@@ -46,7 +46,7 @@ echo
 
 diffcount() {
     [ $# -eq 2 ]
-    diff -y --suppress-common-lines "$1" "$2" |wc -l
+    diff -y --suppress-common-lines -E "$1" "$2" |wc -l
 }
 
 printf "Lines indented differently:\n\n"
