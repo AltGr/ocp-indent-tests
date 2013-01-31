@@ -56,15 +56,16 @@ for name in ${names[@]}; do
     if ! [ -d current/$name ]; then
         cp -r new/$name current
     fi
-    co=0; no=0; nc=0
+    total=0; co=0; no=0; nc=0
     for f in $(find orig/$name ! -type d); do
         f=${f#orig/}
+        total=$((total + $(wc -l <orig/$f)))
         co=$((co + $(diffcount current/$f orig/$f)))
         nc=$((nc + $(diffcount new/$f current/$f)))
         no=$((no + $(diffcount new/$f orig/$f)))
     done
-    printf "\e[34m%-20s\e[m  %15d  %15d  %15d  \e[%dm%+15d\e[m\n" \
-        $name $co $nc $no \
+    printf "\e[34m%-20s\e[m  %14d%%  %14d%%  %14d%%  \e[%dm%+15d\e[m\n" \
+        $name $((co*100/total)) $((nc*100/total)) $((no*100/total)) \
         $(if [ $no -eq $co ]; then echo 33
         elif [ $no -gt $co ]; then echo 31
         else echo 32; fi) \
