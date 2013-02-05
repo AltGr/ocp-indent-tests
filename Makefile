@@ -7,7 +7,7 @@ current:
 	mv new current
 
 clean:
-	rm -rf orig new
+	rm -rf orig new tuareg
 
 %.test: test.sh
 	./test.sh $*
@@ -21,5 +21,8 @@ clean:
 %.meld-changes: %.test
 	@echo
 	@echo "Meld view:"
-	@echo "[orig] [new] [current]"
+	@echo "[current] [new]"
 	@meld current/$** new/$**
+
+status.html: test.sh
+	./test.sh | aha --black -t "ocp-indent current status" > $@
