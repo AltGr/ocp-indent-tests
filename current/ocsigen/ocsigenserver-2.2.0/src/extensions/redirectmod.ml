@@ -91,9 +91,9 @@ let gen dir = function
                (fun () ->
                  Lwt.return
                    {empty_result with
-                     Ocsigen_http_frame.res_location = Some redir;
-                     Ocsigen_http_frame.res_code= 
-                       if temp then 302 else 301}))
+                      Ocsigen_http_frame.res_location = Some redir;
+                      Ocsigen_http_frame.res_code= 
+                        if temp then 302 else 301}))
         )
         (function
           | Ocsigen_extensions.Not_concerned -> return (Ext_next err)

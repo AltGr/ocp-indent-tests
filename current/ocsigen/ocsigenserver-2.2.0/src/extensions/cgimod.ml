@@ -171,8 +171,8 @@ let find_cgi_page request reg sub_path =
           let sc = Ocsigen_extensions.replace_user_dir reg.regexp reg.script path' in
           let reg =
             {reg with
-              path = path'';
-              path_info= string_conform0 path_info}
+               path = path'';
+               path_info= string_conform0 path_info}
           in
           find_file (dr^sc, reg, dr)
         with Ocsigen_extensions.NoSuchUser -> raise Failed_404
@@ -506,7 +506,7 @@ let gen reg = function
                     if loc <> "" && loc.[0] = '/' then
                       Lwt.return
                         (Ext_retry_with ({ ri with request_info =
-                                             ri_of_url loc ri.request_info },
+                                                                                            ri_of_url loc ri.request_info },
                            Ocsigen_cookies.Cookies.empty))
                     else
                       let default_result = Ocsigen_http_frame.default_result () in
@@ -515,8 +515,8 @@ let gen reg = function
                            (fun () ->
                              Lwt.return
                                { default_result with
-                                 res_code= 301; (* Moved permanently *)
-                                 res_location= Some loc}))
+                                   res_code= 301; (* Moved permanently *)
+                                   res_location= Some loc}))
                 | _, _ ->
                     let code = match code with
                       | None -> 200
@@ -540,14 +540,14 @@ let gen reg = function
                                      Lwt.return ());
                            Lwt.return
                              {default_result with
-                               res_content_length = None;
-                               res_stream = (content, None);
-                               res_location= loc;
-                               res_headers =
-                                 Http_headers.replace_opt
-                                   Http_headers.status None
-                                   header.Http_header.headers;
-                               res_code = code})))
+                                res_content_length = None;
+                                res_stream = (content, None);
+                                res_location= loc;
+                                res_headers =
+                                  Http_headers.replace_opt
+                                    Http_headers.status None
+                                    header.Http_header.headers;
+                                res_code = code})))
             (fun e ->
               Ocsigen_stream.finalize content `Failure >>= fun () ->
               Lwt.fail e))

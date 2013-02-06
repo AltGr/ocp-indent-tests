@@ -91,10 +91,10 @@ let rtc_timeoffset_of_vm ~__context (vm, vm_t) vbds =
     |> List.map (fun self -> (self, Db.VDI.get_record ~__context ~self))
     |> List.filter (fun (_, record) -> record.API.vDI_on_boot = `reset)
     |> List.filter_map (fun (reference, record) ->
-        Opt.of_exception (fun () ->
-          reference,
-          List.assoc "timeoffset"
-            record.API.vDI_other_config)) in
+      Opt.of_exception (fun () ->
+        reference,
+        List.assoc "timeoffset"
+          record.API.vDI_other_config)) in
   match vdis_with_timeoffset_to_be_reset_on_boot with
   | [] ->
     timeoffset
@@ -445,7 +445,7 @@ let generate_xenops_state ~__context ~self ~vm ~vbds ~pcis =
   try
     let vm_to_resume = {
       (Helpers.parse_boot_record vm.API.vM_last_booted_record) with
-      API.vM_VBDs = vm.API.vM_VBDs
+        API.vM_VBDs = vm.API.vM_VBDs
     } in
     debug "Successfully parsed old last_booted_record format - translating to new format so that xenopsd can resume the VM.";
     let vm = MD.of_vm ~__context (self, vm_to_resume) vbds (pcis <> []) in

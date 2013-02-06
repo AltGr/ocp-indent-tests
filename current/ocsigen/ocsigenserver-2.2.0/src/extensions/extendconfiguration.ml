@@ -32,7 +32,7 @@ let gen configfun = function
   | Ocsigen_extensions.Req_not_found (err, request) ->
       Ocsigen_messages.debug2 "--Updating configuration";
       let updated_request = { request with request_config =
-                                configfun request.request_config }
+                                                                       configfun request.request_config }
       in
       Lwt.return
         (Ocsigen_extensions.Ext_continue_with
@@ -121,7 +121,7 @@ let update_config usermode = function
         let config = match attrs with
           | ["default", s] ->
               { config with charset_assoc =
-                  set_default_charset config.charset_assoc s }
+                                          set_default_charset config.charset_assoc s }
           | [] -> config
           | _ -> bad_config "Only attribute \"default\" is permitted \
                              for option \"charset\""
@@ -147,7 +147,7 @@ let update_config usermode = function
         let config = match attrs with
           | ["default", s] ->
               { config with mime_assoc =
-                  set_default_mime config.mime_assoc s }
+                                          set_default_mime config.mime_assoc s }
           | [] -> config
           | _ -> bad_config "Only attribute \"default\" is permitted \
                              for option \"contenttype\""
@@ -174,7 +174,7 @@ let update_config usermode = function
         check_regexp_list do_not_serve.do_not_serve_regexps;
         gen (fun config ->
           { config with do_not_serve_404 =
-              join_do_not_serve do_not_serve config.do_not_serve_404 })
+                                  join_do_not_serve do_not_serve config.do_not_serve_404 })
       with Bad_regexp r ->
           badconfig "Invalid regexp %s in %s" r "hidefile")
   | Element ("hidefile" as s, _, _) -> badconfig "Bad syntax for tag %s" s
@@ -185,7 +185,7 @@ let update_config usermode = function
         check_regexp_list do_not_serve.do_not_serve_regexps;
         gen (fun config ->
           { config with do_not_serve_403 =
-              join_do_not_serve do_not_serve config.do_not_serve_403 })
+                                  join_do_not_serve do_not_serve config.do_not_serve_403 })
       with Bad_regexp r ->
           badconfig "Invalid regexp %s in %s" r "forbidfile")
   | Element ("forbidfile" as s, _, _) -> badconfig "Bad syntax for tag %s" s

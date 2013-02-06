@@ -369,10 +369,10 @@ type parse_config =
 and parse_config_user =
     userconf_info -> parse_config
 and parse_config_aux =
-        Url.path -> parse_host ->
-        (parse_fun -> Simplexmlparser.xml ->
-         extension
-        )
+      Url.path -> parse_host ->
+      (parse_fun -> Simplexmlparser.xml ->
+       extension
+      )
 
 
 (** For each extension generating pages, we register its name and six functions:

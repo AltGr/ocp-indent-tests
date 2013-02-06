@@ -120,9 +120,9 @@ module Vm_memory_constraints : T = struct
       (* Ensure target is within dynamic constraints. *)
       let target = constrain c.target dynamic_min dynamic_max in
       Some {c with
-             dynamic_min = dynamic_min;
-             target      = target;
-             dynamic_max = dynamic_max;
+              dynamic_min = dynamic_min;
+              target      = target;
+              dynamic_max = dynamic_max;
            }
 
   let are_pinned ~constraints =

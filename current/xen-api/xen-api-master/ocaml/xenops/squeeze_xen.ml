@@ -451,10 +451,10 @@ let make_host ~verbose ~xc ~xs =
                    (initial_reservation_kib -* memory_actual_kib -* memory_shadow_kib) in
                reserved_kib := Int64.add !reserved_kib unaccounted_kib;
                [ { domain with Squeeze.
-                     dynamic_min_kib   = memory_max_kib;
-                   dynamic_max_kib   = memory_max_kib;
-                   target_kib        = memory_max_kib;
-                   memory_actual_kib = memory_max_kib;
+                                                dynamic_min_kib   = memory_max_kib;
+                                              dynamic_max_kib   = memory_max_kib;
+                                              target_kib        = memory_max_kib;
+                                              memory_actual_kib = memory_max_kib;
                  } ]
              end else begin
 
@@ -469,10 +469,10 @@ let make_host ~verbose ~xc ~xs =
                    target_kib, target_kib
                in
                [ { domain with Squeeze.
-                     dynamic_min_kib = min_kib;
-                   dynamic_max_kib = max_kib;
-                   target_kib = target_kib;
-                   memory_actual_kib = memory_actual_kib
+                                                dynamic_min_kib = min_kib;
+                                              dynamic_max_kib = max_kib;
+                                              target_kib = target_kib;
+                                              memory_actual_kib = memory_actual_kib
                  } ]
              end
            with

@@ -3058,8 +3058,8 @@ let namespace ?(get_field_writer_roles=fun x->x) ?(get_field_reader_roles=fun x-
   let rec prefix = function
     | Namespace(x, xs) -> Namespace(x, List.map prefix xs)
     | Field x -> Field { x with full_name = if idempotent then x.full_name else name :: x.full_name;
-                         field_setter_roles=get_field_writer_roles x.field_setter_roles;
-                         field_getter_roles=get_field_reader_roles x.field_getter_roles
+                                                     field_setter_roles=get_field_writer_roles x.field_setter_roles;
+                                                     field_getter_roles=get_field_reader_roles x.field_getter_roles
                        } in
   Namespace(name, List.map prefix contents)
 
@@ -3090,7 +3090,7 @@ let create_obj ?lifecycle ~in_oss_since ?in_product_since ?(internal_deprecated_
   let contents = List.map (function 
     | Namespace(n,cs)->namespace ~get_field_writer_roles ~get_field_reader_roles ~name:n ~contents:cs ~idempotent:true ()
     | Field f->Field{f with field_setter_roles=get_field_writer_roles f.field_setter_roles;
-                      field_getter_roles=get_field_reader_roles f.field_getter_roles}
+                                              field_getter_roles=get_field_reader_roles f.field_getter_roles}
     ) contents in
   if lifecycle = None && in_product_since = None then
     failwith ("Lifecycle for class '" ^ name ^ "' not specified");

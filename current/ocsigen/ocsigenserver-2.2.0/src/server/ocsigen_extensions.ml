@@ -368,9 +368,9 @@ type parse_fun = Simplexmlparser.xml list -> extension2
 
 
 type parse_host =
-        Parse_host of
-          (Url.path ->
-           parse_host -> parse_fun -> Simplexmlparser.xml -> extension)
+      Parse_host of
+        (Url.path ->
+         parse_host -> parse_fun -> Simplexmlparser.xml -> extension)
 
 let (hosts : (virtual_hosts * config_info * extension2) list ref) =
   ref []
@@ -414,9 +414,9 @@ let add_to_res_cookies res cookies_to_set =
     res
   else
     {res with
-      Ocsigen_http_frame.res_cookies =
-        Ocsigen_cookies.add_cookies
-          res.Ocsigen_http_frame.res_cookies cookies_to_set}
+       Ocsigen_http_frame.res_cookies =
+         Ocsigen_cookies.add_cookies
+           res.Ocsigen_http_frame.res_cookies cookies_to_set}
 
 let make_ext awake cookies_to_set req_state (genfun : extension) (genfun2 : extension2) =
   genfun req_state
@@ -522,9 +522,9 @@ let rec default_parse_config
                 | None -> oldri
                 | Some charset ->
                     { oldri with request_config =
-                        { oldri.request_config with charset_assoc =
-                            Ocsigen_charset_mime.set_default_charset
-                              oldri.request_config.charset_assoc charset } }
+                                                     { oldri.request_config with charset_assoc =
+                                                                                                                                      Ocsigen_charset_mime.set_default_charset
+                                                                                                                                        oldri.request_config.charset_assoc charset } }
               in
               match site_match oldri path oldri.request_info.ri_full_path with
                 | None ->
@@ -544,12 +544,12 @@ let rec default_parse_config
                           "\" matches \""^
                           (Url.string_of_url_path ~encode:true path)^"\".");
                     let ri = {oldri with
-                               request_info =
-                                 { oldri.request_info with
-                                   ri_sub_path = sub_path;
-                                   ri_sub_path_string =
-                                     Url.string_of_url_path
-                                       ~encode:true sub_path} }
+                                request_info =
+                                  { oldri.request_info with
+                                      ri_sub_path = sub_path;
+                                      ri_sub_path_string =
+                                        Url.string_of_url_path
+                                          ~encode:true sub_path} }
                     in
                     parse_config awake cookies_to_set (Req_not_found (e, ri))
                     >>= function
@@ -640,10 +640,10 @@ type userconf_info = {
 type parse_config = virtual_hosts -> config_info -> parse_config_aux
 and parse_config_user = userconf_info -> parse_config
 and parse_config_aux =
-        Url.path -> parse_host ->
-        (parse_fun -> Simplexmlparser.xml ->
-         extension
-        )
+      Url.path -> parse_host ->
+      (parse_fun -> Simplexmlparser.xml ->
+       extension
+      )
 
 
 
@@ -1050,16 +1050,16 @@ let ri_of_url ?(full_rewrite = false) url ri =
   in
   (* ri_original_full_path is not changed *)
   {ri with
-    ri_url_string = url;
-    ri_host = host;
-    ri_full_path_string = path_string;
-    ri_full_path = path;
-    ri_original_full_path_string = original_fullpath_string;
-    ri_original_full_path = original_fullpath;
-    ri_sub_path = path;
-    ri_sub_path_string = path_string;
-    ri_get_params_string = params;
-    ri_get_params = get_params;
+     ri_url_string = url;
+     ri_host = host;
+     ri_full_path_string = path_string;
+     ri_full_path = path;
+     ri_original_full_path_string = original_fullpath_string;
+     ri_original_full_path = original_fullpath;
+     ri_sub_path = path;
+     ri_sub_path_string = path_string;
+     ri_get_params_string = params;
+     ri_get_params = get_params;
   }
 
 

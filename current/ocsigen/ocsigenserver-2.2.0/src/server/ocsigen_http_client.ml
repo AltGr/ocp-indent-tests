@@ -507,7 +507,7 @@ let raw_request
                                                *)
                   ~sender:request_sender
                   {empty_result with
-                    Ocsigen_http_frame.res_headers = headers}
+                     Ocsigen_http_frame.res_headers = headers}
 
             | Some stream ->
                 Ocsigen_senders.Stream_content.result_of_content
@@ -521,8 +521,8 @@ let raw_request
                   ~keep_alive:keep_alive_asked
                   ~sender:request_sender
                   {r with
-                    Ocsigen_http_frame.res_content_length= content_length;
-                    Ocsigen_http_frame.res_headers= headers;
+                     Ocsigen_http_frame.res_content_length= content_length;
+                     Ocsigen_http_frame.res_headers= headers;
                   }) >>= fun () ->
 
           Ocsigen_messages.debug2 "--Ocsigen_http_client: request sent";
@@ -813,7 +813,7 @@ let basic_raw_request
             ~keep_alive:false
             ~sender:request_sender
             {empty_result with
-              Ocsigen_http_frame.res_headers = headers}
+               Ocsigen_http_frame.res_headers = headers}
       | Some stream ->
           Ocsigen_senders.Stream_content.result_of_content stream >>= fun r ->
           Ocsigen_http_com.send
@@ -824,8 +824,8 @@ let basic_raw_request
             ~keep_alive:false
             ~sender:request_sender
             {r with
-              Ocsigen_http_frame.res_content_length= content_length;
-              Ocsigen_http_frame.res_headers= headers;
+               Ocsigen_http_frame.res_content_length= content_length;
+               Ocsigen_http_frame.res_headers= headers;
             }
 
   in

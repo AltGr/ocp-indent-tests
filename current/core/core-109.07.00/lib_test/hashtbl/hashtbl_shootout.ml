@@ -263,7 +263,7 @@ module Make (Tbl : Test_intf) = struct
     (* turn off compaction *)
     Gc.set
       { (Gc.get ()) with Gc.Control.
-          max_overhead = 1_000_000; };
+                               max_overhead = 1_000_000; };
     let samples = Strings.create () in
     if List.mem tests `insert_and_lookup then begin
       let (rs, tbl) = insert samples 1 1_000_000 in

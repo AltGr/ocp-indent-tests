@@ -323,30 +323,30 @@ let unoptimize_sequence seq =
     | Index16 t -> Rgba32 (Index16.to_rgba32 t)
     | t -> t in
   { seq with
-    seq_frames = begin
-      let _, result =
-        let head_frame = List.hd seq.seq_frames in
-        List.fold_left (fun (previmage, result) frame ->
-          let newimage = copy previmage in
-          let src = coe frame.frame_image in
-          begin match src, newimage with
-          | Rgb24 _, _ | Cmyk32 _, _ -> (* non transparent *)
-            blit src 0 0 newimage frame.frame_left frame.frame_top
-              (width src) (height src)
-          | Rgba32 src32, Rgba32 dst32 -> (* transparent *)
-            Rgba32.map Color.Rgba.merge
-              src32 0 0 dst32 frame.frame_left frame.frame_top
-              (width src) (height src)
-          | _ -> assert false
-          end;
-          (newimage, { frame_left = 0;
-                       frame_top = 0;
-                       frame_image = newimage;
-                       frame_delay = frame.frame_delay } :: result))
-          (coe head_frame.frame_image, [head_frame])
-          (List.tl seq.seq_frames) in
-      List.rev result
-    end };;
+      seq_frames = begin
+        let _, result =
+          let head_frame = List.hd seq.seq_frames in
+          List.fold_left (fun (previmage, result) frame ->
+            let newimage = copy previmage in
+            let src = coe frame.frame_image in
+            begin match src, newimage with
+            | Rgb24 _, _ | Cmyk32 _, _ -> (* non transparent *)
+              blit src 0 0 newimage frame.frame_left frame.frame_top
+                (width src) (height src)
+            | Rgba32 src32, Rgba32 dst32 -> (* transparent *)
+              Rgba32.map Color.Rgba.merge
+                src32 0 0 dst32 frame.frame_left frame.frame_top
+                (width src) (height src)
+            | _ -> assert false
+            end;
+            (newimage, { frame_left = 0;
+                         frame_top = 0;
+                         frame_image = newimage;
+                         frame_delay = frame.frame_delay } :: result))
+            (coe head_frame.frame_image, [head_frame])
+            (List.tl seq.seq_frames) in
+        List.rev result
+      end };;
 
 let load_sequence filename load_options =
   let result = ref None in

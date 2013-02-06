@@ -151,8 +151,8 @@ module Unit_tests
   TEST = Set.of_sorted_array [|Elt.of_int 0|] |! Result.is_ok
   TEST = Set.of_sorted_array [|Elt.of_int 0; Elt.of_int 0|] |! Result.is_error
   TEST = Set.of_sorted_array [|Elt.of_int 1
-                             ; Elt.of_int 0
-                             ; Elt.of_int 1|] |! Result.is_error
+                              ; Elt.of_int 0
+                              ; Elt.of_int 1|] |! Result.is_error
 
   TEST =
     let list = List.init 100 ~f:Elt.of_int in

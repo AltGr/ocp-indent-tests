@@ -266,12 +266,12 @@ let create ~__context ~name_label ~name_description
   let open Storage_interface in
   let vdi_info = {
     default_vdi_info with
-    name_label = name_label;
-    name_description = name_description;
-    ty = vdi_type;
-    read_only = read_only;
-    virtual_size = virtual_size;
-    sm_config = sm_config;
+      name_label = name_label;
+      name_description = name_description;
+      ty = vdi_type;
+      read_only = read_only;
+      virtual_size = virtual_size;
+      sm_config = sm_config;
   } in
   let module C = Client(struct let rpc = rpc end) in
   let vi = transform_storage_exn
@@ -380,10 +380,10 @@ let snapshot_and_clone call_f ~__context ~vdi ~driver_params =
     let vdi' = Db.VDI.get_location ~__context ~self:vdi in
     let vdi_info = {
       default_vdi_info with
-      vdi = vdi';
-      name_label = a.Db_actions.vDI_name_label;
-      name_description = a.Db_actions.vDI_name_description;
-      sm_config = driver_params;
+        vdi = vdi';
+        name_label = a.Db_actions.vDI_name_label;
+        name_description = a.Db_actions.vDI_name_description;
+        sm_config = driver_params;
     } in
     let sr' = Db.SR.get_uuid ~__context ~self:sR in
     (* We don't use transform_storage_exn because of the clone/copy fallback below *)

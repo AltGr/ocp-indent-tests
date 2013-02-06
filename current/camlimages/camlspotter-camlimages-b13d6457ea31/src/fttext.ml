@@ -170,7 +170,7 @@ let vector_gen loadf turn_y rot func face px py string =
   let matrix = 
     if turn_y then 
       { matrix with ft_xy = -. matrix.ft_xy;
-        ft_yy = -. matrix.ft_yy; }
+                        ft_yy = -. matrix.ft_yy; }
     else matrix
   in 
   let curx = ref px and cury = ref py in

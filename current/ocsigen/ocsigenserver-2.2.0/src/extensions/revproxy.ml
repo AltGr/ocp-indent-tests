@@ -211,9 +211,9 @@ let gen dir = function
                                  Lwt.return ());
                        Lwt.return
                          {empty_result with
-                           Ocsigen_http_frame.res_content_length = length;
-                           res_headers= headers;
-                           res_code= code;
+                            Ocsigen_http_frame.res_content_length = length;
+                            res_headers= headers;
+                            res_code= code;
                          }
                    | Some stream ->
                        let default_result =
@@ -231,10 +231,10 @@ let gen dir = function
                                  Lwt.return ());
                        Lwt.return
                          {default_result with
-                           Ocsigen_http_frame.res_content_length = length;
-                           res_stream = (stream, None);
-                           res_headers= headers;
-                           res_code= code;
+                            Ocsigen_http_frame.res_content_length = length;
+                            res_stream = (stream, None);
+                            res_headers= headers;
+                            res_code= code;
                          }
                )
             )

@@ -466,9 +466,9 @@ module Vbd = struct
   let free_device ~xs bus_type domid =
     let disks = List.map
         (fun x -> x.frontend.devid
-          |> Device_number.of_xenstore_key
-          |> Device_number.spec
-          |> (fun (_, disk, _) -> disk))
+                  |> Device_number.of_xenstore_key
+                  |> Device_number.spec
+                  |> (fun (_, disk, _) -> disk))
         (Device_common.list_frontends ~xs domid) in
     let next = List.fold_left max 0 disks + 1 in
     bus_type, next, 0

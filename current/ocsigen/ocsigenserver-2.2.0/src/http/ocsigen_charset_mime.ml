@@ -65,7 +65,7 @@ let set_default assoc default = { assoc with assoc_default = default }
 
 let update_ext assoc (ext : extension) v =
   { assoc with assoc_list =
-      Extension (String.lowercase ext, v) :: assoc.assoc_list}
+                 Extension (String.lowercase ext, v) :: assoc.assoc_list}
 
 let update_file assoc (file : filename) v =
   { assoc with assoc_list = File (file, v) :: assoc.assoc_list}

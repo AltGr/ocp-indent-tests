@@ -64,9 +64,9 @@ let write_out_database filename =
   Db_cache_impl.sync
     [ {
       Parse_db_conf.dummy_conf with
-      Parse_db_conf.path=filename;
-      Parse_db_conf.mode=Parse_db_conf.No_limit;
-      Parse_db_conf.compress=(!compress)
+        Parse_db_conf.path=filename;
+        Parse_db_conf.mode=Parse_db_conf.No_limit;
+        Parse_db_conf.compress=(!compress)
     } ] (Db_ref.get_database (Db_backend.make ()))
 
 let help_pad = "      "

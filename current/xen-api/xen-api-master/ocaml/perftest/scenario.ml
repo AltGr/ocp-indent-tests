@@ -79,22 +79,22 @@ let pools =
     { default with id="pool2"; hosts=16};
     { default with id="pool3"; hosts=48};
     { default with 
-      id="real1";
-      hosts=1;
-      sdk=false;
-      bonds=0;
-      interfaces_per_host=0;
-      vms = [ { (default_vm 50) with tag = "" } ]};
+        id="real1";
+        hosts=1;
+        sdk=false;
+        bonds=0;
+        interfaces_per_host=0;
+        vms = [ { (default_vm 50) with tag = "" } ]};
     { default with
-      id="xendesktop";
-      hosts=8;
-      vms = [ { (default_vm 50) with vbds = 0; vifs = 1; tag = "xendesktop"; has_affinity = false } ]};
+        id="xendesktop";
+        hosts=8;
+        vms = [ { (default_vm 50) with vbds = 0; vifs = 1; tag = "xendesktop"; has_affinity = false } ]};
     { default with
-      id="empty";
-      hosts=1; (* we won't be starting VMs in the clone test so we don't need any hosts *)
-      vms = [ { (default_vm 1) with tag = "winxp-gold"; vifs = 1; vbds = 1 } ]; (* 1 per host *)
-      iscsi_luns=6;
-      use_shared_storage=true;}
+        id="empty";
+        hosts=1; (* we won't be starting VMs in the clone test so we don't need any hosts *)
+        vms = [ { (default_vm 1) with tag = "winxp-gold"; vifs = 1; vbds = 1 } ]; (* 1 per host *)
+        iscsi_luns=6;
+        use_shared_storage=true;}
   ]
 
 let get_all () = List.map (fun p -> p.id) pools

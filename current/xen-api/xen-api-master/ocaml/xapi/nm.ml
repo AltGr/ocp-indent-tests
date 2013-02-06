@@ -163,7 +163,7 @@ let create_bond ~__context bond mtu =
                       bond_properties=props; bond_mac=Some mac}] in
   cleanup,
   [master_net_rc.API.network_bridge, {default_bridge with ports; bridge_mac=(Some mac); other_config;
-                                       persistent_b}],
+                                                                                             persistent_b}],
   interface_config
 
 let destroy_bond ~__context ~force bond =
@@ -189,7 +189,7 @@ let create_vlan ~__context vlan =
 
   [master_network_rc.API.network_bridge,
    {default_bridge with vlan=(Some (slave_network_rc.API.network_bridge, tag)); other_config;
-     bridge_mac=(Some mac); persistent_b}]
+                         bridge_mac=(Some mac); persistent_b}]
 
 let destroy_vlan ~__context vlan =
   let master = Db.VLAN.get_untagged_PIF ~__context ~self:vlan in
@@ -236,7 +236,7 @@ let rec create_bridges ~__context pif_rc net_rc =
   | `tunnel_pif _ ->
     [],
     [net_rc.API.network_bridge, {default_bridge with bridge_mac=(Some pif_rc.API.pIF_MAC);
-                                  other_config; persistent_b}],
+                                                                                   other_config; persistent_b}],
     []
   | `vlan_pif vlan ->
     let slave = Db.VLAN.get_tagged_PIF ~__context ~self:vlan in
@@ -262,7 +262,7 @@ let rec create_bridges ~__context pif_rc net_rc =
     let ports = [pif_rc.API.pIF_device, {default_port with interfaces=[pif_rc.API.pIF_device]}] in
     cleanup,
     [net_rc.API.network_bridge, {default_bridge with ports; bridge_mac=(Some pif_rc.API.pIF_MAC);
-                                  other_config; persistent_b}],
+                                                                                   other_config; persistent_b}],
     [pif_rc.API.pIF_device, {default_interface with mtu; ethtool_settings; ethtool_offload}]
 
 let rec destroy_bridges ~__context ~force pif_rc bridge =

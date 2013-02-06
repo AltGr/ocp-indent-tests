@@ -80,8 +80,8 @@ let filter_field (pred: field -> bool) (system: obj list) =
     | Namespace(name, contents) -> [ Namespace(name, concat_map remove_leaf contents) ] in
   let rec fixpoint f x = let result = f x in if result = x then x else fixpoint f result in
   let obj x = { x with contents = 
-                  let contents = concat_map content x.contents in
-                  fixpoint (concat_map remove_leaf) contents } in
+                                     let contents = concat_map content x.contents in
+                                     fixpoint (concat_map remove_leaf) contents } in
   List.map obj system 
 
 (** Takes a predicate and a list of objects, returning the objects with only the messages

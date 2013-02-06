@@ -386,24 +386,24 @@ let main_loop ifd ofd =
             (* Switch into a raw mode, passing through stuff like Control + C *)
             let tc' = {
               tc with
-              Unix.c_ignbrk = false;
-              Unix.c_brkint = false;
-              Unix.c_parmrk = false;
-              Unix.c_istrip = false;
-              Unix.c_inlcr = false;
-              Unix.c_igncr = false;
-              Unix.c_icrnl = false;
-              Unix.c_ixon = false;
-              Unix.c_opost = false;
-              Unix.c_echo = false;
-              Unix.c_echonl = false;
-              Unix.c_icanon = false;
-              Unix.c_isig = false;
-              (* IEXTEN? *)
-              Unix.c_csize = 8;
-              Unix.c_parenb = false;
-              Unix.c_vmin = 0;
-              Unix.c_vtime = 0;
+                Unix.c_ignbrk = false;
+                Unix.c_brkint = false;
+                Unix.c_parmrk = false;
+                Unix.c_istrip = false;
+                Unix.c_inlcr = false;
+                Unix.c_igncr = false;
+                Unix.c_icrnl = false;
+                Unix.c_ixon = false;
+                Unix.c_opost = false;
+                Unix.c_echo = false;
+                Unix.c_echonl = false;
+                Unix.c_icanon = false;
+                Unix.c_isig = false;
+                (* IEXTEN? *)
+                Unix.c_csize = 8;
+                Unix.c_parenb = false;
+                Unix.c_vmin = 0;
+                Unix.c_vtime = 0;
             } in
             Unix.tcsetattr Unix.stdin Unix.TCSANOW tc';
             tc_save := Some tc

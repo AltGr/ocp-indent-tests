@@ -415,10 +415,10 @@ end = struct
   let frame_503 () =
     Lwt.return
       { (OFrame.default_result ()) with
-        OFrame.res_stream = (OStream.of_string "", None);
-        OFrame.res_code = 503; (*Service Unavailable*)
-        OFrame.res_content_length = None;
-        OFrame.res_content_type = Some "text/plain";
+          OFrame.res_stream = (OStream.of_string "", None);
+          OFrame.res_code = 503; (*Service Unavailable*)
+          OFrame.res_content_length = None;
+          OFrame.res_content_type = Some "text/plain";
       }
 
   exception Kill
@@ -430,11 +430,11 @@ end = struct
         OMsg.debug (fun () -> "Incorrect or empty Comet request");
         Lwt.return
           { (OFrame.default_result ()) with
-            OFrame.res_stream =
-              (OStream.of_string "Empty or incorrect registration", None) ;
-            OFrame.res_code = 400 ;(* BAD REQUEST *)
-            OFrame.res_content_type = Some "text/plain" ;
-            OFrame.res_content_length = None ;
+              OFrame.res_stream =
+                (OStream.of_string "Empty or incorrect registration", None) ;
+              OFrame.res_code = 400 ;(* BAD REQUEST *)
+              OFrame.res_content_type = Some "text/plain" ;
+              OFrame.res_content_length = None ;
           }
 
     | [], (_::_ as ended) -> (* All channels are closed *)
@@ -442,9 +442,9 @@ end = struct
         OMsg.debug (fun () -> "Comet request served");
         Lwt.return
           { (OFrame.default_result ()) with
-            OFrame.res_stream = (OStream.of_string end_notice, None) ;
-            OFrame.res_content_length = None ;
-            OFrame.res_content_type = Some "text/plain" ;
+              OFrame.res_stream = (OStream.of_string end_notice, None) ;
+              OFrame.res_content_length = None ;
+              OFrame.res_content_type = Some "text/plain" ;
           }
 
     | (_::_ as active), ended -> (* generic case *)
@@ -470,9 +470,9 @@ end = struct
               let s = Messages.encode_downgoing ended x in
               OMsg.debug (fun () -> "Comet request served");
               { (OFrame.default_result ()) with
-                OFrame.res_stream = (s, None) ;
-                OFrame.res_content_length = None ;
-                OFrame.res_content_type = Some "text/plain" ;
+                  OFrame.res_stream = (s, None) ;
+                  OFrame.res_content_length = None ;
+                  OFrame.res_content_type = Some "text/plain" ;
               }
           )
           (function

@@ -322,9 +322,9 @@ let get_boot_record ~__context ~self =
   (* CA-31903: we now use an unhealthy mix of fields from the boot_records and the live VM.
      In particular the VM is currently using dynamic_min and max from the live VM -- not the boot-time settings. *)
   { lbr with
-    API.vM_memory_target = 0L;
-    API.vM_memory_dynamic_min = r.Db_actions.vM_memory_dynamic_min;
-    API.vM_memory_dynamic_max = r.Db_actions.vM_memory_dynamic_max;
+      API.vM_memory_target = 0L;
+      API.vM_memory_dynamic_min = r.Db_actions.vM_memory_dynamic_min;
+      API.vM_memory_dynamic_max = r.Db_actions.vM_memory_dynamic_max;
   }
 
 

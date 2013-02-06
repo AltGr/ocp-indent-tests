@@ -219,7 +219,7 @@ struct
   (** adds an header option in the header option list*)
   let add_headers header key value =
     { header with
-      headers = Http_headers.add key value header.headers }
+        headers = Http_headers.add key value header.headers }
 end
 
 module Http_error =

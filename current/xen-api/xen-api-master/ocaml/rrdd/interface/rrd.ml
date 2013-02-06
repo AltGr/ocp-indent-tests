@@ -421,8 +421,8 @@ let rrd_create dss rras timestep inittime =
     rrd_dss=dss;
     rrd_rras=Array.map (fun rra -> 
         { rra with 
-          rra_data = Array.init (Array.length dss) (fun _ -> Fring.make rra.rra_row_cnt nan);
-          rra_cdps = Array.init (Array.length dss) (fun i -> {cdp_value=0.0; cdp_unknown_pdps=0})
+            rra_data = Array.init (Array.length dss) (fun _ -> Fring.make rra.rra_row_cnt nan);
+            rra_cdps = Array.init (Array.length dss) (fun i -> {cdp_value=0.0; cdp_unknown_pdps=0})
         }) rras;
   } in
   let values = Array.map (fun ds -> ds.ds_last) dss in
@@ -438,12 +438,12 @@ let rrd_add_ds rrd newds =
     let now = Unix.gettimeofday () in
     let npdps = Int64.div (Int64.of_float now) rrd.timestep in
     {rrd with
-      rrd_dss = Array.append rrd.rrd_dss [|newds|];
-      rrd_rras = Array.map (fun rra -> 
-          let nunknowns = Int64.to_int (Int64.rem npdps (Int64.of_int rra.rra_pdp_cnt)) in
-          { rra with
-            rra_data = Array.append rra.rra_data [| Fring.make rra.rra_row_cnt nan |];
-            rra_cdps = Array.append rra.rra_cdps [| {cdp_value=cf_init_value rra.rra_cf; cdp_unknown_pdps=nunknowns} |]; }) rrd.rrd_rras;
+       rrd_dss = Array.append rrd.rrd_dss [|newds|];
+       rrd_rras = Array.map (fun rra -> 
+           let nunknowns = Int64.to_int (Int64.rem npdps (Int64.of_int rra.rra_pdp_cnt)) in
+           { rra with
+               rra_data = Array.append rra.rra_data [| Fring.make rra.rra_row_cnt nan |];
+               rra_cdps = Array.append rra.rra_cdps [| {cdp_value=cf_init_value rra.rra_cf; cdp_unknown_pdps=nunknowns} |]; }) rrd.rrd_rras;
     }
 
 (** Remove the named DS from an RRD. Removes all of the data associated with it, too *)
@@ -453,11 +453,11 @@ let rrd_remove_ds rrd ds_name =
     raise (Api_errors.Server_error(Api_errors.invalid_value, ["data-source"; ds_name]))
   else
     { rrd with
-      rrd_dss = Array.remove n rrd.rrd_dss;
-      rrd_rras = Array.map (fun rra ->
-          { rra with
-            rra_data = Array.remove n rra.rra_data;
-            rra_cdps = Array.remove n rra.rra_cdps }) rrd.rrd_rras; }
+        rrd_dss = Array.remove n rrd.rrd_dss;
+        rrd_rras = Array.map (fun rra ->
+            { rra with
+                rra_data = Array.remove n rra.rra_data;
+                rra_cdps = Array.remove n rra.rra_cdps }) rrd.rrd_rras; }
 
 exception No_RRA_Available
 

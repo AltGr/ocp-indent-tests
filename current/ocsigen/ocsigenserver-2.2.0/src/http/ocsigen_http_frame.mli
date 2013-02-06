@@ -83,10 +83,10 @@ end
 module Http_header :
 sig
   type http_method =
-          GET | POST | HEAD | PUT | DELETE | TRACE
+        GET | POST | HEAD | PUT | DELETE | TRACE
       | OPTIONS | CONNECT | LINK | UNLINK | PATCH
   type http_mode =
-          Query of (http_method * string)
+        Query of (http_method * string)
       | Answer of int
       | Nofirstline
   type proto = HTTP10 | HTTP11

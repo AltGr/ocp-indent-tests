@@ -147,14 +147,14 @@ let gen ~usermode ?cache dir = function
             | None -> answer
             | Some 0 ->
                 {answer with Ocsigen_http_frame.res_headers =
-                    answer.Ocsigen_http_frame.res_headers
-                  << (Http_headers.cache_control, "no-cache")
-                  << (Http_headers.expires, "0")}
+                                             answer.Ocsigen_http_frame.res_headers
+                                           << (Http_headers.cache_control, "no-cache")
+                                           << (Http_headers.expires, "0")}
             | Some duration ->
                 {answer with Ocsigen_http_frame.res_headers =
-                    answer.Ocsigen_http_frame.res_headers
-                  << (Http_headers.cache_control, "max-age: "^ string_of_int duration)
-                  << (Http_headers.expires, Ocsigen_http_com.gmtdate (Unix.time () +. float_of_int duration))}
+                                             answer.Ocsigen_http_frame.res_headers
+                                           << (Http_headers.cache_control, "max-age: "^ string_of_int duration)
+                                           << (Http_headers.expires, Ocsigen_http_com.gmtdate (Unix.time () +. float_of_int duration))}
           in
           Lwt.return (Ext_found (fun () -> Lwt.return answer))
         )
@@ -217,7 +217,7 @@ let parse_config userconf _ : parse_config_aux = fun _ _ _ ->
       | ("dest", s)::l when opt.opt_dest = None ->
           parse_attrs l
             { opt with opt_dest =
-                Some (parse_user_dir (rewrite_local_path userconf s)) }
+                                   Some (parse_user_dir (rewrite_local_path userconf s)) }
 
       | ("root", s) :: l when opt.opt_root_checks = None ->
           parse_attrs l

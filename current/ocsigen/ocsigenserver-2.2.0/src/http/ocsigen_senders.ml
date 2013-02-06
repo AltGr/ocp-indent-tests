@@ -68,11 +68,11 @@ module Make_XML_Content(Xml : Xml_sigs.Iterable)
     let default_result = default_result () in
     Lwt.return
       {default_result with
-        res_content_length = None;
-        res_content_type = Some content_type;
-        res_etag = get_etag c;
-        res_headers= Http_headers.dyn_headers;
-        res_stream = (x, None)
+         res_content_length = None;
+         res_content_type = Some content_type;
+         res_etag = get_etag c;
+         res_headers= Http_headers.dyn_headers;
+         res_stream = (x, None)
       }
 
 end
@@ -108,15 +108,15 @@ struct
     let default_result = default_result () in
     Lwt.return
       {default_result with
-        res_content_length = Some (Int64.of_int (String.length c));
-        res_etag = md5;
-        res_content_type = Some ct;
-        res_headers= Http_headers.dyn_headers;
-        res_stream =
-          (Ocsigen_stream.make
-             (fun () -> 
-               Ocsigen_stream.cont c (fun () -> Ocsigen_stream.empty None)),
-           None)
+         res_content_length = Some (Int64.of_int (String.length c));
+         res_etag = md5;
+         res_content_type = Some ct;
+         res_headers= Http_headers.dyn_headers;
+         res_stream =
+           (Ocsigen_stream.make
+              (fun () -> 
+                Ocsigen_stream.cont c (fun () -> Ocsigen_stream.empty None)),
+            None)
 
       }
 
@@ -136,9 +136,9 @@ struct
     let default_result = default_result () in
     Lwt.return
       {default_result with
-        res_content_length = None;
-        res_headers= Http_headers.dyn_headers;
-        res_stream = (c, None)}
+         res_content_length = None;
+         res_headers= Http_headers.dyn_headers;
+         res_stream = (c, None)}
 
 end
 
@@ -193,12 +193,12 @@ struct
     let default_result = default_result () in
     Lwt.return
       {default_result with
-        res_content_length = None;
-        res_etag = get_etag c;
-        res_stream = 
-          (Ocsigen_stream.make ~finalize (fun _ -> next_stream c), None);
-        res_headers= Http_headers.dyn_headers;
-        res_content_type = Some ct}
+         res_content_length = None;
+         res_etag = get_etag c;
+         res_stream = 
+           (Ocsigen_stream.make ~finalize (fun _ -> next_stream c), None);
+         res_headers= Http_headers.dyn_headers;
+         res_content_type = Some ct}
 
 end
 
@@ -274,21 +274,21 @@ struct
         let default_result = default_result () in
         Lwt.return
           {default_result with
-            res_content_length = Some st.Unix.LargeFile.st_size;
-            res_content_type =
-              Some (Ocsigen_charset_mime.find_mime c mime_assoc);
-            res_charset =
-              Some (Ocsigen_charset_mime.find_charset c charset_assoc);
-            res_lastmodified = Some st.Unix.LargeFile.st_mtime;
-            res_etag = etag;
-            res_stream =
-              (Ocsigen_stream.make
-                 ~finalize:
-                 (fun _ ->
-                   Ocsigen_messages.debug2 "closing file";
-                   Lwt_unix.close fd)
-                 stream,
-               Some (skip fd))
+             res_content_length = Some st.Unix.LargeFile.st_size;
+             res_content_type =
+               Some (Ocsigen_charset_mime.find_mime c mime_assoc);
+             res_charset =
+               Some (Ocsigen_charset_mime.find_charset c charset_assoc);
+             res_lastmodified = Some st.Unix.LargeFile.st_mtime;
+             res_etag = etag;
+             res_stream =
+               (Ocsigen_stream.make
+                  ~finalize:
+                  (fun _ ->
+                    Ocsigen_messages.debug2 "closing file";
+                    Lwt_unix.close fd)
+                  stream,
+                Some (skip fd))
           }
       with e -> Lwt_unix.close fd >>= fun () -> raise e
     with e -> Ocsigen_messages.debug2 (Printexc.to_string e);  fail e
@@ -455,9 +455,9 @@ struct
     Text_content.result_of_content (c, "text/html") >>= fun r ->
     Lwt.return
       {r with
-        res_lastmodified = Some stat.Unix.LargeFile.st_mtime;
-        res_etag = etag;
-        res_charset= Some "utf-8"
+         res_lastmodified = Some stat.Unix.LargeFile.st_mtime;
+         res_etag = etag;
+         res_charset= Some "utf-8"
       }
 
 
@@ -530,10 +530,10 @@ struct
     Xhtml_content.result_of_content err_page >>= fun r ->
     Lwt.return
       {r with
-        res_cookies = cookies_to_set;
-        res_code = error_code;
-        res_charset = Some "utf-8";
-        res_headers = headers;
+         res_cookies = cookies_to_set;
+         res_code = error_code;
+         res_charset = Some "utf-8";
+         res_headers = headers;
       }
 
 

@@ -442,12 +442,12 @@ end
 
 let to_pretty t =
   { t with
-    ready_events =
-      Array.init t.num_ready_events ~f:(fun i ->
-        { Pretty.
-          file_descr = epoll_readyfd t.ready_events i;
-          flags = epoll_readyflags t.ready_events i;
-        });
+      ready_events =
+        Array.init t.num_ready_events ~f:(fun i ->
+          { Pretty.
+            file_descr = epoll_readyfd t.ready_events i;
+            flags = epoll_readyflags t.ready_events i;
+          });
   }
 ;;
 

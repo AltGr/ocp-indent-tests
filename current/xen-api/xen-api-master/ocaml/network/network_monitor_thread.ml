@@ -105,12 +105,12 @@ let rec monitor dbg () =
             try Int64.of_string (List.nth flds i) with _ -> 0L)
             [ 1; 2; 3; 9; 10; 11; ] in
         let eth_stat = {default_stats with
-                         rx_bytes = List.nth vs 0;
-                         rx_pkts = List.nth vs 1;
-                         rx_errors = List.nth vs 2;
-                         tx_bytes = List.nth vs 3;
-                         tx_pkts = List.nth vs 4;
-                         tx_errors = List.nth vs 5;
+                          rx_bytes = List.nth vs 0;
+                          rx_pkts = List.nth vs 1;
+                          rx_errors = List.nth vs 2;
+                          tx_bytes = List.nth vs 3;
+                          tx_pkts = List.nth vs 4;
+                          tx_errors = List.nth vs 5;
                        } in
         (* CA-23291: no good can come of recording 'dummy' device stats *)
         if not(String.startswith "dummy" name) &&
@@ -125,12 +125,12 @@ let rec monitor dbg () =
     let make_bond_info (name, interfaces) =
       let devs = List.filter (fun (name', _) -> List.mem name' interfaces) !devs in
       let eth_stat = {default_stats with
-                       rx_bytes = List.fold_left (fun ac (_, stat) -> Int64.add ac stat.rx_bytes) 0L devs;
-                       rx_pkts = List.fold_left (fun ac (_, stat) -> Int64.add ac stat.rx_pkts) 0L devs;
-                       rx_errors = List.fold_left (fun ac (_, stat) -> Int64.add ac stat.rx_errors) 0L devs;
-                       tx_bytes = List.fold_left (fun ac (_, stat) -> Int64.add ac stat.tx_bytes) 0L devs;
-                       tx_pkts = List.fold_left (fun ac (_, stat) -> Int64.add ac stat.tx_pkts) 0L devs;
-                       tx_errors = List.fold_left (fun ac (_, stat) -> Int64.add ac stat.tx_errors) 0L devs;
+                        rx_bytes = List.fold_left (fun ac (_, stat) -> Int64.add ac stat.rx_bytes) 0L devs;
+                        rx_pkts = List.fold_left (fun ac (_, stat) -> Int64.add ac stat.rx_pkts) 0L devs;
+                        rx_errors = List.fold_left (fun ac (_, stat) -> Int64.add ac stat.rx_errors) 0L devs;
+                        tx_bytes = List.fold_left (fun ac (_, stat) -> Int64.add ac stat.tx_bytes) 0L devs;
+                        tx_pkts = List.fold_left (fun ac (_, stat) -> Int64.add ac stat.tx_pkts) 0L devs;
+                        tx_errors = List.fold_left (fun ac (_, stat) -> Int64.add ac stat.tx_errors) 0L devs;
                      } in
       name, eth_stat
     in
@@ -143,12 +143,12 @@ let rec monitor dbg () =
           let devs = List.filter (fun (n,x) -> n=name) !devs in
           let tot = List.fold_left (fun acc (_,b) ->
               {default_stats with
-                rx_bytes = Int64.add acc.rx_bytes b.rx_bytes;
-                rx_pkts = Int64.add acc.rx_pkts b.rx_pkts;
-                rx_errors = Int64.add acc.rx_errors b.rx_errors;
-                tx_bytes = Int64.add acc.tx_bytes b.tx_bytes;
-                tx_pkts = Int64.add acc.tx_pkts b.tx_pkts;
-                tx_errors = Int64.add acc.tx_errors b.tx_errors}) default_stats devs
+                 rx_bytes = Int64.add acc.rx_bytes b.rx_bytes;
+                 rx_pkts = Int64.add acc.rx_pkts b.rx_pkts;
+                 rx_errors = Int64.add acc.rx_errors b.rx_errors;
+                 tx_bytes = Int64.add acc.tx_bytes b.tx_bytes;
+                 tx_pkts = Int64.add acc.tx_pkts b.tx_pkts;
+                 tx_errors = Int64.add acc.tx_errors b.tx_errors}) default_stats devs
           in
           (name,tot)
         ) newdevnames
@@ -210,7 +210,7 @@ let rec monitor dbg () =
           in
           let pci_bus_path = if List.length devs = 1 then Sysfs.get_pcibuspath dev else "" in
           let stat = {stat with carrier; speed; duplex; pci_bus_path; vendor_id;
-                       device_id; nb_links; links_up; interfaces} in
+                                                   device_id; nb_links; links_up; interfaces} in
           check_for_changes ~dev ~stat;
           dev, stat
         end else

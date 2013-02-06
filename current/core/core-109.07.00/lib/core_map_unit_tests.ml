@@ -273,8 +273,8 @@ module Unit_tests
   (* test detection of invalid input *)
   TEST = Map.of_sorted_array [|Key.of_int 0, 0; Key.of_int 0, 0|] |! Result.is_error
   TEST = Map.of_sorted_array [|Key.of_int 1, 0
-                             ; Key.of_int 0, 0
-                             ; Key.of_int 1, 0|] |! Result.is_error
+                              ; Key.of_int 0, 0
+                              ; Key.of_int 1, 0|] |! Result.is_error
 
   let of_sorted_array_unchecked _ = assert false
 

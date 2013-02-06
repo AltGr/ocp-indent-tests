@@ -541,34 +541,34 @@ let pre_deactivate_hook ~dbg ~dp ~sr ~vdi =
   let open State.Send_state in
   let id = State.id_of (sr,vdi) in
   State.find_active_local_mirror id |> 
-    Opt.iter (fun s ->
-      try
-        Tapctl.pause (Tapctl.create ()) s.tapdev;
-        let stats = Tapctl.stats (Tapctl.create ()) s.tapdev in
-        s.failed <- stats.Tapctl.Stats.nbd_mirror_failed = 1
-      with e ->
-        error "Caught exception while finally checking mirror state: %s"
-          (Printexc.to_string e);
-        s.failed <- true
-    )
+  Opt.iter (fun s ->
+    try
+      Tapctl.pause (Tapctl.create ()) s.tapdev;
+      let stats = Tapctl.stats (Tapctl.create ()) s.tapdev in
+      s.failed <- stats.Tapctl.Stats.nbd_mirror_failed = 1
+    with e ->
+      error "Caught exception while finally checking mirror state: %s"
+        (Printexc.to_string e);
+      s.failed <- true
+  )
 
 let post_detach_hook ~sr ~vdi ~dp = 
   let open State.Send_state in
   let id = State.id_of (sr,vdi) in
   State.find_active_local_mirror id |> 
-    Opt.iter (fun r -> 
-      let remote_url = Http.Url.of_string r.url in
-      let module Remote = Client(struct let rpc = rpc ~srcstr:"smapiv2" ~dststr:"dst_smapiv2" remote_url end) in
-      let t = Thread.create (fun () ->
-          debug "Calling receive_finalize";
-          log_exn_and_continue "in detach hook" 
-            (fun () -> Remote.DATA.MIRROR.receive_finalize ~dbg:"Mirror-cleanup" ~id);
-          debug "Finished calling receive_finalize";
-          State.remove id State.active_send;
-          debug "Removed active local mirror: %s" id
-        ) () in
-      Opt.iter (fun id -> Updates.Scheduler.cancel id) r.watchdog;
-      debug "Created thread %d to call receive finalize and dp destroy" (Thread.id t))
+  Opt.iter (fun r -> 
+    let remote_url = Http.Url.of_string r.url in
+    let module Remote = Client(struct let rpc = rpc ~srcstr:"smapiv2" ~dststr:"dst_smapiv2" remote_url end) in
+    let t = Thread.create (fun () ->
+        debug "Calling receive_finalize";
+        log_exn_and_continue "in detach hook" 
+          (fun () -> Remote.DATA.MIRROR.receive_finalize ~dbg:"Mirror-cleanup" ~id);
+        debug "Finished calling receive_finalize";
+        State.remove id State.active_send;
+        debug "Removed active local mirror: %s" id
+      ) () in
+    Opt.iter (fun id -> Updates.Scheduler.cancel id) r.watchdog;
+    debug "Created thread %d to call receive finalize and dp destroy" (Thread.id t))
 
 let nbd_handler req s sr vdi dp =
   debug "sr=%s vdi=%s dp=%s" sr vdi dp;

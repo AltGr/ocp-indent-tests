@@ -478,8 +478,8 @@ let set_mode ~__context ~self ~value =
   (* Set up sensible properties for this bond mode. *)
   let requirements = requirements_of_mode value in
   let properties = Db.Bond.get_properties ~__context ~self
-    |> List.filter (fun property -> try ignore(validate_property requirements property); true with _-> false)
-    |> add_defaults requirements
+                   |> List.filter (fun property -> try ignore(validate_property requirements property); true with _-> false)
+                   |> add_defaults requirements
   in
   Db.Bond.set_properties ~__context ~self ~value:properties;
 

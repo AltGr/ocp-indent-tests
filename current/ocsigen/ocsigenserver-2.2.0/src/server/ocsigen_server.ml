@@ -111,7 +111,7 @@ let find_field field content_disp =
   Netstring_pcre.matched_group res 1 content_disp
 
 type to_write =
-        No_File of string * Buffer.t
+      No_File of string * Buffer.t
     | A_File of (string * string * string * Unix.file_descr * (string * string option) option)
 
 let counter = let c = ref (Random.int 1000000) in fun () -> c := !c + 1 ; !c
@@ -519,9 +519,9 @@ let handle_result_frame ri res send =
         Ocsigen_messages.debug2 "-> Sending 304 Not modified ";
         Ocsigen_stream.finalize (fst res.res_stream) `Success >>= fun () ->
         send { (Ocsigen_http_frame.empty_result ()) with
-               res_code = 304  (* Not modified *);
-               res_lastmodified = res.res_lastmodified;
-               res_etag = res.res_etag;
+                 res_code = 304  (* Not modified *);
+                 res_lastmodified = res.res_lastmodified;
+                 res_etag = res.res_etag;
              }
 
     | `Precondition_failed ->
@@ -529,7 +529,7 @@ let handle_result_frame ri res send =
                                  (conditional headers)";
         Ocsigen_stream.finalize (fst res.res_stream) `Success >>= fun () ->
         send { (Ocsigen_http_frame.empty_result ()) with
-               res_code = 412 (* Precondition failed *)}
+                 res_code = 412 (* Precondition failed *)}
 
     | `Std ->
         Ocsigen_range.compute_range ri res
@@ -725,8 +725,8 @@ let service receiver sender_slot request meth url port sockaddr =
                     in
                     send_aux {
                       (Ocsigen_http_frame.empty_result ()) with
-                      res_code = 301;
-                      res_location = Some (Neturl.string_of_url new_url)
+                        res_code = 301;
+                        res_location = Some (Neturl.string_of_url new_url)
                     }
 
                 | _ -> handle_service_errors e

@@ -92,10 +92,10 @@ let compute_range ri res =
         then Lwt.return res
         else begin
           let res = {res with
-                      Ocsigen_http_frame.res_headers =
-                        Http_headers.replace 
-                          Http_headers.accept_ranges "bytes"
-                          res.Ocsigen_http_frame.res_headers;
+                       Ocsigen_http_frame.res_headers =
+                         Http_headers.replace 
+                           Http_headers.accept_ranges "bytes"
+                           res.Ocsigen_http_frame.res_headers;
                     }
           in
           match change_range (Lazy.force ri.Ocsigen_extensions.ri_range) with
@@ -143,16 +143,16 @@ let compute_range ri res =
                     >>= fun new_s ->
                     Lwt.return 
                       {res with
-                        Ocsigen_http_frame.res_stream = (new_s, None);
-                        Ocsigen_http_frame.res_code = 206;
-                        Ocsigen_http_frame.res_headers =
-                          Http_headers.replace 
-                            Http_headers.content_range
-                            ("bytes "^Int64.to_string beg^"-"^
-                               Int64.to_string endc^"/"^
-                               Int64.to_string cl)
-                            res.Ocsigen_http_frame.res_headers;
-                        Ocsigen_http_frame.res_content_length = Some length
+                         Ocsigen_http_frame.res_stream = (new_s, None);
+                         Ocsigen_http_frame.res_code = 206;
+                         Ocsigen_http_frame.res_headers =
+                           Http_headers.replace 
+                             Http_headers.content_range
+                             ("bytes "^Int64.to_string beg^"-"^
+                                Int64.to_string endc^"/"^
+                                Int64.to_string cl)
+                             res.Ocsigen_http_frame.res_headers;
+                         Ocsigen_http_frame.res_content_length = Some length
                       }
                   )
                   (function
@@ -161,12 +161,12 @@ let compute_range ri res =
                         let dr = Ocsigen_http_frame.default_result () in
                         Lwt.return
                           {dr with
-                            Ocsigen_http_frame.res_code = 416;
-                            Ocsigen_http_frame.res_headers =
-                              Http_headers.replace 
-                                Http_headers.content_range
-                                ("bytes */"^Int64.to_string cl)
-                                res.Ocsigen_http_frame.res_headers;
+                             Ocsigen_http_frame.res_code = 416;
+                             Ocsigen_http_frame.res_headers =
+                               Http_headers.replace 
+                                 Http_headers.content_range
+                                 ("bytes */"^Int64.to_string cl)
+                                 res.Ocsigen_http_frame.res_headers;
                           }
                     | e -> Lwt.fail e)
 

@@ -228,28 +228,28 @@ let new_messages_of_field x order fld =
                  msg_map_keys_roles = []
                } in
   let getter = { common with
-                 msg_name = prefix "get_";
-                 msg_params = [ self ];
-                 msg_result = Some (fld.ty, "value of the field");
-                 msg_errors = [];
-                 msg_doc = (Printf.sprintf
-                     "Get the %s field of the given %s."
-                     (String.concat "/" fld.full_name) x.name);
-                 msg_allowed_roles = fld.field_getter_roles;
-                 msg_tag = FromField(Getter, fld) } in
+                   msg_name = prefix "get_";
+                   msg_params = [ self ];
+                   msg_result = Some (fld.ty, "value of the field");
+                   msg_errors = [];
+                   msg_doc = (Printf.sprintf
+                       "Get the %s field of the given %s."
+                       (String.concat "/" fld.full_name) x.name);
+                   msg_allowed_roles = fld.field_getter_roles;
+                   msg_tag = FromField(Getter, fld) } in
   let setter = { common with
-                 msg_name = prefix "set_";
-                 msg_params = [ self;
-                                {param_type=fld.ty; param_name=(if !named_self then fld.field_name else "value"); param_doc="New value to set";
-                                 param_release=fld.release; param_default=None}
-                              ];
-                 msg_result = None;
-                 msg_errors = [];
-                 msg_doc = (Printf.sprintf
-                     "Set the %s field of the given %s."
-                     (String.concat "/" fld.full_name) x.name);
-                 msg_allowed_roles = fld.field_setter_roles;
-                 msg_tag = FromField(Setter, fld) } in
+                   msg_name = prefix "set_";
+                   msg_params = [ self;
+                                  {param_type=fld.ty; param_name=(if !named_self then fld.field_name else "value"); param_doc="New value to set";
+                                   param_release=fld.release; param_default=None}
+                                ];
+                   msg_result = None;
+                   msg_errors = [];
+                   msg_doc = (Printf.sprintf
+                       "Set the %s field of the given %s."
+                       (String.concat "/" fld.full_name) x.name);
+                   msg_allowed_roles = fld.field_setter_roles;
+                   msg_tag = FromField(Setter, fld) } in
   (* Set(Ref _) fields in a many-to-many generate symmetrical add_to, remove_from etc *)
   let is_many_to_many =
     let api = Datamodel.all_api in
@@ -263,52 +263,52 @@ let new_messages_of_field x order fld =
     if order = 0 then [getter] else [
       setter; (* only makes sense to the database *)
       { common with
-        msg_name = prefix "add_";
-        msg_params = [ self;
-                       {param_type=t; param_name="value"; param_doc="New value to add"; param_release=fld.release; param_default=None} ];
-        msg_result = None;
-        msg_doc = (sprintf
-            "Add the given value to the %s field of the given %s.  If the value is already in that Set, then do nothing."
-            (String.concat "/" fld.full_name) x.name);
-        msg_allowed_roles = fld.field_setter_roles;
-        msg_tag = FromField(Add, fld) };
+          msg_name = prefix "add_";
+          msg_params = [ self;
+                         {param_type=t; param_name="value"; param_doc="New value to add"; param_release=fld.release; param_default=None} ];
+          msg_result = None;
+          msg_doc = (sprintf
+              "Add the given value to the %s field of the given %s.  If the value is already in that Set, then do nothing."
+              (String.concat "/" fld.full_name) x.name);
+          msg_allowed_roles = fld.field_setter_roles;
+          msg_tag = FromField(Add, fld) };
       { common with
-        msg_name = prefix "remove_";
-        msg_params = [ self;
-                       {param_type=t; param_name="value"; param_doc="Value to remove"; param_release=fld.release; param_default=None} ];
-        msg_result = None;
-        msg_doc = (sprintf
-            "Remove the given value from the %s field of the given %s.  If the value is not in that Set, then do nothing."
-            (String.concat "/" fld.full_name) x.name);
-        msg_allowed_roles = fld.field_setter_roles;
-        msg_tag = FromField(Remove, fld) };
+          msg_name = prefix "remove_";
+          msg_params = [ self;
+                         {param_type=t; param_name="value"; param_doc="Value to remove"; param_release=fld.release; param_default=None} ];
+          msg_result = None;
+          msg_doc = (sprintf
+              "Remove the given value from the %s field of the given %s.  If the value is not in that Set, then do nothing."
+              (String.concat "/" fld.full_name) x.name);
+          msg_allowed_roles = fld.field_setter_roles;
+          msg_tag = FromField(Remove, fld) };
     ]
   | Map(k, v), _, _ -> 
     if order = 0 then [getter] else [
       setter; (* only makes sense to the database *)
       { common with
-        msg_name = prefix "add_to_";
-        msg_params = [ self;
-                       {param_type=k; param_name="key"; param_doc="Key to add"; param_release=fld.release; param_default=None};
-                       {param_type=v; param_name="value"; param_doc="Value to add"; param_release=fld.release; param_default=None}];
-        msg_result = None;
-        msg_doc = (sprintf
-            "Add the given key-value pair to the %s field of the given %s."
-            (String.concat "/" fld.full_name) x.name);
-        msg_allowed_roles = fld.field_setter_roles;
-        msg_map_keys_roles = List.map (fun (k,(w))->(k,w)) fld.field_map_keys_roles;
-        msg_tag = FromField(Add, fld) };
+          msg_name = prefix "add_to_";
+          msg_params = [ self;
+                         {param_type=k; param_name="key"; param_doc="Key to add"; param_release=fld.release; param_default=None};
+                         {param_type=v; param_name="value"; param_doc="Value to add"; param_release=fld.release; param_default=None}];
+          msg_result = None;
+          msg_doc = (sprintf
+              "Add the given key-value pair to the %s field of the given %s."
+              (String.concat "/" fld.full_name) x.name);
+          msg_allowed_roles = fld.field_setter_roles;
+          msg_map_keys_roles = List.map (fun (k,(w))->(k,w)) fld.field_map_keys_roles;
+          msg_tag = FromField(Add, fld) };
       { common with
-        msg_name = prefix "remove_from_";
-        msg_params = [ self;
-                       {param_type=k; param_name="key"; param_doc="Key to remove"; param_release=fld.release; param_default=None} ];
-        msg_result = None;
-        msg_doc = (sprintf
-            "Remove the given key and its corresponding value from the %s field of the given %s.  If the key is not in that Map, then do nothing."
-            (String.concat "/" fld.full_name) x.name);
-        msg_allowed_roles = fld.field_setter_roles;
-        msg_map_keys_roles = List.map (fun (k,(w))->(k,w)) fld.field_map_keys_roles;
-        msg_tag = FromField(Remove, fld) };
+          msg_name = prefix "remove_from_";
+          msg_params = [ self;
+                         {param_type=k; param_name="key"; param_doc="Key to remove"; param_release=fld.release; param_default=None} ];
+          msg_result = None;
+          msg_doc = (sprintf
+              "Remove the given key and its corresponding value from the %s field of the given %s.  If the key is not in that Map, then do nothing."
+              (String.concat "/" fld.full_name) x.name);
+          msg_allowed_roles = fld.field_setter_roles;
+          msg_map_keys_roles = List.map (fun (k,(w))->(k,w)) fld.field_map_keys_roles;
+          msg_tag = FromField(Remove, fld) };
     ]
   | t, _, _ -> [
     if order = 0 then getter else setter
@@ -339,119 +339,119 @@ let messages_of_obj (x: obj) document_order : message list =
                  msg_obj_name=x.name } in
   (* Constructor *)
   let ctor = { common with 
-               msg_name = "create";
-               msg_params = [ {param_type=Record x.name;
-                               param_name=(if !named_self then "record" else "args");
-                               param_doc="All constructor arguments";
-                               param_release=x.obj_release; param_default = None
-                              }];
-               msg_result = Some (Ref x.name, "reference to the newly created object");
-               msg_doc = doccomment x "create";
-               msg_async = true;
-               msg_session = true;
-               msg_has_effect = true;
-               msg_allowed_roles = x.obj_allowed_roles;
-               msg_tag = FromObject Make } in
+                 msg_name = "create";
+                 msg_params = [ {param_type=Record x.name;
+                                 param_name=(if !named_self then "record" else "args");
+                                 param_doc="All constructor arguments";
+                                 param_release=x.obj_release; param_default = None
+                                }];
+                 msg_result = Some (Ref x.name, "reference to the newly created object");
+                 msg_doc = doccomment x "create";
+                 msg_async = true;
+                 msg_session = true;
+                 msg_has_effect = true;
+                 msg_allowed_roles = x.obj_allowed_roles;
+                 msg_tag = FromObject Make } in
   (* Destructor *)
   let dtor = { common with
-               msg_name = "destroy";
-               msg_params = [ self ];
-               msg_result = None;
-               msg_doc = doccomment x "destroy";
-               msg_async = true;
-               msg_session = true;
-               msg_has_effect = true;
-               msg_allowed_roles = x.obj_allowed_roles;
-               msg_tag = FromObject Delete } in
+                 msg_name = "destroy";
+                 msg_params = [ self ];
+                 msg_result = None;
+                 msg_doc = doccomment x "destroy";
+                 msg_async = true;
+                 msg_session = true;
+                 msg_has_effect = true;
+                 msg_allowed_roles = x.obj_allowed_roles;
+                 msg_tag = FromObject Delete } in
   (* Get by UUID *)
   let uuid = { common with
-               msg_name = "get_by_uuid";
-               msg_params = [ {param_type=String; param_name="uuid"; param_doc="UUID of object to return"; param_release=x.obj_release; param_default = None} ];
-               msg_result = Some (Ref x.name, "reference to the object");
-               msg_doc = doccomment x "get_by_uuid";
-               msg_async = false;
-               msg_session = true;
-               msg_has_effect = false;
-               msg_allowed_roles = x.obj_implicit_msg_allowed_roles;
-               msg_tag = FromObject GetByUuid } in
+                 msg_name = "get_by_uuid";
+                 msg_params = [ {param_type=String; param_name="uuid"; param_doc="UUID of object to return"; param_release=x.obj_release; param_default = None} ];
+                 msg_result = Some (Ref x.name, "reference to the object");
+                 msg_doc = doccomment x "get_by_uuid";
+                 msg_async = false;
+                 msg_session = true;
+                 msg_has_effect = false;
+                 msg_allowed_roles = x.obj_implicit_msg_allowed_roles;
+                 msg_tag = FromObject GetByUuid } in
   (* Get by label *)
   let get_by_name_label = { common with
-                            msg_name = "get_by_name_label";
-                            msg_params = [ {param_type=String; param_name="label"; param_doc="label of object to return"; param_release=x.obj_release; param_default = None} ];
-                            msg_result = Some (Set(Ref x.name), "references to objects with matching names");
-                            msg_doc = doccomment x "get_by_name_label";
-                            msg_async = false;
-                            msg_session = true;
-                            msg_has_effect = false;
-                            msg_allowed_roles = x.obj_implicit_msg_allowed_roles;
-                            msg_tag = FromObject GetByLabel } in         
+                              msg_name = "get_by_name_label";
+                              msg_params = [ {param_type=String; param_name="label"; param_doc="label of object to return"; param_release=x.obj_release; param_default = None} ];
+                              msg_result = Some (Set(Ref x.name), "references to objects with matching names");
+                              msg_doc = doccomment x "get_by_name_label";
+                              msg_async = false;
+                              msg_session = true;
+                              msg_has_effect = false;
+                              msg_allowed_roles = x.obj_implicit_msg_allowed_roles;
+                              msg_tag = FromObject GetByLabel } in         
   (* Get Record *)
   let get_record = { common with
-                     msg_name = "get_record";
-                     msg_params = [ self ];
-                     msg_result = Some (Record x.name, "all fields from the object");
-                     msg_doc = doccomment x "get_record";
-                     msg_async = false;
-                     msg_session = true;
-                     msg_has_effect = false;
-                     msg_allowed_roles = x.obj_implicit_msg_allowed_roles;
-                     msg_tag = FromObject GetRecord } in
+                       msg_name = "get_record";
+                       msg_params = [ self ];
+                       msg_result = Some (Record x.name, "all fields from the object");
+                       msg_doc = doccomment x "get_record";
+                       msg_async = false;
+                       msg_session = true;
+                       msg_has_effect = false;
+                       msg_allowed_roles = x.obj_implicit_msg_allowed_roles;
+                       msg_tag = FromObject GetRecord } in
 
   (* Get Record (private db version) *)
   let get_record_internal = { common with
-                              msg_name = "get_record_internal";
-                              msg_params = [ self ];
-                              msg_result = Some (Record x.name, "all fields from the object, including implementation-only ones");
-                              msg_doc = doccomment x "get_record_internal";
-                              msg_async = false;
-                              msg_session = true;
-                              msg_db_only = true;
-                              msg_release = {opensource=[]; internal=[]; internal_deprecated_since=None}; (* internal messages not in an any API releases... *)
-                              msg_has_effect = false;
-                              msg_tag = FromObject (Private GetDBRecord);
-                              msg_hide_from_docs = true;
+                                msg_name = "get_record_internal";
+                                msg_params = [ self ];
+                                msg_result = Some (Record x.name, "all fields from the object, including implementation-only ones");
+                                msg_doc = doccomment x "get_record_internal";
+                                msg_async = false;
+                                msg_session = true;
+                                msg_db_only = true;
+                                msg_release = {opensource=[]; internal=[]; internal_deprecated_since=None}; (* internal messages not in an any API releases... *)
+                                msg_has_effect = false;
+                                msg_tag = FromObject (Private GetDBRecord);
+                                msg_hide_from_docs = true;
                             } in
 
   (* Internal database-only get_all function *)
   let get_all = { common with
-                  msg_name = "get_all";
-                  msg_params = [];
-                  msg_result = Some(Set(Ref x.name), "references to all objects");
-                  msg_doc = doccomment x "get_all";
-                  msg_async = false;
-                  msg_session = true; (* but irrelevant because currently not exposed *)
-                  msg_release = {opensource=[]; internal=[]; internal_deprecated_since=None};
-                  msg_db_only = true;
-                  msg_has_effect = false;
-                  msg_tag = FromObject (Private GetDBAll);
-                  msg_hide_from_docs = true } in
+                    msg_name = "get_all";
+                    msg_params = [];
+                    msg_result = Some(Set(Ref x.name), "references to all objects");
+                    msg_doc = doccomment x "get_all";
+                    msg_async = false;
+                    msg_session = true; (* but irrelevant because currently not exposed *)
+                    msg_release = {opensource=[]; internal=[]; internal_deprecated_since=None};
+                    msg_db_only = true;
+                    msg_has_effect = false;
+                    msg_tag = FromObject (Private GetDBAll);
+                    msg_hide_from_docs = true } in
 
   (* Optional public version *)
   let get_all_public = { get_all with msg_release = x.obj_release; msg_tag = FromObject GetAll; msg_hide_from_docs = false; msg_db_only = false;
-                         msg_allowed_roles = x.obj_implicit_msg_allowed_roles;
+                                                           msg_allowed_roles = x.obj_implicit_msg_allowed_roles;
                        } in
 
   (* And the 'get_all_records_where' semi-public function *)
   let get_all_records_where = { get_all_public with 
-                                msg_name = "get_all_records_where";
-                                msg_tag = FromObject GetAllRecordsWhere;
-                                msg_params = [ {param_type=String; param_name="expr"; param_doc="expression representing records to fetch";
-                                                param_release=x.obj_release; param_default = None}
-                                             ];
-                                msg_result = Some(Map(Ref x.name, Record x.name), "records of all matching objects");
-                                msg_release = {opensource=[]; internal=x.obj_release.internal; internal_deprecated_since=None};
-                                msg_allowed_roles = x.obj_implicit_msg_allowed_roles;
-                                msg_hide_from_docs = true;
+                                  msg_name = "get_all_records_where";
+                                  msg_tag = FromObject GetAllRecordsWhere;
+                                  msg_params = [ {param_type=String; param_name="expr"; param_doc="expression representing records to fetch";
+                                                  param_release=x.obj_release; param_default = None}
+                                               ];
+                                  msg_result = Some(Map(Ref x.name, Record x.name), "records of all matching objects");
+                                  msg_release = {opensource=[]; internal=x.obj_release.internal; internal_deprecated_since=None};
+                                  msg_allowed_roles = x.obj_implicit_msg_allowed_roles;
+                                  msg_hide_from_docs = true;
                               } in
   (* And the 'get_all_records' public function *)
   let get_all_records = { get_all_public with 
-                          msg_name = "get_all_records";
-                          msg_tag = FromObject GetAllRecords;
-                          msg_params = [ ];
-                          msg_result = Some(Map(Ref x.name, Record x.name), "records of all objects");
-                          msg_release = {opensource=[]; internal=x.obj_release.internal; internal_deprecated_since=None};
-                          msg_allowed_roles = x.obj_implicit_msg_allowed_roles;
-                          msg_doc = doccomment x "get_all_records" } in
+                            msg_name = "get_all_records";
+                            msg_tag = FromObject GetAllRecords;
+                            msg_params = [ ];
+                            msg_result = Some(Map(Ref x.name, Record x.name), "records of all objects");
+                            msg_release = {opensource=[]; internal=x.obj_release.internal; internal_deprecated_since=None};
+                            msg_allowed_roles = x.obj_implicit_msg_allowed_roles;
+                            msg_doc = doccomment x "get_all_records" } in
 
   let name_label = if obj_has_get_by_name_label x then [ get_by_name_label ] else [ ] in
   let get_all_public = if List.mem x.name expose_get_all_messages_for then [ get_all_public; get_all_records_where; get_all_records ] else [] in
