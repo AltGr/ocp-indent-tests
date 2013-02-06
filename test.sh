@@ -76,9 +76,9 @@ if [ -x "$OCP_INDENT" ]; then
     VERSION=$($OCP_INDENT --version | awk '{ print $NF; exit }')
     COMMITS_SINCE=$(cd ocp-indent && git log --oneline $VERSION.. 2>/dev/null)
     if [ -n "$COMMITS_SINCE" ]; then
-        VERSION="$VERSION+$((1+$(wc -l <<<"$COMMITS_SINCE")))"
+        VERSION="$VERSION+$(wc -l <<<"$COMMITS_SINCE")"
     fi
-    ocp_indent_version="$VERSION ($(cd ocp-indent && git log -n1 --date=short --format="%h (%cd)"))"
+    ocp_indent_version="$VERSION ($(cd ocp-indent && git log -n1 --date=short --format="%h, %cd"))"
     echo "=> using local checkout of ocp-indent: $ocp_indent_version"
 elif [ ! -x "$OCP_INDENT" ]; then
     OCP_INDENT=$(which ocp-indent)
