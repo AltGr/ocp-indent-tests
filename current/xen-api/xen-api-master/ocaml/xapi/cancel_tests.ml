@@ -76,13 +76,13 @@ with rpc
 let operations = [
   VBD_plug
 ; VBD_unplug
-  ; VIF_plug
-  ; VIF_unplug
-  ; Start
-  ; Shutdown
-  ; Reboot
-  ; Suspend
-  ; Resume
+; VIF_plug
+; VIF_unplug
+; Start
+; Shutdown
+; Reboot
+; Suspend
+; Resume
 (*
   ; Pool_migrate
 *)

@@ -161,125 +161,125 @@ let yyact = [|
                        ( [] )
 # 163 "xn_cfg_parser.ml"
                : Xn_cfg_types.config))
-  ; (fun __caml_parser_env ->
-    let _2 = (Parsing.peek_val __caml_parser_env 0 : Xn_cfg_types.config) in
-    Obj.repr(
+; (fun __caml_parser_env ->
+  let _2 = (Parsing.peek_val __caml_parser_env 0 : Xn_cfg_types.config) in
+  Obj.repr(
 # 11 "xn_cfg_parser.mly"
                        ( _2 )
 # 170 "xn_cfg_parser.ml"
                : Xn_cfg_types.config))
-  ; (fun __caml_parser_env ->
-    let _1 = (Parsing.peek_val __caml_parser_env 1 : 'setting) in
-    let _2 = (Parsing.peek_val __caml_parser_env 0 : Xn_cfg_types.config) in
-    Obj.repr(
+; (fun __caml_parser_env ->
+  let _1 = (Parsing.peek_val __caml_parser_env 1 : 'setting) in
+  let _2 = (Parsing.peek_val __caml_parser_env 0 : Xn_cfg_types.config) in
+  Obj.repr(
 # 12 "xn_cfg_parser.mly"
                        ( _1 :: _2 )
 # 178 "xn_cfg_parser.ml"
                : Xn_cfg_types.config))
-  ; (fun __caml_parser_env ->
-    let _1 = (Parsing.peek_val __caml_parser_env 3 : string) in
-    let _3 = (Parsing.peek_val __caml_parser_env 1 : 'value) in
-    let _4 = (Parsing.peek_val __caml_parser_env 0 : 'endstmt) in
-    Obj.repr(
+; (fun __caml_parser_env ->
+  let _1 = (Parsing.peek_val __caml_parser_env 3 : string) in
+  let _3 = (Parsing.peek_val __caml_parser_env 1 : 'value) in
+  let _4 = (Parsing.peek_val __caml_parser_env 0 : 'endstmt) in
+  Obj.repr(
 # 15 "xn_cfg_parser.mly"
                                 ( _1, _3 )
 # 187 "xn_cfg_parser.ml"
                : 'setting))
-  ; (fun __caml_parser_env ->
-    Obj.repr(
+; (fun __caml_parser_env ->
+  Obj.repr(
 # 18 "xn_cfg_parser.mly"
                  ( () )
 # 193 "xn_cfg_parser.ml"
                : 'endstmt))
-  ; (fun __caml_parser_env ->
-    Obj.repr(
+; (fun __caml_parser_env ->
+  Obj.repr(
 # 19 "xn_cfg_parser.mly"
                    ( () )
 # 199 "xn_cfg_parser.ml"
                : 'endstmt))
-  ; (fun __caml_parser_env ->
-    let _1 = (Parsing.peek_val __caml_parser_env 0 : 'atom) in
-    Obj.repr(
+; (fun __caml_parser_env ->
+  let _1 = (Parsing.peek_val __caml_parser_env 0 : 'atom) in
+  Obj.repr(
 # 22 "xn_cfg_parser.mly"
             ( _1 )
 # 206 "xn_cfg_parser.ml"
                : 'value))
-  ; (fun __caml_parser_env ->
-    let _2 = (Parsing.peek_val __caml_parser_env 2 : 'nlok) in
-    let _3 = (Parsing.peek_val __caml_parser_env 1 : 'valuelist) in
-    Obj.repr(
+; (fun __caml_parser_env ->
+  let _2 = (Parsing.peek_val __caml_parser_env 2 : 'nlok) in
+  let _3 = (Parsing.peek_val __caml_parser_env 1 : 'valuelist) in
+  Obj.repr(
 # 23 "xn_cfg_parser.mly"
                                         ( List _3 )
 # 214 "xn_cfg_parser.ml"
                : 'value))
-  ; (fun __caml_parser_env ->
-    let _1 = (Parsing.peek_val __caml_parser_env 0 : string) in
-    Obj.repr(
+; (fun __caml_parser_env ->
+  let _1 = (Parsing.peek_val __caml_parser_env 0 : string) in
+  Obj.repr(
 # 26 "xn_cfg_parser.mly"
              ( String _1 )
 # 221 "xn_cfg_parser.ml"
                : 'atom))
-  ; (fun __caml_parser_env ->
-    let _1 = (Parsing.peek_val __caml_parser_env 0 : int) in
-    Obj.repr(
+; (fun __caml_parser_env ->
+  let _1 = (Parsing.peek_val __caml_parser_env 0 : int) in
+  Obj.repr(
 # 27 "xn_cfg_parser.mly"
           ( Int _1 )
 # 228 "xn_cfg_parser.ml"
                : 'atom))
-  ; (fun __caml_parser_env ->
-    Obj.repr(
+; (fun __caml_parser_env ->
+  Obj.repr(
 # 30 "xn_cfg_parser.mly"
                        ( [] )
 # 234 "xn_cfg_parser.ml"
                : 'valuelist))
-  ; (fun __caml_parser_env ->
-    let _1 = (Parsing.peek_val __caml_parser_env 0 : 'values) in
-    Obj.repr(
+; (fun __caml_parser_env ->
+  let _1 = (Parsing.peek_val __caml_parser_env 0 : 'values) in
+  Obj.repr(
 # 31 "xn_cfg_parser.mly"
                   ( _1 )
 # 241 "xn_cfg_parser.ml"
                : 'valuelist))
-  ; (fun __caml_parser_env ->
-    let _1 = (Parsing.peek_val __caml_parser_env 2 : 'values) in
-    let _3 = (Parsing.peek_val __caml_parser_env 0 : 'nlok) in
-    Obj.repr(
+; (fun __caml_parser_env ->
+  let _1 = (Parsing.peek_val __caml_parser_env 2 : 'values) in
+  let _3 = (Parsing.peek_val __caml_parser_env 0 : 'nlok) in
+  Obj.repr(
 # 32 "xn_cfg_parser.mly"
                              ( _1 )
 # 249 "xn_cfg_parser.ml"
                : 'valuelist))
-  ; (fun __caml_parser_env ->
-    let _1 = (Parsing.peek_val __caml_parser_env 1 : 'atom) in
-    let _2 = (Parsing.peek_val __caml_parser_env 0 : 'nlok) in
-    Obj.repr(
+; (fun __caml_parser_env ->
+  let _1 = (Parsing.peek_val __caml_parser_env 1 : 'atom) in
+  let _2 = (Parsing.peek_val __caml_parser_env 0 : 'nlok) in
+  Obj.repr(
 # 35 "xn_cfg_parser.mly"
                   ( [ _1 ] )
 # 257 "xn_cfg_parser.ml"
                : 'values))
-  ; (fun __caml_parser_env ->
-    let _1 = (Parsing.peek_val __caml_parser_env 4 : 'values) in
-    let _3 = (Parsing.peek_val __caml_parser_env 2 : 'nlok) in
-    let _4 = (Parsing.peek_val __caml_parser_env 1 : 'atom) in
-    let _5 = (Parsing.peek_val __caml_parser_env 0 : 'nlok) in
-    Obj.repr(
+; (fun __caml_parser_env ->
+  let _1 = (Parsing.peek_val __caml_parser_env 4 : 'values) in
+  let _3 = (Parsing.peek_val __caml_parser_env 2 : 'nlok) in
+  let _4 = (Parsing.peek_val __caml_parser_env 1 : 'atom) in
+  let _5 = (Parsing.peek_val __caml_parser_env 0 : 'nlok) in
+  Obj.repr(
 # 36 "xn_cfg_parser.mly"
                                     ( _4 :: _1 )
 # 267 "xn_cfg_parser.ml"
                : 'values))
-  ; (fun __caml_parser_env ->
-    Obj.repr(
+; (fun __caml_parser_env ->
+  Obj.repr(
 # 39 "xn_cfg_parser.mly"
                   ( () )
 # 273 "xn_cfg_parser.ml"
                : 'nlok))
-  ; (fun __caml_parser_env ->
-    let _1 = (Parsing.peek_val __caml_parser_env 1 : 'nlok) in
-    Obj.repr(
+; (fun __caml_parser_env ->
+  let _1 = (Parsing.peek_val __caml_parser_env 1 : 'nlok) in
+  Obj.repr(
 # 40 "xn_cfg_parser.mly"
                 ( () )
 # 280 "xn_cfg_parser.ml"
                : 'nlok))
-  (* Entry file *)
-  ; (fun __caml_parser_env -> raise (Parsing.YYexit (Parsing.peek_val __caml_parser_env 0)))
+(* Entry file *)
+; (fun __caml_parser_env -> raise (Parsing.YYexit (Parsing.peek_val __caml_parser_env 0)))
 |]
 let yytables =
   { Parsing.actions=yyact;

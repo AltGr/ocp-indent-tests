@@ -105,16 +105,16 @@ module T = struct
   let all = [
     Jan
   ; Feb
-    ; Mar
-    ; Apr
-    ; May
-    ; Jun
-    ; Jul
-    ; Aug
-    ; Sep
-    ; Oct
-    ; Nov
-    ; Dec ]
+  ; Mar
+  ; Apr
+  ; May
+  ; Jun
+  ; Jul
+  ; Aug
+  ; Sep
+  ; Oct
+  ; Nov
+  ; Dec ]
 
   TEST = List.length all = num_months
 
