@@ -57,10 +57,10 @@ let yield () =
 let rec bind_safely stmt = function
   | [] -> stmt
   | (value, name)::q as l ->
-    match Sqlite3.bind stmt (bind_parameter_index stmt name) value with
-      | Rc.OK -> bind_safely stmt q
-      | Rc.BUSY | Rc.LOCKED -> yield () ; bind_safely stmt l
-      | rc -> ignore(finalize stmt) ; failwith (Rc.to_string rc)
+      match Sqlite3.bind stmt (bind_parameter_index stmt name) value with
+        | Rc.OK -> bind_safely stmt q
+        | Rc.BUSY | Rc.LOCKED -> yield () ; bind_safely stmt l
+        | rc -> ignore(finalize stmt) ; failwith (Rc.to_string rc)
 
 let close_safely db =
   if not (db_close db) then
@@ -126,12 +126,12 @@ let (db_get, db_replace, db_replace_if_exists) =
     let rec aux () =
       match step stmt with
         | Rc.ROW ->
-          let value = match column stmt 0 with
-            | Data.BLOB s -> s
-            | _ -> assert false
-          in
-          ignore (finalize stmt);
-          value
+            let value = match column stmt 0 with
+              | Data.BLOB s -> s
+              | _ -> assert false
+            in
+            ignore (finalize stmt);
+            value
         | Rc.DONE -> ignore(finalize stmt) ;  raise Not_found
         | Rc.BUSY | Rc.LOCKED ->  yield () ; aux ()
         | rc -> ignore(finalize stmt) ; failwith (Rc.to_string rc)
@@ -165,11 +165,11 @@ let db_iter_step table rowid =
     let rec aux () =
       match step stmt with
         | Rc.ROW ->
-          (match (column stmt 0,column stmt 1, column stmt 2) with
-            | (Data.TEXT k, Data.BLOB v, Data.INT rowid) ->
-              ignore(finalize stmt) ;
-              Some (k, v, rowid)
-            | _ -> assert false )
+            (match (column stmt 0,column stmt 1, column stmt 2) with
+              | (Data.TEXT k, Data.BLOB v, Data.INT rowid) ->
+                  ignore(finalize stmt) ;
+                  Some (k, v, rowid)
+              | _ -> assert false )
         | Rc.DONE -> ignore(finalize stmt) ; None
         | Rc.BUSY | Rc.LOCKED -> yield () ; aux ()
         | rc -> ignore(finalize stmt) ; failwith (Rc.to_string rc)
@@ -184,9 +184,9 @@ let db_iter_block table f =
     let rec aux () =
       match step stmt with
         | Rc.ROW ->
-          (match (column stmt 0,column stmt 1) with
-            | (Data.TEXT k, Data.BLOB v) -> f k (Marshal.from_string v 0); aux()
-            | _ -> assert false )
+            (match (column stmt 0,column stmt 1) with
+              | (Data.TEXT k, Data.BLOB v) -> f k (Marshal.from_string v 0); aux()
+              | _ -> assert false )
         | Rc.DONE -> ignore(finalize stmt)
         | Rc.BUSY | Rc.LOCKED ->  yield () ; aux ()
         | rc -> ignore(finalize stmt) ; failwith (Rc.to_string rc)
@@ -201,12 +201,12 @@ let db_length table =
     let rec aux () =
       match step stmt with
         | Rc.ROW ->
-          let  value = match column stmt 0 with
-            | Data.INT s -> Int64.to_int s
-            | _ -> assert false
-          in
-          ignore (finalize stmt);
-          value
+            let  value = match column stmt 0 with
+              | Data.INT s -> Int64.to_int s
+              | _ -> assert false
+            in
+            ignore (finalize stmt);
+            value
         | Rc.DONE -> ignore(finalize stmt) ;  raise Not_found
         | Rc.BUSY | Rc.LOCKED ->  yield () ; aux ()
         | rc -> ignore(finalize stmt) ; failwith (Rc.to_string rc)
@@ -235,8 +235,8 @@ let make_persistent_lazy ~store ~name ~default =
      (fun () -> db_get pvname >>= (fun _ -> return ()))
      (function
        | Not_found ->
-         let def = Marshal.to_string (default ()) []
-         in db_replace pvname def
+           let def = Marshal.to_string (default ()) []
+           in db_replace pvname def
        | e -> fail e)) >>=
   (fun () -> return pvname)
 
@@ -285,7 +285,7 @@ let iter_step f table =
     (function
       | None -> return ()
       | Some (k,v,rowid') ->
-        f k (Marshal.from_string v 0) >>= (fun () -> aux rowid'))
+          f k (Marshal.from_string v 0) >>= (fun () -> aux rowid'))
   in
   aux Int64.zero
 
@@ -296,7 +296,7 @@ let fold_step f table beg =
     (function
       | None -> return beg
       | Some (k, v, rowid') ->
-        f k (Marshal.from_string v 0) beg >>= (fun res -> aux rowid' res))
+          f k (Marshal.from_string v 0) beg >>= (fun res -> aux rowid' res))
   in
   aux Int64.zero beg
 
@@ -324,12 +324,12 @@ let init config =
   (* We check that we can access the database *)
   try Lwt_unix.run (exec_safely (fun _ -> ()))
   with e ->
-    Ocsigen_messages.errlog
-      (Printf.sprintf
-         "Error opening database file '%s' when registering Ocsipersist. \
-          Check that the directory exists, and that Ocsigen has enough \
-          rights" !db_file);
-    raise e
+      Ocsigen_messages.errlog
+        (Printf.sprintf
+           "Error opening database file '%s' when registering Ocsipersist. \
+            Check that the directory exists, and that Ocsigen has enough \
+            rights" !db_file);
+      raise e
 
 
 let _ = Ocsigen_extensions.register_extension

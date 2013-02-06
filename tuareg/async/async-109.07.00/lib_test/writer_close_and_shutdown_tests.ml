@@ -12,11 +12,11 @@ let shutdown_after d = upon d (fun () -> shutdown 0)
 
 module Test = struct
   type t =
-    { id : int;
-      info : Info.t;
-      run : unit -> unit Deferred.t;
-      check : unit -> unit Or_error.t Deferred.t;
-    }
+      { id : int;
+        info : Info.t;
+        run : unit -> unit Deferred.t;
+        check : unit -> unit Or_error.t Deferred.t;
+      }
 
   let id_counter = ref 0
 

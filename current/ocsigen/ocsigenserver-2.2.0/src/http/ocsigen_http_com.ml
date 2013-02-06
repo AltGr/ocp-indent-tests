@@ -69,9 +69,9 @@ let convert_io_error e =
     | End_of_file
     | Ssl.Write_error (Ssl.Error_zero_return | Ssl.Error_syscall | Ssl.Error_ssl)
     | Unix.Unix_error (Unix.EPIPE, _, _) ->
-      Lost_connection e
+        Lost_connection e
     | _ ->
-      e
+        e
 
 let catch_io_errors f =
   Lwt.catch f (fun e -> Lwt.fail (convert_io_error e))
@@ -219,21 +219,21 @@ let rec extract_aux receiver pos bound cont =
       (fun e ->
         match e, bound with
               End_of_file, Bounded _ ->
-            Ocsigen_stream.empty None
+              Ocsigen_stream.empty None
           | _ ->
-            Lwt.fail (convert_io_error e))
+              Lwt.fail (convert_io_error e))
   else
     let pos' = Int64.add pos (Int64.of_int avail) in
     match bound with
           Exact l when pos' >= l ->
-        let len = Int64.to_int (Int64.sub l pos) in
-        let s = buf_get_string receiver len in
-        Ocsigen_stream.cont s cont
+          let len = Int64.to_int (Int64.sub l pos) in
+          let s = buf_get_string receiver len in
+          Ocsigen_stream.cont s cont
       | Bounded (Some l) when pos' > l ->
-        Lwt.fail (request_too_large l)
+          Lwt.fail (request_too_large l)
       | _ ->
-        let s = buf_get_string receiver avail in
-        Ocsigen_stream.cont s (fun () -> extract_aux receiver pos' bound cont)
+          let s = buf_get_string receiver avail in
+          Ocsigen_stream.cont s (fun () -> extract_aux receiver pos' bound cont)
 
 (** Stream from the receiver channel. *)
 let extract receiver bound =
@@ -251,11 +251,11 @@ let rec wait_pattern find_pattern receiver cur_pos =
   let avail = receiver.write_pos - (cur_pos + read_pos) in
   match find_pattern receiver.buf (cur_pos + read_pos) avail with
         Found end_pos ->
-      Lwt.return (end_pos - read_pos)
+        Lwt.return (end_pos - read_pos)
     | Retry retry_pos ->
-      let pos = max 0 (retry_pos - read_pos) in
-      receive receiver >>= fun () ->
-      wait_pattern find_pattern receiver pos
+        let pos = max 0 (retry_pos - read_pos) in
+        receive receiver >>= fun () ->
+        wait_pattern find_pattern receiver pos
 
 (** Find the first sequence crlfcrlf or lflf in the buffer *)
 let rec find_header buf pos rem =
@@ -282,14 +282,14 @@ let wait_http_header receiver =
       Lwt.fail
         (match e with
               Buffer_full ->
-            Ocsigen_http_frame.Http_error.Http_exception
-              (413, Some "header too long", None)
+              Ocsigen_http_frame.Http_error.Http_exception
+                (413, Some "header too long", None)
           | End_of_file when buf_used receiver = 0 ->
-            Connection_closed
+              Connection_closed
           | Timeout when buf_used receiver = 0 && receiver.sender_count = 0 ->
-            Keepalive_timeout
+              Keepalive_timeout
           | _ ->
-            convert_io_error e))
+              convert_io_error e))
 
 (** Find an end of line crlf or lf in the buffer *)
 let rec find_line buf pos rem =
@@ -369,8 +369,8 @@ let parse_http_header mode s =
        else
          Http_lexer.header lexbuf)
   with Parsing.Parse_error ->
-    Lwt.fail (Ocsigen_http_frame.Http_error.Http_exception
-          (400, Some "parse error", None))
+      Lwt.fail (Ocsigen_http_frame.Http_error.Http_exception
+            (400, Some "parse error", None))
 
 let get_maxsize = function
   | Nofirstline
@@ -402,96 +402,96 @@ let get_http_frame ?(head = false) receiver =
   begin match header.Ocsigen_http_frame.Http_header.mode with
     | Ocsigen_http_frame.Http_header.Answer code
       when code_without_message_body code ->
-      return_with_no_body receiver
-    | _ ->
-      if head then begin
         return_with_no_body receiver
-      end
-      else begin
-        (* RFC
-           2. If  a Transfer-Encoding header field (section  14.41) is present
-           and has  any value other than "identity",  then the transfer-length
-           is defined  by use of the "chunked"  transfer-coding (section 3.6),
-           unless the message is terminated by closing the connection.
-        *)
-        let chunked =
-          try
-            Ocsigen_http_frame.Http_header.get_headers_value
-              header Http_headers.transfer_encoding <> "identity"
-          with Not_found ->
-            false
-        in
-        if chunked then
-          Lwt.return (Some (extract_chunked receiver))
+    | _ ->
+        if head then begin
+          return_with_no_body receiver
+        end
         else begin
           (* RFC
-             3. If a Content-Length header field (section 14.13) is present, its
-             decimal value  in OCTETs represents both the  entity-length and the
-             transfer-length. The  Content-Length header field MUST  NOT be sent
-             if these  two lengths are  different (i.e., if  a Transfer-Encoding
-             header  field is present).  If a  message is  received with  both a
-             Transfer-Encoding header  field and a  Content-Length header field,
-             the latter MUST be ignored.
+             2. If  a Transfer-Encoding header field (section  14.41) is present
+             and has  any value other than "identity",  then the transfer-length
+             is defined  by use of the "chunked"  transfer-coding (section 3.6),
+             unless the message is terminated by closing the connection.
           *)
-          let content_length =
+          let chunked =
             try
-              (*XXX Check for overflow/malformed field... *)
-              Some
-                (Int64.of_string
-                   (Ocsigen_http_frame.Http_header.get_headers_value
-                      header Http_headers.content_length))
+              Ocsigen_http_frame.Http_header.get_headers_value
+                header Http_headers.transfer_encoding <> "identity"
             with Not_found ->
-              None
+                false
           in
-          match content_length with
-            | Some cl ->
-              if cl < 0L then
-                (*XXX Malformed field!!!*)
-                Lwt.fail
-                  (Ocsigen_http_frame.Http_error.Http_exception
-                     (400, Some "ill-formed content-length header", None))
-              else if cl = 0L then
-                return_with_no_body receiver
-              else
-                let max = get_maxsize receiver.r_mode in
-                begin match max with
-                      Some m when cl > m ->
-                    Lwt.fail (request_too_large m)
-                  | _ ->
-                    Lwt.return (Some (extract receiver (Exact cl)))
-                end
-            | None ->
-              (* RFC
-                 4. If  the message uses the media  type "multipart/byteranges", and
-                 the transfer-length is  not  otherwise specified,  then this  self-
-                 delimiting media type defines the transfer-length.  This media type
-                 MUST NOT be used unless the sender knows that the recipient can parse
-                 it; the presence in a request  of a Range header with multiple byte-
-                 range specifiers from a 1.1 client implies that the client can parse
-                 multipart/byteranges responses.
-                 NOT IMPLEMENTED
+          if chunked then
+            Lwt.return (Some (extract_chunked receiver))
+          else begin
+            (* RFC
+               3. If a Content-Length header field (section 14.13) is present, its
+               decimal value  in OCTETs represents both the  entity-length and the
+               transfer-length. The  Content-Length header field MUST  NOT be sent
+               if these  two lengths are  different (i.e., if  a Transfer-Encoding
+               header  field is present).  If a  message is  received with  both a
+               Transfer-Encoding header  field and a  Content-Length header field,
+               the latter MUST be ignored.
+            *)
+            let content_length =
+              try
+                (*XXX Check for overflow/malformed field... *)
+                Some
+                  (Int64.of_string
+                     (Ocsigen_http_frame.Http_header.get_headers_value
+                        header Http_headers.content_length))
+              with Not_found ->
+                  None
+            in
+            match content_length with
+              | Some cl ->
+                  if cl < 0L then
+                    (*XXX Malformed field!!!*)
+                    Lwt.fail
+                      (Ocsigen_http_frame.Http_error.Http_exception
+                         (400, Some "ill-formed content-length header", None))
+                  else if cl = 0L then
+                    return_with_no_body receiver
+                  else
+                    let max = get_maxsize receiver.r_mode in
+                    begin match max with
+                          Some m when cl > m ->
+                          Lwt.fail (request_too_large m)
+                      | _ ->
+                          Lwt.return (Some (extract receiver (Exact cl)))
+                    end
+              | None ->
+                  (* RFC
+                     4. If  the message uses the media  type "multipart/byteranges", and
+                     the transfer-length is  not  otherwise specified,  then this  self-
+                     delimiting media type defines the transfer-length.  This media type
+                     MUST NOT be used unless the sender knows that the recipient can parse
+                     it; the presence in a request  of a Range header with multiple byte-
+                     range specifiers from a 1.1 client implies that the client can parse
+                     multipart/byteranges responses.
+                     NOT IMPLEMENTED
 
-                 5. By  the server closing  the connection. (Closing  the connection
-                 cannot be  used to indicate the  end of a request  body, since that
-                 would leave no possibility for the server to send back a response.)
-              *)
-              match header.Ocsigen_http_frame.Http_header.mode with
-                    Ocsigen_http_frame.Http_header.Query (_, s) ->
-                  return_with_no_body receiver
-                | _ ->
-                  let st =
-                    extract receiver
-                      (Bounded (get_maxsize receiver.r_mode)) in
-                  Lwt.return (Some st)
+                     5. By  the server closing  the connection. (Closing  the connection
+                     cannot be  used to indicate the  end of a request  body, since that
+                     would leave no possibility for the server to send back a response.)
+                  *)
+                  match header.Ocsigen_http_frame.Http_header.mode with
+                        Ocsigen_http_frame.Http_header.Query (_, s) ->
+                        return_with_no_body receiver
+                    | _ ->
+                        let st =
+                          extract receiver
+                            (Bounded (get_maxsize receiver.r_mode)) in
+                        Lwt.return (Some st)
+          end
         end
-      end
   end >>= fun b ->
   let la =
     (match b with
       | None -> Lwt_mutex.unlock receiver.read_mutex; None
       | Some s ->
-        Ocsigen_stream.add_finalizer s (fun _ -> Ocsigen_stream.consume s);
-        Some s
+          Ocsigen_stream.add_finalizer s (fun _ -> Ocsigen_stream.consume s);
+          Some s
     )
   in
   Lwt.return {Ocsigen_http_frame.frame_header = header;
@@ -653,48 +653,48 @@ let write_stream_chunked out_ch stream =
     Ocsigen_stream.next stream >>= fun e ->
     match e with
       | Ocsigen_stream.Finished _ ->
-        (if len > 0 then begin
-           (* It is incorrect to send an empty chunk *)
-           Lwt_chan.output_string
-             out_ch (Format.sprintf "%x\r\n" len) >>= fun () ->
-           Lwt_chan.output out_ch buffer 0 len >>= fun () ->
-           Lwt_chan.output_string out_ch "\r\n"
-         end else
-           Lwt.return ()) >>= fun () ->
-        Lwt_chan.output_string out_ch "0\r\n\r\n"
-      | Ocsigen_stream.Cont (s, next) ->
-        let l = String.length s in
-        if l = 0 then
-          aux next len
-        else
-        if l >= size_for_not_buffering then begin
           (if len > 0 then begin
+             (* It is incorrect to send an empty chunk *)
              Lwt_chan.output_string
                out_ch (Format.sprintf "%x\r\n" len) >>= fun () ->
              Lwt_chan.output out_ch buffer 0 len >>= fun () ->
              Lwt_chan.output_string out_ch "\r\n"
-           end else Lwt.return ()) >>= fun () ->
-          Lwt_chan.output_string
-            out_ch (Format.sprintf "%x\r\n" l) >>= fun () ->
-          Lwt_chan.output out_ch s 0 l >>= fun () ->
-          Lwt_chan.output_string out_ch "\r\n" >>= fun () ->
-          aux next 0
-        end else (* Will not work if l is very large: *)
-          let available = buf_size - len in
-          if l > available then begin
+           end else
+             Lwt.return ()) >>= fun () ->
+          Lwt_chan.output_string out_ch "0\r\n\r\n"
+      | Ocsigen_stream.Cont (s, next) ->
+          let l = String.length s in
+          if l = 0 then
+            aux next len
+          else
+          if l >= size_for_not_buffering then begin
+            (if len > 0 then begin
+               Lwt_chan.output_string
+                 out_ch (Format.sprintf "%x\r\n" len) >>= fun () ->
+               Lwt_chan.output out_ch buffer 0 len >>= fun () ->
+               Lwt_chan.output_string out_ch "\r\n"
+             end else Lwt.return ()) >>= fun () ->
             Lwt_chan.output_string
-              out_ch (Format.sprintf "%x\r\n" buf_size) >>= fun () ->
-            Lwt_chan.output out_ch buffer 0 len >>= fun () ->
-            Lwt_chan.output out_ch s 0 available >>= fun () ->
+              out_ch (Format.sprintf "%x\r\n" l) >>= fun () ->
+            Lwt_chan.output out_ch s 0 l >>= fun () ->
             Lwt_chan.output_string out_ch "\r\n" >>= fun () ->
-            let newlen = l - available in
-            String.blit s available buffer 0 newlen;
-            aux next newlen
-          end
-          else begin
-            String.blit s 0 buffer len l;
-            aux next (len + l)
-          end
+            aux next 0
+          end else (* Will not work if l is very large: *)
+            let available = buf_size - len in
+            if l > available then begin
+              Lwt_chan.output_string
+                out_ch (Format.sprintf "%x\r\n" buf_size) >>= fun () ->
+              Lwt_chan.output out_ch buffer 0 len >>= fun () ->
+              Lwt_chan.output out_ch s 0 available >>= fun () ->
+              Lwt_chan.output_string out_ch "\r\n" >>= fun () ->
+              let newlen = l - available in
+              String.blit s available buffer 0 newlen;
+              aux next newlen
+            end
+            else begin
+              String.blit s 0 buffer len l;
+              aux next (len + l)
+            end
   in
   aux stream 0
 
@@ -702,10 +702,10 @@ let rec write_stream_raw out_ch stream =
   Ocsigen_stream.next stream >>= fun e ->
   match e with
     | Ocsigen_stream.Finished _ ->
-      Lwt.return ()
+        Lwt.return ()
     | Ocsigen_stream.Cont (s, next) ->
-      Lwt_chan.output_string out_ch s >>= fun () ->
-      write_stream_raw out_ch next
+        Lwt_chan.output_string out_ch s >>= fun () ->
+        write_stream_raw out_ch next
 
 (*XXX We should check the length of the stream:
    - do not send more than expected
@@ -804,14 +804,14 @@ let send
           match keep_alive with
             | None -> hds
             | Some ka ->
-              hds
-              <<?! (* We override the value *)
-                (*XXX Check: HTTP/1.0 *)
-                (Http_headers.connection,
-                 if ka
-                 (* && not (not chunked && res.res_content_length = None) *)
-                 then Some "keep-alive"
-                 else Some "close")
+                hds
+                <<?! (* We override the value *)
+                  (*XXX Check: HTTP/1.0 *)
+                  (Http_headers.connection,
+                   if ka
+                   (* && not (not chunked && res.res_content_length = None) *)
+                   then Some "keep-alive"
+                   else Some "close")
         in
         (*VVV Do we need to REMOVE the connection header if present? *)
         let hd =
@@ -844,21 +844,21 @@ let send
                 match reopen with
                   | None -> Lwt.fail e
                   | Some reopen ->
-                    match convert_io_error e with
-                      | Keepalive_timeout
-                      | Timeout
-                      | Connection_closed
-                      | Unix.Unix_error (Unix.EBADF,_ ,_)
-                      | Lost_connection _ ->
-                        reopen () >>= fun () ->
-                        Lwt.fail e
-                      | _ ->
-                        Ocsigen_messages.warning
-                          ("Ocsigen_http_com: reopening after exception "^
-                             (Printexc.to_string e)^
-                             " (Is that right?) Please report this error.");
-                        ignore (reopen ());
-                        Lwt.fail e
+                      match convert_io_error e with
+                        | Keepalive_timeout
+                        | Timeout
+                        | Connection_closed
+                        | Unix.Unix_error (Unix.EBADF,_ ,_)
+                        | Lost_connection _ ->
+                            reopen () >>= fun () ->
+                            Lwt.fail e
+                        | _ ->
+                            Ocsigen_messages.warning
+                              ("Ocsigen_http_com: reopening after exception "^
+                                 (Printexc.to_string e)^
+                                 " (Is that right?) Please report this error.");
+                            ignore (reopen ());
+                            Lwt.fail e
               )
           )
         >>= fun () ->
@@ -916,8 +916,8 @@ let send
          header field in a request." *)
       (*VVV What about Nofirstline? *)
       | _ -> headers
-        <<
-          (Http_headers.date, date)
+          <<
+            (Http_headers.date, date)
   in
   let mkcook path exp name c secure =
     Format.sprintf "%s=%s%s%s" name c
@@ -926,9 +926,9 @@ let send
       (if secure && slot.sl_ssl then "; secure" else "")^
       (match exp with
         | Some s -> "; expires=" ^
-            Netdate.format
-              "%a, %d-%b-%Y %H:%M:%S GMT"
-              (Netdate.create s)
+              Netdate.format
+                "%a, %d-%b-%Y %H:%M:%S GMT"
+                (Netdate.create s)
         | None   -> "")
   in
   let mkcookl path t hds =
@@ -958,19 +958,19 @@ let send
        match res.res_content_type with
          | None   -> None
          | Some s ->
-           if String.length s >= 4 then
-             match String.sub s 0 4, res.res_charset with
-               | "text", Some "" -> Some s
-               | "text", Some c -> Some (Format.sprintf "%s; charset=%s" s c)
-               | _              ->
-                 match String.sub s (String.length s - 4) 4,
-                   res.res_charset with
-                   | ("+xml"|"/xml"), Some "" -> Some s
-                   | ("+xml"|"/xml"), Some c ->
-                     Some (Format.sprintf "%s; charset=%s" s c)
-                   | _ -> res.res_content_type
-           else
-             res.res_content_type
+             if String.length s >= 4 then
+               match String.sub s 0 4, res.res_charset with
+                 | "text", Some "" -> Some s
+                 | "text", Some c -> Some (Format.sprintf "%s; charset=%s" s c)
+                 | _              ->
+                     match String.sub s (String.length s - 4) 4,
+                       res.res_charset with
+                       | ("+xml"|"/xml"), Some "" -> Some s
+                       | ("+xml"|"/xml"), Some c ->
+                           Some (Format.sprintf "%s; charset=%s" s c)
+                       | _ -> res.res_content_type
+             else
+               res.res_content_type
       )
   in
   send_aux ~mode headers

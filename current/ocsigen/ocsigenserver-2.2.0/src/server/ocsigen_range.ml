@@ -45,7 +45,7 @@ let select_range length beg endopt skipfun stream =
     else
       (match step with
         | Ocsigen_stream.Finished _  -> 
-          Lwt.fail Ocsigen_stream.Stream_too_small
+            Lwt.fail Ocsigen_stream.Stream_too_small
         | Ocsigen_stream.Cont (c, f) -> Lwt.return (c, f))
       >>= fun (buf, nextstream) ->
       let buflen = String.length buf in
@@ -64,15 +64,15 @@ let select_range length beg endopt skipfun stream =
       Lwt.return
         (match endopt with
           | None -> 
-            Ocsigen_stream.make
-              ~finalize:
-              (fun status -> Ocsigen_stream.finalize stream status)
-              (fun () -> Lwt.return new_s)
+              Ocsigen_stream.make
+                ~finalize:
+                (fun status -> Ocsigen_stream.finalize stream status)
+                (fun () -> Lwt.return new_s)
           | Some endc -> 
-            Ocsigen_stream.make
-              ~finalize:
-              (fun status -> Ocsigen_stream.finalize stream status)
-              (aux new_s length))
+              Ocsigen_stream.make
+                ~finalize:
+                (fun status -> Ocsigen_stream.finalize stream status)
+                (aux new_s length))
     )
     (function
       | Ocsigen_stream.Stream_too_small -> Lwt.fail Range_416
@@ -86,91 +86,91 @@ let compute_range ri res =
        Content-Range always contains the length ... *)
     | None -> Lwt.return res
     | Some cl ->
-      (* Send range only if the code is 200!! *)
-      if (res.Ocsigen_http_frame.res_code <> 200)
-         || (Ocsigen_config.get_disablepartialrequests ())
-      then Lwt.return res
-      else begin
-        let res = {res with
-                    Ocsigen_http_frame.res_headers =
-                      Http_headers.replace 
-                        Http_headers.accept_ranges "bytes"
-                        res.Ocsigen_http_frame.res_headers;
-                  }
-        in
-        match change_range (Lazy.force ri.Ocsigen_extensions.ri_range) with
-          | None -> Lwt.return res
-          | Some (_, _, Ocsigen_extensions.IR_ifmatch etag) 
-            when (match res.Ocsigen_http_frame.res_etag with
-              | None -> true
-              | Some resetag -> String.compare etag resetag <> 0) ->
-            Lwt.return res
-          | Some (_, _, Ocsigen_extensions.IR_Ifunmodsince date)
-            when (match res.Ocsigen_http_frame.res_lastmodified with
-              | None -> true
-              | Some l -> l > date)
-            ->
-            Lwt.return res
-          | Some (beg, endopt, _) ->
-
-            Lwt.catch
-              (fun () ->
-                (if Int64.compare cl beg <= 0
-                 then Lwt.fail Range_416
-                 else Lwt.return ()) >>= fun () ->
-
-                let endc, length = match endopt with
-                  | None -> (Int64.sub cl 1L, Int64.sub cl beg)
-                  | Some e -> (e, Int64.add (Int64.sub e beg) 1L)
-                in
-
-                let resstream, skipfun =
-                  res.Ocsigen_http_frame.res_stream
-                in
-                (* stream transform *)
-                let skipfun = 
-                  match skipfun with
-                    | None -> 
-                      (fun stream beg ->
-                        (Ocsigen_stream.next 
-                           (Ocsigen_stream.get stream) >>= fun s ->
-                         Ocsigen_stream.skip s beg))
-                    | Some f -> f
-                in
-                select_range 
-                  length beg endopt skipfun
-                  resstream
-                >>= fun new_s ->
-                Lwt.return 
-                  {res with
-                    Ocsigen_http_frame.res_stream = (new_s, None);
-                    Ocsigen_http_frame.res_code = 206;
-                    Ocsigen_http_frame.res_headers =
-                      Http_headers.replace 
-                        Http_headers.content_range
-                        ("bytes "^Int64.to_string beg^"-"^
-                           Int64.to_string endc^"/"^
-                           Int64.to_string cl)
-                        res.Ocsigen_http_frame.res_headers;
-                    Ocsigen_http_frame.res_content_length = Some length
-                  }
-              )
-              (function
-                | Range_416 ->
-                  (* RFC 2616 When this status code is returned for a byte-range request, the response SHOULD include a Content-Range entity-header field specifying the current length of the selected resource *)
-                  let dr = Ocsigen_http_frame.default_result () in
-                  Lwt.return
-                    {dr with
-                      Ocsigen_http_frame.res_code = 416;
+        (* Send range only if the code is 200!! *)
+        if (res.Ocsigen_http_frame.res_code <> 200)
+           || (Ocsigen_config.get_disablepartialrequests ())
+        then Lwt.return res
+        else begin
+          let res = {res with
                       Ocsigen_http_frame.res_headers =
                         Http_headers.replace 
-                          Http_headers.content_range
-                          ("bytes */"^Int64.to_string cl)
+                          Http_headers.accept_ranges "bytes"
                           res.Ocsigen_http_frame.res_headers;
                     }
-                | e -> Lwt.fail e)
+          in
+          match change_range (Lazy.force ri.Ocsigen_extensions.ri_range) with
+            | None -> Lwt.return res
+            | Some (_, _, Ocsigen_extensions.IR_ifmatch etag) 
+              when (match res.Ocsigen_http_frame.res_etag with
+                | None -> true
+                | Some resetag -> String.compare etag resetag <> 0) ->
+                Lwt.return res
+            | Some (_, _, Ocsigen_extensions.IR_Ifunmodsince date)
+              when (match res.Ocsigen_http_frame.res_lastmodified with
+                | None -> true
+                | Some l -> l > date)
+              ->
+                Lwt.return res
+            | Some (beg, endopt, _) ->
 
-      end
+                Lwt.catch
+                  (fun () ->
+                    (if Int64.compare cl beg <= 0
+                     then Lwt.fail Range_416
+                     else Lwt.return ()) >>= fun () ->
+
+                    let endc, length = match endopt with
+                      | None -> (Int64.sub cl 1L, Int64.sub cl beg)
+                      | Some e -> (e, Int64.add (Int64.sub e beg) 1L)
+                    in
+
+                    let resstream, skipfun =
+                      res.Ocsigen_http_frame.res_stream
+                    in
+                    (* stream transform *)
+                    let skipfun = 
+                      match skipfun with
+                        | None -> 
+                            (fun stream beg ->
+                              (Ocsigen_stream.next 
+                                 (Ocsigen_stream.get stream) >>= fun s ->
+                               Ocsigen_stream.skip s beg))
+                        | Some f -> f
+                    in
+                    select_range 
+                      length beg endopt skipfun
+                      resstream
+                    >>= fun new_s ->
+                    Lwt.return 
+                      {res with
+                        Ocsigen_http_frame.res_stream = (new_s, None);
+                        Ocsigen_http_frame.res_code = 206;
+                        Ocsigen_http_frame.res_headers =
+                          Http_headers.replace 
+                            Http_headers.content_range
+                            ("bytes "^Int64.to_string beg^"-"^
+                               Int64.to_string endc^"/"^
+                               Int64.to_string cl)
+                            res.Ocsigen_http_frame.res_headers;
+                        Ocsigen_http_frame.res_content_length = Some length
+                      }
+                  )
+                  (function
+                    | Range_416 ->
+                        (* RFC 2616 When this status code is returned for a byte-range request, the response SHOULD include a Content-Range entity-header field specifying the current length of the selected resource *)
+                        let dr = Ocsigen_http_frame.default_result () in
+                        Lwt.return
+                          {dr with
+                            Ocsigen_http_frame.res_code = 416;
+                            Ocsigen_http_frame.res_headers =
+                              Http_headers.replace 
+                                Http_headers.content_range
+                                ("bytes */"^Int64.to_string cl)
+                                res.Ocsigen_http_frame.res_headers;
+                          }
+                    | e -> Lwt.fail e)
+
+        end
 
 
 let get_range http_frame =
@@ -197,15 +197,15 @@ let get_range http_frame =
         let rec f index = function
           | [] -> [], None
           | [a] -> 
-            let d, e = String.sep '-' a in
-            if e = ""
-            then [], Some (Int64.of_string d)
-            else [decode_int index d e], None
+              let d, e = String.sep '-' a in
+              if e = ""
+              then [], Some (Int64.of_string d)
+              else [decode_int index d e], None
           | a::l ->
-            let d, e = String.sep '-' a in
-            let a, b = decode_int index d e in
-            let ll, fr = f b l in (* not tail rec *)
-            (a, b)::ll, fr
+              let d, e = String.sep '-' a in
+              let a, b = decode_int index d e in
+              let ll, fr = f b l in (* not tail rec *)
+              (a, b)::ll, fr
         in
         f (-1L) l
     in

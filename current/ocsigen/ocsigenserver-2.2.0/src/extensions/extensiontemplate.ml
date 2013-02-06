@@ -76,60 +76,60 @@ let rec parse_global_config = function
 *)
 let gen = function
   | Ocsigen_extensions.Req_found _ ->
-    (* If previous extension already found the page, you can
-       modify the result (if you write a filter) or return it
-       without modification like this: *)
-    Lwt.return Ocsigen_extensions.Ext_do_nothing
+      (* If previous extension already found the page, you can
+         modify the result (if you write a filter) or return it
+         without modification like this: *)
+      Lwt.return Ocsigen_extensions.Ext_do_nothing
   | Ocsigen_extensions.Req_not_found (err, ri) ->
-    (* If previous extensions did not find the result,
-       I decide here to answer with a default page
-       (for the example):
-    *)
-    return (Ext_found
-          (fun () ->
-            let content = "Extensiontemplate page" in
-            Ocsigen_senders.Text_content.result_of_content
-              (content, "text/plain")))
-
-
-
-      (*****************************************************************************)
-      (** Extensions may define new tags for configuring each site.
-          These tags are inside <site ...>...</site> in the config file.
-
-         For example:
-         <site dir="">
-           <extensiontemplate module=".../mymodule.cmo" />
-         </site>
-
-         Each extension will set its own configuration options, for example:
-         <site dir="">
-           <extensiontemplate module=".../mymodule.cmo" />
-           <eliom module=".../myeliommodule.cmo" />
-           <static dir="/var/www/plop" />
-         </extension>
-
-          Here parse_site is the function used to parse the config file inside this
-          site. Use this if you want to put extensions config options inside
-          your own option. For example:
-
-         {[
-         | Element ("iffound", [], sub) ->
-            let ext = parse_fun sub in
-         (* DANGER: parse_fun MUST be called BEFORE the function! *)
-            (fun charset -> function
-              | Ocsigen_extensions.Req_found (_, _) ->
-                  Lwt.return (Ext_sub_result ext)
-              | Ocsigen_extensions.Req_not_found (err, ri) ->
-                  Lwt.return (Ocsigen_extensions.Ext_not_found err))
-         ]}
+      (* If previous extensions did not find the result,
+         I decide here to answer with a default page
+         (for the example):
       *)
+      return (Ext_found
+            (fun () ->
+              let content = "Extensiontemplate page" in
+              Ocsigen_senders.Text_content.result_of_content
+                (content, "text/plain")))
+
+
+
+        (*****************************************************************************)
+        (** Extensions may define new tags for configuring each site.
+            These tags are inside <site ...>...</site> in the config file.
+
+           For example:
+           <site dir="">
+             <extensiontemplate module=".../mymodule.cmo" />
+           </site>
+
+           Each extension will set its own configuration options, for example:
+           <site dir="">
+             <extensiontemplate module=".../mymodule.cmo" />
+             <eliom module=".../myeliommodule.cmo" />
+             <static dir="/var/www/plop" />
+           </extension>
+
+            Here parse_site is the function used to parse the config file inside this
+            site. Use this if you want to put extensions config options inside
+            your own option. For example:
+
+           {[
+           | Element ("iffound", [], sub) ->
+              let ext = parse_fun sub in
+           (* DANGER: parse_fun MUST be called BEFORE the function! *)
+              (fun charset -> function
+                | Ocsigen_extensions.Req_found (_, _) ->
+                    Lwt.return (Ext_sub_result ext)
+                | Ocsigen_extensions.Req_not_found (err, ri) ->
+                    Lwt.return (Ocsigen_extensions.Ext_not_found err))
+           ]}
+        *)
 
 let parse_config path _ parse_site = function
   | Element ("extensiontemplate", atts, []) -> gen
   | Element (t, _, _) -> raise (Bad_config_tag_for_extension t)
   | _ ->
-    raise (Error_in_config_file "Unexpected data in config file")
+      raise (Error_in_config_file "Unexpected data in config file")
 
 
 

@@ -48,8 +48,8 @@ let map_rev_accu_split func lst accu1 accu2 =
   let rec aux accu1 accu2 = function
     | [] -> (accu1, accu2)
     | x :: xs -> match func x with
-      | Left y -> aux (y :: accu1) accu2 xs
-      | Right y -> aux accu1 (y :: accu2) xs
+        | Left y -> aux (y :: accu1) accu2 xs
+        | Right y -> aux accu1 (y :: accu2) xs
   in
   aux accu1 accu2 lst
 
@@ -71,9 +71,9 @@ let get_max_virtual_channels () = !max_virtual_channels_ref
 let rec parse_options = function
   | [] -> ()
   | ("max_virtual_channels", "") :: tl ->
-    max_virtual_channels_ref := None ; parse_options tl
+      max_virtual_channels_ref := None ; parse_options tl
   | ("max_virtual_channels", s) :: tl ->
-    max_virtual_channels_ref := Some (int_of_string s) ; parse_options tl
+      max_virtual_channels_ref := Some (int_of_string s) ; parse_options tl
   | _ :: _ -> raise (OX.Error_in_config_file "Unexpected data in config file")
 
 
@@ -203,8 +203,8 @@ end = struct
   let create ?name () = match name with
     | None -> do_create (new_id ())
     | Some n ->
-      try ignore (find_channel n) ; raise Non_unique_channel_name
-      with Not_found -> do_create n
+        try ignore (find_channel n) ; raise Non_unique_channel_name
+        with Not_found -> do_create n
 
   (* reading a channel : just getting a hang on the reader thread *)
   let read ch = ch.ch_read
@@ -279,13 +279,13 @@ end = struct
       (fun () ->
         match r.OX.request_info.OX.ri_http_frame.OFrame.frame_content with
           | None ->
-            Lwt.return []
+              Lwt.return []
           | Some body ->
-            Lwt.return (OStream.get body) >>=
-            OStream.string_of_stream
-              (OConf.get_maxrequestbodysizeinmemory ()) >|=
-              Url.fixup_url_string >|=
-              Netencoding.Url.dest_url_encoded_parameters
+              Lwt.return (OStream.get body) >>=
+              OStream.string_of_stream
+                (OConf.get_maxrequestbodysizeinmemory ()) >|=
+                Url.fixup_url_string >|=
+                Netencoding.Url.dest_url_encoded_parameters
       )
       (function
         | OStream.String_too_large -> Lwt.fail Input_is_too_large
@@ -316,17 +316,17 @@ end = struct
   let encode_downgoing e = function
     | None -> OStream.of_string (encode_ended e)
     | Some s ->
-      let stream =
-        OStream.of_string
-          (match e with
-            | [] -> encode s
-            | e ->   encode_ended e
-              ^ field_separator
-              ^ encode s
-          )
-      in
-      OStream.add_finalizer stream (stream_result_notification s) ;
-      stream
+        let stream =
+          OStream.of_string
+            (match e with
+              | [] -> encode s
+              | e ->   encode_ended e
+                  ^ field_separator
+                  ^ encode s
+            )
+        in
+        OStream.add_finalizer stream (stream_result_notification s) ;
+        stream
 
 end
 
@@ -386,15 +386,15 @@ end = struct
     | ["deactivate"] -> deactivate ()
     | ["activate"]   -> activate ()
     | "set_timeout" :: f :: tl ->
-      (try
-        set_timeout
-          ~reset:(match tl with
-            | ["KILL"] -> true
-            | [] -> false
-            | _ -> raise OX.Unknown_command
-          )
-          (float_of_string f)
-      with Failure _ -> raise OX.Unknown_command)
+        (try
+          set_timeout
+            ~reset:(match tl with
+              | ["KILL"] -> true
+              | [] -> false
+              | _ -> raise OX.Unknown_command
+            )
+            (float_of_string f)
+        with Failure _ -> raise OX.Unknown_command)
     | _ -> raise OX.Unknown_command
 
   let command_function x y = command_function_ x y; Lwt.return ()
@@ -427,61 +427,61 @@ end = struct
    * terminates when one of the channel is written upon. *)
   let treat_decoded = function
     | [], [] -> (* error : empty request *)
-      OMsg.debug (fun () -> "Incorrect or empty Comet request");
-      Lwt.return
-        { (OFrame.default_result ()) with
-          OFrame.res_stream =
-            (OStream.of_string "Empty or incorrect registration", None) ;
-          OFrame.res_code = 400 ;(* BAD REQUEST *)
-          OFrame.res_content_type = Some "text/plain" ;
-          OFrame.res_content_length = None ;
-        }
+        OMsg.debug (fun () -> "Incorrect or empty Comet request");
+        Lwt.return
+          { (OFrame.default_result ()) with
+            OFrame.res_stream =
+              (OStream.of_string "Empty or incorrect registration", None) ;
+            OFrame.res_code = 400 ;(* BAD REQUEST *)
+            OFrame.res_content_type = Some "text/plain" ;
+            OFrame.res_content_length = None ;
+          }
 
     | [], (_::_ as ended) -> (* All channels are closed *)
-      let end_notice = Messages.encode_ended ended in
-      OMsg.debug (fun () -> "Comet request served");
-      Lwt.return
-        { (OFrame.default_result ()) with
-          OFrame.res_stream = (OStream.of_string end_notice, None) ;
-          OFrame.res_content_length = None ;
-          OFrame.res_content_type = Some "text/plain" ;
-        }
+        let end_notice = Messages.encode_ended ended in
+        OMsg.debug (fun () -> "Comet request served");
+        Lwt.return
+          { (OFrame.default_result ()) with
+            OFrame.res_stream = (OStream.of_string end_notice, None) ;
+            OFrame.res_content_length = None ;
+            OFrame.res_content_type = Some "text/plain" ;
+          }
 
     | (_::_ as active), ended -> (* generic case *)
-      let choosed =
-        let readings =
-          (List.map
-             (fun c -> Channels.read c >|= fun (v,x) -> (c, v, x))
-             active
-          )
+        let choosed =
+          let readings =
+            (List.map
+               (fun c -> Channels.read c >|= fun (v,x) -> (c, v, x))
+               active
+            )
+          in
+          (*wait for one thread to terminate and get all terminated threads  *)
+          Lwt.choose readings >>= fun _ -> Lwt.nchoose readings
         in
-        (*wait for one thread to terminate and get all terminated threads  *)
-        Lwt.choose readings >>= fun _ -> Lwt.nchoose readings
-      in
-      List.iter (fun c -> Channels.send_listeners c 1) active ;
-      Lwt.catch
-        (fun () ->
-          Lwt.choose
-            [ (choosed >|= fun x -> Some x);
-              (Lwt_unix.sleep (get_timeout ()) >|= fun () -> None);
-              (Lwt_event.next Security.kill >>= fun () -> Lwt.fail Kill);
-            ] >|= fun x ->
-            List.iter (fun c -> Channels.send_listeners c (-1)) active ;
-            let s = Messages.encode_downgoing ended x in
-            OMsg.debug (fun () -> "Comet request served");
-            { (OFrame.default_result ()) with
-              OFrame.res_stream = (s, None) ;
-              OFrame.res_content_length = None ;
-              OFrame.res_content_type = Some "text/plain" ;
-            }
-        )
-        (function
-          | Kill -> (* Comet stopped for security *)
-            List.iter (fun c -> Channels.send_listeners c (-1)) active ;
-            OMsg.debug (fun () -> "Killed Comet request handling");
-            frame_503 ()
-          | e -> Lwt.fail e
-        )
+        List.iter (fun c -> Channels.send_listeners c 1) active ;
+        Lwt.catch
+          (fun () ->
+            Lwt.choose
+              [ (choosed >|= fun x -> Some x);
+                (Lwt_unix.sleep (get_timeout ()) >|= fun () -> None);
+                (Lwt_event.next Security.kill >>= fun () -> Lwt.fail Kill);
+              ] >|= fun x ->
+              List.iter (fun c -> Channels.send_listeners c (-1)) active ;
+              let s = Messages.encode_downgoing ended x in
+              OMsg.debug (fun () -> "Comet request served");
+              { (OFrame.default_result ()) with
+                OFrame.res_stream = (s, None) ;
+                OFrame.res_content_length = None ;
+                OFrame.res_content_type = Some "text/plain" ;
+              }
+          )
+          (function
+            | Kill -> (* Comet stopped for security *)
+                List.iter (fun c -> Channels.send_listeners c (-1)) active ;
+                OMsg.debug (fun () -> "Killed Comet request handling");
+                frame_503 ()
+            | e -> Lwt.fail e
+          )
 
 
   (* This is just a mashup of the other functions in the module. *)
@@ -513,21 +513,21 @@ let rec debug_content_type = function
 let main = function
 
   | OX.Req_not_found (_, rq) -> (* Else check for content type *)
-    begin match rq.OX.request_info.OX.ri_content_type with
-      | Some (hd, tl) when has_comet_content_type (hd :: tl) ->
-        OMsg.debug (fun () -> "Comet message: " ^ debug_content_type (hd :: tl));
-        Lwt.return (OX.Ext_found (Main.main rq))
+      begin match rq.OX.request_info.OX.ri_content_type with
+        | Some (hd, tl) when has_comet_content_type (hd :: tl) ->
+            OMsg.debug (fun () -> "Comet message: " ^ debug_content_type (hd :: tl));
+            Lwt.return (OX.Ext_found (Main.main rq))
 
-      | Some (hd, tl) ->
-        OMsg.debug (fun () -> "Non comet message: " ^ debug_content_type (hd :: tl));
-        Lwt.return OX.Ext_do_nothing
-      | None ->
-        OMsg.debug (fun () -> "Non comet message: no content type");
-        Lwt.return OX.Ext_do_nothing
-    end
+        | Some (hd, tl) ->
+            OMsg.debug (fun () -> "Non comet message: " ^ debug_content_type (hd :: tl));
+            Lwt.return OX.Ext_do_nothing
+        | None ->
+            OMsg.debug (fun () -> "Non comet message: no content type");
+            Lwt.return OX.Ext_do_nothing
+      end
 
   | OX.Req_found _ -> (* If recognized by some other extension... *)
-    Lwt.return OX.Ext_do_nothing (* ...do nothing *)
+      Lwt.return OX.Ext_do_nothing (* ...do nothing *)
 
 
 
@@ -537,12 +537,12 @@ let main = function
 (* registering extension and the such *)
 let parse_config _ _ _ = function
   | Simplexmlparser.Element ("comet", attrs, []) ->
-    parse_options attrs ;
-    main
+      parse_options attrs ;
+      main
   | Simplexmlparser.Element (t, _, _) ->
-    raise (OX.Bad_config_tag_for_extension t)
+      raise (OX.Bad_config_tag_for_extension t)
   | _ ->
-    raise (OX.Error_in_config_file "Unexpected data in config file")
+      raise (OX.Error_in_config_file "Unexpected data in config file")
 let site_creator (_ : OX.virtual_hosts) _ = parse_config
 let user_site_creator (_ : OX.userconf_info) = site_creator
 

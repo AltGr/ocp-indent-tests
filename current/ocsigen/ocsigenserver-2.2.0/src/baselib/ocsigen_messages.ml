@@ -66,9 +66,9 @@ Lwt_log.default :=
          let show =
            match lev with
                  Lwt_log.Error | Lwt_log.Fatal ->
-               not (Ocsigen_config.get_silent ())
+                 not (Ocsigen_config.get_silent ())
              | _ ->
-               Ocsigen_config.get_verbose ()
+                 Ocsigen_config.get_verbose ()
          in
          if show then stderr else Lwt_log.null)];
 

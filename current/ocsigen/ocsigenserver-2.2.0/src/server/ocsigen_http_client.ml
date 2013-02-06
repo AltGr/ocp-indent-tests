@@ -159,43 +159,43 @@ module FT = struct
       in
       T.replace free_connection_table k new_l
     with Not_found ->
-      T.replace free_connection_table k [v]
+        T.replace free_connection_table k [v]
 
   let find_remove k =
     match T.find free_connection_table k with
       | [] ->
-        T.remove free_connection_table k;
-        raise Not_found
+          T.remove free_connection_table k;
+          raise Not_found
       | [a] ->
-        T.remove free_connection_table k;
-        a
+          T.remove free_connection_table k;
+          a
       | a::l ->
-        T.replace free_connection_table k l;
-        a
+          T.replace free_connection_table k l;
+          a
 
   let remove k (conn, gf) =
     let rec aux = function
       | [] -> false, []
       | ((conn2, _) as a)::l ->
-        if conn2 == conn then
-          true, l
-        else
-          let (b, ll) = aux l in
-          b, a::ll
+          if conn2 == conn then
+            true, l
+          else
+            let (b, ll) = aux l in
+            b, a::ll
     in
     try
       match T.find free_connection_table k with
         | [] ->
-          T.remove free_connection_table k;
+            T.remove free_connection_table k;
         | [(conn2, _)] ->
-          if conn == conn2 then T.remove free_connection_table k;
+            if conn == conn2 then T.remove free_connection_table k;
         | l ->
-          let b, ll = aux l in
-          if b then T.replace free_connection_table k ll;
+            let b, ll = aux l in
+            if b then T.replace free_connection_table k ll;
     with Not_found ->
-      ()
+        ()
        | e ->
-         Ocsigen_messages.debug2 ("--Ocsigen_http_client: exception while removing from connection table: "^Printexc.to_string e)
+           Ocsigen_messages.debug2 ("--Ocsigen_http_client: exception while removing from connection table: "^Printexc.to_string e)
 
 end
 
@@ -233,30 +233,30 @@ let appreciate_server_pipeline inet_addr port =
         | Yes -> None
         | No t when Unix.time () -. t < purgatory_delay -> None
         | No t ->
-          Ocsigen_messages.warning
-            ("--Ocsigen_http_client will give to server "^
-               (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
-             ^" a new probing period for pipelining.");
-          Some purgatory_time (* second chance *)
+            Ocsigen_messages.warning
+              ("--Ocsigen_http_client will give to server "^
+                 (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
+               ^" a new probing period for pipelining.");
+            Some purgatory_time (* second chance *)
         | Probing n -> Some (n-1)
     with Not_found ->
-      Ocsigen_messages.warning
-        ("--Ocsigen_http_client will give to server "^
-           (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
-         ^" a first probing period for pipelining.");
-      Some probing_time
+        Ocsigen_messages.warning
+          ("--Ocsigen_http_client will give to server "^
+             (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
+           ^" a first probing period for pipelining.");
+        Some probing_time
   with
     | None -> ()
     | Some n ->
-      if n < 0 then begin
-        Ocsigen_messages.warning
-          ("--Ocsigen_http_client now trusts server "^
-             (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
-           ^" for pipelining. He passed the probing period.");
-        KT.replace pipelining_table key Yes
-      end
-      else
-        KT.replace pipelining_table key (Probing n)
+        if n < 0 then begin
+          Ocsigen_messages.warning
+            ("--Ocsigen_http_client now trusts server "^
+               (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
+             ^" for pipelining. He passed the probing period.");
+          KT.replace pipelining_table key Yes
+        end
+        else
+          KT.replace pipelining_table key (Probing n)
 
 let boycott_server_pipeline server_do_keepalive inet_addr port =
   if server_do_keepalive then
@@ -272,17 +272,17 @@ let keep_alive_server inet_addr port =
     match KT.find pipelining_table (inet_addr, port) with
       | Yes -> true
       | No _ ->
-        Ocsigen_messages.debug
-          (fun () -> "--Ocsigen_http_client does not trust server "^
-              (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
-            ^" for pipelining.");
-        false
+          Ocsigen_messages.debug
+            (fun () -> "--Ocsigen_http_client does not trust server "^
+                (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
+              ^" for pipelining.");
+          false
       | Probing _ ->
-        Ocsigen_messages.debug
-          (fun () -> "--Ocsigen_http_client is currently probing server "^
-              (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
-            ^" for pipelining. No pipeline for now.");
-        false
+          Ocsigen_messages.debug
+            (fun () -> "--Ocsigen_http_client is currently probing server "^
+                (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
+              ^" for pipelining. No pipeline for now.");
+          false
   with Not_found -> false
 
 
@@ -290,16 +290,16 @@ let keep_alive_server inet_addr port =
 
 let handle_connection_error fd exn = match exn with
   | Unix.Unix_error (Unix.ECONNREFUSED, _, _) ->
-    Lwt_unix.close fd
-    >>= fun () -> Lwt.fail
-                    (Ocsigen_http_frame.Http_error.Http_exception
-                       (502, Some "Connection refused by distant server", None))
+      Lwt_unix.close fd
+      >>= fun () -> Lwt.fail
+                      (Ocsigen_http_frame.Http_error.Http_exception
+                         (502, Some "Connection refused by distant server", None))
   | Unix.Unix_error (Unix.ECONNRESET, _, _) ->
-    (* Caused by shutting down the file descriptor after a timeout *)
-    Lwt_unix.close fd
-    >>= fun () ->  Lwt.fail
-                     (Ocsigen_http_frame.Http_error.Http_exception
-                        (504, Some "Distant server closed connection", None))
+      (* Caused by shutting down the file descriptor after a timeout *)
+      Lwt_unix.close fd
+      >>= fun () ->  Lwt.fail
+                       (Ocsigen_http_frame.Http_error.Http_exception
+                          (504, Some "Distant server closed connection", None))
   | e -> Lwt_unix.close fd >>= fun () ->  Lwt.fail e
 
 
@@ -349,19 +349,19 @@ let raw_request
           (fun () -> gf >>= fun _ -> Lwt.return ())
           (function
             | Ocsigen_http_com.Connection_closed ->
-              Ocsigen_messages.debug2
-                "--Ocsigen_http_client: connection closed by server (closing)";
-              Lwt_ssl.close (Ocsigen_http_com.connection_fd conn)
+                Ocsigen_messages.debug2
+                  "--Ocsigen_http_client: connection closed by server (closing)";
+                Lwt_ssl.close (Ocsigen_http_com.connection_fd conn)
             | Ocsigen_http_com.Keepalive_timeout ->
-              Ocsigen_messages.debug2
-                "--Ocsigen_http_client: connection closed by keepalive timeout";
-              Lwt_ssl.close (Ocsigen_http_com.connection_fd conn)
+                Ocsigen_messages.debug2
+                  "--Ocsigen_http_client: connection closed by keepalive timeout";
+                Lwt_ssl.close (Ocsigen_http_com.connection_fd conn)
             | e ->
-              Ocsigen_messages.warning
-                ("--Ocsigen_http_client: exception caught while receiving frame: "^
-                   Printexc.to_string e^
-                   " - closing connection to the server.");
-              Lwt_ssl.close (Ocsigen_http_com.connection_fd conn)
+                Ocsigen_messages.warning
+                  ("--Ocsigen_http_client: exception caught while receiving frame: "^
+                     Printexc.to_string e^
+                     " - closing connection to the server.");
+                Lwt_ssl.close (Ocsigen_http_com.connection_fd conn)
           )))
   in
 
@@ -410,10 +410,10 @@ let raw_request
         "--Ocsigen_http_client: Free connection found";
       c
     with Not_found ->
-      Ocsigen_messages.debug2
-        "--Ocsigen_http_client: Free connection not found - creating new one";
-      let (c, g) = new_conn () in
-      (ref c, g)
+        Ocsigen_messages.debug2
+          "--Ocsigen_http_client: Free connection not found - creating new one";
+        let (c, g) = new_conn () in
+        (ref c, g)
   in
 
   let (key_new_waiter, ref_thr_conn, get_frame) =
@@ -426,44 +426,44 @@ let raw_request
                           *)
                           http_method <> Ocsigen_http_frame.Http_header.CONNECT)
         ->
-        (* Trying to pipeline *)
-        Ocsigen_messages.debug_noel2
-          "--Ocsigen_http_client: Trying to find an opened connection for same client - connection number ";
-        Ocsigen_messages.debug (fun () ->
-          string_of_int
-            (Ocsigen_extensions.client_id client));
-        let new_waiter, new_waiter_awakener = Lwt.wait () in
-        let key = (Ocsigen_extensions.client_id client, (inet_addr, port, head)) in
-        (* Is there already a connection for the same client? *)
-        let (ref_thr_conn, get_frame, nb_users) =
-          try
-            let r = T.find connection_table key in
-            Ocsigen_messages.debug2
-              "--Ocsigen_http_client: Connection FOUND for this client! PIPELINING! <----------------";
-            r
-          with Not_found ->
-            Ocsigen_messages.debug2
-              "--Ocsigen_http_client: Connection not found for this client's connection";
-            let (ref_thr_conn, gf) = find_conn () in
-            (ref_thr_conn, gf, 0)
-        in
-        let new_get_frame =
-          new_waiter >>= fun () ->
-          !ref_thr_conn >>= fun conn ->
-          let gf = Ocsigen_http_com.get_http_frame ~head conn in
-          close_on_error !ref_thr_conn gf;
-          gf
-        in
-        Ocsigen_messages.debug2
-          "--Ocsigen_http_client: Putting connection in connection_table";
-        T.replace connection_table key
-          (ref_thr_conn, new_get_frame, nb_users + 1);
-        (*          remove_on_error key get_frame; *)
-        (Some (key, new_waiter_awakener), ref_thr_conn, get_frame)
+          (* Trying to pipeline *)
+          Ocsigen_messages.debug_noel2
+            "--Ocsigen_http_client: Trying to find an opened connection for same client - connection number ";
+          Ocsigen_messages.debug (fun () ->
+            string_of_int
+              (Ocsigen_extensions.client_id client));
+          let new_waiter, new_waiter_awakener = Lwt.wait () in
+          let key = (Ocsigen_extensions.client_id client, (inet_addr, port, head)) in
+          (* Is there already a connection for the same client? *)
+          let (ref_thr_conn, get_frame, nb_users) =
+            try
+              let r = T.find connection_table key in
+              Ocsigen_messages.debug2
+                "--Ocsigen_http_client: Connection FOUND for this client! PIPELINING! <----------------";
+              r
+            with Not_found ->
+                Ocsigen_messages.debug2
+                  "--Ocsigen_http_client: Connection not found for this client's connection";
+                let (ref_thr_conn, gf) = find_conn () in
+                (ref_thr_conn, gf, 0)
+          in
+          let new_get_frame =
+            new_waiter >>= fun () ->
+            !ref_thr_conn >>= fun conn ->
+            let gf = Ocsigen_http_com.get_http_frame ~head conn in
+            close_on_error !ref_thr_conn gf;
+            gf
+          in
+          Ocsigen_messages.debug2
+            "--Ocsigen_http_client: Putting connection in connection_table";
+          T.replace connection_table key
+            (ref_thr_conn, new_get_frame, nb_users + 1);
+          (*          remove_on_error key get_frame; *)
+          (Some (key, new_waiter_awakener), ref_thr_conn, get_frame)
       | _ ->
-        (* No pipeline *)
-        let (ref_thr_conn, gf) = find_conn () in
-        (None, ref_thr_conn, gf)
+          (* No pipeline *)
+          let (ref_thr_conn, gf) = find_conn () in
+          (None, ref_thr_conn, gf)
 
   in
 
@@ -494,36 +494,36 @@ let raw_request
         (fun () ->
           (match content with
             | None ->
-              let empty_result = Ocsigen_http_frame.empty_result () in
-              Ocsigen_http_com.send
-                ?reopen
-                slot
-                ~head:false (* We want to send the full request *)
-                ~mode:query
-                ~clientproto:Ocsigen_http_frame.Http_header.HTTP11
-                ~keep_alive:keep_alive_asked (* we request keep alive
-                                                even if we do not pipeline
-                                                if we don't trust the server
-                                             *)
-                ~sender:request_sender
-                {empty_result with
-                  Ocsigen_http_frame.res_headers = headers}
+                let empty_result = Ocsigen_http_frame.empty_result () in
+                Ocsigen_http_com.send
+                  ?reopen
+                  slot
+                  ~head:false (* We want to send the full request *)
+                  ~mode:query
+                  ~clientproto:Ocsigen_http_frame.Http_header.HTTP11
+                  ~keep_alive:keep_alive_asked (* we request keep alive
+                                                  even if we do not pipeline
+                                                  if we don't trust the server
+                                               *)
+                  ~sender:request_sender
+                  {empty_result with
+                    Ocsigen_http_frame.res_headers = headers}
 
             | Some stream ->
-              Ocsigen_senders.Stream_content.result_of_content
-                stream >>= fun r ->
-              Ocsigen_http_com.send
-                ?reopen
-                slot
-                ~mode:query
-                ~head:false (* We want to send the full request *)
-                ~clientproto:Ocsigen_http_frame.Http_header.HTTP11
-                ~keep_alive:keep_alive_asked
-                ~sender:request_sender
-                {r with
-                  Ocsigen_http_frame.res_content_length= content_length;
-                  Ocsigen_http_frame.res_headers= headers;
-                }) >>= fun () ->
+                Ocsigen_senders.Stream_content.result_of_content
+                  stream >>= fun r ->
+                Ocsigen_http_com.send
+                  ?reopen
+                  slot
+                  ~mode:query
+                  ~head:false (* We want to send the full request *)
+                  ~clientproto:Ocsigen_http_frame.Http_header.HTTP11
+                  ~keep_alive:keep_alive_asked
+                  ~sender:request_sender
+                  {r with
+                    Ocsigen_http_frame.res_content_length= content_length;
+                    Ocsigen_http_frame.res_headers= headers;
+                  }) >>= fun () ->
 
           Ocsigen_messages.debug2 "--Ocsigen_http_client: request sent";
           Lwt.wakeup request_sent_awakener ();
@@ -559,12 +559,12 @@ let raw_request
           "--Ocsigen_http_client: Putting in free connections";
         let gf = match gf with
           | None ->
-            let gf =
-              !ref_thr_conn >>= fun conn ->
-              Ocsigen_http_com.get_http_frame ~head conn
-            in
-            close_on_error !ref_thr_conn gf;
-            gf
+              let gf =
+                !ref_thr_conn >>= fun conn ->
+                Ocsigen_http_com.get_http_frame ~head conn
+              in
+              close_on_error !ref_thr_conn gf;
+              gf
           | Some gf -> gf
         in
         try
@@ -576,35 +576,35 @@ let raw_request
             (inet_addr, port, head) (ref_thr_conn, gf) ;
           Lwt.return ()
         with e ->
-          Ocsigen_messages.debug_noel2
-            "--Ocsigen_http_client: exception while trying to keep free connection: ";
-          Ocsigen_messages.debug2 (Printexc.to_string e);
-          !ref_thr_conn >>= fun conn ->
-          Lwt_ssl.close (Ocsigen_http_com.connection_fd conn)
+            Ocsigen_messages.debug_noel2
+              "--Ocsigen_http_client: exception while trying to keep free connection: ";
+            Ocsigen_messages.debug2 (Printexc.to_string e);
+            !ref_thr_conn >>= fun conn ->
+            Lwt_ssl.close (Ocsigen_http_com.connection_fd conn)
       in
       if do_keep_alive then begin
         match key_new_waiter with
           | None -> (* no pipeline *) put_in_free_conn ()
           | Some (key, _) ->
-            (try
-              let (ref_thr_conn, gf, nb_users) =
-                T.find connection_table key
-              in
-              if nb_users = 1 then begin
-                Ocsigen_messages.debug2
-                  "--Ocsigen_http_client: The connection is not used any more by the client";
-                T.remove connection_table key;
-                put_in_free_conn ~gf ()
-              end
-              else begin
-                T.replace connection_table key (ref_thr_conn, gf, nb_users - 1);
-                Lwt.return ()
-              end
-            with Not_found ->
-              Ocsigen_messages.warning
-                "--Ocsigen_http_client - Strange: connection disappeared from \
-                 connection_table";
-              Lwt.return ())
+              (try
+                let (ref_thr_conn, gf, nb_users) =
+                  T.find connection_table key
+                in
+                if nb_users = 1 then begin
+                  Ocsigen_messages.debug2
+                    "--Ocsigen_http_client: The connection is not used any more by the client";
+                  T.remove connection_table key;
+                  put_in_free_conn ~gf ()
+                end
+                else begin
+                  T.replace connection_table key (ref_thr_conn, gf, nb_users - 1);
+                  Lwt.return ()
+                end
+              with Not_found ->
+                  Ocsigen_messages.warning
+                    "--Ocsigen_http_client - Strange: connection disappeared from \
+                     connection_table";
+                  Lwt.return ())
       end
       else begin
         !ref_thr_conn >>= fun conn ->
@@ -624,11 +624,11 @@ let raw_request
             !get_frame_ref)
           (function
             | Pipeline_failed ->
-              (* Previous request closed the pipeline
-                 but the request has been sent. We redo it. *)
-              Ocsigen_messages.warning "Previous request closed the pipeline. Redoing the request on a new connection.";
-              reopen () >>= fun () ->
-              !get_frame_ref
+                (* Previous request closed the pipeline
+                   but the request has been sent. We redo it. *)
+                Ocsigen_messages.warning "Previous request closed the pipeline. Redoing the request on a new connection.";
+                reopen () >>= fun () ->
+                !get_frame_ref
             | e -> Lwt.fail e))
 
       (fun e ->
@@ -636,7 +636,7 @@ let raw_request
         (match key_new_waiter with
           | None -> ()
           | Some (_, new_waiter_awakener) ->
-            Lwt.wakeup_exn new_waiter_awakener Pipeline_failed);
+              Lwt.wakeup_exn new_waiter_awakener Pipeline_failed);
 
         finalize false >>= fun () ->
         Lwt.fail e)
@@ -659,17 +659,17 @@ let raw_request
     (match key_new_waiter with
       | None -> ()
       | Some (_, new_waiter) ->
-        if server_keepalive then
-          Lwt.wakeup new_waiter ()
-        else
-          Lwt.wakeup_exn new_waiter Pipeline_failed);
+          if server_keepalive then
+            Lwt.wakeup new_waiter ()
+          else
+            Lwt.wakeup_exn new_waiter Pipeline_failed);
 
     Ocsigen_messages.debug2 "--Ocsigen_http_client: frame received";
     (match http_frame.Ocsigen_http_frame.frame_content with
       | None   -> finalize do_keep_alive
       | Some c ->
-        Ocsigen_stream.add_finalizer c (fun _ -> finalize do_keep_alive);
-        Lwt.return ()
+          Ocsigen_stream.add_finalizer c (fun _ -> finalize do_keep_alive);
+          Lwt.return ()
     ) >>= fun () ->
 
 
@@ -804,29 +804,29 @@ let basic_raw_request
 
     match content with
       | None ->
-        let empty_result = Ocsigen_http_frame.empty_result () in
-        Ocsigen_http_com.send
-          slot
-          ~mode:query
-          ~clientproto:Ocsigen_http_frame.Http_header.HTTP11
-          ~head:false
-          ~keep_alive:false
-          ~sender:request_sender
-          {empty_result with
-            Ocsigen_http_frame.res_headers = headers}
+          let empty_result = Ocsigen_http_frame.empty_result () in
+          Ocsigen_http_com.send
+            slot
+            ~mode:query
+            ~clientproto:Ocsigen_http_frame.Http_header.HTTP11
+            ~head:false
+            ~keep_alive:false
+            ~sender:request_sender
+            {empty_result with
+              Ocsigen_http_frame.res_headers = headers}
       | Some stream ->
-        Ocsigen_senders.Stream_content.result_of_content stream >>= fun r ->
-        Ocsigen_http_com.send
-          slot
-          ~mode:query
-          ~clientproto:Ocsigen_http_frame.Http_header.HTTP11
-          ~head:false
-          ~keep_alive:false
-          ~sender:request_sender
-          {r with
-            Ocsigen_http_frame.res_content_length= content_length;
-            Ocsigen_http_frame.res_headers= headers;
-          }
+          Ocsigen_senders.Stream_content.result_of_content stream >>= fun r ->
+          Ocsigen_http_com.send
+            slot
+            ~mode:query
+            ~clientproto:Ocsigen_http_frame.Http_header.HTTP11
+            ~head:false
+            ~keep_alive:false
+            ~sender:request_sender
+            {r with
+              Ocsigen_http_frame.res_content_length= content_length;
+              Ocsigen_http_frame.res_headers= headers;
+            }
 
   in
   Ocsigen_http_com.start_processing conn f; (* starting the request *)
@@ -840,8 +840,8 @@ let basic_raw_request
       (match http_frame.Ocsigen_http_frame.frame_content with
         | None   -> Lwt_ssl.close socket
         | Some c ->
-          Ocsigen_stream.add_finalizer c (fun _ -> Lwt_ssl.close socket);
-          Lwt.return ())
+            Ocsigen_stream.add_finalizer c (fun _ -> Lwt_ssl.close socket);
+            Lwt.return ())
       >>= fun () ->
       Lwt.return http_frame)
     (fun e -> Lwt_ssl.close socket >>= fun () -> Lwt.fail e)

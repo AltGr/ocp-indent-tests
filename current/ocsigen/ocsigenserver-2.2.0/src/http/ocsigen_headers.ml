@@ -116,8 +116,8 @@ let rec parse_cookies s =
       CookiesTable.empty
       splitted
   with _ -> CookiesTable.empty
-    (*VVV Actually the real syntax of cookies is more complex! *)
-    (*
+      (*VVV Actually the real syntax of cookies is more complex! *)
+      (*
 http://www.w3.org/Protocols/rfc2109/rfc2109
 Mozilla spec + RFC2109
 http://ws.bokeland.com/blog/376/1043/2006/10/27/76832
@@ -132,24 +132,24 @@ let get_keepalive http_header =
       (Http_header.get_headers_value http_header Http_headers.connection)
     <> "close"
   with Not_found ->
-    true
-    (* 06/02/2008
-       If HTTP/1.0, we do not keep alive, even if the client asks so.
-       It would be possible, but only if the content-length is known.
-       Chunked encoding is not possible with HTTP/1.0.
-       As we cannot know if the output will be chunked or not,
-       we decided that we won't keep the connection open at all for
-       HTTP/1.0.
-       Another solution would be to keep it open if the client asks so,
-       and answer connection:close (and close) if we don't know the size
-       of the document. In that case, all requests that have been pipelined
-       would be processed by the server, but not sent back to the client.
-       Which one is the best? It really depends on the client.
-       If the client waits the answer before doing the following request,
-       it would be ok to keep the connection opened,
-       otherwise it is better not.
-       (+ pb with non-idempotent requests, that should not be pipelined)
-    *)
+      true
+      (* 06/02/2008
+         If HTTP/1.0, we do not keep alive, even if the client asks so.
+         It would be possible, but only if the content-length is known.
+         Chunked encoding is not possible with HTTP/1.0.
+         As we cannot know if the output will be chunked or not,
+         we decided that we won't keep the connection open at all for
+         HTTP/1.0.
+         Another solution would be to keep it open if the client asks so,
+         and answer connection:close (and close) if we don't know the size
+         of the document. In that case, all requests that have been pipelined
+         would be processed by the server, but not sent back to the client.
+         Which one is the best? It really depends on the client.
+         If the client waits the answer before doing the following request,
+         it would be ok to keep the connection opened,
+         otherwise it is better not.
+         (+ pb with non-idempotent requests, that should not be pipelined)
+      *)
 
 
 
@@ -167,13 +167,13 @@ let get_host_from_host_header =
       in
       match Netstring_pcre.string_match host_re hostport 0 with
         | Some m -> 
-          (Some (Netstring_pcre.matched_group m 1 hostport),
-           try Some (int_of_string 
-                 (Netstring_pcre.matched_group m 3 hostport))
-           with Not_found -> None | Failure _ -> raise Ocsigen_Bad_Request)
+            (Some (Netstring_pcre.matched_group m 1 hostport),
+             try Some (int_of_string 
+                   (Netstring_pcre.matched_group m 3 hostport))
+             with Not_found -> None | Failure _ -> raise Ocsigen_Bad_Request)
         | None -> raise Ocsigen_Bad_Request
     with Not_found ->
-      (None, None)
+        (None, None)
 
 let get_user_agent http_frame =
   try (Http_header.get_headers_value
@@ -185,7 +185,7 @@ let get_cookie_string http_frame =
     Some (Http_header.get_headers_value
         http_frame.Ocsigen_http_frame.frame_header Http_headers.cookie)
   with Not_found ->
-    None
+      None
 
 let get_if_modified_since http_frame =
   try
@@ -234,20 +234,20 @@ let get_content_type http_frame =
 let parse_content_type = function
   | None -> None
   | Some s ->
-    match String.split ';' s with
-      | [] -> None
-      | a::l ->
-        try
-          let (typ, subtype) = String.sep '/' a in
-          let params = 
+      match String.split ';' s with
+        | [] -> None
+        | a::l ->
             try
-              List.map (String.sep '=') l 
-            with Not_found -> []
-          in 
-          (*VVV If syntax error, we return no parameter at all *)
-          Some ((typ, subtype), params)
-        with Not_found -> None
-        (*VVV If syntax error in type, we return None *)
+              let (typ, subtype) = String.sep '/' a in
+              let params = 
+                try
+                  List.map (String.sep '=') l 
+                with Not_found -> []
+              in 
+              (*VVV If syntax error, we return no parameter at all *)
+              Some ((typ, subtype), params)
+            with Not_found -> None
+            (*VVV If syntax error in type, we return None *)
 
 
 let get_content_length http_frame =

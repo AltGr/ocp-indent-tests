@@ -174,24 +174,24 @@ let resolve ?no_check_for ~request ~filename () =
         else
           let rec find_index = function
             | [] ->
-              (* No suitable index, we try to list the directory *)
-              if request.request_config.list_directory_content then (
-                Ocsigen_messages.debug2
-                  "--LocalFiles: Displaying directory content";
-                (filename, stat))
-              else (
-                (* No suitable index *)
-                Ocsigen_messages.debug2 "--LocalFiles: No index and no listing";
-                raise NotReadableDirectory)
+                (* No suitable index, we try to list the directory *)
+                if request.request_config.list_directory_content then (
+                  Ocsigen_messages.debug2
+                    "--LocalFiles: Displaying directory content";
+                  (filename, stat))
+                else (
+                  (* No suitable index *)
+                  Ocsigen_messages.debug2 "--LocalFiles: No index and no listing";
+                  raise NotReadableDirectory)
             | e :: q ->
-              let index = filename ^ e in
-              Ocsigen_messages.debug
-                (fun () -> "--LocalFiles: Testing \""^index
-                  ^"\" as possible index.");
-              try
-                (index, Unix.LargeFile.stat index)
-              with
-                | Unix.Unix_error (Unix.ENOENT, _, _) -> find_index q
+                let index = filename ^ e in
+                Ocsigen_messages.debug
+                  (fun () -> "--LocalFiles: Testing \""^index
+                    ^"\" as possible index.");
+                try
+                  (index, Unix.LargeFile.stat index)
+                with
+                  | Unix.Unix_error (Unix.ENOENT, _, _) -> find_index q
           in find_index request.request_config.default_directory_index
 
       else (filename, stat)
@@ -232,14 +232,14 @@ let content ~request ~file =
   try
     match file with
       | RDir dirname ->
-        Ocsigen_senders.Directory_content.result_of_content
-          (dirname, request.request_info.ri_full_path)
+          Ocsigen_senders.Directory_content.result_of_content
+            (dirname, request.request_info.ri_full_path)
       | RFile filename ->
-        Ocsigen_senders.File_content.result_of_content
-          (filename,
-           request.request_config.charset_assoc,
-           request.request_config.mime_assoc
-          )
+          Ocsigen_senders.File_content.result_of_content
+            (filename,
+             request.request_config.charset_assoc,
+             request.request_config.mime_assoc
+            )
 
   with
     | Unix.Unix_error (Unix.EACCES,_,_) -> raise Failed_403

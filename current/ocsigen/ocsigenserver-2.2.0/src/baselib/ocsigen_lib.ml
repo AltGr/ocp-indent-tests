@@ -123,26 +123,26 @@ module Ip_address = struct
       in
       let maybe_mask = match maybe_mask with
         | Some n when n > 64 ->
-          Some (IPv6 (Int64.minus_one, Int64.shift_left Int64.minus_one (128-n)))
+            Some (IPv6 (Int64.minus_one, Int64.shift_left Int64.minus_one (128-n)))
         | Some n ->
-          Some (IPv6 (Int64.shift_left Int64.minus_one (64-n), Int64.zero))
+            Some (IPv6 (Int64.shift_left Int64.minus_one (64-n), Int64.zero))
         | None -> None
       in
       match normalized with
         | [a; b; c; d; e; f; g; h] ->
-          IPv6 (Int64.zero ++ a ++ b ++ c ++ d,
-              Int64.zero ++ e ++ f ++ g ++ h), maybe_mask
+            IPv6 (Int64.zero ++ a ++ b ++ c ++ d,
+                Int64.zero ++ e ++ f ++ g ++ h), maybe_mask
         | _ -> failwith "invalid IPv6 address: %s (%d components)" s (List.length normalized)
     else
       let (++) a b = Int32.logor (Int32.shift_left a 16) (Int32.of_int b) in
       let maybe_mask = match maybe_mask with
         | Some n ->
-          Some (IPv4 (Int32.shift_left Int32.minus_one (32-n)))
+            Some (IPv4 (Int32.shift_left Int32.minus_one (32-n)))
         | None -> None
       in
       match addr_list with
         | [b; a] ->
-          IPv4 (Int32.zero ++ a ++ b), maybe_mask
+            IPv4 (Int32.zero ++ a ++ b), maybe_mask
         | _ -> failwith "invalid IPv4 address: %s" s
 
 
@@ -151,19 +151,19 @@ module Ip_address = struct
       | IPv4 a, IPv4 b, Some (IPv4 m) -> Int32.logand a m = Int32.logand b m
       | IPv4 a, IPv4 b, None -> a = b
       | IPv6 (a1,a2), IPv6 (b1,b2), Some (IPv6 (m1,m2)) ->
-        Int64.logand a1 m1 = Int64.logand b1 m1 &&
-        Int64.logand a2 m2 = Int64.logand b2 m2
+          Int64.logand a1 m1 = Int64.logand b1 m1 &&
+          Int64.logand a2 m2 = Int64.logand b2 m2
       | IPv6 (a1,a2), IPv6 (b1,b2), None -> a1 = b1 && a2 = b2
       | IPv6 (a1,a2), IPv4 b, c
         when a1 = 0L && Int64.logand a2 0xffffffff00000000L = 0xffff00000000L ->
-        (* might be insecure, cf
-           http://tools.ietf.org/internet-drafts/draft-itojun-v6ops-v4mapped-harmful-02.txt *)
-        let a = Int64.to_int32 a2 in
-        begin match c with
-          | Some (IPv4 m) -> Int32.logand a m = Int32.logand b m
-          | Some (IPv6 _) -> invalid_arg "match_ip"
-          | None -> a = b
-        end
+          (* might be insecure, cf
+             http://tools.ietf.org/internet-drafts/draft-itojun-v6ops-v4mapped-harmful-02.txt *)
+          let a = Int64.to_int32 a2 in
+          begin match c with
+            | Some (IPv4 m) -> Int32.logand a m = Int32.logand b m
+            | Some (IPv6 _) -> invalid_arg "match_ip"
+            | None -> a = b
+          end
       | _ -> false
 
   let network_of_ip ip mask4 (mask61, mask62) = match ip with
@@ -224,7 +224,7 @@ module Filename = struct
       let pos = String.rindex filename '.' in
       String.sub filename (pos+1) ((String.length filename) - pos - 1)
     with Not_found ->
-      raise Not_found
+        raise Not_found
 
   let extension filename =
     try
@@ -238,7 +238,7 @@ module Filename = struct
       else (* Dot before a directory separator *)
         raise Not_found
     with Not_found -> (* No dot in filename *)
-      raise Not_found
+        raise Not_found
 
 end
 
@@ -321,8 +321,8 @@ module Url = struct
           match Netstring_pcre.matched_string r s with
             | " " when plus -> "+"
             | x ->
-              let k = Char.code(x.[0]) in
-              "%" ^ to_hex2 k
+                let k = Char.code(x.[0]) in
+                "%" ^ to_hex2 k
         )
         s
 
@@ -359,37 +359,37 @@ module Url = struct
       let (https, host, port, pathstring, query) =
         match match_re with
           | None ->
-            (match Netstring_pcre.string_match short_url_re url 0 with
-              | None -> raise Ocsigen_Bad_Request
-              | Some m ->
-                let path =
-                  fixup_url_string (Netstring_pcre.matched_group m 1 url)
-                in
-                let query =
-                  try
-                    Some (fixup_url_string (Netstring_pcre.matched_group m 3 url))
-                  with Not_found -> None
-                in
-                (None, None, None, path, query))
+              (match Netstring_pcre.string_match short_url_re url 0 with
+                | None -> raise Ocsigen_Bad_Request
+                | Some m ->
+                    let path =
+                      fixup_url_string (Netstring_pcre.matched_group m 1 url)
+                    in
+                    let query =
+                      try
+                        Some (fixup_url_string (Netstring_pcre.matched_group m 3 url))
+                      with Not_found -> None
+                    in
+                    (None, None, None, path, query))
           | Some m ->
-            let path = fixup_url_string (Netstring_pcre.matched_group m 5 url) in
-            let query =
-              try Some (fixup_url_string (Netstring_pcre.matched_group m 7 url))
-              with Not_found -> None
-            in
-            let https =
-              try (match Netstring_pcre.matched_group m 1 url with
-                | "http" -> Some false
-                | "https" -> Some true
-                | _ -> None)
-              with Not_found -> None in
-            let host =
-              try Some (Netstring_pcre.matched_group m 2 url)
-              with Not_found -> None in
-            let port =
-              try Some (int_of_string (Netstring_pcre.matched_group m 4 url))
-              with Not_found -> None in
-            (https, host, port, path, query)
+              let path = fixup_url_string (Netstring_pcre.matched_group m 5 url) in
+              let query =
+                try Some (fixup_url_string (Netstring_pcre.matched_group m 7 url))
+                with Not_found -> None
+              in
+              let https =
+                try (match Netstring_pcre.matched_group m 1 url with
+                  | "http" -> Some false
+                  | "https" -> Some true
+                  | _ -> None)
+                with Not_found -> None in
+              let host =
+                try Some (Netstring_pcre.matched_group m 2 url)
+                with Not_found -> None in
+              let port =
+                try Some (int_of_string (Netstring_pcre.matched_group m 4 url))
+                with Not_found -> None in
+              (https, host, port, path, query)
       in
 
       (* Note that the fragment (string after #) is not sent by browsers *)

@@ -48,16 +48,16 @@ module Make_XML_Content(Xml : Xml_sigs.Iterable)
     match accepted, alt with
       | None, _ | _, [] -> default
       | Some accepted, alt ->
-        try
-          List.find
-            (fun content_type ->
-              List.exists
-                (function
-                  | ((Some a, Some b),_,_) -> a^"/"^b = content_type
-                  | _ -> false)
-                (Lazy.force accepted))
-            alt
-        with Not_found -> default
+          try
+            List.find
+              (fun content_type ->
+                List.exists
+                  (function
+                    | ((Some a, Some b),_,_) -> a^"/"^b = content_type
+                    | _ -> false)
+                  (Lazy.force accepted))
+              alt
+          with Not_found -> default
 
   let result_of_content ?options c =
     let content_type =
@@ -165,25 +165,25 @@ struct
         (fun s ->
           match s with
                 Ocsigen_stream.Finished None ->
-              finalize `Success >>= fun () ->
-              next_stream l
+                finalize `Success >>= fun () ->
+                next_stream l
             | Ocsigen_stream.Finished (Some stream) ->
-              next stream l
+                next stream l
             | Ocsigen_stream.Cont (v, stream) ->
-              Ocsigen_stream.cont v (fun () -> next stream l))
+                Ocsigen_stream.cont v (fun () -> next stream l))
         (function Interrupted e | e ->
-          (*XXX string_of_exn should know how to print "Interrupted _" exceptions*)
-          exnhandler e l)
+            (*XXX string_of_exn should know how to print "Interrupted _" exceptions*)
+            exnhandler e l)
     and next_stream l =
       match l with
             [] -> Ocsigen_stream.empty None
         | f :: l ->
-          Lwt.try_bind f
-            (fun stream ->
-              finalizer :=
-                (fun status -> Ocsigen_stream.finalize stream status);
-              next (Ocsigen_stream.get stream) l)
-            (fun e -> exnhandler e l)
+            Lwt.try_bind f
+              (fun stream ->
+                finalizer :=
+                  (fun status -> Ocsigen_stream.finalize stream status);
+                next (Ocsigen_stream.get stream) l)
+              (fun e -> exnhandler e l)
     and exnhandler e l =
       Ocsigen_messages.warning
         ("Error while reading stream list: " ^ Printexc.to_string e);
@@ -394,15 +394,15 @@ struct
     let trie li =
       List.sort (fun (a1, b1, _) (a2, b2, _) -> match a1, a2 with
         | `Dir, `Dir ->
-          if b1<b2
-          then 0
-          else 1
+            if b1<b2
+            then 0
+            else 1
         | `Dir, _ -> 0
         | _, `Dir -> 1
         | _, _->
-          if b1<b2
-          then 0
-          else 1) li
+            if b1<b2
+            then 0
+            else 1) li
 
     in let rec aux2 = function
       | [] -> ""
@@ -438,12 +438,12 @@ struct
     and back = match parent with
       | None -> ""
       | Some parent ->
-        "<tr>\n\
-         <td class=\"img\"><img src=\"/ocsigenstuff/back.png\" alt=\"\" /></td>\n\
-         <td><a href=\""^parent^"\">Parent Directory</a></td>\n\
-                                <td>"^(Int64.to_string stat.Unix.LargeFile.st_size)^"</td>\n\
-                                                             <td>"^(date stat.Unix.LargeFile.st_mtime)^"</td>\n\
-                                                   </tr>\n"
+          "<tr>\n\
+           <td class=\"img\"><img src=\"/ocsigenstuff/back.png\" alt=\"\" /></td>\n\
+           <td><a href=\""^parent^"\">Parent Directory</a></td>\n\
+                                  <td>"^(Int64.to_string stat.Unix.LargeFile.st_size)^"</td>\n\
+                                                               <td>"^(date stat.Unix.LargeFile.st_mtime)^"</td>\n\
+                                                     </tr>\n"
 
     and after=
       "</table>\
@@ -492,14 +492,14 @@ struct
     let (error_code, error_msg, headers) =
       match exn with
         | Some (Http_error.Http_exception (errcode, msgs, h) as e) ->
-          let msg = Http_error.string_of_http_exception e in
-          let headers = match h with
-            | Some h -> h
-            | None -> Http_headers.dyn_headers
-          in (errcode, msg, headers)
+            let msg = Http_error.string_of_http_exception e in
+            let headers = match h with
+              | Some h -> h
+              | None -> Http_headers.dyn_headers
+            in (errcode, msg, headers)
         | _ ->
-          let error_mes = Http_error.expl_of_code code in
-          (code, error_mes, Http_headers.empty)
+            let error_mes = Http_error.expl_of_code code in
+            (code, error_mes, Http_headers.empty)
     in
     let headers =
       (* puts dynamic headers *)
@@ -512,20 +512,20 @@ struct
     let err_page =
       match exn with
         | Some exn when Ocsigen_config.get_debugmode () ->
-          error_page
-            ("Error "^str_code)
-            error_msg
-            [Xhtml.M.p
-               [Xhtml.M.pcdata (Printexc.to_string exn);
-                Xhtml.M.br ();
-                Xhtml.M.em
-                  [Xhtml.M.pcdata "(Ocsigen running in debug mode)"]
-               ]]
+            error_page
+              ("Error "^str_code)
+              error_msg
+              [Xhtml.M.p
+                 [Xhtml.M.pcdata (Printexc.to_string exn);
+                  Xhtml.M.br ();
+                  Xhtml.M.em
+                    [Xhtml.M.pcdata "(Ocsigen running in debug mode)"]
+                 ]]
         | _ ->
-          error_page
-            ("Error "^str_code)
-            error_msg
-            []
+            error_page
+              ("Error "^str_code)
+              error_msg
+              []
     in
     Xhtml_content.result_of_content err_page >>= fun r ->
     Lwt.return

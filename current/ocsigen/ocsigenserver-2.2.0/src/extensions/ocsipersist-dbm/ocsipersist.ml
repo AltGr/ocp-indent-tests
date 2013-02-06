@@ -42,19 +42,19 @@ open Simplexmlparser
 let rec parse_global_config (store, ocsidbm, delayloading as d) = function
   | [] -> d
   | Element ("delayloading", [("val", ("true" | "1"))], []) :: ll ->
-    parse_global_config (store, ocsidbm, true) ll
+      parse_global_config (store, ocsidbm, true) ll
 
   | Element ("store", [("dir", s)], []) :: ll ->
-    if store = None then
-      parse_global_config ((Some s), ocsidbm, delayloading) ll
-    else
-      Ocsigen_extensions.badconfig "Ocsipersist: Duplicate <store> tag"
+      if store = None then
+        parse_global_config ((Some s), ocsidbm, delayloading) ll
+      else
+        Ocsigen_extensions.badconfig "Ocsipersist: Duplicate <store> tag"
 
   | Element ("ocsidbm", [("name", s)], []) :: ll ->
-    if ocsidbm = None then
-      parse_global_config (store, (Some s), delayloading) ll
-    else
-      Ocsigen_extensions.badconfig "Ocsipersist: Duplicate <ocsidbm> tag"
+      if ocsidbm = None then
+        parse_global_config (store, (Some s), delayloading) ll
+      else
+        Ocsigen_extensions.badconfig "Ocsipersist: Duplicate <ocsidbm> tag"
 
   | (Element (s,_,_))::ll -> Ocsigen_extensions.badconfig "Bad tag %s" s
 
@@ -121,7 +121,7 @@ let rec get_indescr i =
                                    Error message is: "^
              (match e with
                | Unix.Unix_error (a,b,c) ->
-                 (Unix.error_message a)^" in "^b^"("^c^")"
+                   (Unix.error_message a)^" in "^b^"("^c^")"
                | _ -> Printexc.to_string e)^
              ". Have a look at the logs to see if there is an \
               error message from the Ocsidbm process.");
@@ -244,8 +244,8 @@ let make_persistent_lazy ~store ~name ~default =
      (fun () -> db_get pvname >>= (fun _ -> return ()))
      (function
        | Not_found ->
-         let def = Marshal.to_string (default ()) []
-         in db_replace pvname def
+           let def = Marshal.to_string (default ()) []
+           in db_replace pvname def
        | e -> fail e)) >>=
   (fun () -> return pvname)
 
@@ -301,7 +301,7 @@ let fold_table f table beg =
     (function
       | None -> return beg
       | Some k -> find table k >>= fun r ->
-        f k r beg >>= (fun res -> aux db_nextkey res))
+          f k r beg >>= (fun res -> aux db_nextkey res))
   in
   aux db_firstkey beg
 

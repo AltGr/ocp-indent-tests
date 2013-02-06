@@ -56,9 +56,9 @@ let add_cookies newcookies oldcookies =
         (fun n v beg ->
           match v with
             | OSet (expo, v, secure) ->
-              add_cookie path n (OSet (expo, v, secure)) beg
+                add_cookie path n (OSet (expo, v, secure)) beg
             | OUnset ->
-              add_cookie path n OUnset beg
+                add_cookie path n OUnset beg
         )
         ct
         t

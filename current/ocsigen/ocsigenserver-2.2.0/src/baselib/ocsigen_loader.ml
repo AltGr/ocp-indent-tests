@@ -69,7 +69,7 @@ let loadfile pre post force file =
       begin try
         Dynlink_wrapper.loadfile file; post ()
       with e ->
-        post (); raise e
+          post (); raise e
       end
     end
     else if not (isloaded file) then begin
@@ -78,7 +78,7 @@ let loadfile pre post force file =
       begin try
         Dynlink_wrapper.loadfile file; post ()
       with e ->
-        post (); raise e
+          post (); raise e
       end;
       addloaded file;
     end
@@ -109,7 +109,7 @@ let init_module pre post force name =
     try
       M.find name !init_functions
     with Not_found as e ->
-      raise (Dynlink_error ("named module " ^ name, e))
+        raise (Dynlink_error ("named module " ^ name, e))
   in try
     if force then begin
       pre ();
@@ -117,7 +117,7 @@ let init_module pre post force name =
       begin try
         f (); post ()
       with e ->
-        post (); raise e
+          post (); raise e
       end
     end
     else if not (isloaded name) then begin
@@ -126,7 +126,7 @@ let init_module pre post force name =
       begin try
         f (); post ()
       with e ->
-        post (); raise e
+          post (); raise e
       end;
       addloaded name;
     end
@@ -175,17 +175,17 @@ let findfiles =
       let rec aux = function
         | [] -> []
         | a::q ->
-          let mods =
-            try
-              let raw = Findlib.package_property preds a "archive" in
-              (* Replacing .cmx/.cmxa by .cmxs *)
-              let raw = Netstring_pcre.global_replace cmx ".cmxs " raw in
-              List.filter ((<>) "") (String.split ~multisep:true ' ' raw)
-            with
-              | Not_found -> []
-          in
-          let base = Findlib.package_directory a in
-          (List.map (Findlib.resolve_path ~base) mods) @ (aux q)
+            let mods =
+              try
+                let raw = Findlib.package_property preds a "archive" in
+                (* Replacing .cmx/.cmxa by .cmxs *)
+                let raw = Netstring_pcre.global_replace cmx ".cmxs " raw in
+                List.filter ((<>) "") (String.split ~multisep:true ' ' raw)
+              with
+                | Not_found -> []
+            in
+            let base = Findlib.package_directory a in
+            (List.map (Findlib.resolve_path ~base) mods) @ (aux q)
       in
       let res = aux deps in
       Ocsigen_messages.debug
@@ -205,14 +205,14 @@ let () = Printexc.register_exn_printer
     (fun f_rec -> function
       | Dynlink_wrapper.Error e -> Dynlink_wrapper.error_message e
       | Dynlink_error (s, e) ->
-        sprintf "Dynlink error while loading %s: %s" s (f_rec e)
+          sprintf "Dynlink error while loading %s: %s" s (f_rec e)
       | Findlib_error (s, Fl_package_base.No_such_package (s', msg)) ->
-        let pkg =
-          if s = s' then s else sprintf "%s [while trying to load %s]" s' s
-        in
-        let additional = if msg = "" then "" else sprintf " (%s)" msg in
-        sprintf
-          "Findlib package %s not found%s: maybe you forgot <findlib path=\"...\"/>?"
-          pkg additional
+          let pkg =
+            if s = s' then s else sprintf "%s [while trying to load %s]" s' s
+          in
+          let additional = if msg = "" then "" else sprintf " (%s)" msg in
+          sprintf
+            "Findlib package %s not found%s: maybe you forgot <findlib path=\"...\"/>?"
+            pkg additional
       | Findlib_error (s, e) -> sprintf "Findlib error while handling %s: %s" s (f_rec e)
       | e -> raise e)

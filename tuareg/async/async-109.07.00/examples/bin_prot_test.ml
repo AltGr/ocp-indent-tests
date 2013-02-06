@@ -6,15 +6,15 @@ module Fd = Unix.Fd
 
 (* The type of values we want to transmit for testing *)
 type test =
-  {
-    a : int;
-    b : float;
-    c : bool array;
-    d : (string * int64) list;
-    e : nativeint array;
-    f : [`Foo | `Bar] array;
-    g : float array;
-  }
+    {
+      a : int;
+      b : float;
+      c : bool array;
+      d : (string * int64) list;
+      e : nativeint array;
+      f : [`Foo | `Bar] array;
+      g : float array;
+    }
 with bin_io
 
 (* This value is very likely larger than e.g. an order, fill, etc. *)

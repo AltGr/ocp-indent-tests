@@ -79,9 +79,9 @@ module List = struct
     let rec aux acc = function
       | [] -> acc
       | t::q ->
-        match f t with
-          | None -> aux acc q
-          | Some r -> aux (r::acc) q
+          match f t with
+            | None -> aux acc q
+            | Some r -> aux (r::acc) q
     in
     List.rev (aux [] l)
 
@@ -212,8 +212,8 @@ end = struct
   let rec iter f (node : 'a t) =
     match node.next.content with
       | Some c ->
-        f c;
-        iter f node.next
+          f c;
+          iter f node.next
       | None -> ()
 
   let rec fold_left f a (node : 'a t) =

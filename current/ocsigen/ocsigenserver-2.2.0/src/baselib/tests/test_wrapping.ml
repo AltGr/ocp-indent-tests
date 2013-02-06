@@ -51,9 +51,9 @@ let _,vb'' = Ocsigen_wrap.wrap [2,[1.,[vb,4,ref 0],ref 42]]
 let () =
   match vb'' with
     | [2,[1.,[vb',4,{ contents = 0}],{ contents = 42}]] ->
-      assert (
-        let (t,f) = Obj.magic (vb') in
-        t == tst_string && ( f -. 4.14 < 0.0001 ))
+        assert (
+          let (t,f) = Obj.magic (vb') in
+          t == tst_string && ( f -. 4.14 < 0.0001 ))
     | _ -> assert false
 
 
@@ -71,8 +71,8 @@ let _,vb'' = Ocsigen_wrap.wrap vb'
 let () =
   match (Obj.magic vb'') with
     | (x,y) -> 
-      assert (x == vb'.b);
-      assert (y.a -. 4.14 < 0.0001 )
+        assert (x == vb'.b);
+        assert (y.a -. 4.14 < 0.0001 )
 
 
 (*** big value copy ***)

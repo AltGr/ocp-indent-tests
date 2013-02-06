@@ -67,8 +67,8 @@ let list_tables () =
       Unix.opendir directory
     with
       | Unix.Unix_error(error,_,_) ->
-        failwith ( Printf.sprintf "Ocsidbm: can't open directory  %s: %s"
-              directory (Unix.error_message error))
+          failwith ( Printf.sprintf "Ocsidbm: can't open directory  %s: %s"
+                directory (Unix.error_message error))
   in
   let rec aux () =
     try
@@ -88,17 +88,17 @@ let _ =
     Unix.access directory [Unix.R_OK; Unix.W_OK; Unix.X_OK; Unix.F_OK]
   with
     | Unix.Unix_error (Unix.ENOENT, _, _) ->
-      begin
-        try
-          Unix.mkdir directory 0o750
-        with
-          | Unix.Unix_error(error,_,_) ->
-            failwith ( Printf.sprintf "Ocsidbm: can't create directory %s: %s"
-                  directory (Unix.error_message error) )
-      end
+        begin
+          try
+            Unix.mkdir directory 0o750
+          with
+            | Unix.Unix_error(error,_,_) ->
+                failwith ( Printf.sprintf "Ocsidbm: can't create directory %s: %s"
+                      directory (Unix.error_message error) )
+        end
     | Unix.Unix_error(error,_,_) ->
-      failwith ( Printf.sprintf "Ocsidbm: can't access directory %s: %s"
-            directory (Unix.error_message error) )
+        failwith ( Printf.sprintf "Ocsidbm: can't access directory %s: %s"
+              directory (Unix.error_message error) )
 
 
 let open_db name =
@@ -205,38 +205,38 @@ let execute outch =
   let handle_errors f = try f () with e -> send outch (Error e) in
   function
     | Get (t, k) ->
-      handle_errors
-        (fun () ->
-          try
-            send outch (Value (db_get t k))
-          with
-            | Not_found -> send outch Dbm_not_found)
+        handle_errors
+          (fun () ->
+            try
+              send outch (Value (db_get t k))
+            with
+              | Not_found -> send outch Dbm_not_found)
     | Remove (t, k) -> handle_errors (fun () -> db_remove t k; send outch Ok)
     | Replace (t, k, v) ->
-      handle_errors (fun () -> db_replace t k v; send outch Ok)
+        handle_errors (fun () -> db_replace t k v; send outch Ok)
     | Replace_if_exists (t, k, v) ->
-      handle_errors (fun () ->
-          try
-            ignore (db_get t k);
-            db_replace t k v;
-            send outch Ok
-          with Not_found -> send outch Dbm_not_found)
+        handle_errors (fun () ->
+            try
+              ignore (db_get t k);
+              db_replace t k v;
+              send outch Ok
+            with Not_found -> send outch Dbm_not_found)
     | Firstkey t ->
-      handle_errors (fun () ->
-          try send outch (Key (db_firstkey t))
-          with Not_found -> send outch End)
+        handle_errors (fun () ->
+            try send outch (Key (db_firstkey t))
+            with Not_found -> send outch End)
     | Nextkey t ->
-      handle_errors (fun () ->
-          try send outch (Key (db_nextkey t))
-          with Not_found -> send outch End)
+        handle_errors (fun () ->
+            try send outch (Key (db_nextkey t))
+            with Not_found -> send outch End)
     | Length t ->
-      handle_errors (fun () ->
-          catch
-            (fun () ->
-              db_length t >>=
-              (fun i -> send outch (Value (Marshal.to_string i []))))
-            (function Not_found -> send outch Dbm_not_found
-                    | e -> send outch (Error e)))
+        handle_errors (fun () ->
+            catch
+              (fun () ->
+                db_length t >>=
+                (fun i -> send outch (Value (Marshal.to_string i []))))
+              (function Not_found -> send outch Dbm_not_found
+                      | e -> send outch (Error e)))
 
 let nb_clients = ref 0
 

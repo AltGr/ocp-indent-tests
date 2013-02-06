@@ -60,7 +60,7 @@ let compute_new_ri_cookies
           (fun n v beg ->
             match v with
               | OSet (Some ti, v, _) when ti>now ->
-                String.Table.add n v t
+                  String.Table.add n v t
               | OSet (None, v, _) -> String.Table.add n v t
               | OSet (_, _, _)
               | OUnset -> String.Table.remove n t
@@ -278,27 +278,27 @@ struct
   let display_http_exception e =
     match e with
       | Http_exception (n, Some s, Some _) ->
-        Ocsigen_messages.debug
-          (fun () -> Format.sprintf "%s: %s (with headers)" (expl_of_code n) s)
+          Ocsigen_messages.debug
+            (fun () -> Format.sprintf "%s: %s (with headers)" (expl_of_code n) s)
       | Http_exception (n, Some s, None) ->
-        Ocsigen_messages.debug
-          (fun () -> Format.sprintf "%s: %s" (expl_of_code n) s)
+          Ocsigen_messages.debug
+            (fun () -> Format.sprintf "%s: %s" (expl_of_code n) s)
       | Http_exception (n, None, _) ->
-        Ocsigen_messages.debug
-          (fun () -> Format.sprintf "%s" (expl_of_code n))
+          Ocsigen_messages.debug
+            (fun () -> Format.sprintf "%s" (expl_of_code n))
       | _ ->
-        raise e
+          raise e
 
   let string_of_http_exception e =
     match e with
       | Http_exception (n, Some s, Some _) ->
-        Format.sprintf "Error %d, %s: %s (with headers)" n (expl_of_code n) s
+          Format.sprintf "Error %d, %s: %s (with headers)" n (expl_of_code n) s
       | Http_exception (n, Some s, None) ->
-        Format.sprintf "Error %d, %s: %s" n (expl_of_code n) s
+          Format.sprintf "Error %d, %s: %s" n (expl_of_code n) s
       | Http_exception (n, None, _) ->
-        Format.sprintf "Error %d, %s" n (expl_of_code n)
+          Format.sprintf "Error %d, %s" n (expl_of_code n)
       | _ ->
-        raise e
+          raise e
 
 end
 

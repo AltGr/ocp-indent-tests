@@ -205,14 +205,14 @@ end = struct
     match node.mylist with
       | None -> ()
       | Some l as a ->
-        (try
-          l.finaliser_before node;
-          assert (node.mylist == a);
-          remove' node l
-        with e ->
-          remove' node l;
-          raise e);
-        l.finaliser_after node
+          (try
+            l.finaliser_before node;
+            assert (node.mylist == a);
+            remove' node l
+          with e ->
+              remove' node l;
+              raise e);
+          l.finaliser_after node
 
   (* These next functions are for the collecting thread *)
 
@@ -225,33 +225,33 @@ end = struct
    * its collection hasn't been rescheduled ! *)
   let collect dl n = match n.mylist with
     | Some l when l == dl ->
-      begin match n.collection with
-        | None -> assert false
-        | Some c -> if c < Unix.gettimeofday () then remove n else ()
-      end
+        begin match n.collection with
+          | None -> assert false
+          | Some c -> if c < Unix.gettimeofday () then remove n else ()
+        end
     | None | Some _ -> ()
 
   let sleep_until = function (*/!\ COOPERATES*)
     | None -> assert false (* collection is set to None and collector to Some *)
     | Some t ->
-      let duration = t -. Unix.gettimeofday () in
-      if duration <= 0.
-      then Lwt.return ()
-      else Lwt_unix.sleep duration
+        let duration = t -. Unix.gettimeofday () in
+        if duration <= 0.
+        then Lwt.return ()
+        else Lwt_unix.sleep duration
 
   (* a function to set the collector. *)
   let rec update_collector r = match r.time_bound with
     | None (* Not time bounded dlist *)
     | Some {collector = Some _} -> () (* Already collecting *)
     | Some ({collector = None} as t) -> match r.oldest with
-      | None -> () (* Empty dlist *)
-      | Some n ->
-        t.collector <- Some (sleep_until n.collection >>= fun () ->
-            collect r n;
-            t.collector <- None;
-            update_collector r;
-            Lwt.return ()
-          )
+        | None -> () (* Empty dlist *)
+        | Some n ->
+            t.collector <- Some (sleep_until n.collection >>= fun () ->
+                collect r n;
+                t.collector <- None;
+                update_collector r;
+                Lwt.return ()
+              )
 
 
   (* Add a node that do not belong to any list to a list.
@@ -266,21 +266,21 @@ end = struct
     let res =
       match r.newest with
         | None ->
-          node.succ <- None;
-          node.prev <- None;
-          r.newest <- Some node;
-          r.oldest <- r.newest;
-          r.size <- 1;
-          None
+            node.succ <- None;
+            node.prev <- None;
+            r.newest <- Some node;
+            r.oldest <- r.newest;
+            r.size <- 1;
+            None
         | Some rl ->
-          node.succ <- None;
-          node.prev <- r.newest;
-          rl.succ <- Some node;
-          r.newest <- Some node;
-          r.size <- r.size + 1;
-          if r.size > r.maxsize
-          then r.oldest
-          else None
+            node.succ <- None;
+            node.prev <- r.newest;
+            rl.succ <- Some node;
+            r.newest <- Some node;
+            r.size <- r.size + 1;
+            if r.size > r.maxsize
+            then r.oldest
+            else None
     in
     node.collection <- collect_timer r;
     update_collector r;
@@ -314,12 +314,12 @@ end = struct
     match node.mylist with
       | None -> ()
       | Some l ->
-        match l.newest with
-          | Some n when node == n -> ()
-          | _ ->
-            remove' node l;
-            ignore (add_node node l) (* assertion: = None *)
-            (* we must not change the physical address => use add_node *)
+          match l.newest with
+            | Some n when node == n -> ()
+            | _ ->
+                remove' node l;
+                ignore (add_node node l) (* assertion: = None *)
+                (* we must not change the physical address => use add_node *)
 
   let rec remove_n_oldest l n = (* remove the n oldest values
                                    (or less if the list is not long enough) ;
@@ -330,9 +330,9 @@ end = struct
       match l.oldest with
         | None -> []
         | Some node ->
-          let v = node.value in
-          remove node; (* and finalise! *)
-          v::remove_n_oldest l (n-1)
+            let v = node.value in
+            remove node; (* and finalise! *)
+            v::remove_n_oldest l (n-1)
 
 
   (* Move a node from one dlist to another one, without finalizing *)
@@ -349,60 +349,60 @@ end = struct
     match newest with
       | None -> Lwt.return accu
       | Some newest ->
-        let rec fold accu node =
-          f accu node.value >>= fun accu ->
-          match node.prev with
-            | None -> Lwt.return accu
-            | Some new_node when new_node == newest -> Lwt.return accu
-            | Some new_node ->
-              fold accu new_node
-        in
-        fold accu newest
+          let rec fold accu node =
+            f accu node.value >>= fun accu ->
+            match node.prev with
+              | None -> Lwt.return accu
+              | Some new_node when new_node == newest -> Lwt.return accu
+              | Some new_node ->
+                  fold accu new_node
+          in
+          fold accu newest
 
   (* fold over the elements from the oldest to the newest *)
   let lwt_fold_back f accu {oldest} =
     match oldest with
       | None -> Lwt.return accu
       | Some oldest ->
-        let rec fold accu node =
-          f accu node.value >>= fun accu ->
-          match node.succ with
-            | None -> Lwt.return accu
-            | Some new_node when new_node == oldest -> Lwt.return accu
-            | Some new_node ->
-              fold accu new_node
-        in
-        fold accu oldest
+          let rec fold accu node =
+            f accu node.value >>= fun accu ->
+            match node.succ with
+              | None -> Lwt.return accu
+              | Some new_node when new_node == oldest -> Lwt.return accu
+              | Some new_node ->
+                  fold accu new_node
+          in
+          fold accu oldest
 
   (* fold over the elements from the newest to the oldest *)
   let fold f accu {newest} =
     match newest with
       | None -> accu
       | Some newest ->
-        let rec fold accu node =
-          let accu = f accu node.value in
-          match node.prev with
-            | None -> accu
-            | Some new_node when new_node == newest -> accu
-            | Some new_node ->
-              fold accu new_node
-        in
-        fold accu newest
+          let rec fold accu node =
+            let accu = f accu node.value in
+            match node.prev with
+              | None -> accu
+              | Some new_node when new_node == newest -> accu
+              | Some new_node ->
+                  fold accu new_node
+          in
+          fold accu newest
 
   (* fold over the elements from the oldest to the newest *)
   let fold_back f accu {oldest} =
     match oldest with
       | None -> accu
       | Some oldest ->
-        let rec fold accu node =
-          let accu = f accu node.value in
-          match node.succ with
-            | None -> accu
-            | Some new_node when new_node == oldest -> accu
-            | Some new_node ->
-              fold accu new_node
-        in
-        fold accu oldest
+          let rec fold accu node =
+            let accu = f accu node.value in
+            match node.succ with
+              | None -> accu
+              | Some new_node when new_node == oldest -> accu
+              | Some new_node ->
+                  fold accu new_node
+          in
+          fold accu oldest
 
   let set_maxsize l m =
     let size = l.size in
@@ -534,11 +534,11 @@ module Make =
       (try
         Lwt.return (find_in_cache cache k)
       with Not_found ->
-        cache.finder k >>= fun r ->
-        (try (* it may have been added during cache.finder *)
-          ignore (find_in_cache cache k)
-        with Not_found -> add_no_remove cache k r);
-        Lwt.return r)
+          cache.finder k >>= fun r ->
+          (try (* it may have been added during cache.finder *)
+            ignore (find_in_cache cache k)
+          with Not_found -> add_no_remove cache k r);
+          Lwt.return r)
 
     class cache f ?timer size_c =
       let c = create f ?timer size_c in

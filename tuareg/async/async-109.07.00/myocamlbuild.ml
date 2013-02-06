@@ -35,13 +35,13 @@ module OASISExpr = struct
   type flag = string 
 
   type t =
-  | EBool of bool
-  | ENot of t
-  | EAnd of t * t
-  | EOr of t * t
-  | EFlag of flag
-  | ETest of test * string
-      
+    | EBool of bool
+    | ENot of t
+    | EAnd of t * t
+    | EOr of t * t
+    | EFlag of flag
+    | ETest of test * string
+        
 
   type 'a choices = (t * 'a) list 
 
@@ -342,15 +342,15 @@ module MyOCamlbuildBase = struct
   (* # 56 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/ocamlbuild/MyOCamlbuildBase.ml" *)
 
   type t =
-    {
-      lib_ocaml: (name * dir list) list;
-      lib_c:     (name * dir * file list) list; 
-      flags:     (tag list * (spec OASISExpr.choices)) list;
+      {
+        lib_ocaml: (name * dir list) list;
+        lib_c:     (name * dir * file list) list; 
+        flags:     (tag list * (spec OASISExpr.choices)) list;
         (* Replace the 'dir: include' from _tags by a precise interdepends in
          * directory.
          *)
-      includes:  (dir * dir list) list; 
-    } 
+        includes:  (dir * dir list) list; 
+      } 
 
   let env_filename =
     Pathname.basename 

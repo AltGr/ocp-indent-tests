@@ -90,10 +90,10 @@ let environment= ["CONTENT_LENGTH=%d";
 let string_conform s = match String.length s with
   | 0 -> "/"
   | n -> match  s.[0], s.[n - 1] with
-    | '/' ,'/' -> s
-    | _, '/' -> "/"^s
-    | '/', _ -> s^"/"
-    | _, _ -> "/"^s^"/"
+      | '/' ,'/' -> s
+      | _, '/' -> "/"^s
+      | '/', _ -> s^"/"
+      | _, _ -> "/"^s^"/"
 
 let string_conform0 s =
   try
@@ -113,20 +113,20 @@ let string_conform2 s =
   match String.length s with
     | 0 | 1 when s = "/" -> ""
     | n -> match s.[0], s.[n - 1] with
-      | '/', '/' -> String.sub s 1 (n-1)
-      | _, '/' -> s
-      | '/', _ -> (String.sub s 1 (n-1))^"/"
-      | _, _ -> s^"/"
+        | '/', '/' -> String.sub s 1 (n-1)
+        | _, '/' -> s
+        | '/', _ -> (String.sub s 1 (n-1))^"/"
+        | _, _ -> s^"/"
 
 (* split a string in two parts, according to a regexp *)
 let split_regexp r s =
   match Regexp.string_match r s 0 with
     | None -> None (* the begining of the string doesn't match the regexp *)
     | Some result ->
-      let (split,l) = Regexp.match_end result, String.length s in
-      let s' = Regexp.first_chars s split in
-      let s'' = Regexp.last_chars s (l - split) in
-      Some (s',s'')
+        let (split,l) = Regexp.match_end result, String.length s in
+        let s' = Regexp.first_chars s split in
+        let s'' = Regexp.last_chars s (l - split) in
+        Some (s',s'')
 
 
 (** permet de recuperer le fichier correspondant a l url *)
@@ -149,11 +149,11 @@ let find_cgi_page request reg sub_path =
       then begin
         match re.exec with
           | None ->
-            Unix.access filename [Unix.X_OK];
-            (filename, re, doc_root)
+              Unix.access filename [Unix.X_OK];
+              (filename, re, doc_root)
           | Some exec ->
-            Unix.access filename [Unix.R_OK];
-            (filename, re, doc_root)
+              Unix.access filename [Unix.R_OK];
+              (filename, re, doc_root)
       end
       else raise Failed_403
     with
@@ -165,22 +165,22 @@ let find_cgi_page request reg sub_path =
   match split_regexp reg.regexp sub_path with
     | None -> raise Failed_404
     | Some (path', path_info) ->
-      let path'' = reg.path^path' in
-      try
-        let dr = Ocsigen_extensions.replace_user_dir reg.regexp reg.doc_root path' in
-        let sc = Ocsigen_extensions.replace_user_dir reg.regexp reg.script path' in
-        let reg =
-          {reg with
-            path = path'';
-            path_info= string_conform0 path_info}
-        in
-        find_file (dr^sc, reg, dr)
-      with Ocsigen_extensions.NoSuchUser -> raise Failed_404
+        let path'' = reg.path^path' in
+        try
+          let dr = Ocsigen_extensions.replace_user_dir reg.regexp reg.doc_root path' in
+          let sc = Ocsigen_extensions.replace_user_dir reg.regexp reg.script path' in
+          let reg =
+            {reg with
+              path = path'';
+              path_info= string_conform0 path_info}
+          in
+          find_file (dr^sc, reg, dr)
+        with Ocsigen_extensions.NoSuchUser -> raise Failed_404
 
 
 
-                                              (*****************************************************************************)
-                                              (** permet de creer le tableau des variables d environnement *)
+                                                (*****************************************************************************)
+                                                (** permet de creer le tableau des variables d environnement *)
 
 (*XXX Is this documented anywhere?*)
 let suitable_header = Regexp.regexp "[a-zA-Z-]+"
@@ -286,21 +286,21 @@ let create_process_cgi filename ri post_out cgi_in err_in re doc_root hostname =
       (array_environment filename re doc_root ri hostname)@(set_env_list re.env)) in
   match re.exec with
     | None ->
-      Unix.create_process_env
-        "/bin/sh"
-        [|"/bin/sh"; "-c"; filename|]
-        envir
-        post_out
-        cgi_in
-        err_in
+        Unix.create_process_env
+          "/bin/sh"
+          [|"/bin/sh"; "-c"; filename|]
+          envir
+          post_out
+          cgi_in
+          err_in
     | Some r ->
-      Unix.create_process_env
-        "/bin/sh"
-        [|"/bin/sh"; "-c"; (r^" "^filename)|]
-        envir
-        post_out
-        cgi_in
-        err_in
+        Unix.create_process_env
+          "/bin/sh"
+          [|"/bin/sh"; "-c"; (r^" "^filename)|]
+          envir
+          post_out
+          cgi_in
+          err_in
 
 
 
@@ -370,17 +370,17 @@ let recupere_cgi head re doc_root filename ri hostname =
            (match ri.ri_http_frame.Ocsigen_http_frame.frame_content with
              | None -> Lwt_unix.close post_in
              | Some content_post ->
-               Ocsigen_http_com.write_stream post_in_ch content_post >>= fun () ->
-               Lwt_chan.flush post_in_ch >>= fun () ->
-               Lwt_unix.close post_in
+                 Ocsigen_http_com.write_stream post_in_ch content_post >>= fun () ->
+                 Lwt_chan.flush post_in_ch >>= fun () ->
+                 Lwt_unix.close post_in
            ))
          (*XXX Check possible errors! *)
          (function
            | Unix.Unix_error (Unix.EPIPE, _, _) ->
-             Lwt_unix.close post_in
+               Lwt_unix.close post_in
            | e ->
-             Ocsigen_messages.unexpected_exception e "Cgimod.recupere_cgi (1)";
-             Lwt_unix.close post_in
+               Ocsigen_messages.unexpected_exception e "Cgimod.recupere_cgi (1)";
+               Lwt_unix.close post_in
          ));
 
 
@@ -397,8 +397,8 @@ let recupere_cgi head re doc_root filename ri hostname =
          (function
            | End_of_file -> Lwt_unix.close err_out
            | e ->
-             Ocsigen_messages.unexpected_exception e "Cgimod.recupere_cgi (2)";
-             Lwt_unix.close err_out));
+               Ocsigen_messages.unexpected_exception e "Cgimod.recupere_cgi (2)";
+               Lwt_unix.close err_out));
     (* This threads terminates, as you can see by doing:
        in ignore (catch get_errors (fun _ -> print_endline "the end";
                                           Lwt_unix.close err_out; return ()));
@@ -416,12 +416,12 @@ let recupere_cgi head re doc_root filename ri hostname =
        (match status with
          | Unix.WEXITED 0 -> ()
          | Unix.WEXITED i ->
-           Ocsigen_messages.warning ("CGI exited with code "^(string_of_int i))
+             Ocsigen_messages.warning ("CGI exited with code "^(string_of_int i))
          | Unix.WSIGNALED i ->
-           Ocsigen_messages.warning ("CGI killed by signal "^(string_of_int i))
+             Ocsigen_messages.warning ("CGI killed by signal "^(string_of_int i))
          | Unix.WSTOPPED i ->
-           (* Cannot occur without Unix.WUNTRACED wait_flag *)
-           assert false
+             (* Cannot occur without Unix.WUNTRACED wait_flag *)
+             assert false
        );
        Lwt.return ());
 
@@ -452,7 +452,7 @@ let get_content str =
 let rec parse_global_config = function
   | [] -> ()
   | (Element ("cgitimeout", [("value", s)], []))::[] ->
-    cgitimeout := int_of_string s
+      cgitimeout := int_of_string s
   | _ -> raise (Error_in_config_file
                ("Unexpected content inside cgimod config"))
 
@@ -461,165 +461,165 @@ let rec parse_global_config = function
 
 let gen reg = function
   | Ocsigen_extensions.Req_found _ -> 
-    Lwt.return Ocsigen_extensions.Ext_do_nothing
+      Lwt.return Ocsigen_extensions.Ext_do_nothing
   | Ocsigen_extensions.Req_not_found (err, ri) ->
-    catch
-      (* Is it a cgi page? *)
-      (fun () ->
-        Ocsigen_messages.debug2 "--Cgimod: Is it a cgi file?";
-        let (filename, re, doc_root) =
-          find_cgi_page ri reg ri.request_info.ri_sub_path
-        in
-        recupere_cgi
-          (ri.request_info.ri_method = Http_header.HEAD)
-          re doc_root filename ri.request_info
-          (Ocsigen_extensions.get_hostname ri)
-        >>= fun (frame, finalizer) ->
-        let header = frame.Ocsigen_http_frame.frame_header in
-        let content = get_content frame in
-        Ocsigen_stream.add_finalizer content finalizer;
-        Lwt.catch
-          (fun () ->
-            let code =
-              try
-                let status =
-                  Ocsigen_http_frame.Http_header.get_headers_value
-                    header Http_headers.status in
-                if String.length status < 3 then
-                  raise (Failure "Cgimod.gen");
-                Some (int_of_string (String.sub status 0 3))
-              with
-                | Not_found -> None
-                | Failure _ ->
-                  raise (CGI_Error (Failure "Bad Status line in header"))
-            in
-            let loc =
-              try
-                Some (Ocsigen_http_frame.Http_header.get_headers_value
-                    header Http_headers.location)
-              with Not_found ->
-                None
-            in
-            match code, loc with
-              | None, Some loc ->
-                Ocsigen_stream.finalize content `Success >>= fun () ->
-                if loc <> "" && loc.[0] = '/' then
-                  Lwt.return
-                    (Ext_retry_with ({ ri with request_info =
-                                         ri_of_url loc ri.request_info },
-                       Ocsigen_cookies.Cookies.empty))
-                else
-                  let default_result = Ocsigen_http_frame.default_result () in
-                  Lwt.return
-                    (Ext_found
-                       (fun () ->
-                         Lwt.return
-                           { default_result with
-                             res_code= 301; (* Moved permanently *)
-                             res_location= Some loc}))
-              | _, _ ->
-                let code = match code with
-                  | None -> 200
-                  | Some c -> c
-                in
-                let default_result = Ocsigen_http_frame.default_result () in
-                (*VVV Warning: this is really late to make the return Ext_found ... *)
-                (*VVV But the extension may also answer Ext_retry_with ... *)
-                (*VVV and the other extensions may receive requests in wrong order ... *)
+      catch
+        (* Is it a cgi page? *)
+        (fun () ->
+          Ocsigen_messages.debug2 "--Cgimod: Is it a cgi file?";
+          let (filename, re, doc_root) =
+            find_cgi_page ri reg ri.request_info.ri_sub_path
+          in
+          recupere_cgi
+            (ri.request_info.ri_method = Http_header.HEAD)
+            re doc_root filename ri.request_info
+            (Ocsigen_extensions.get_hostname ri)
+          >>= fun (frame, finalizer) ->
+          let header = frame.Ocsigen_http_frame.frame_header in
+          let content = get_content frame in
+          Ocsigen_stream.add_finalizer content finalizer;
+          Lwt.catch
+            (fun () ->
+              let code =
+                try
+                  let status =
+                    Ocsigen_http_frame.Http_header.get_headers_value
+                      header Http_headers.status in
+                  if String.length status < 3 then
+                    raise (Failure "Cgimod.gen");
+                  Some (int_of_string (String.sub status 0 3))
+                with
+                  | Not_found -> None
+                  | Failure _ ->
+                      raise (CGI_Error (Failure "Bad Status line in header"))
+              in
+              let loc =
+                try
+                  Some (Ocsigen_http_frame.Http_header.get_headers_value
+                      header Http_headers.location)
+                with Not_found ->
+                    None
+              in
+              match code, loc with
+                | None, Some loc ->
+                    Ocsigen_stream.finalize content `Success >>= fun () ->
+                    if loc <> "" && loc.[0] = '/' then
+                      Lwt.return
+                        (Ext_retry_with ({ ri with request_info =
+                                             ri_of_url loc ri.request_info },
+                           Ocsigen_cookies.Cookies.empty))
+                    else
+                      let default_result = Ocsigen_http_frame.default_result () in
+                      Lwt.return
+                        (Ext_found
+                           (fun () ->
+                             Lwt.return
+                               { default_result with
+                                 res_code= 301; (* Moved permanently *)
+                                 res_location= Some loc}))
+                | _, _ ->
+                    let code = match code with
+                      | None -> 200
+                      | Some c -> c
+                    in
+                    let default_result = Ocsigen_http_frame.default_result () in
+                    (*VVV Warning: this is really late to make the return Ext_found ... *)
+                    (*VVV But the extension may also answer Ext_retry_with ... *)
+                    (*VVV and the other extensions may receive requests in wrong order ... *)
 
-                Lwt.return
-                  (Ext_found
-                     (fun () ->
-                       (*VVV NO! If sending is interrupted, we probably must do something else! *)
-                       Ocsigen_stream.add_finalizer content
-                         (fun outcome ->
-                           match outcome with
-                                 `Failure ->
-                               frame.Ocsigen_http_frame.frame_abort ()
-                             | `Success ->
-                               Lwt.return ());
-                       Lwt.return
-                         {default_result with
-                           res_content_length = None;
-                           res_stream = (content, None);
-                           res_location= loc;
-                           res_headers =
-                             Http_headers.replace_opt
-                               Http_headers.status None
-                               header.Http_header.headers;
-                           res_code = code})))
-          (fun e ->
-            Ocsigen_stream.finalize content `Failure >>= fun () ->
-            Lwt.fail e))
-      (function
-        | Unix.Unix_error (Unix.EACCES,_,_)
-        | Lost_connection _ as e -> fail e
-        | Unix.Unix_error (Unix.ENOENT,_,_) -> return (Ext_next 404)
-        | Failed_403 -> return (Ext_next 403)
-        | Failed_404 -> return (Ext_next 404)
-        | Not_concerned -> return (Ext_next err)
-        | e -> fail e)
-
-
+                    Lwt.return
+                      (Ext_found
+                         (fun () ->
+                           (*VVV NO! If sending is interrupted, we probably must do something else! *)
+                           Ocsigen_stream.add_finalizer content
+                             (fun outcome ->
+                               match outcome with
+                                     `Failure ->
+                                     frame.Ocsigen_http_frame.frame_abort ()
+                                 | `Success ->
+                                     Lwt.return ());
+                           Lwt.return
+                             {default_result with
+                               res_content_length = None;
+                               res_stream = (content, None);
+                               res_location= loc;
+                               res_headers =
+                                 Http_headers.replace_opt
+                                   Http_headers.status None
+                                   header.Http_header.headers;
+                               res_code = code})))
+            (fun e ->
+              Ocsigen_stream.finalize content `Failure >>= fun () ->
+              Lwt.fail e))
+        (function
+          | Unix.Unix_error (Unix.EACCES,_,_)
+          | Lost_connection _ as e -> fail e
+          | Unix.Unix_error (Unix.ENOENT,_,_) -> return (Ext_next 404)
+          | Failed_403 -> return (Ext_next 403)
+          | Failed_404 -> return (Ext_next 404)
+          | Not_concerned -> return (Ext_next err)
+          | e -> fail e)
 
 
-      (*****************************************************************************)
-      (** Parsing of config file *)
+
+
+        (*****************************************************************************)
+        (** Parsing of config file *)
 
 let rec set_env = function
   | [] -> []
   | (Element("setenv", [("var",vr);("val",vl)], []))::l ->
-    if List.mem vr environment
-    then (Ocsigen_messages.debug (fun () -> "--Cgimod: variable no set "^vr);
-      set_env l)
-    else (vr,vl)::set_env l
+      if List.mem vr environment
+      then (Ocsigen_messages.debug (fun () -> "--Cgimod: variable no set "^vr);
+        set_env l)
+      else (vr,vl)::set_env l
   | _ :: l -> raise (Error_in_config_file "Bad config tag for <cgi>")
 
 let parse_config _ path _ _ = function
   | Element ("cgi", atts, l) ->
-    let good_root r =
-      Regexp.quote (string_conform2 r) 
-    in
-    let dir = match atts with
-      | [] ->
-        raise (Error_in_config_file
-              "attributes expected for <cgi>")
-      | [("root",r);("dir", s)] ->
-        {
-          regexp= Regexp.regexp ("^"^(good_root r)^"([^/]*)");
+      let good_root r =
+        Regexp.quote (string_conform2 r) 
+      in
+      let dir = match atts with
+        | [] ->
+            raise (Error_in_config_file
+                  "attributes expected for <cgi>")
+        | [("root",r);("dir", s)] ->
+            {
+              regexp= Regexp.regexp ("^"^(good_root r)^"([^/]*)");
 
-          doc_root= Ocsigen_extensions.parse_user_dir (string_conform1 s);
-          script= Ocsigen_extensions.parse_user_dir "\\1";
+              doc_root= Ocsigen_extensions.parse_user_dir (string_conform1 s);
+              script= Ocsigen_extensions.parse_user_dir "\\1";
 
-          path= string_conform 
-              (Url.string_of_url_path ~encode:true path);
-          path_info="";
+              path= string_conform 
+                  (Url.string_of_url_path ~encode:true path);
+              path_info="";
 
-          exec=None;
-          env=set_env l}
-      | ("regexp", s)::("dir",d)::("script",t)::q ->
-        {
-          regexp=Regexp.regexp ("^"^s);
+              exec=None;
+              env=set_env l}
+        | ("regexp", s)::("dir",d)::("script",t)::q ->
+            {
+              regexp=Regexp.regexp ("^"^s);
 
-          doc_root= Ocsigen_extensions.parse_user_dir (string_conform1 d);
-          script= Ocsigen_extensions.parse_user_dir t;
+              doc_root= Ocsigen_extensions.parse_user_dir (string_conform1 d);
+              script= Ocsigen_extensions.parse_user_dir t;
 
-          path= string_conform 
-              (Url.string_of_url_path ~encode:true path);
-          path_info=""; (* unknown for the moment *)
+              path= string_conform 
+                  (Url.string_of_url_path ~encode:true path);
+              path_info=""; (* unknown for the moment *)
 
-          exec= (match q with
-            |[] -> None
-            |[("exec",x)] -> Some(x)
-            |_ -> raise (Error_in_config_file
-                        "Wrong attributes for <cgi>")) ;
-          env=set_env l}
-      | _ -> raise (Error_in_config_file "Wrong attributes for <cgi>")
-    in
-    gen dir
+              exec= (match q with
+                |[] -> None
+                |[("exec",x)] -> Some(x)
+                |_ -> raise (Error_in_config_file
+                            "Wrong attributes for <cgi>")) ;
+              env=set_env l}
+        | _ -> raise (Error_in_config_file "Wrong attributes for <cgi>")
+      in
+      gen dir
   | Element (t, _, _) -> raise (Bad_config_tag_for_extension t)
   | _ ->
-    raise (Error_in_config_file "Unexpected data in config file")
+      raise (Error_in_config_file "Unexpected data in config file")
 
 
 

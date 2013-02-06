@@ -39,32 +39,32 @@ let scan_header ?(downcase=true)
   let rec parse_header i l =
     match S.string_match header_re parstr i with
           Some r ->
-        let i' = S.match_end r in
-        if i' > i1 then
-          raise (Multipart_error "Mimestring.scan_header");
-        let name =
-          if downcase then
-            String.lowercase(S.matched_group r 1 parstr)
-          else
-            S.matched_group r 1 parstr
-        in
-        let value_with_crlf =
-          S.matched_group r 2 parstr in
-        let value =
-          if unfold then
-            S.global_replace cr_or_lf_re "" value_with_crlf
-          else
-            value_with_crlf
-        in
-        parse_header i' ( (name,value) :: l)
+          let i' = S.match_end r in
+          if i' > i1 then
+            raise (Multipart_error "Mimestring.scan_header");
+          let name =
+            if downcase then
+              String.lowercase(S.matched_group r 1 parstr)
+            else
+              S.matched_group r 1 parstr
+          in
+          let value_with_crlf =
+            S.matched_group r 2 parstr in
+          let value =
+            if unfold then
+              S.global_replace cr_or_lf_re "" value_with_crlf
+            else
+              value_with_crlf
+          in
+          parse_header i' ( (name,value) :: l)
       | None ->
-        (* The header must end with an empty line *)
-        begin match S.string_match empty_line_re parstr i with
-              Some r' ->
-            List.rev l, S.match_end r'
-          | None ->
-            raise (Multipart_error "Mimestring.scan_header")
-        end
+          (* The header must end with an empty line *)
+          begin match S.string_match empty_line_re parstr i with
+                Some r' ->
+                List.rev l, S.match_end r'
+            | None ->
+                raise (Multipart_error "Mimestring.scan_header")
+          end
   in
   parse_header i0 []
 ;;
@@ -80,18 +80,18 @@ let read_header ?downcase ?unfold ?strip s =
         *)
         match S.string_match empty_line_re b 0 with
               Some r ->
-            return (s, (S.match_end r))
+              return (s, (S.match_end r))
           | None ->
-            (* Search the empty line: *)
-            return
-              (s, (S.match_end (snd (S.search_forward end_of_header_re b 0))))
+              (* Search the empty line: *)
+              return
+                (s, (S.match_end (snd (S.search_forward end_of_header_re b 0))))
       )
       (function
         | Not_found ->
-          Ocsigen_stream.enlarge_stream s >>=
-          (function
-                Finished _ -> fail Stream_too_small
-            | Cont (stri, _) as s -> find_end_of_header s)
+            Ocsigen_stream.enlarge_stream s >>=
+            (function
+                  Finished _ -> fail Stream_too_small
+              | Cont (stri, _) as s -> find_end_of_header s)
         | e -> fail e)
   in
   find_end_of_header s >>= (fun (s, end_pos) ->
@@ -114,10 +114,10 @@ let read_multipart_body decode_part boundary s =
       return (s, snd (S.search_forward re (Ocsigen_stream.current_buffer s) start))
     with
           Not_found ->
-        Ocsigen_stream.enlarge_stream s >>=
-        (function
-          | Finished _ -> fail Stream_too_small
-          | Cont (stri, _) as s -> search_window s re start)
+          Ocsigen_stream.enlarge_stream s >>=
+          (function
+            | Finished _ -> fail Stream_too_small
+            | Cont (stri, _) as s -> search_window s re start)
   in
   let search_end_of_line s k =
     (* Search LF beginning at position k *)
@@ -126,8 +126,8 @@ let read_multipart_body decode_part boundary s =
         (fun (s, x) -> return (s, (S.match_end x))))
       (function
         | Not_found ->
-          fail (Multipart_error
-                "read_multipart_body: MIME boundary without line end")
+            fail (Multipart_error
+                  "read_multipart_body: MIME boundary without line end")
         | e -> fail e)
   in
 
@@ -146,10 +146,10 @@ let read_multipart_body decode_part boundary s =
     Ocsigen_stream.stream_want s (ldel + 2) >>= (function
       | Finished _ as str2 -> return (str2, false, false)
       | Cont (ss, f) as str2 ->
-        let long = String.length ss in
-        let isdelim = (long >= ldel) && (String.sub ss 0 ldel = del) in
-        let islast = isdelim && (String.sub ss ldel 2 = "--") in
-        return (str2, isdelim, islast))
+          let long = String.length ss in
+          let isdelim = (long >= ldel) && (String.sub ss 0 ldel = del) in
+          let islast = isdelim && (String.sub ss ldel 2 = "--") in
+          return (str2, isdelim, islast))
   in
 
   let rec parse_parts s uses_crlf =
@@ -169,10 +169,10 @@ let read_multipart_body decode_part boundary s =
     let last_part = match s with
       | Finished _ -> false
       | Cont (ss, f) ->
-        let long = String.length ss in
-        (long >= (l_delimiter+2)) &&
-        (ss.[l_delimiter] = '-') &&
-        (ss.[l_delimiter+1] = '-')
+          let long = String.length ss in
+          (long >= (l_delimiter+2)) &&
+          (ss.[l_delimiter] = '-') &&
+          (ss.[l_delimiter+1] = '-')
     in
     if last_part then
       return [ y ]
@@ -212,8 +212,8 @@ let read_multipart_body decode_part boundary s =
         parse_parts s uses_crlf)
       (function
         | Not_found ->
-          (* No boundary at all: The body is empty. *)
-          return []
+            (* No boundary at all: The body is empty. *)
+            return []
         | e -> fail e)
   end
 ;;
@@ -229,27 +229,27 @@ let scan_multipart_body_from_stream s ~boundary ~create ~add ~stop ~maxsize=
         | Finished None -> return (size, empty_stream)
         | Finished (Some ss) -> return (size, ss)
         | Cont (stri, f) ->
-          let long = String.length stri in
-          let size2 = Int64.add size (Int64.of_int long) in
-          if
-            (match maxsize with
-                  None -> false
-              | Some m ->
-                (Int64.compare size2 m) > 0)
-          then
-            fail Ocsigen_Request_too_long
-          else
-          if stri = ""
-          then Ocsigen_stream.next f >>= while_stream size
-          else ((* catch
-                   (fun () ->
-                     add p stri)
-                   (fun e -> f () >>=
-                     Ocsigen_stream.consume >>=
-                     (fun () -> fail e)) *)
-            add p stri >>= fun () ->
-            Ocsigen_stream.next f >>=
-            while_stream size2)
+            let long = String.length stri in
+            let size2 = Int64.add size (Int64.of_int long) in
+            if
+              (match maxsize with
+                    None -> false
+                | Some m ->
+                    (Int64.compare size2 m) > 0)
+            then
+              fail Ocsigen_Request_too_long
+            else
+            if stri = ""
+            then Ocsigen_stream.next f >>= while_stream size
+            else ((* catch
+                     (fun () ->
+                       add p stri)
+                     (fun e -> f () >>=
+                       Ocsigen_stream.consume >>=
+                       (fun () -> fail e)) *)
+              add p stri >>= fun () ->
+              Ocsigen_stream.next f >>=
+              while_stream size2)
       in
       catch
         (fun () -> while_stream Int64.zero s >>=

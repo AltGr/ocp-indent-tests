@@ -68,11 +68,11 @@ let fst_line buf header =
   match header.H.mode with
     | H.Nofirstline -> ()
     | H.Answer code ->
-      Printf.bprintf buf "%s %i %s\r\n" (string_of_proto header.H.proto)
-        code (Http_error.expl_of_code code)
+        Printf.bprintf buf "%s %i %s\r\n" (string_of_proto header.H.proto)
+          code (Http_error.expl_of_code code)
     | H.Query (meth, url) ->
-      Printf.bprintf buf "%s %s %s\r\n"
-        (string_of_method meth) url (string_of_proto header.H.proto)
+        Printf.bprintf buf "%s %s %s\r\n"
+          (string_of_method meth) url (string_of_proto header.H.proto)
 
 
 (** Prints the content of a header. To prevent http header injection,
@@ -90,27 +90,27 @@ let print_header_content buf content =
       let add_prev () = Buffer.add_substring buf content prev (i-prev) in
       match content.[i] with
         | '\n' | '\r' as c ->
-          let i' = i+1 in
-          let escape_c () =
-            add_prev ();
-            Buffer.add_char buf c;
-            Buffer.add_char buf ' ';
-            aux i' i'
-          in
-          if i' < s then
-            (match content.[i'] with
-              | '\n' | '\r' as c' when c <> c' ->
-                add_prev ();
-                Buffer.add_char buf c; Buffer.add_char buf c';
-                Buffer.add_char buf ' ';
-                aux (i+2) (i+2)
+            let i' = i+1 in
+            let escape_c () =
+              add_prev ();
+              Buffer.add_char buf c;
+              Buffer.add_char buf ' ';
+              aux i' i'
+            in
+            if i' < s then
+              (match content.[i'] with
+                | '\n' | '\r' as c' when c <> c' ->
+                    add_prev ();
+                    Buffer.add_char buf c; Buffer.add_char buf c';
+                    Buffer.add_char buf ' ';
+                    aux (i+2) (i+2)
 
-              | _ -> escape_c ()
-            ) else
-            escape_c ()
+                | _ -> escape_c ()
+              ) else
+              escape_c ()
 
         | _ ->
-          aux prev (i+1)
+            aux prev (i+1)
   in
   aux 0 0
 
