@@ -53,7 +53,7 @@ struct
     aux [] 0
 
   let to_string p =
-    sprintf "%s%i\000%s" (string_of_access p.other) p.owner	(string_of_ack p.ack)
+    sprintf "%s%i\000%s" (string_of_access p.other) p.owner  (string_of_ack p.ack)
 
   let to_pretty_string p =
     sprintf "%s%i,%s" (string_of_access p.other) p.owner (pretty_string_of_ack p.ack)

@@ -133,7 +133,7 @@ let update_host_cpu ~__context host cpus' =
       (Array.length cpus) (List.length all)
   else begin
     (* If Host_cpu objects are missing, fill 'em in with temporary random data.
-       			 This is needed to make sure Rio/Miami migrate succeeds *)
+       This is needed to make sure Rio/Miami migrate succeeds *)
     if List.length all < Array.length cpus then begin
       let numbers = List.map (fun self -> Int64.to_int (Db.Host_cpu.get_number ~__context ~self)) all in
       for i = 0 to Array.length cpus - 1 do
@@ -219,7 +219,7 @@ let update_pifs ~__context host pifs =
         if !Xapi_xenops.pass_through_pif_carrier then begin
           try
             (* Go from physical interface -> bridge -> vif devices.
-               					 * Do this for the physical network and any VLANs/tunnels on top of it. *)
+             * Do this for the physical network and any VLANs/tunnels on top of it. *)
             let network = pifrec.API.pIF_network in
             let vlan_networks = List.map (fun vlan ->
                 let vlan_master = Db.VLAN.get_untagged_PIF ~__context ~self:vlan in

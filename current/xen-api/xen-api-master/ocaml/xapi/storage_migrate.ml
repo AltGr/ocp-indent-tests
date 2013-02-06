@@ -58,7 +58,7 @@ module State = struct
   end
 
   type mirror = 
-    | Send of Send_state.t		
+    | Send of Send_state.t    
     | Receive of Receive_state.t with rpc
 
   type t = (string, mirror) Hashtbl.t with rpc
@@ -85,13 +85,13 @@ module State = struct
     to_string active_send |> Unixext.write_string_to_file (path true);
     to_string active_recv |> Unixext.write_string_to_file (path false)
   let op s f h = Mutex.execute mutex (fun () -> if not !loaded then load (); let r = f h in if s then save (); r)
-  let map_of () =	
+  let map_of () =  
     let m1 = op false (fun h -> Hashtbl.fold (fun k v acc -> (k,v)::acc) h []) active_send in
     op false (fun h -> Hashtbl.fold (fun k v acc -> (k,v)::acc) h m1) active_recv
 
   let add id h s = op true (fun a -> Hashtbl.replace a id s) h
   let find id h = op false (fun a -> try Some (Hashtbl.find a id) with _ -> None) h
-  let remove id h = op true (fun a ->	Hashtbl.remove a id) h
+  let remove id h = op true (fun a ->  Hashtbl.remove a id) h
 
   let add_to_active_local_mirrors id url dest_sr remote_dp local_dp mirror_vdi remote_url tapdev =
     let open Send_state in 

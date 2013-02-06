@@ -100,7 +100,7 @@ let all_valid_tests = List.filter (fun t -> expected_result t <> None) all_possi
 let _ = 
   List.iter print_endline (map string_of_test all_valid_tests);
   Printf.printf "In total there are %d tests.\n" (List.length all_valid_tests)
-	  *)
+    *)
 
 open Quicktest_common
 open Client

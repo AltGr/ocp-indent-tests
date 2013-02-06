@@ -29,7 +29,7 @@ let size_inc   = ref 0
 (* Read cmd-line args *)
 let _ =
   Arg.parse [
-    (*	      "-host", Arg.Set_string host, "hostname of test XE host"; *)
+    (*        "-host", Arg.Set_string host, "hostname of test XE host"; *)
     "-xe", Arg.Set_string xe, "path to XE CLI executable";
     "-base_size1", Arg.Set_int base_size1, "base-size1 for disk create";
     "-base_size2", Arg.Set_int base_size2, "base-size2 for disk create";

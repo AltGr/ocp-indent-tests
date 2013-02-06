@@ -96,5 +96,5 @@ let build (task: Xenops_task.t) ~xc ~xs info xenguest domid stubdom_domid =
 (* XXX: 
    (* Add a place for qemu to record the dm state in XenStore, with appropriate permissions *)
    List.iter (fun domid -> Device.Dm.init ~xs ~domid) [stubdom_domid; domid];
-   	*)
+*)
 

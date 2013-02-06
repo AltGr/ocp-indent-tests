@@ -171,7 +171,7 @@ let operation (obj: obj) (x: message) =
       (* If we're a constructor then unmarshall all the fields from the constructor record, passed as a struct *)
       if is_ctor then [from_rpc Client.session; from_ctor_record]
       (* Otherwise, go read non-default fields from pattern match; if we have default fields then we need to
-         	   get those from the 'default_fields' arg *)
+         get those from the 'default_fields' arg *)
       else  List.map from_rpc args_without_default_values)
 
     (* and for every default value we try to get this from default_args or default it *)
@@ -231,7 +231,7 @@ let operation (obj: obj) (x: message) =
         Printf.sprintf "let resp = Server_helpers.do_dispatch %s %s __async supports_async __call local_op marshaller fd http_req __label generate_task_for in"
           (if x.msg_session then "~session_id" else "")
           (if Gen_empty_custom.operation_requires_side_effect x then "~forward_op" else "");
-        (*	"P.debug \"Server RPC response: %s\" (Rpc.to_string (resp.Rpc.contents));"; *)
+        (*  "P.debug \"Server RPC response: %s\" (Rpc.to_string (resp.Rpc.contents));"; *)
         "resp"
       ] in
     common_let_decs @ side_effect_let_decs @ body_exp in
@@ -292,8 +292,8 @@ let gen_module api : O.Module.t =
               "let http_other_config = Context.get_http_other_config http_req in";
               "Server_helpers.exec_with_new_task (\"dispatch:\"^__call^\"\") ~http_other_config ?subtask_of:(Pervasiveext.may Ref.of_string subtask_of) (fun __context ->";
               (*
-	      "if not (Hashtbl.mem supress_printing_for_these_messages __call) then ";
-	      debug "%s %s" [ "__call"; "(if __async then \"(async)\" else \"\")" ];
+        "if not (Hashtbl.mem supress_printing_for_these_messages __call) then ";
+        debug "%s %s" [ "__call"; "(if __async then \"(async)\" else \"\")" ];
 *)
               "Server_helpers.dispatch_exn_wrapper (fun () -> (match __call with ";
             ] @ (List.flatten (List.map obj all_objs)) @ [

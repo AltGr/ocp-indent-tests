@@ -77,7 +77,7 @@ let load name opts =
           if Char.code buf.[c] land Array.unsafe_get bits b <> 0 then
             Index8.unsafe_set img x y 1
         done
-      | _ -> assert false in
+                | _ -> assert false in
 
   for y = 0 to h - 1 do
     read_scanline tif buf y;

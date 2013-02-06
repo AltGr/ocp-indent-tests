@@ -19,14 +19,14 @@ module Unpack_one : sig
     calls to [feed]. *)
 
   type ('value, 'partial_unpack) t =
-  ?partial_unpack:'partial_unpack
-  -> ?pos:int
-  -> ?len:int
-  -> Bigstring.t
-  -> [ `Ok of 'value * int
-     | `Not_enough_data of 'partial_unpack * int
-     | `Invalid_data of Error.t
-     ]
+    ?partial_unpack:'partial_unpack
+    -> ?pos:int
+    -> ?len:int
+    -> Bigstring.t
+    -> [ `Ok of 'value * int
+       | `Not_enough_data of 'partial_unpack * int
+       | `Invalid_data of Error.t
+       ]
 
   val map : ('a, 'partial_unpack) t -> f:('a -> 'b) -> ('b, 'partial_unpack) t
 

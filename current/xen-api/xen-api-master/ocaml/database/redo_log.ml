@@ -22,7 +22,7 @@ module R = Debug.Debugger(struct let name = "redo_log" end)
 
 let get_static_device reason =
   (* Specifically use Static_vdis_list rather than Static_vdis to avoid the
-     	   cyclic dependency caused by reference to Server_helpers in Static_vdis *)
+     cyclic dependency caused by reference to Server_helpers in Static_vdis *)
   let vdis = List.filter
       (fun x -> x.Static_vdis_list.reason = reason && x.Static_vdis_list.currently_attached)
       (Static_vdis_list.list ())

@@ -35,7 +35,7 @@
 *)
 
 module Make :
-functor (A : sig type key type value end) ->
+  functor (A : sig type key type value end) ->
   sig
 
     (** [new cache finder ?timer size] creates a cache object where [finder]

@@ -81,34 +81,34 @@ sig
   val get_etag : ?options:options -> t -> etag option
 end
 module Http_header :
-  sig
-    type http_method =
-            GET | POST | HEAD | PUT | DELETE | TRACE
-        | OPTIONS | CONNECT | LINK | UNLINK | PATCH
-    type http_mode =
-            Query of (http_method * string)
-        | Answer of int
-        | Nofirstline
-    type proto = HTTP10 | HTTP11
-    type http_header = {
-      mode : http_mode;
-      proto : proto;
-      headers : Http_headers.t;
-    }
-    val get_firstline : http_header -> http_mode
-    val get_headers : http_header -> Http_headers.t
-    val get_headers_value : http_header -> Http_headers.name -> string
-    val get_headers_values : http_header -> Http_headers.name -> string list
-    val get_proto : http_header -> proto
-    val add_headers : http_header -> Http_headers.name -> string -> http_header
-  end
+sig
+  type http_method =
+          GET | POST | HEAD | PUT | DELETE | TRACE
+      | OPTIONS | CONNECT | LINK | UNLINK | PATCH
+  type http_mode =
+          Query of (http_method * string)
+      | Answer of int
+      | Nofirstline
+  type proto = HTTP10 | HTTP11
+  type http_header = {
+    mode : http_mode;
+    proto : proto;
+    headers : Http_headers.t;
+  }
+  val get_firstline : http_header -> http_mode
+  val get_headers : http_header -> Http_headers.t
+  val get_headers_value : http_header -> Http_headers.name -> string
+  val get_headers_values : http_header -> Http_headers.name -> string list
+  val get_proto : http_header -> proto
+  val add_headers : http_header -> Http_headers.name -> string -> http_header
+end
 module Http_error :
-  sig
-    exception Http_exception of int * string option * Http_headers.t option
-    val expl_of_code : int -> string
-    val display_http_exception : exn -> unit
-    val string_of_http_exception : exn -> string
-  end
+sig
+  exception Http_exception of int * string option * Http_headers.t option
+  val expl_of_code : int -> string
+  val display_http_exception : exn -> unit
+  val string_of_http_exception : exn -> string
+end
 
 
 (** The type of HTTP frames.

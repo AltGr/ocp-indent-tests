@@ -85,18 +85,18 @@ module Make(B:Bitdepth) : sig
   val set_strip : t -> int -> int -> int -> string -> unit
     (* Strip access
        Here, "strip" means a rectangle region with height 1.
-       	 [get_strip t x y w] returns the string reprensentation of strip of [t]
+       [get_strip t x y w] returns the string reprensentation of strip of [t]
        at (x, y) - (x + w - 1, y).
-       	 [set_strip t x y w str] write [str] to the strip of [t]
+       [set_strip t x y w str] write [str] to the strip of [t]
        at (x, y) - (x + w - 1, y).
     *)
 
   val get_scanline : t -> int -> string
   val set_scanline : t -> int -> string -> unit
     (* Scanline access 
-       	 [get_scanline t y] returns the string representation of the scanline
+       [get_scanline t y] returns the string representation of the scanline
        of [t] at [y].
-       	 [set_scanline t y str] writes [str] to the scanline of [t] at [y].
+       [set_scanline t y str] writes [str] to the scanline of [t] at [y].
     *)
 
   (* only for one row *)      

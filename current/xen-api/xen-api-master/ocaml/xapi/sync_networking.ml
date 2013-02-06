@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *)
 
@@ -72,8 +72,8 @@ let copy_bonds_from_master ~__context () =
       List.map (fun self -> self, Db.PIF.get_MAC ~__context ~self, Db.PIF.get_device ~__context ~self)
         bond.API.bond_slaves in
     (* Take the MAC addr of the bond and figure out whether this is the MAC address of any of the
-       		 * slaves. If it is then we will use this to ensure that we inherit the MAC address from the _same_
-       		 * slave when we re-create on the slave *)
+     * slaves. If it is then we will use this to ensure that we inherit the MAC address from the _same_
+     * slave when we re-create on the slave *)
     let master_bond_mac = Db.PIF.get_MAC ~__context ~self:bond.API.bond_master in
     (* The bond mode used on the master. We will use the same mode on the slave, when creating a new bond. *)
     let bond_mode = bond.API.bond_mode in
@@ -81,24 +81,24 @@ let copy_bonds_from_master ~__context () =
     let master_slaves_with_same_mac_as_bond (* expecting a list of at most 1 here *) =
       List.filter (fun (pifref,mac,device) -> mac=master_bond_mac) slaves_to_mac_and_device_map in
     (* This tells us the device that the master used to inherit the bond's MAC address
-       		 * (if indeed that is what it did; we set it to None if we think it didn't do this) *)
+     * (if indeed that is what it did; we set it to None if we think it didn't do this) *)
     let device_of_primary_slave =
       match master_slaves_with_same_mac_as_bond with
       | [] -> None
       | [_,_,device] ->
         debug "Master bond has MAC address derived from %s" device;
         (* found single slave with mac matching bond master =>
-           				 * this was one that we inherited mac from *)
+         * this was one that we inherited mac from *)
         Some device
       | _ -> None
     in
     (* Look at the master's slaves and find the corresponding slave PIFs. Note that the slave
-       		 * might not have the necessary devices: in this case we'll try to make partial bonds *)
+     * might not have the necessary devices: in this case we'll try to make partial bonds *)
     let slave_devices = List.map (fun (_,_,device)->device) slaves_to_mac_and_device_map in
     let my_slave_pifs = List.filter (fun (_, pif) -> List.mem pif.API.pIF_device slave_devices) my_phy_pifs in
     let my_slave_pif_refs = List.map fst my_slave_pifs in
     (* Do I have a pif that I should treat as a primary pif -
-       		 * i.e. the one to inherit the MAC address from on my bond create? *)
+     * i.e. the one to inherit the MAC address from on my bond create? *)
     let my_primary_slave =
       match device_of_primary_slave with
       | None -> None (* don't care cos we couldn't even figure out who master's primary slave was *)
@@ -113,7 +113,7 @@ let copy_bonds_from_master ~__context () =
         end
     in
     (* If I do have a pif that I need to treat as my primary slave then I need to put it
-       		 * first in the list so the bond master will inherit it's MAC address *)
+     * first in the list so the bond master will inherit it's MAC address *)
     let my_slave_pif_refs =
       match my_primary_slave with
       | None -> my_slave_pif_refs (* no change *)

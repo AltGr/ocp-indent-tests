@@ -28,7 +28,7 @@ module Tests = functor(Client: Db_interface.DB_ACCESS) -> struct
     ]
 
   let make_vbd vm r uuid = [
-    (*		"ref", r; *)
+    (*    "ref", r; *)
     "qos__supported_algorithms", "()";
     "other_config", "(('owner' ''))";
     "uuid", uuid;
@@ -148,13 +148,13 @@ module Tests = functor(Client: Db_interface.DB_ACCESS) -> struct
     then failwith (Printf.sprintf "check_many_to_many: bar(bar:1).foos expected ('foo:1') got %s" bar_foos);
 
     (* set foo.bars to [] *)
-    (*		let foo_1 = Table.find "foo:1" (TableSet.find "foo" (Database.tableset db)) in*)
+    (*    let foo_1 = Table.find "foo:1" (TableSet.find "foo" (Database.tableset db)) in*)
     let db = set_field "foo" "foo:1" "bars" "()" db in
     (* check that 'bar.foos' is empty *)
     let bar_1 = Table.find "bar:1" (TableSet.find "bar" (Database.tableset db)) in
     let bar_foos = Row.find "foos" bar_1 in
     if bar_foos <> "()"
-    then failwith (Printf.sprintf "check_many_to_many: bar(bar:1).foos expected () got %s" bar_foos);		
+    then failwith (Printf.sprintf "check_many_to_many: bar(bar:1).foos expected () got %s" bar_foos);    
     (* add 'bar' to foo.bars *)
     let db = set_field "foo" "foo:1" "bars" "('bar:1')" db in
     (* check that 'bar.foos' includes 'foo' *)
@@ -165,10 +165,10 @@ module Tests = functor(Client: Db_interface.DB_ACCESS) -> struct
     (* delete 'bar' *)
     let db = remove_row "bar" "bar:1" db in
     (* check that 'foo.bars' is empty *)
-    let foo_1 = Table.find "foo:1" (TableSet.find "foo" (Database.tableset db)) in		
+    let foo_1 = Table.find "foo:1" (TableSet.find "foo" (Database.tableset db)) in    
     let foo_bars = Row.find "bars" foo_1 in
     if foo_bars <> "()"
-    then failwith (Printf.sprintf "check_many_to_many: foo(foo:1).foos expected () got %s" foo_bars);				
+    then failwith (Printf.sprintf "check_many_to_many: foo(foo:1).foos expected () got %s" foo_bars);        
     ()
 
   let check_events t =
@@ -351,7 +351,7 @@ module Tests = functor(Client: Db_interface.DB_ACCESS) -> struct
 
     ()
 
-  let main in_process = 	
+  let main in_process =   
     (* reference which we create *)
     let valid_ref = "ref1" in
     let valid_uuid = "uuid1" in
@@ -516,10 +516,10 @@ module Tests = functor(Client: Db_interface.DB_ACCESS) -> struct
       );
     Printf.printf "write_field <valid table> <valid ref> <valid field>\n";
     let (_: unit) = Client.write_field t "VM" valid_ref (Escaping.escape_id ["name"; "description"]) "description" in
-    if in_process then check_ref_index t "VM" valid_ref;		
+    if in_process then check_ref_index t "VM" valid_ref;    
     Printf.printf "write_field <valid table> <valid ref> <valid field> - invalidating ref_index\n";
     let (_: unit) = Client.write_field t "VM" valid_ref (Escaping.escape_id ["name"; "label"]) "newlabel" in
-    if in_process then check_ref_index t "VM" valid_ref;		
+    if in_process then check_ref_index t "VM" valid_ref;    
 
     Printf.printf "read_record <invalid table> <invalid ref>\n";
     expect_missing_tbl "Vm"
@@ -559,7 +559,7 @@ module Tests = functor(Client: Db_interface.DB_ACCESS) -> struct
     Client.write_field t "VBD" vbd_ref (Escaping.escape_id [ "VM" ]) "overwritten";
     let fv_list, fvs_list = Client.read_record t "VM" valid_ref in
     if List.assoc "VBDs" fvs_list <> []
-    then failwith "read_record <valid table> <valid ref> 6";	
+    then failwith "read_record <valid table> <valid ref> 6";  
 
     expect_missing_tbl "Vm"
       (fun () ->

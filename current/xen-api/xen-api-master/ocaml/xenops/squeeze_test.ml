@@ -12,16 +12,16 @@
  * GNU Lesser General Public License for more details.
  *)
 (**
-   	Simulation environment and set of unit tests for the domain memory balancer.
+   Simulation environment and set of unit tests for the domain memory balancer.
 *)
 
 open Pervasiveext
 open Squeeze
 
 (**
-   	Computes the memory_actual delta for a VM assuming the balloon driver
-   	responds at a given speed. Warning: make sure the balloon_rate * time_passed
-   	is > 0 when rounded to an integer.
+   Computes the memory_actual delta for a VM assuming the balloon driver
+   responds at a given speed. Warning: make sure the balloon_rate * time_passed
+   is > 0 when rounded to an integer.
 *)
 let compute_memory_actual_delta domain rate time =
   let max_change = Int64.of_float (time *. (Int64.to_float rate)) in
@@ -57,23 +57,23 @@ class virtual vm initial_domain = object (self)
     domain <- { domain with memory_max_kib = new_max_kib }
 
   (**
-     		Given a number of time units since the last call to 'update',
-     		compute the expected change in memory_actual. Note that this
-     		might be unfulfilled if the host is low on memory.
-     	*)
+     Given a number of time units since the last call to 'update',
+     compute the expected change in memory_actual. Note that this
+     might be unfulfilled if the host is low on memory.
+  *)
   method virtual compute_memory_actual_delta : float -> int64
 
   (**
-     		Called by the simulator to update memory_actual. It also returns
-     		memory_actual so the host free memory total can be updated.
-     	*)
+     Called by the simulator to update memory_actual. It also returns
+     memory_actual so the host free memory total can be updated.
+  *)
   method update host_free_mem time = 
     let time_passed = time -. time_of_last_update in
     (* We can release as much memory as we like but *)
     (* we can't allocate more than is available     *)
     let delta = self#compute_memory_actual_delta time_passed in
     (* By construction it should never be possible for a domain to wish to allocate
-       	     more memory than exists. *)
+       more memory than exists. *)
     if delta > host_free_mem
     then failwith (Printf.sprintf "Attempted to allocate more than host_free_mem domid = %d; delta = %Ld; free = %Ld" domain.domid delta host_free_mem);
     domain <- { domain with memory_actual_kib = domain.memory_actual_kib +* delta };
@@ -91,8 +91,8 @@ class idealised_vm initial_domain balloon_rate_kib_per_unit_time = object
 end
 
 (**
-   	Represents a VM whose balloon driver responds at a certain speed but which
-   	has a minimum limit
+   Represents a VM whose balloon driver responds at a certain speed but which
+   has a minimum limit
 *)
 class idealised_vm_with_limit
     initial_domain balloon_rate_kib_per_unit_time minimum_memory = object
@@ -137,8 +137,8 @@ class stuck_vm initial_domain = object
 end
 
 (**
-   	Represents a VM whose balloon driver moves at a constant rate
-   	but gets stuck for 'interval' seconds every 'interval' seconds
+   Represents a VM whose balloon driver moves at a constant rate
+   but gets stuck for 'interval' seconds every 'interval' seconds
 *)
 class intermittently_stuck_vm
     initial_domain balloon_rate_kib_per_unit_time interval = object
@@ -175,7 +175,7 @@ type scenario = {
 let scenario_a = {
   name = "a";
   description = "a small domain with a hidden limit and a large domain which \
-                 		exhibits 'sticky' behaviour"; 
+                 exhibits 'sticky' behaviour"; 
   should_succeed = true;
   scenario_domains = [
     new idealised_vm_with_limit
@@ -191,7 +191,7 @@ let scenario_a = {
 let scenario_b = {
   name = "b";
   description = "two domains exhibiting 'sticky' behaviour with different \
-                 		periods: one > than the assumed stuck interval and the other <";
+                 periods: one > than the assumed stuck interval and the other <";
   should_succeed = true;
   scenario_domains = [
     new intermittently_stuck_vm
@@ -207,7 +207,7 @@ let scenario_b = {
 let scenario_c = {
   name = "c";
   description = "dynamic_mins are too high to allow enough memory to be \
-                 		freed";
+                 freed";
   should_succeed = false;
   scenario_domains = [
     new idealised_vm (domain_make 0 true 1000L 1500L 2000L 1500L 1500L 0L) 100L;
@@ -221,7 +221,7 @@ let scenario_c = {
 let scenario_d = {
   name = "d";
   description = "looks ok but one VM is permanently stuck above its \
-                 		dynamic_min";
+                 dynamic_min";
   should_succeed = false;
   scenario_domains = [
     new idealised_vm
@@ -237,9 +237,9 @@ let scenario_d = {
 let scenario_e = {
   name = "e";
   description = "one domain needs to free but is stuck, other domain needs to allocate \
-                 		but can't because there is not enough free memory. We need to give up on the stuck \
-                 		domain first and then tell the other domain to free rather than allocate. We must not \
-                 		conclude the second domain is stuck because it can't allocate.";
+                 but can't because there is not enough free memory. We need to give up on the stuck \
+                 domain first and then tell the other domain to free rather than allocate. We must not \
+                 conclude the second domain is stuck because it can't allocate.";
   should_succeed = true;
   scenario_domains = [
     (* The stuck domain is using more than it should be if the memory was freed and everything balanced *)
@@ -253,12 +253,12 @@ let scenario_e = {
   host_free_mem_kib = 0L;
   required_mem_kib = 1000L;
   (* The system has 3000L units of surplus memory. Ideally we'd give 1000L to the system and then split
-     	   the remaining 2000L units proportionally amongst the domains: 500L to 0 and 1500L to 1. If both 
-     	   domains were ideal then we could set 0's target to 5500L (down) and 1's target to 6500L (up)
-     	   However since the stuck domain is stuck this strategy will fail. In this case we want the idealised
-     	   VM to release the 1000L units of memory. However the likely failure mode is that it will have been
-     	   asked to increase its allocation and been unable to do so because all host memory is exhausted. 
-     	   It will then also have been marked as stuck and the operation will fail. *)
+     the remaining 2000L units proportionally amongst the domains: 500L to 0 and 1500L to 1. If both 
+     domains were ideal then we could set 0's target to 5500L (down) and 1's target to 6500L (up)
+     However since the stuck domain is stuck this strategy will fail. In this case we want the idealised
+     VM to release the 1000L units of memory. However the likely failure mode is that it will have been
+     asked to increase its allocation and been unable to do so because all host memory is exhausted. 
+     It will then also have been marked as stuck and the operation will fail. *)
   fistpoints = [ ];
 }
 
@@ -315,23 +315,23 @@ let all_scenarios = [
 (*
 (** Fails if either memory_actual or target lie outside our dynamic range *)
 let assert_within_dynamic_range host = 
-	List.iter
-		(fun domain ->
-			 let lt domid x x' y y' =
-				if x < y
-				then failwith (Printf.sprintf "domid %d %s (%Ld) < %s (%Ld)"
-					domid x' x y' y)
-			in
-			lt domain.domid domain.memory_actual_kib "memory_actual"
-				domain.dynamic_min_kib "dynamic_min";
-			lt domain.domid domain.target_kib "target"
-				domain.dynamic_min_kib "dynamic_min";
-			lt domain.domid domain.dynamic_max_kib "dynamic_max"
-				domain.memory_actual_kib "memory_actual";
-			lt domain.domid domain.dynamic_max_kib "dynamic_max"
-				domain.target_kib "target"
-		)
-		host.domains
+  List.iter
+    (fun domain ->
+       let lt domid x x' y y' =
+        if x < y
+        then failwith (Printf.sprintf "domid %d %s (%Ld) < %s (%Ld)"
+          domid x' x y' y)
+      in
+      lt domain.domid domain.memory_actual_kib "memory_actual"
+        domain.dynamic_min_kib "dynamic_min";
+      lt domain.domid domain.target_kib "target"
+        domain.dynamic_min_kib "dynamic_min";
+      lt domain.domid domain.dynamic_max_kib "dynamic_max"
+        domain.memory_actual_kib "memory_actual";
+      lt domain.domid domain.dynamic_max_kib "dynamic_max"
+        domain.target_kib "target"
+    )
+    host.domains
 *)
 
 let verify_memory_is_guaranteed_free host kib = 

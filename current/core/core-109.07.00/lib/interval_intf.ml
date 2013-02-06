@@ -126,7 +126,7 @@ module type S = sig
 
     val to_poly : t -> bound poly_set
   end
-    with type 'a interval := 'a t_
+  with type 'a interval := 'a t_
 end
 
 module type S1 = sig
@@ -141,6 +141,6 @@ module type S1 = sig
     type 'a t with bin_io, sexp
     include Gen_set with type 'a t := 'a t
   end
-    with type 'a bound := 'a bound_
-    with type 'a interval := 'a t
+  with type 'a bound := 'a bound_
+  with type 'a interval := 'a t
 end

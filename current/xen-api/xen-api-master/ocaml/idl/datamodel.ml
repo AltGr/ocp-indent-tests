@@ -251,8 +251,8 @@ let call ~name ?(doc="") ?(in_oss_since=Some "3.0.3") ?in_product_since ?interna
     ?(map_keys_roles=[])
     ?(params=[]) ?versioned_params ?lifecycle () =
   (* if you specify versioned_params then these get put in the params field of the message record;
-     	 * otherwise params go in with no default values and param_release=call_release...
-     	 *)
+   * otherwise params go in with no default values and param_release=call_release...
+  *)
   if lifecycle = None && in_product_since = None then
     failwith ("Lifecycle for message '" ^ name ^ "' not specified");
   let lifecycle = match lifecycle with
@@ -1685,7 +1685,7 @@ let vm_set_memory_dynamic_range = call
     ~name:"set_memory_dynamic_range"
     ~in_product_since:rel_midnight_ride
     ~doc:"Set the minimum and maximum amounts of physical memory the VM is \
-          		allowed to use."
+          allowed to use."
     ~allowed_roles:_R_VM_POWER_ADMIN
     ~params:[
       Ref _vm, "self", "The VM";
@@ -1721,7 +1721,7 @@ let vm_set_memory_static_range = call
     ~name:"set_memory_static_range"
     ~in_product_since:rel_midnight_ride
     ~doc:"Set the static (ie boot-time) range of virtual memory that the VM is \
-          		allowed to use."
+          allowed to use."
     ~allowed_roles:_R_VM_POWER_ADMIN
     ~params:[Ref _vm, "self", "The VM";
              Int, "min", "The new minimum value";
@@ -1905,7 +1905,7 @@ let vm_suspend = call
     ~name:"suspend"
     ~doc:"Suspend the specified VM to disk.  This can only be called when the specified VM is in the Running state."
     ~params:[Ref _vm, "vm", "The VM to suspend"]
-    (*	    Bool, "live", "If set to true, perform a live hibernate; otherwise suspend the VM before commencing hibernate" *)
+    (*      Bool, "live", "If set to true, perform a live hibernate; otherwise suspend the VM before commencing hibernate" *)
     ~errs:[Api_errors.vm_bad_power_state; Api_errors.other_operation_in_progress; Api_errors.operation_not_allowed;
            Api_errors.vm_is_template]
     ~allowed_roles:_R_VM_OP
@@ -2994,7 +2994,7 @@ let field ?(in_oss_since = Some "3.0.3") ?in_product_since ?(internal_only = fal
     ?(map_keys_roles=[]) (* list of (key_name,(writer_roles)) for a map field *)
     ?lifecycle name desc =
   (* in_product_since currently defaults to 'Some rel_rio', for backwards compatibility.
-     	 * This should eventually become 'None'. *)
+   * This should eventually become 'None'. *)
   let in_product_since = match in_product_since with None -> Some rel_rio | x -> x in
   if lifecycle = None && in_product_since = None then
     failwith ("Lifecycle for field '" ^ name ^ "' not specified");
@@ -3106,7 +3106,7 @@ let create_obj ?lifecycle ~in_oss_since ?in_product_since ?(internal_deprecated_
       in
       published @ deprecated
     | Some l -> l
-  in	
+  in  
   let release =
     {
       internal = (match get_published lifecycle with 
@@ -4611,7 +4611,7 @@ let pif =
     field ~in_oss_since:None ~ty:String ~in_product_since:rel_miami ~qualifier:DynamicRO "gateway" "IP gateway" ~default_value:(Some (VString ""));
     field ~in_oss_since:None ~ty:String ~in_product_since:rel_miami ~qualifier:DynamicRO "DNS" "IP address of DNS servers to use" ~default_value:(Some (VString ""));
     field ~in_oss_since:None ~ty:(Ref _bond) ~in_product_since:rel_miami ~qualifier:DynamicRO "bond_slave_of" "Indicates which bond this interface is part of" ~default_value:(Some (VRef ""));
-    field ~in_oss_since:None ~ty:(Set(Ref _bond)) ~in_product_since:rel_miami ~qualifier:DynamicRO "bond_master_of" "Indicates this PIF represents the results of a bond";	
+    field ~in_oss_since:None ~ty:(Set(Ref _bond)) ~in_product_since:rel_miami ~qualifier:DynamicRO "bond_master_of" "Indicates this PIF represents the results of a bond";  
     field ~in_oss_since:None ~ty:(Ref _vlan) ~in_product_since:rel_miami ~qualifier:DynamicRO "VLAN_master_of" "Indicates wich VLAN this interface receives untagged traffic from" ~default_value:(Some (VRef ""));
     field ~in_oss_since:None ~ty:(Set(Ref _vlan)) ~in_product_since:rel_miami ~qualifier:DynamicRO "VLAN_slave_of" "Indicates which VLANs this interface transmits tagged traffic to";
     field ~in_oss_since:None ~ty:Bool ~in_product_since:rel_miami ~qualifier:DynamicRO "management" "Indicates whether the control software is listening for connections on this interface" ~default_value:(Some (VBool false));
@@ -4746,7 +4746,7 @@ let vlan =
     field ~qualifier:StaticRO ~ty:(Ref _pif) ~in_product_since:rel_miami "tagged_PIF" "interface on which traffic is tagged" ~default_value:(Some (VRef ""));
     field ~qualifier:DynamicRO ~ty:(Ref _pif) ~in_product_since:rel_miami "untagged_PIF" "interface on which traffic is untagged" ~default_value:(Some (VRef ""));
     field ~qualifier:StaticRO ~ty:Int ~in_product_since:rel_miami "tag" "VLAN tag in use" ~default_value:(Some (VInt (-1L)));
-    field ~in_product_since:rel_miami ~default_value:(Some (VMap [])) ~ty:(Map(String, String)) "other_config" "additional configuration";	  
+    field ~in_product_since:rel_miami ~default_value:(Some (VMap [])) ~ty:(Map(String, String)) "other_config" "additional configuration";    
   ])
     ()
 
@@ -5478,9 +5478,9 @@ let vdi_checksum = call
     ~doc:"Internal function to calculate VDI checksum and return a string"
     ~hide_from_docs:true
     ~allowed_roles:_R_VM_ADMIN (* Conceptually, this is not correct. We do it
-                                  	                              this way only to follow the previous
-                                  	                              convention. It is supposed to fix by future
-                                  	                              version of RBAC *)
+                                  this way only to follow the previous
+                                  convention. It is supposed to fix by future
+                                  version of RBAC *)
     ()
 
 let vdi_read_database_pool_uuid = call
@@ -6494,9 +6494,9 @@ let hvm =
 (*
 let power_behaviour =
   Enum ("power_behaviour", [ "destroy", "destroy the VM state"; 
-			     "restart", "automatically restart the VM"; 
-			     "preserve", "leave VM running"; 
-			     "rename_restart", "leave VM running and restart a new one" ])
+           "restart", "automatically restart the VM"; 
+           "preserve", "leave VM running"; 
+           "rename_restart", "leave VM running and restart a new one" ])
 *)
 let on_crash_behaviour = 
   Enum ("on_crash_behaviour", [ "destroy", "destroy the VM state";
@@ -6669,8 +6669,8 @@ let vm =
        field ~qualifier:DynamicRO ~ty:(Ref _vm_metrics) "metrics" "metrics associated with this VM";
        field ~qualifier:DynamicRO ~ty:(Ref _vm_guest_metrics) "guest_metrics" "metrics associated with the running guest";
        (* This was an internal field in Rio, Miami beta1, Miami beta2 but is now exposed so that
-          	   it will be included automatically in Miami GA exports and can be restored, important if
-          	   the VM is in a suspended state *)
+          it will be included automatically in Miami GA exports and can be restored, important if
+          the VM is in a suspended state *)
        field ~in_oss_since:None ~internal_only:false ~in_product_since:rel_miami ~qualifier:DynamicRO ~ty:String "last_booted_record" "marshalled value containing VM record at time of last boot, updated dynamically to reflect the runtime state of the domain" ~default_value:(Some (VString ""));
        field ~in_oss_since:None ~ty:String "recommendations" "An XML specification of recommended values and ranges for properties of this VM";
        field ~effect:true ~in_oss_since:None ~ty:(Map(String, String)) ~in_product_since:rel_miami ~qualifier:RW "xenstore_data" "data to be inserted into the xenstore tree (/local/domain/<domid>/vm-data) after the VM is created." ~default_value:(Some (VMap []));

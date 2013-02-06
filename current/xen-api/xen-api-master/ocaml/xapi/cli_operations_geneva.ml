@@ -389,8 +389,8 @@ let vm_install fd printer rpc session_id params =
     Client.VM.provision rpc session_id new_vm;
     (* Geneva doesn't start VMs automatically on install *)
     (*
-	Client.VM.start rpc session_id new_vm false true;
-	*)
+  Client.VM.start rpc session_id new_vm false true;
+  *)
     (* We wait for the PV bootloader switcheroo *)
     marshal fd (Command (Print ("New VM uuid: "^uuid)));
     let record_matches record =
@@ -479,14 +479,14 @@ let vm_vif_add printer rpc session_id params =
     let net = List.filter filter networks in
     match net with
     | [] -> failwith "Bridge not found"
-    |	n::ns ->
+    |  n::ns ->
       begin
         let vif = Client.VIF.create rpc session_id device n vm mac 1500L [] "" [] `network_default [] [] in
         if List.mem_assoc "rate" params then
           (Client.VIF.set_qos_algorithm_type rpc session_id vif "ratelimit";
            Client.VIF.add_to_qos_algorithm_params rpc session_id vif "kbs" (List.assoc "rate" params))
       end    
-  in	  
+  in    
   ignore(Cli_operations.do_vm_op printer rpc session_id op params [])  
 
 let vm_vif_list printer rpc session_id params =
@@ -509,7 +509,7 @@ let vm_vif_list printer rpc session_id params =
           List.assoc ((Client.VIF.get_device rpc session_id vif)^"/ip") networks
         with
           _ -> "not available [guest must be on with XenSource tools installed]"
-      in	    
+      in      
       [("name",name);
        ("mac",mac);
        ("ip",ip);
@@ -545,8 +545,8 @@ let vm_vif_remove printer rpc session_id params =
   let recs = 
     List.map (fun (_,v) ->
       (["NAME",v.API.vM_name_label;
-	"uuid",v.API.vM_uuid;
-	"state",Cli_util.power_to_string v.API.vM_power_state])) vms in
+  "uuid",v.API.vM_uuid;
+  "state",Cli_util.power_to_string v.API.vM_power_state])) vms in
   printer (Cli_printer.PTable recs)
 *)
   (* XXX: rework post API 1.0 *)

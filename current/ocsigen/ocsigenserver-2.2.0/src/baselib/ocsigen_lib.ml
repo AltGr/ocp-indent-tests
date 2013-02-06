@@ -189,11 +189,11 @@ module Ip_address = struct
   let getnameinfo ia p =
     try
       Lwt_unix.getnameinfo (Unix.ADDR_INET (ia, p)) [Unix.NI_NAMEREQD] >>= fun r ->
-	Lwt.return r.Unix.ni_hostname
+    Lwt.return r.Unix.ni_hostname
     with
     | Not_found ->
-	let hs = Unix.string_of_inet_addr ia in
-	Lwt.return
+    let hs = Unix.string_of_inet_addr ia in
+    Lwt.return
           (if String.length hs > 7 && String.sub hs 0 7 = "::ffff:"
           then String.sub hs 7 (String.length hs - 7)
           else if String.contains hs ':'

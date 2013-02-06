@@ -147,10 +147,10 @@ module type Accessors = sig
 end
 
 type ('key, 'comparator, 'z) without_comparator =
-('key, 'comparator, 'z) Core_map_intf.without_comparator
+  ('key, 'comparator, 'z) Core_map_intf.without_comparator
 
 type ('key, 'comparator, 'z) with_comparator =
-('key, 'comparator, 'z) Core_map_intf.with_comparator
+  ('key, 'comparator, 'z) Core_map_intf.with_comparator
 
 module type Creators = sig
   type ('a, 'comparator) t

@@ -33,11 +33,11 @@ module Tree0 = struct
       (1) all values serialize the same way in both representations, or
       (2) you add a new Set version to stable.ml *)
   type 'a t =
-  | Empty
-  (* (Leaf x) is the same as (Node (Empty, x, Empty, 1, 1)) but uses less space. *)
-  | Leaf of 'a
-  (* first int is height, second is sub-tree size *)
-  | Node of 'a t * 'a * 'a t * int * int
+    | Empty
+    (* (Leaf x) is the same as (Node (Empty, x, Empty, 1, 1)) but uses less space. *)
+    | Leaf of 'a
+    (* first int is height, second is sub-tree size *)
+    | Node of 'a t * 'a * 'a t * int * int
 
   type 'a tree = 'a t
 
@@ -784,9 +784,9 @@ end
     (1) all values serialize the same way in both representations, or
     (2) you add a new Set version to stable.ml *)
 type ('a, 'comparator) t =
-{ tree : 'a Tree0.t;
-  comparator : ('a, 'comparator) Comparator.t;
-}
+  { tree : 'a Tree0.t;
+    comparator : ('a, 'comparator) Comparator.t;
+  }
 
 let comparator t = t.comparator
 

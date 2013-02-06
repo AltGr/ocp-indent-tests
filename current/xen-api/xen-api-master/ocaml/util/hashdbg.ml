@@ -40,7 +40,7 @@ struct
 
   let remove x k = Hashtbl.remove x.t k; x.c <- x.c - 1
   let iter f x = Hashtbl.iter f x.t
-  let find x k = Hashtbl.find x.t k	
+  let find x k = Hashtbl.find x.t k  
   let find_all x k = Hashtbl.find_all x.t k
   let mem x k = Hashtbl.mem x.t k
   let fold f x c = Hashtbl.fold f x.t c

@@ -54,7 +54,7 @@ module Ip = struct
     (a > a') || ((a = a') && (b > b')) || ((a = a') && (b = b') && (c > c')) || ((a = a') && (b = b') && (c = c') && (d > d'))
 
   (** [first a b f] returns [Some x] where [x] is the first address in the sequence from
-     		[a] to [b] where [f x] is true if it exists, and [None] otherwise. *)
+     [a] to [b] where [f x] is true if it exists, and [None] otherwise. *)
   let rec first a b f =
     if gt a b then None
     else

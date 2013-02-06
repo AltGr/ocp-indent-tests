@@ -67,12 +67,12 @@ let event_wait p =
   done
 
 let wait_for_task id =
-  (*	Printf.fprintf stderr "wait_for id = %s\n%!" id; *)
+  (*  Printf.fprintf stderr "wait_for id = %s\n%!" id; *)
   let finished = function
     | Dynamic.Task id' ->
       id = id' && (task_ended dbg id)
     | x ->
-      (*			Printf.fprintf stderr "ignore event on %s\n%!" (x |> Dynamic.rpc_of_id |> Jsonrpc.to_string); *)
+      (*      Printf.fprintf stderr "ignore event on %s\n%!" (x |> Dynamic.rpc_of_id |> Jsonrpc.to_string); *)
       false in 
   event_wait finished;
   id
@@ -251,7 +251,7 @@ let vm_assert_equal vm vm' =
     | Direct x, Direct x' ->
       assert_equal ~msg:"kernel" ~printer:(fun x -> x) x.kernel x'.kernel;
       assert_equal ~msg:"cmdline" ~printer:(fun x -> x) x.cmdline x'.cmdline;
-      assert_equal ~msg:"ramdisk" ~printer:(function None -> "None" | Some x -> x) x.ramdisk x'.ramdisk		
+      assert_equal ~msg:"ramdisk" ~printer:(function None -> "None" | Some x -> x) x.ramdisk x'.ramdisk    
     | Indirect x, Indirect x' ->
       assert_equal ~msg:"bootloader" ~printer:(fun x -> x) x.bootloader x'.bootloader;
       assert_equal ~msg:"extra_args" ~printer:(fun x -> x) x.extra_args x'.extra_args;
@@ -401,12 +401,12 @@ let vm_test_parallel_start_shutdown _ =
 let vm_test_consoles _ =
   ()
   (*
-	with_vm example_uuid
-		(fun id ->
-			success (Client.VM.start id);
-			let (_: Console.t list) = success (Client.CONSOLE.list id) in
-			success (Client.VM.shutdown id None);
-		)
+  with_vm example_uuid
+    (fun id ->
+      success (Client.VM.start id);
+      let (_: Console.t list) = success (Client.CONSOLE.list id) in
+      success (Client.VM.shutdown id None);
+    )
 *)
 
 let vm_test_reboot _ =
@@ -656,7 +656,7 @@ let vbd_plug_ordering_good _ =
   } in
   let ro position id = { (rw position id) with mode = ReadOnly } in
   (* We'll try adding the VBDs in both a good order and a bad order.
-     	   The VM.start should plug them in the correct order. *)
+     The VM.start should plug them in the correct order. *)
   let vbds = [
     [ ro "0"; rw "1" ];
     [ rw "0"; ro "1" ];

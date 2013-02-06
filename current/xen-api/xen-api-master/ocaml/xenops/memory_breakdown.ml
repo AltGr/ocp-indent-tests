@@ -22,15 +22,15 @@ open Xenstore
 (** {2 Command line interface} *)
 
 let cli_description = "\
-	Displays a breakdown of host and guest memory usage.\n\n\
-	\
-	When run with no arguments, memory_breakdown periodically prints \
-	a single line to stdout containing memory data for the host and all \
-	currently active domains.\n\n\
-	\
-	When run with '-pad <file>', where <file> contains the data output \
-	from a previous run, memory_breakdown inserts extra padding values \
-	so that all lines in the output have the same number of columns.\n"
+  Displays a breakdown of host and guest memory usage.\n\n\
+  \
+  When run with no arguments, memory_breakdown periodically prints \
+  a single line to stdout containing memory data for the host and all \
+  currently active domains.\n\n\
+  \
+  When run with '-pad <file>', where <file> contains the data output \
+  from a previous run, memory_breakdown inserts extra padding values \
+  so that all lines in the output have the same number of columns.\n"
 
 let cli_argument_delay_period_seconds = ref (1.0)
 let cli_argument_existing_file_to_pad = ref ""

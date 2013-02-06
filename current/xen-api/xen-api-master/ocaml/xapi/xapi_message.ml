@@ -210,7 +210,7 @@ let symlinks _ref gen message basefilename =
     symlinks
 
 (** Check to see if the UUID is valid. This should not use get_by_uuid as
-   	this causes spurious exceptions to be logged... *)
+   this causes spurious exceptions to be logged... *)
 let check_uuid ~__context ~cls ~uuid =
   try
     (match cls with
@@ -280,7 +280,7 @@ let cache_remove _ref =
 
 
 (** Write: write message to disk. Returns boolean indicating whether
-   	message was written *)
+   message was written *)
 let write ~__context ~_ref ~message =
   (* Check if a message with _ref has already been written *)
   let message_exists () =
@@ -324,11 +324,11 @@ let write ~__context ~_ref ~message =
               fd, basefilename, filename
             with _ -> begin
                 (* We may be copying messages from another
-                   						   pool, in which case we may have
-                   						   filename collision (unlikely, but
-                   						   possible). So increment the filename
-                   						   and try again, but leave the original
-                   						   timestamp in the message untouched. *)
+                   pool, in which case we may have
+                   filename collision (unlikely, but
+                   possible). So increment the filename
+                   and try again, but leave the original
+                   timestamp in the message untouched. *)
                 timestamp := !timestamp +. 0.00001 ;
                 doit (n+1)
               end
@@ -353,7 +353,7 @@ let write ~__context ~_ref ~message =
 
 
 (** create: Create a new message, and write to disk. Returns null ref
-   	if write failed, or message ref otherwise. *)
+   if write failed, or message ref otherwise. *)
 let create ~__context ~name ~priority ~cls ~obj_uuid ~body =
   debug "Message.create %s %Ld %s %s" name priority
     (class_to_string cls) obj_uuid;
@@ -388,9 +388,9 @@ let create ~__context ~name ~priority ~cls ~obj_uuid ~body =
   Opt.iter (cache_insert _ref message) gen;
 
   (* Emit a create event (with the old event API). If the message
-     	   hasn't been written, we may want to also emit a del even, for
-     	   consistency (since the reference for the message will never be
-     	   valid again. *)
+     hasn't been written, we may want to also emit a del even, for
+     consistency (since the reference for the message will never be
+     valid again. *)
   let rpc = API.rpc_of_message_t message in
   Xapi_event.event_add ~snapshot:rpc "message" "add" (Ref.string_of _ref);
   let (_: bool) = (!queue_push) name (message_to_string (_ref,message)) in
@@ -651,7 +651,7 @@ let rss_handler (req: Http.Request.t) (bio: Buf_io.t) _ =
       ignore(Unix.write s body 0 (String.length body)))
 
 (** Handler for PUTing messages to a host.
-   	Query params: { cls=<obj class>, uuid=<obj uuid> } *)
+   Query params: { cls=<obj class>, uuid=<obj uuid> } *)
 let handler (req: Http.Request.t) fd _ =
   let query = req.Http.Request.query in
   req.Http.Request.close <- true ;

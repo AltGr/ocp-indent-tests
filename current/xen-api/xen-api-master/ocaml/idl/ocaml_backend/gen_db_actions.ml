@@ -140,7 +140,7 @@ let args_of_message (obj: obj) ( { msg_tag = tag } as msg) =
       | FromObject(Make) ->
         if x <> obj.DT.name then failwith "args_of_message";
         (* Client constructor takes all object fields regardless of qualifier
-           	       but excluding Set(Ref _) types *)
+           but excluding Set(Ref _) types *)
         let fields = DU.fields_of_obj obj in
         let fields = List.filter field_in_this_table fields in
         List.map Client.param_of_field fields
@@ -343,7 +343,7 @@ let db_action api : O.Module.t =
            (Escaping.escape_obj obj.DT.name) Client._self)
       | FromObject(Make) ->
         let fields = List.filter field_in_this_table (DU.fields_of_obj obj) in
-        (*	  let fields = db_fields_of_obj obj in *)
+        (*    let fields = db_fields_of_obj obj in *)
         let kvs = List.map (fun fld ->
             Escaping.escape_id fld.full_name,
             OU.ocaml_of_record_field fld.full_name) fields  in
@@ -377,7 +377,7 @@ let db_action api : O.Module.t =
       | FromObject(Private(GetDBAll)) ->
         (* | FromObject(GetAll) -> *)
         (* Generate the same code for the internal GetDBAll as well as the public GetAll.
-           	     Eventually we'll need to provide user filtering for the public version *)
+           Eventually we'll need to provide user filtering for the public version *)
         begin match x.msg_result with
         | Some (Set result_ty, _) ->
           let query = Printf.sprintf "DB.read_refs __t \"%s\""
@@ -396,11 +396,11 @@ let db_action api : O.Module.t =
 
       (*
       | FromObject(Private(Copy)) ->
-	  begin match x.msg_params with
-	  | [ _, src_name, _; _, dst_name, _ ] -> make_shallow_copy api obj (OU.escape src_name) (OU.escape dst_name) (DU.fields_of_obj obj)
-	  | _ -> failwith "Copy needs a single parameter"
-	  end
-	    *)
+    begin match x.msg_params with
+    | [ _, src_name, _; _, dst_name, _ ] -> make_shallow_copy api obj (OU.escape src_name) (OU.escape dst_name) (DU.fields_of_obj obj)
+    | _ -> failwith "Copy needs a single parameter"
+    end
+      *)
       | _ -> assert false
     in
     O.Let.make

@@ -17,9 +17,9 @@ module List = Core_list
 
 type 'a queue_end = 'a z option ref
 and 'a z =
-{ value : 'a;
-  next : 'a queue_end;
-}
+  { value : 'a;
+    next : 'a queue_end;
+  }
 
 let queue_end_to_list queue_end =
   let rec loop queue_end ac =
@@ -32,10 +32,10 @@ let queue_end_to_list queue_end =
 
 
 type 'a t =
-{ mutable front : 'a queue_end;
-  mutable back : 'a queue_end;
-  mutable length : int;
-}
+  { mutable front : 'a queue_end;
+    mutable back : 'a queue_end;
+    mutable length : int;
+  }
 
 let length t = t.length
 

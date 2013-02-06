@@ -171,14 +171,14 @@ let evaluate_sort_partition evaluate sort partition list =
    Each host category function acts as:
    {ol
    {- an indicator function for membership of the set, returning values:
-   	{ul
-   	{- ≥ 0 for hosts {i inside } the set.}
-   	{- < 0 for hosts {i outside} the set.}}}
+   {ul
+   {- ≥ 0 for hosts {i inside } the set.}
+   {- < 0 for hosts {i outside} the set.}}}
    {- a valuation function to enable comparison between members of the set, where:
-   	{ul
-   	{- {i higher} values indicate {i more   } desirable hosts.}
-   	{- {i lower } values indicate {i less   } desirable hosts.}
-   	{- {i equal } values indicate {i equally} desirable hosts.}}}}
+   {ul
+   {- {i higher} values indicate {i more   } desirable hosts.}
+   {- {i lower } values indicate {i less   } desirable hosts.}
+   {- {i equal } values indicate {i equally} desirable hosts.}}}}
 *)
 type host_category = Host_snapshot_summary.t -> int64
 
@@ -196,11 +196,11 @@ let bias_away_from_pool_master : host_category -> host_category =
 
 (** The {b definite} host category. Includes:
    {ul
-   	{- hosts that don't need to compress their guests.}}
+   {- hosts that don't need to compress their guests.}}
    This function values each host according to:
    {ul
-   	{- slaves: (available_memory - Σ memory_static_max)}
-   	{- master: (available_memory - Σ memory_static_max - 1) / 2}}
+   {- slaves: (available_memory - Σ memory_static_max)}
+   {- master: (available_memory - Σ memory_static_max - 1) / 2}}
 *)
 let definite_host_category : host_category =
   let unbiased_category host =
@@ -209,13 +209,13 @@ let definite_host_category : host_category =
 
 (** The {b probable} host category. Includes the union of:
    {ul
-   	{- hosts that may need to compress their guests.}
-   	{- hosts included in the {b definite} category.}
+   {- hosts that may need to compress their guests.}
+   {- hosts included in the {b definite} category.}
    }
    This function values each host according to:
    {ul
-   	{- slaves: (available_memory - Σ memory_dynamic_max)}
-   	{- master: (available_memory - Σ memory_dynamic_max - 1) / 2}}
+   {- slaves: (available_memory - Σ memory_dynamic_max)}
+   {- master: (available_memory - Σ memory_dynamic_max - 1) / 2}}
 *)
 let probable_host_category : host_category =
   let unbiased_category host =
@@ -224,8 +224,8 @@ let probable_host_category : host_category =
 
 (** The {b possible} host category. Includes the union of:
    {ul
-   	{- hosts that do need to compress their guests.}
-   	{- hosts included in the {b probable} category.}
+   {- hosts that do need to compress their guests.}
+   {- hosts included in the {b probable} category.}
    }
    This function values masters and slaves identically: in proportion to their
    projected memory compression ratios. *)
@@ -248,8 +248,8 @@ let possible_host_category : host_category =
 
 (** The {b affinity} host category. Includes the intersection of:
    {ul
-   	{- hosts with identifiers in the given host identifier list.}
-   	{- hosts included in the {b possible} category.}
+   {- hosts with identifiers in the given host identifier list.}
+   {- hosts included in the {b possible} category.}
    }
    This function values masters and slaves identically: in proportion to their
    projected memory compression ratios. *)

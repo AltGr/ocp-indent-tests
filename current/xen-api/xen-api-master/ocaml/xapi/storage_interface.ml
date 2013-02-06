@@ -29,7 +29,7 @@ type vdi = string
 type debug_info = string
 
 (** The result of a successful VDI.attach: this information (eg) can be used to
-   	connect a VBD backend to a VBD frontend *)
+   connect a VBD backend to a VBD frontend *)
 type attach_info = {
   params : string;
   xenstore_data : (string * string) list;
@@ -186,7 +186,7 @@ module DP = struct
   external create: dbg:debug_info -> id:string -> dp = ""
 
   (** [destroy task id]: frees any resources associated with [id] and destroys it.
-     		This will typically do any needed VDI.detach, VDI.deactivate cleanup. *)
+     This will typically do any needed VDI.detach, VDI.deactivate cleanup. *)
   external destroy: dbg:debug_info -> dp:dp -> allow_leak:bool -> unit = ""
 
 
@@ -194,12 +194,12 @@ module DP = struct
   external attach_info: dbg:debug_info -> sr:sr -> vdi:vdi -> dp:dp -> attach_info = ""
 
   (** [diagnostics ()]: returns a printable set of diagnostic information,
-     		typically including lists of all registered datapaths and their allocated
-     		resources. *)
+     typically including lists of all registered datapaths and their allocated
+     resources. *)
   external diagnostics: unit -> string = ""
 
   (** [stat_vdi task sr vdi ()] returns the state of the given VDI from the point of view of
-         each dp as well as the overall superstate. *)
+        each dp as well as the overall superstate. *)
   external stat_vdi: dbg:debug_info -> sr:sr -> vdi:vdi -> unit -> dp_stat_t = ""
 end
 
@@ -213,17 +213,17 @@ module SR = struct
   external attach : dbg:debug_info -> sr:sr -> device_config:(string * string) list -> unit = ""
 
   (** [detach task sr]: detaches the SR, first detaching and/or deactivating any
-     		active VDIs. This may fail with Sr_not_attached, or any error from VDI.detach
-     		or VDI.deactivate. *)
+     active VDIs. This may fail with Sr_not_attached, or any error from VDI.detach
+     or VDI.deactivate. *)
   external detach : dbg:debug_info -> sr:sr -> unit = ""
 
   (** [reset task sr]: declares that the SR has been completely reset, e.g. by
-     		rebooting the VM hosting the SR backend. *)
+     rebooting the VM hosting the SR backend. *)
   external reset : dbg:debug_info -> sr:sr ->  unit = ""
 
   (** [destroy sr]: destroys (i.e. makes unattachable and unprobeable) the [sr],
-     		first detaching and/or deactivating any active VDIs. This may fail with 
-     		Sr_not_attached, or any error from VDI.detach or VDI.deactivate. *)
+     first detaching and/or deactivating any active VDIs. This may fail with 
+     Sr_not_attached, or any error from VDI.detach or VDI.deactivate. *)
   external destroy : dbg:debug_info -> sr:sr -> unit = ""
 
   (** [scan task sr] returns a list of VDIs contained within an attached SR *)
@@ -235,11 +235,11 @@ end
 
 module VDI = struct
 (** Functions which operate on particular VDIs.
-   		These functions are all idempotent from the point of view of a given [dp]. *)
+   These functions are all idempotent from the point of view of a given [dp]. *)
 
   (** [create task sr vdi_info] creates a new VDI in [sr] using [vdi_info]. Some
-         fields in the [vdi_info] may be modified (e.g. rounded up), so the function
-         returns the vdi_info which was used. *)
+        fields in the [vdi_info] may be modified (e.g. rounded up), so the function
+        returns the vdi_info which was used. *)
   external create : dbg:debug_info -> sr:sr -> vdi_info:vdi_info -> vdi_info = ""
 
   (** [snapshot task sr vdi_info] creates a new VDI which is a snapshot of [vdi_info] in [sr] *)
@@ -258,28 +258,28 @@ module VDI = struct
   external set_persistent : dbg:debug_info -> sr:sr -> vdi:vdi -> persistent:bool -> unit = ""
 
   (** [epoch_begin sr vdi] declares that [vdi] is about to be added to a starting/rebooting VM.
-         This is not called over suspend/resume or migrate. *)
+        This is not called over suspend/resume or migrate. *)
   external epoch_begin : dbg:debug_info -> sr:sr -> vdi:vdi -> unit = ""
 
   (** [attach task dp sr vdi read_write] returns the [params] for a given
-     		[vdi] in [sr] which can be written to if (but not necessarily only if) [read_write]
-     		is true *)
+     [vdi] in [sr] which can be written to if (but not necessarily only if) [read_write]
+     is true *)
   external attach : dbg:debug_info -> dp:dp -> sr:sr -> vdi:vdi -> read_write:bool -> attach_info = ""
 
   (** [activate task dp sr vdi] signals the desire to immediately use [vdi].
-     		This client must have called [attach] on the [vdi] first. *)
+     This client must have called [attach] on the [vdi] first. *)
   external activate : dbg:debug_info -> dp:dp -> sr:sr -> vdi:vdi -> unit = ""
 
   (** [deactivate task dp sr vdi] signals that this client has stopped reading (and writing)
-     		[vdi]. *)
+     [vdi]. *)
   external deactivate : dbg:debug_info -> dp:dp -> sr:sr -> vdi:vdi -> unit = ""
 
   (** [detach task dp sr vdi] signals that this client no-longer needs the [attach_info]
-     		to be valid. *)
+     to be valid. *)
   external detach : dbg:debug_info -> dp:dp -> sr:sr -> vdi:vdi -> unit = ""
 
   (** [epoch_end sr vdi] declares that [vdi] is about to be removed from a shutting down/rebooting VM.
-         This is not called over suspend/resume or migrate. *)
+        This is not called over suspend/resume or migrate. *)
   external epoch_end : dbg:debug_info -> sr:sr -> vdi:vdi -> unit = ""
 
   (** [get_url task sr vdi] returns a URL suitable for accessing disk data directly. *)
@@ -318,7 +318,7 @@ module DATA = struct
 
   module MIRROR = struct
     (** [start task sr vdi url sr2] creates a VDI in remote [url]'s [sr2] and writes
-       			data synchronously. It returns the id of the VDI.*)
+       data synchronously. It returns the id of the VDI.*)
     external start : dbg:debug_info -> sr:sr -> vdi:vdi -> dp:dp -> url:string -> dest:sr -> Task.id = ""
 
     (** [stop task sr vdi] stops mirroring local [vdi] *)

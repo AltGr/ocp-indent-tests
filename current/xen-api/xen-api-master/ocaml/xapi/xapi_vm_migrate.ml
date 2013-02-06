@@ -46,7 +46,7 @@ let with_migrate f =
     if !number = 3 then raise (Api_errors.Server_error (Api_errors.too_many_storage_migrates,["3"]));
     incr number);
   finally f (fun () -> 
-    Mutex.execute nmutex (fun () ->			
+    Mutex.execute nmutex (fun () ->      
       decr number))
 
 
@@ -83,7 +83,7 @@ let pool_migrate ~__context ~vm ~host ~options =
         (* Delete all record of this VM locally (including caches) *)
         Xapi_xenops.Xenopsd_metadata.delete ~__context vm';
         (* Flush xenopsd events through: we don't want the pool database to
-           				   be updated on this host ever again. *)
+           be updated on this host ever again. *)
         Xapi_xenops.Events_from_xenopsd.wait dbg ()
       )
     );
@@ -99,9 +99,9 @@ let pool_migrate ~__context ~vm ~host ~options =
   end;
   Rrdd_proxy.migrate_rrd ~__context ~vm_uuid:vm' ~host_uuid:(Ref.string_of host) ();
   (* We will have missed important events because we set resident_on late.
-     	   This was deliberate: resident_on is used by the pool master to reserve
-     	   memory. If we called 'atomic_set_resident_on' before the domain is
-     	   transferred then we would have no record of the memory use. *)
+     This was deliberate: resident_on is used by the pool master to reserve
+     memory. If we called 'atomic_set_resident_on' before the domain is
+     transferred then we would have no record of the memory use. *)
   Helpers.call_api_functions ~__context
     (fun rpc session_id ->
       XenAPI.VM.pool_migrate_complete rpc session_id vm host
@@ -315,7 +315,7 @@ let migrate_send'  ~__context ~vm ~dest ~live ~vdi_map ~vif_map ~options =
               let vdi = task_result |> vdi_of_task dbg in
               remote_vdis := vdi.vdi :: !remote_vdis;
               vdi.vdi
-            end	else begin 
+            end  else begin 
               let mirror_id = task_result |> mirror_of_task dbg in
               mirrors := mirror_id :: !mirrors;
               let m = SMAPI.DATA.MIRROR.stat ~dbg ~id:mirror_id in
@@ -429,7 +429,7 @@ let migrate_send'  ~__context ~vm ~dest ~live ~vdi_map ~vif_map ~options =
             Xapi_xenops.Events_from_xenopsd.wait dbg ())
       with
       | Xenops_interface.Does_not_exist ("VM",_) ->
-        ()	
+        ()  
     end;
 
     debug "Migration complete";
@@ -462,12 +462,12 @@ let migrate_send'  ~__context ~vm ~dest ~live ~vdi_map ~vif_map ~options =
         if not (Xapi_fist.storage_motion_keep_vdi ()) 
         then begin
           (* In a cross-pool migrate, due to the Xapi_xenops.with_events_suppressed call above, 
-             					   the VBDs are left 'currently-attached=true', because they haven't been resynced
-             					   by the destination host.
+             the VBDs are left 'currently-attached=true', because they haven't been resynced
+             by the destination host.
 
-             					   Look for VBDs in this state (there shouldn't be any for intra-pool) and destroy
-             					   them 
-             					*)
+             Look for VBDs in this state (there shouldn't be any for intra-pool) and destroy
+             them 
+          *)
           let matching_vbd = 
             try Some (List.find (fun (vbd,vbd_r) -> vbd_r.API.vBD_VDI = vdi && vbd_r.API.vBD_currently_attached) vbds) with _ -> None
           in
@@ -526,7 +526,7 @@ let migrate_send'  ~__context ~vm ~dest ~live ~vdi_map ~vif_map ~options =
     let task = Context.get_task_id __context in
     let oc = Db.Task.get_other_config ~__context ~self:task in
     if List.mem_assoc "mirror_failed" oc then
-      failed_vdi := Some (List.assoc "mirror_failed" oc);			
+      failed_vdi := Some (List.assoc "mirror_failed" oc);      
     match !failed_vdi with
     | Some loc -> 
       let (vdi,_,_,_,_,_,_,_) = List.find (fun (_,_,loc',_,_,_,_,_) -> loc'=loc) vdis in
@@ -636,8 +636,8 @@ let handler req fd _ =
       debug "memory_required_kib = %Ld" memory_required_kib;
       let snapshot = Helpers.get_boot_record ~__context ~self:vm in
       (* CA-31764: the transmitted memory value may actually be > static_max if maxmem on the remote was
-         			   increased. If this happens we clip the target at static_max. If the domain has managed to
-         			   allocate more than static_max (!) then it may not fit and the migrate will fail. *)
+         increased. If this happens we clip the target at static_max. If the domain has managed to
+         allocate more than static_max (!) then it may not fit and the migrate will fail. *)
       let target_kib =
         Memory.kib_of_bytes_used (
           let bytes = Memory.bytes_of_kib memory_required_kib in
@@ -651,8 +651,8 @@ let handler req fd _ =
       in
 
       (* Since the initial memory target is read from vM_memory_target in _resume_domain we must
-         			   configure this to prevent the domain ballooning up and allocating more than target_kib
-         			   of guest memory on unpause. *)
+         configure this to prevent the domain ballooning up and allocating more than target_kib
+         of guest memory on unpause. *)
       let snapshot = { snapshot with API.vM_memory_target = Memory.bytes_of_kib target_kib } in
       let overhead_bytes = Memory_check.vm_compute_memory_overhead snapshot in
       let free_memory_required_kib = Int64.add (Memory.kib_of_bytes_used overhead_bytes) memory_required_kib in
@@ -682,9 +682,9 @@ let handler req fd _ =
       );
 
       (* We will have missed important events because we set resident_on late.
-         			   This was deliberate: resident_on is used by the pool master to reserve
-         			   memory. If we called 'atomic_set_resident_on' before the domain is
-         			   transferred then we would have no record of the memory use. *)
+         This was deliberate: resident_on is used by the pool master to reserve
+         memory. If we called 'atomic_set_resident_on' before the domain is
+         transferred then we would have no record of the memory use. *)
       Helpers.call_api_functions ~__context (fun rpc session_id ->
         XenAPI.VM.pool_migrate_complete rpc session_id vm localhost
       );

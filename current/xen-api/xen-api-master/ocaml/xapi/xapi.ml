@@ -267,7 +267,7 @@ let check_no_other_masters() =
               exit Xapi_globs.restart_return_code;
             end
         with e ->  (* if we couldn't contact slave then carry on regardless
-                      		       --- this is just a sanity check, not a guarantee... *)
+                      --- this is just a sanity check, not a guarantee... *)
           debug "Couldn't contact slave on startup check: %s" (Printexc.to_string e)
       in
       let hosts = Db.Host.get_all ~__context in
@@ -344,7 +344,7 @@ let bring_up_management_if ~__context () =
     debug "Caught exception bringing up management interface: %s" (ExnHelper.string_of_exn e)
 
 (** Assuming a management interface is defined, return the IP address. Note this
-   	call may block for a long time. *)
+   call may block for a long time. *)
 let wait_for_management_ip_address ~__context =
   debug "Attempting to acquire a management IP address";
   Xapi_host.set_emergency_mode_error Api_errors.host_has_no_management_ip [];
@@ -911,7 +911,7 @@ let server_init() =
         "creating networks", [ Startup.OnlyMaster ], Create_networks.create_networks_localhost;
         "updating the vswitch controller", [], (fun () -> Helpers.update_vswitch_controller ~__context ~host:(Helpers.get_localhost ~__context)); 
         (* CA-22417: bring up all non-bond slaves so that the SM backends can use storage NIC IP addresses (if the routing
-           	 table happens to be right) *)
+           table happens to be right) *)
         "Best-effort bring up of physical NICs", [ Startup.NoExnRaising ], Xapi_pif.start_of_day_best_effort_bring_up;
         "initialising storage", [ Startup.NoExnRaising ],
         (fun () -> Helpers.call_api_functions ~__context Create_storage.create_storage_localhost);
@@ -1028,8 +1028,8 @@ let watchdog f =
         pid := Some newpid;
 
         (* CA-22875: make sure we unset on_system_boot so we don't 
-           				   execute on-boot stuff more than once eg over a 
-           				   'pool-emergency-transition-to-master' or an HA failover *)
+           execute on-boot stuff more than once eg over a 
+           'pool-emergency-transition-to-master' or an HA failover *)
         Xapi_globs.on_system_boot := false;
 
       end;
@@ -1062,7 +1062,7 @@ let watchdog f =
           loginfo "received signal: %s" (Unixext.string_of_signal i);
           pid := None;
           (* arbitrary choice of signals, probably need more
-             						   though, for real use *)
+             though, for real use *)
           if i = Sys.sigsegv || i = Sys.sigpipe then begin
             let ctime = Unix.time () in
             if ctime < (!last_badsig +. no_retry_interval) then begin
@@ -1082,7 +1082,7 @@ let watchdog f =
           loginfo "receive stop code %i" i;
           Unix.sleep 1;
           (* well, just resume the stop process. the watchdog
-             						   cannot do anything if the process is stop *)
+             cannot do anything if the process is stop *)
           Unix.kill (Forkhelpers.getpid (Opt.unbox !pid)) Sys.sigcont;
       with
         Unix.Unix_error(Unix.EINTR,_,_) -> ()

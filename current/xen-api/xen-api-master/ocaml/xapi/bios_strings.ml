@@ -39,7 +39,7 @@ let trim str =
   in
   let a = check_left 0 in
   let b = (check_right (l-1)) - a in
-  try	String.sub str a b with Invalid_argument _  -> ""
+  try  String.sub str a b with Invalid_argument _  -> ""
 
 (* obtain the BIOS string with the given name from dmidecode *)
 let get_bios_string name =

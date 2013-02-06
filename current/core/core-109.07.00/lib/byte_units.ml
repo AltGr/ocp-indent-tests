@@ -15,13 +15,13 @@ let gbyte = kbyte *. mbyte
 (* External.t - used just for custom sexp convertors *)
 module External = struct
   type t =
-  [
-    | `Bytes of float
-    | `Kilobytes of float
-    | `Megabytes of float
-    | `Gigabytes of float
-    | `Words of float
-  ]
+    [
+      | `Bytes of float
+      | `Kilobytes of float
+      | `Megabytes of float
+      | `Gigabytes of float
+      | `Words of float
+    ]
   with sexp
   type _ignore = t
 end

@@ -95,7 +95,7 @@ let determine_other_config ~__context pif_rc net_rc =
 
 let create_bond ~__context bond mtu =
   (* Get all information we need from the DB before doing anything that may drop our
-     	 * management connection *)
+   * management connection *)
   let master = Db.Bond.get_master ~__context ~self:bond in
   let master_rc = Db.PIF.get_record ~__context ~self:master in
   let slaves = Db.Bond.get_slaves ~__context ~self:bond in

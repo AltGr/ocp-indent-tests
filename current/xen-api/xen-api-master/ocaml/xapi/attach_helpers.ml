@@ -41,8 +41,8 @@ let safe_unplug rpc session_id self =
     end
 
 (** For a VBD attached to a control domain, it may correspond to a running task
-   	(if so the task will be linked via an other_config key) or it may be a qemu
-   	frontend (if so it will be linked to another frontend) *)
+   (if so the task will be linked via an other_config key) or it may be a qemu
+   frontend (if so it will be linked to another frontend) *)
 let has_vbd_leaked __context vbd =
   let other_config = Db.VBD.get_other_config ~__context ~self:vbd in
   let device = Db.VBD.get_device ~__context ~self:vbd in
@@ -52,7 +52,7 @@ let has_vbd_leaked __context vbd =
   then (info "Ignoring orphaned disk attached to control domain (device = %s)" device; false)
   else begin
     let has_valid_task = has_task && (
-                           let task_id = Ref.of_string (List.assoc Xapi_globs.vbd_task_key other_config) in			
+                           let task_id = Ref.of_string (List.assoc Xapi_globs.vbd_task_key other_config) in      
                            (* check if the task record still exists and is pending *)
                            try
                              let status = Db.Task.get_status ~__context ~self:task_id in

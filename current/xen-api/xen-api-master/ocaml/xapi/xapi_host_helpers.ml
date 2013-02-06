@@ -40,8 +40,8 @@ let valid_operations ~__context record _ref' =
       then Hashtbl.replace table op (Some(code, params))) ops in
 
   (* Operations are divided into two groups:
-     	 1. those that create new VMs: `provision, `vm_resume, `vm_migrate
-     	 2. those that remove VMs: `evacuate, `reboot, `shutdown *)
+     1. those that create new VMs: `provision, `vm_resume, `vm_migrate
+     2. those that remove VMs: `evacuate, `reboot, `shutdown *)
   let is_creating_new x = List.mem x [ `provision; `vm_resume; `vm_migrate ] in
   let is_removing x = List.mem x [ `evacuate; `reboot; `shutdown ] in
   let creating_new = List.fold_left (fun acc op -> acc || (is_creating_new op)) false current_ops in
@@ -153,7 +153,7 @@ let update_host_metrics ~__context ~host ~memory_total ~memory_free =
     if should_set_live then begin
       Db.Host_metrics.set_live ~__context ~self:m ~value:true;
       update_allowed_operations ~__context ~self:host
-    end	
+    end  
   end
   else warn "Host %s has invalid Host_metrics object reference" (Ref.string_of host)
 
@@ -195,8 +195,8 @@ let assert_startup_complete () =
 let consider_enabling_host_nolock ~__context =
   debug "Xapi_host_helpers.consider_enabling_host_nolock called";
   (* If HA is enabled only consider marking the host as enabled if all the storage plugs in successfully.
-        Disabled hosts are excluded from the HA planning calculations. Otherwise a host may boot,
-        fail to plug in a PBD and cause all protected VMs to suddenly become non-agile. *)
+       Disabled hosts are excluded from the HA planning calculations. Otherwise a host may boot,
+       fail to plug in a PBD and cause all protected VMs to suddenly become non-agile. *)
   let ha_enabled = try bool_of_string (Localdb.get Constants.ha_armed) with _ -> false in
   let localhost = Helpers.get_localhost ~__context in
   let pbds = Db.Host.get_PBDs ~__context ~self:localhost in
@@ -205,9 +205,9 @@ let consider_enabling_host_nolock ~__context =
 
   if not !user_requested_host_disable && (not ha_enabled || all_pbds_ok) then begin
     (* If we were in the middle of a shutdown or reboot with HA enabled but somehow we failed
-       		   and xapi restarted, make sure we don't automatically re-enable ourselves. This is to avoid
-       		   letting a machine with no fencing touch any VMs. Once the host reboots we can safely clear
-       		   the flag 'host_disabled_until_reboot' *)
+       and xapi restarted, make sure we don't automatically re-enable ourselves. This is to avoid
+       letting a machine with no fencing touch any VMs. Once the host reboots we can safely clear
+       the flag 'host_disabled_until_reboot' *)
     let pool = Helpers.get_pool ~__context in
     if !Xapi_globs.on_system_boot then begin
       debug "Host.enabled: system has just restarted: setting localhost to enabled";

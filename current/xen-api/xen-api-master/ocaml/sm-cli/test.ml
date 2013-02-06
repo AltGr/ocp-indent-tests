@@ -248,7 +248,7 @@ let test_mirror_1 url sr rurl rsr _ =
       (if success 
        then Printf.printf "OK\n"
        else Printf.printf "Not OK!\n");
-      junk		
+      junk    
     ) in
 
   (* At this point, we have a VDI containing data with which we can mirror *)
@@ -288,7 +288,7 @@ let test_mirror_1 url sr rurl rsr _ =
       (if success 
        then Printf.printf "OK\n"
        else Printf.printf "Not OK!\n");
-      junk		
+      junk    
     ) in
 
 

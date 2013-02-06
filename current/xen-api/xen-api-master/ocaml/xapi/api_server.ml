@@ -18,8 +18,8 @@
 (** Actions module *)
 module Actions = struct
 (** The DebugVersion throws a NotImplemented exception for everything
-   		by default.  The ReleaseVersion is missing all the fields;
-   		so server will not compile unless everything is overridden *)
+   by default.  The ReleaseVersion is missing all the fields;
+   so server will not compile unless everything is overridden *)
 
   module Task = Xapi_task
   module Session = Xapi_session

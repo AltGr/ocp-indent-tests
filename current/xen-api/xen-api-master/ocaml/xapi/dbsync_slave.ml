@@ -50,7 +50,7 @@ let create_localhost ~__context info =
         ~external_auth_type:"" ~external_auth_service_name:"" ~external_auth_configuration:[] 
         ~license_params:[] ~edition:"free" ~license_server:["address", "localhost"; "port", "27000"]
         ~local_cache_sr:Ref.null ~chipset_info:[]
-    in ()		
+    in ()    
 
 (* TODO cat /proc/stat for btime ? *)
 let get_start_time () =
@@ -126,7 +126,7 @@ let record_host_memory_properties ~__context =
       Some (Unixext.string_of_file boot_memory_file)
     with e ->
       warn "Could not read host free memory file. This may prevent \
-            			VMs from being started on this host. (%s)" (Printexc.to_string e);
+            VMs from being started on this host. (%s)" (Printexc.to_string e);
       None in
   maybe
     (fun boot_memory_string ->
@@ -143,7 +143,7 @@ let record_host_memory_properties ~__context =
           Memory_client.Client.get_host_reserved_memory "dbsync"
         with e ->
           error "Failed to contact ballooning service: \
-                 						host memory overhead may be too small (%s)"
+                 host memory overhead may be too small (%s)"
             (Printexc.to_string e);
           0L
       in
@@ -184,7 +184,7 @@ let resynchronise_pif_params ~__context =
   let localhost = Helpers.get_localhost ~__context in
 
   (* Determine all bridges that are currently up, and ask the master to sync the currently_attached
-     	 * fields on all my PIFs *)
+   * fields on all my PIFs *)
   Helpers.call_api_functions ~__context (fun rpc session_id ->
     let bridges = Netdev.network.Netdev.list () in
     Client.Host.sync_pif_currently_attached rpc session_id localhost bridges
@@ -297,8 +297,8 @@ let update_env __context sync_keys =
   );
 
   (* CA-35549: In a pool rolling upgrade, the master will detect the end of upgrade when the software versions
-     	 of all the hosts are the same. It will then assume that (for example) per-host patch records have
-     	 been tidied up and attempt to delete orphaned pool-wide patch records. *)
+     of all the hosts are the same. It will then assume that (for example) per-host patch records have
+     been tidied up and attempt to delete orphaned pool-wide patch records. *)
 
   (* refresh host info fields *)
   switched_sync Xapi_globs.sync_refresh_localhost_info (fun () -> 

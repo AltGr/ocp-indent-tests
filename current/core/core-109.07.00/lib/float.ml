@@ -176,11 +176,11 @@ let mod_float = Pervasives.mod_float
 
 module Class = struct
   type t =
-  | Infinite
-  | Nan
-  | Normal
-  | Subnormal
-  | Zero
+    | Infinite
+    | Nan
+    | Normal
+    | Subnormal
+    | Zero
   with sexp, bin_io
 
   let to_string t = Sexp.to_string (sexp_of_t t)

@@ -360,8 +360,8 @@ let main_loop ifd ofd =
     | Command (HttpConnect(url)) ->
       let server, path = parse_url url in
       (* The releatively complex design here helps to buffer input/output
-         	         when the underlying connection temporarily breaks, hence provides
-         	         seemingly continous connection. *)
+         when the underlying connection temporarily breaks, hence provides
+         seemingly continous connection. *)
       let block = 65536 in
       let buf_local = String.make block '\000' in
       let buf_local_end = ref 0 in

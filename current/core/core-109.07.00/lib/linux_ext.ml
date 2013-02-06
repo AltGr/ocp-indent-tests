@@ -6,21 +6,21 @@ module Int63 = Core_int63
 
 module Sysinfo0 = struct
   type t =
-  { uptime : Span.t;
-    load1 : int;
-    load5 : int;
-    load15 : int;
-    total_ram : int;
-    free_ram : int;
-    shared_ram : int;
-    buffer_ram : int;
-    total_swap : int;
-    free_swap : int;
-    procs : int;
-    totalhigh : int;
-    freehigh : int;
-    mem_unit : int;
-  }
+    { uptime : Span.t;
+      load1 : int;
+      load5 : int;
+      load15 : int;
+      total_ram : int;
+      free_ram : int;
+      shared_ram : int;
+      buffer_ram : int;
+      total_swap : int;
+      free_swap : int;
+      procs : int;
+      totalhigh : int;
+      freehigh : int;
+      mem_unit : int;
+    }
   with bin_io, sexp
 end
 
@@ -406,21 +406,21 @@ module Table = Bounded_int_table
 
 module T = struct
   type 'a t =
-  { epollfd : File_descr.t;
-    (* [flags_by_fd] has one entry for each file-descr in the epoll set, and stores
-       the epoll flags that the kernel's epoll set currently has for that
-       file-descr.  Keeping our own representation of the kernel data structure is
-       useful for debugging, since the information appears in a human-readable way
-       in [sexp_of_t]'s output.  It also allows us to hide the distinction between
-       [epoll_ctl_add] and [epoll_ctl_mod], since we know which to use based on
-       whether the file descriptor is already being watched. *)
-    flags_by_fd : (File_descr.t, Flags.t) Table.t;
-    max_ready_events : int;
-    (* [num_ready_events] holds the number of ready events in [ready_events], as
-       determined by the last call to [wait]. *)
-    mutable num_ready_events : int;
-    ready_events : 'a;
-  }
+    { epollfd : File_descr.t;
+      (* [flags_by_fd] has one entry for each file-descr in the epoll set, and stores
+         the epoll flags that the kernel's epoll set currently has for that
+         file-descr.  Keeping our own representation of the kernel data structure is
+         useful for debugging, since the information appears in a human-readable way
+         in [sexp_of_t]'s output.  It also allows us to hide the distinction between
+         [epoll_ctl_add] and [epoll_ctl_mod], since we know which to use based on
+         whether the file descriptor is already being watched. *)
+      flags_by_fd : (File_descr.t, Flags.t) Table.t;
+      max_ready_events : int;
+      (* [num_ready_events] holds the number of ready events in [ready_events], as
+         determined by the last call to [wait]. *)
+      mutable num_ready_events : int;
+      ready_events : 'a;
+    }
   with fields, sexp_of
 end
 
@@ -430,9 +430,9 @@ type in_use = ready_events T.t
 
 module Pretty = struct
   type ready_event =
-  { file_descr : File_descr.t;
-    flags : Flags.t;
-  }
+    { file_descr : File_descr.t;
+      flags : Flags.t;
+    }
   with sexp_of
 
   type ready_events = ready_event array with sexp_of

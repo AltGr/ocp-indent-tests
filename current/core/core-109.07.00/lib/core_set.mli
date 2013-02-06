@@ -51,7 +51,7 @@ module Poly : sig
       with type ('a, 'b, 'c) options := ('a, 'b, 'c) without_comparator
   end
 end
-  with type ('a, 'b) set := ('a, 'b) t
+with type ('a, 'b) set := ('a, 'b) t
 
 module type Elt = Elt
 

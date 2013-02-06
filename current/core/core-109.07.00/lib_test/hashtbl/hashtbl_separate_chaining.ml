@@ -6,8 +6,8 @@ module X = Table_new_intf
 module Bucket = struct
   (* This saves a word and an indirection vs a list of triples *)
   type ('k, 'v) t =
-  | Empty
-  | Cons of 'k * 'v * int * ('k, 'v) t
+    | Empty
+    | Cons of 'k * 'v * int * ('k, 'v) t
 
   let empty = Empty
 

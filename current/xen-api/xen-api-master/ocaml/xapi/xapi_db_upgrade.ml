@@ -63,8 +63,8 @@ let upgrade_wlb_configuration = {
     (* there can be only one pool *)
     let pool = List.hd (Db.Pool.get_all ~__context) in
     (* get a Secret reference that makes sense, if there is no password ("")
-       		   then use null, otherwise convert if clear-text and else keep what's
-       		   there *)
+       then use null, otherwise convert if clear-text and else keep what's
+       there *)
     let wlb_passwd_ref = 
       let old_wlb_pwd = Ref.string_of
           (Db.Pool.get_wlb_password ~__context ~self:pool) in
@@ -80,18 +80,18 @@ let upgrade_wlb_configuration = {
 (** On upgrade to the first ballooning-enabled XenServer, we reset memory
    properties to safe defaults to avoid triggering something bad.
    {ul
-   	{- For guest domains, we replace the current set of possibly-invalid memory
-   	constraints {i s} with a new set of valid and unballooned constraints {i t}
-   	such that:
-   	{ol
-   		{- t.dynamic_max := s.static_max}
-   		{- t.target      := s.static_max}
-   		{- t.dynamic_min := s.static_max}
-   		{- t.static_min  := minimum (s.static_min, s.static_max)}}}
-   	{- For control domains, we respect the administrator's choice of target:
-   	{ol
-   		{- t.dynamic_max := s.target}
-   		{- t.dynamic_min := s.target}}}
+   {- For guest domains, we replace the current set of possibly-invalid memory
+   constraints {i s} with a new set of valid and unballooned constraints {i t}
+   such that:
+   {ol
+    {- t.dynamic_max := s.static_max}
+    {- t.target      := s.static_max}
+    {- t.dynamic_min := s.static_max}
+    {- t.static_min  := minimum (s.static_min, s.static_max)}}}
+   {- For control domains, we respect the administrator's choice of target:
+   {ol
+    {- t.dynamic_max := s.target}
+    {- t.dynamic_min := s.target}}}
    }
 *)
 let upgrade_vm_memory_for_dmc = { 
@@ -133,7 +133,7 @@ let upgrade_vm_memory_for_dmc = {
       List.iter update_vm (Db.VM.get_all_records ~__context)
 }
 
-(* GEORGE OEM -> BODIE/MNR *)	
+(* GEORGE OEM -> BODIE/MNR *)  
 let upgrade_bios_strings = {
   description = "Upgrading VM BIOS strings";
   version = (fun x -> x <= george);

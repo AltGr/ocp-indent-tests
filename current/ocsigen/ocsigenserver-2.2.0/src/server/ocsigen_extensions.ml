@@ -664,12 +664,12 @@ let register_extension, parse_config_item, parse_user_site_item, get_beg_init, g
   ((* ********* register_extension ********* *)
     (fun
       ?fun_site
-        ?user_fun_site
-        ?begin_init
-        ?end_init
-        ?(exn_handler=raise)
-        ?(respect_pipeline=false)
-        ()
+      ?user_fun_site
+      ?begin_init
+      ?end_init
+      ?(exn_handler=raise)
+      ?(respect_pipeline=false)
+      ()
       ->
 
         if respect_pipeline then Ocsigen_config.set_respect_pipeline ();

@@ -154,7 +154,7 @@ let parse_appliance attrs children =
           assoc "mem_set" attrs, assoc "vcpus" attrs, 
           (try Some (assoc "distrib" attrs) with _ -> None),
           (try Some (assoc "distrib_version" attrs) with _ -> None)
-        | _ -> raise (Parse_failure "Failed to find element: config") in			
+        | _ -> raise (Parse_failure "Failed to find element: config") in      
       let default_assoc default key pairs = try List.assoc key pairs with Not_found -> default in
       (* make HVM the default if nothing is specified *)
       let is_hvm, cmdline = match find_element "hacks" children with

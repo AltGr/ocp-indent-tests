@@ -18,7 +18,7 @@ let parse_lines ls =
     try 
       match ls with
         ""::ls -> inner ls cur  (* skip blank lines *)
-      |	l::ls ->
+      |  l::ls ->
         let colon = String.index l '=' in
         let token = String.sub l 0 colon in
         let value = String.sub l (colon+1) (String.length l - colon - 1) in

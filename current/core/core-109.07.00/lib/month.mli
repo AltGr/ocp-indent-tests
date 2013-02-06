@@ -1,16 +1,16 @@
 type t =
-| Jan
-| Feb
-| Mar
-| Apr
-| May
-| Jun
-| Jul
-| Aug
-| Sep
-| Oct
-| Nov
-| Dec
+  | Jan
+  | Feb
+  | Mar
+  | Apr
+  | May
+  | Jun
+  | Jul
+  | Aug
+  | Sep
+  | Oct
+  | Nov
+  | Dec
 with bin_io, sexp
 
 include Comparable.S with type t := t

@@ -126,7 +126,7 @@ let wait_xen_free_mem ~xc ?(maximum_wait_time_seconds=64) required_memory_kib : 
     (* a debug message saying how long we've waited: *)
     if is_power_of_2 accumulated_wait_time_seconds then debug
         "Waited %i second(s) for memory to become available: \
-         			%Ld KiB free, %Ld KiB scrub, %Ld KiB required"
+         %Ld KiB free, %Ld KiB scrub, %Ld KiB required"
         accumulated_wait_time_seconds
         free_memory_kib scrub_memory_kib required_memory_kib;
     if free_memory_kib >= required_memory_kib
@@ -225,13 +225,13 @@ let make ~xc ~xs vm_info uuid =
     xs.Xs.writev (dom_path ^ "/bios-strings") vm_info.bios_strings;
 
     (* If a toolstack sees a domain which it should own in this state then the
-       		   domain is not completely setup and should be shutdown. *)
+       domain is not completely setup and should be shutdown. *)
     xs.Xs.write (dom_path ^ "/action-request") "poweroff";
 
     xs.Xs.write (dom_path ^ "/control/platform-feature-multiprocessor-suspend") "1";
 
     (* CA-30811: let the linux guest agent easily determine if this is a fresh domain even if
-       		   the domid hasn't changed (consider cross-host migrate) *)
+       the domid hasn't changed (consider cross-host migrate) *)
     xs.Xs.write (dom_path ^ "/unique-domain-id") (Uuid.string_of_uuid (Uuid.make_uuid ()));
 
     info "VM = %s; domid = %d" (Uuid.to_string uuid) domid;
@@ -294,13 +294,13 @@ let shutdown ~xc ~xs domid req =
       let domain_exists = try ignore (t.Xst.read domainpath); true with Xenbus.Xb.Noent -> false in
       if not domain_exists then raise Domain_does_not_exist;
       (* Delete the node if it already exists. NB: the guest may well still shutdown for the
-         				previous reason... we only want to give it a kick again just in case. *)
+         previous reason... we only want to give it a kick again just in case. *)
       (try t.Xst.rm path with _ -> ());
       t.Xst.write path reason
     )
 
 (** If domain is PV, signal it to shutdown. If the PV domain fails to respond then throw a Watch.Timeout exception.
-   	All other exceptions imply the domain has disappeared. *)
+   All other exceptions imply the domain has disappeared. *)
 let shutdown_wait_for_ack (t: Xenops_task.t) ?(timeout=60.) ~xc ~xs domid req =
   let di = Xenctrl.domain_getinfo xc domid in
   let uuid = get_uuid ~xc domid in
@@ -327,7 +327,7 @@ let destroy (task: Xenops_task.t) ~xc ~xs ~qemu_domid domid =
   let dom_path = xs.Xs.getdomainpath domid in
   let uuid = get_uuid ~xc domid in
   (* These are the devices with a frontend in [domid] and a well-formed backend
-     	   in some other domain *)
+     in some other domain *)
   let all_devices = list_frontends ~xs domid in
 
   debug "VM = %s; domid = %d; Domain.destroy: all known devices = [ %a ]"
@@ -366,7 +366,7 @@ let destroy (task: Xenops_task.t) ~xc ~xs ~qemu_domid domid =
         Device.hard_shutdown task ~xs device
       with e ->
         (* If this fails we may have a resource leak. We should prevent
-           		  this from happening! *)
+           this from happening! *)
         error "VM = %s; domid = %d; Caught exception %s while destroying device %s"
           (Uuid.to_string uuid) domid
           (Printexc.to_string e) (string_of_device device);
@@ -374,7 +374,7 @@ let destroy (task: Xenops_task.t) ~xc ~xs ~qemu_domid domid =
     ) all_devices;
 
   (* For each device which has a hotplug entry, perform the cleanup. Even if one
-     	   fails, try to cleanup the rest anyway.*)
+     fails, try to cleanup the rest anyway.*)
   let released = ref [] in
   List.iter (fun x ->
     log_exn_continue ("waiting for hotplug for " ^ (string_of_device x))
@@ -384,7 +384,7 @@ let destroy (task: Xenops_task.t) ~xc ~xs ~qemu_domid domid =
   ) all_devices;
 
   (* If we fail to release a device we leak resources. If we are to tolerate this
-     	   then we need an async cleanup thread. *)
+     then we need an async cleanup thread. *)
   let failed_devices = List.filter (fun x -> not(List.mem x !released)) all_devices in
   List.iter (fun dev ->
     error "VM = %s; domid = %d; Domain.destroy failed to release device: %s"
@@ -404,7 +404,7 @@ let destroy (task: Xenops_task.t) ~xc ~xs ~qemu_domid domid =
   List.iter (fun ty -> log_exn_rm ~xs (Printf.sprintf "%s/%s/%d" backend_path ty domid)) all_backend_types;
 
   (* If all devices were properly un-hotplugged, then zap the tree in xenstore.
-     	   If there was some error leave the tree for debugging / async cleanup. *)
+     If there was some error leave the tree for debugging / async cleanup. *)
   if failed_devices = []
   then log_exn_rm ~xs (Hotplug.get_private_path domid);
 
@@ -650,13 +650,13 @@ let build_hvm (task: Xenops_task.t) ~xc ~xs ~static_max_kib ~target_kib ~shadow_
       ] [] XenguestHelper.receive_success in
 
   (* XXX: domain builder will reduce our shadow allocation under our feet.
-     	   Detect this and override. *)
+     Detect this and override. *)
   let requested_shadow_mib = Int64.to_int shadow_mib in
   let actual_shadow_mib = Xenctrl.shadow_allocation_get xc domid in
   if actual_shadow_mib < requested_shadow_mib then begin
     warn
       "VM = %s; domid = %d; HVM domain builder reduced our \
-       			shadow memory from %d to %d MiB; reverting" 
+       shadow memory from %d to %d MiB; reverting" 
       (Uuid.to_string uuid) domid
       requested_shadow_mib actual_shadow_mib;
     Xenctrl.shadow_allocation_set xc domid requested_shadow_mib;
@@ -671,20 +671,20 @@ let build_hvm (task: Xenops_task.t) ~xc ~xs ~static_max_kib ~target_kib ~shadow_
       debug "VM = %s; domid = %d; store_mfn = %s; console_mfn = %s" (Uuid.to_string uuid) domid store_mfn console_mfn;
       Nativeint.of_string store_mfn, Nativeint.of_string console_mfn
     | _ ->
-      error "VM = %s; domid = %d; domain builder returned invalid result: \"%s\"" (Uuid.to_string uuid) domid line;			
+      error "VM = %s; domid = %d; domain builder returned invalid result: \"%s\"" (Uuid.to_string uuid) domid line;      
       raise Domain_build_failed in
 
   let local_stuff = [
     "serial/0/limit",    string_of_int 65536;
   (*
-		"console/port",      string_of_int console_port;
-		"console/ring-ref",  sprintf "%nu" console_mfn;
+    "console/port",      string_of_int console_port;
+    "console/ring-ref",  sprintf "%nu" console_mfn;
 *)
   ] in
   (*
-	let store_mfn =
-		try Nativeint.of_string line
-		with _ -> raise Domain_build_failed in
+  let store_mfn =
+    try Nativeint.of_string line
+    with _ -> raise Domain_build_failed in
 *)
   let vm_stuff = [
     "rtc/timeoffset",    timeoffset;
@@ -768,7 +768,7 @@ let resume (task: Xenops_task.t) ~xc ~xs ~hvm ~cooperative ~qemu_domid domid =
   if not cooperative
   then failwith "Domain.resume works only for collaborative domains";
   Xenctrl.domain_resume_fast xc domid;
-  resume_post ~xc	~xs domid;
+  resume_post ~xc  ~xs domid;
   if hvm then Device.Dm.resume task ~xs ~qemu_domid domid
 
 let pv_restore (task: Xenops_task.t) ~xc ~xs ~store_domid ~console_domid ~no_incr_generationid ~static_max_kib ~target_kib ~vcpus xenguest_path domid fd =
@@ -835,8 +835,8 @@ let hvm_restore (task: Xenops_task.t) ~xc ~xs ~store_domid ~console_domid ~no_in
   let local_stuff = [
     "serial/0/limit",    string_of_int 65536;
   (*
-		"console/port",     string_of_int console_port;
-		"console/ring-ref", sprintf "%nu" console_mfn;
+    "console/port",     string_of_int console_port;
+    "console/ring-ref", sprintf "%nu" console_mfn;
 *)
   ] in
   let vm_stuff = [
@@ -889,7 +889,7 @@ let suspend (task: Xenops_task.t) ~xc ~xs ~hvm xenguest_path domid fd flags ?(pr
       debug "VM = %s; domid = %d; waiting for xenguest to call suspend callback" (Uuid.to_string uuid) domid;
 
       (* Monitor the debug (stderr) output of the xenguest helper and
-         		   spot the progress indicator *)
+         spot the progress indicator *)
       let callback txt =
         let prefix = "\\b\\b\\b\\b" in
         if String.startswith prefix txt then
@@ -978,17 +978,17 @@ let trigger_sleep ~xc domid =
 
 let vcpu_affinity_set ~xc domid vcpu cpumap =
   (*
-	let bitmap = ref Int64.zero in
-	if Array.length cpumap > 64 then
-		invalid_arg "affinity_set";
-	let bit_set bitmap n =
-		Int64.logor bitmap (Int64.shift_left 1L n) in
-	(* set bits in the bitmap that are true *)
-	Array.iteri (fun i has_affinity ->
-		if has_affinity then bitmap := bit_set !bitmap i
-		) cpumap;
-	(*Xenctrl.vcpu_affinity_set xc domid vcpu !bitmap*)
-	*)
+  let bitmap = ref Int64.zero in
+  if Array.length cpumap > 64 then
+    invalid_arg "affinity_set";
+  let bit_set bitmap n =
+    Int64.logor bitmap (Int64.shift_left 1L n) in
+  (* set bits in the bitmap that are true *)
+  Array.iteri (fun i has_affinity ->
+    if has_affinity then bitmap := bit_set !bitmap i
+    ) cpumap;
+  (*Xenctrl.vcpu_affinity_set xc domid vcpu !bitmap*)
+  *)
   let uuid = get_uuid ~xc domid in
   debug "VM = %s; domid = %d; vcpu_affinity_set %d <- %s" (Uuid.to_string uuid) domid vcpu
     (String.concat "" (List.map (fun b -> if b then "1" else "0") (Array.to_list cpumap)));
@@ -997,14 +997,14 @@ let vcpu_affinity_set ~xc domid vcpu cpumap =
 
 let vcpu_affinity_get ~xc domid vcpu =
   (*
-	let pcpus = (Xenctrl.physinfo xc).Xenctrl.max_nr_cpus in
-	(* NB we ignore bits corresponding to pCPUs which we don't have *)
-	let bitmap = Xenctrl.vcpu_affinity_get xc domid vcpu in
-	let bit_isset bitmap n =
-		(Int64.logand bitmap (Int64.shift_left 1L n)) > 0L in
-	let cpumap = Array.of_list (List.map (bit_isset bitmap) (List.range 0 pcpus)) in
-	cpumap
-	*)
+  let pcpus = (Xenctrl.physinfo xc).Xenctrl.max_nr_cpus in
+  (* NB we ignore bits corresponding to pCPUs which we don't have *)
+  let bitmap = Xenctrl.vcpu_affinity_get xc domid vcpu in
+  let bit_isset bitmap n =
+    (Int64.logand bitmap (Int64.shift_left 1L n)) > 0L in
+  let cpumap = Array.of_list (List.map (bit_isset bitmap) (List.range 0 pcpus)) in
+  cpumap
+  *)
   let uuid = get_uuid ~xc domid in
   debug "VM = %s; domid = %d; vcpu_affinity_get %d" (Uuid.to_string uuid) domid vcpu;
   Xenctrl.vcpu_affinity_get xc domid vcpu

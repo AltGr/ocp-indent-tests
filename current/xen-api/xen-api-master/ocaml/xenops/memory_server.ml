@@ -68,7 +68,7 @@ let login _ dbg service_name =
   wrap dbg
     (fun () ->
       (* We assume only one instance of a named service logs in at a time and therefore can use
-         		   the service name as a session_id. *)
+         the service name as a session_id. *)
       (* remove any existing reservations associated with this service *)
       with_xc_and_xs
         (fun xc xs ->

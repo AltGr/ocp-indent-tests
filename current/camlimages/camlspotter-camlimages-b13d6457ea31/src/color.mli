@@ -80,18 +80,18 @@ type rgba = Rgba.t = { color: rgb; mutable alpha : int; };;
 (** RGB with alpha (transparent) information *)
 
 module Cmyk :
-  sig
-    type t = {mutable c : int; mutable m : int; mutable y : int;
-              mutable k : int } 
-    val square_distance : t -> t -> int
-    val plus : t -> t -> t
-    val minus : t -> t -> t
-    val size : t map -> int
-    val find_exact : t map -> t -> int
-    val add_color : t map -> t -> int
-    val add_colors : t map -> t list -> int list
-    val find_nearest : t map -> t -> int
-  end;;
+sig
+  type t = {mutable c : int; mutable m : int; mutable y : int;
+            mutable k : int } 
+  val square_distance : t -> t -> int
+  val plus : t -> t -> t
+  val minus : t -> t -> t
+  val size : t map -> int
+  val find_exact : t map -> t -> int
+  val add_color : t map -> t -> int
+  val add_colors : t map -> t list -> int list
+  val find_nearest : t map -> t -> int
+end;;
 
 type cmyk = Cmyk.t =
   { mutable c : int; mutable m : int; mutable y : int; mutable k : int; };;

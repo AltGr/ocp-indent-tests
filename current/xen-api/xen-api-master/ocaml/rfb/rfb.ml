@@ -399,7 +399,7 @@ end
 module Request = struct
   type t = 
     | SetPixelFormat of SetPixelFormat.t
-    | SetEncodings of SetEncodings.t	
+    | SetEncodings of SetEncodings.t  
     | FrameBufferUpdateRequest of FramebufferUpdateRequest.t
     | KeyEvent of KeyEvent.t
     | PointerEvent of PointerEvent.t

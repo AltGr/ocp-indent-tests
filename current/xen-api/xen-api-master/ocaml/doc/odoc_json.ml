@@ -117,7 +117,7 @@ let slice s a b =
 
 (** obtain list of children *)
 let get_childlist graph node =
-  try	List.assoc node graph
+  try  List.assoc node graph
   with Not_found -> []
 
 (** reverse the edges of the given graph *)
@@ -263,7 +263,7 @@ class gen () =
       | Odoc_info.Newline -> node "br" []
       | Odoc_info.Block t -> node "div" ~atts:["class", "block"] (self#t_of_text t)
       | Odoc_info.Title (n, l_opt, t) ->
-        (*	(match l_opt with None -> [] | Some t -> ["name",t]) *)
+        (*  (match l_opt with None -> [] | Some t -> ["name",t]) *)
         node ("h" ^ string_of_int n) (self#t_of_text t)
       | Odoc_info.Latex s -> node "span" ~atts:["class", "latex"] [self#t_of_raw s]
       | Odoc_info.Link (s, t) -> node "a" ~atts: ["href", s] (self#t_of_text t)
@@ -358,9 +358,9 @@ class gen () =
       let info = "info", self#json_of_info_opt v.Value.val_info in
       let te = "type", self#json_of_type_expr v.Value.val_type in
       let params = "params", Array (List.map self#json_of_parameter v.Value.val_parameters) in
-      (*		let code = match v.Value.val_code with
-         		None -> [] | Some s -> [node "code" [Leaf s]]
-         		in*)
+      (*    let code = match v.Value.val_code with
+          None -> [] | Some s -> [node "code" [Leaf s]]
+          in*)
       Object (name :: loc :: info :: te :: params :: []) (* @ code *)
 
     method json_of_exception e =
@@ -375,10 +375,10 @@ class gen () =
         | None -> []
         | Some ea -> ["exception_alias", String ea.Exception.ea_name]
       in
-      (*		let code = match e.Exception.ex_code with
-         		| None -> []
-         		| Some s -> [node "code" [Leaf s]]
-         		in *)
+      (*    let code = match e.Exception.ex_code with
+          | None -> []
+          | Some s -> [node "code" [Leaf s]]
+          in *)
       Object (name :: loc :: info :: args @ alias) (*  @ code *)
 
     method json_of_included_module im =
@@ -404,9 +404,9 @@ class gen () =
         | None -> []
         | Some t -> ["manifest", self#json_of_type_expr t]
       in
-      (*		let code = match t.Type.ty_code with
-         		| None -> [] | Some s -> [node "code" [Leaf s]]
-         		in*)
+      (*    let code = match t.Type.ty_code with
+          | None -> [] | Some s -> [node "code" [Leaf s]]
+          in*)
       Object (name :: loc :: info :: params :: kind :: manifest @ []) (* @ code *)
 
     method json_of_type_parameter (texp, covar, contravar) =
@@ -511,22 +511,22 @@ class gen () =
         "module_alias", String "unavailable" (* self#t_of_module_alias ma *)
       | Module_functor (mparam, mk) ->
         "module_functor", Object (["parameter", self#json_of_module_parameter mparam; self#json_of_module_kind mk])
-      (*		  node "module_functor"
-         		[ self#t_of_module_parameter mparam ; self#t_of_module_kind mk]*)
+      (*      node "module_functor"
+          [ self#t_of_module_parameter mparam ; self#t_of_module_kind mk]*)
       | Module_apply (mk1, mk2) ->
         "module_apply", String "unavailable"
-      (*		  node "module_apply"
-         		[ self#t_of_module_kind mk1 ; self#t_of_module_kind mk2]*)
+      (*      node "module_apply"
+          [ self#t_of_module_kind mk1 ; self#t_of_module_kind mk2]*)
       | Module_with (mk, s) ->
         "module_with", String "unavailable"
-      (*		  node "module_with"
-         		[ self#t_of_module_type_kind mk; node "with" [Leaf s] ]*)
+      (*      node "module_with"
+          [ self#t_of_module_type_kind mk; node "with" [Leaf s] ]*)
       | Module_constraint (mk, mtk) ->
         self#json_of_module_kind mk
-      (*		  node "module_constraint"
-         		[ self#t_of_module_kind mk ;
-         		  self#t_of_module_type_kind mtk ;
-         		]*)
+      (*      node "module_constraint"
+          [ self#t_of_module_kind mk ;
+            self#t_of_module_type_kind mtk ;
+          ]*)
       | _ ->
         print_endline "Error: Unhandled element (odoc_json)!"; 
         "unknown", String "unavailable"

@@ -213,7 +213,7 @@ let latex_section_of_message closed section_prefix x =
             x.msg_name;
             String.concat ""
               [
-                "(";	 
+                "(";   
                 String.concat ", "
                   ((if x.msg_session then ["session_id s"] else []) @
                      (List.map (fun p -> of_ty_verbatim p.param_type ^ " " ^ p.param_name) x.msg_params));

@@ -25,7 +25,7 @@ let _ =
   let username = Sys.argv.(1)
   and password = Sys.argv.(2) in
 
-  let hr x = print_endline ("-----------------------------\n"^x) in	
+  let hr x = print_endline ("-----------------------------\n"^x) in  
 
   (* should return 2037 *)
   hr ("TEST 1a. Authx.get_subject_identifier "^username);
@@ -47,22 +47,22 @@ let _ =
 
     (* should return a list of groups that subjectid 10024 (a group) belongs to *)
     let agroup = List.hd groupid_list in
-    hr ("TEST 2b. AuthX.methods.query_group_membership "^agroup^" (a group subject)");	
+    hr ("TEST 2b. AuthX.methods.query_group_membership "^agroup^" (a group subject)");  
     print_endline (List.fold_left (conc) "" (AuthX.methods.query_group_membership agroup));
 
 
     hr "TEST 2c. AuthX.methods.query_group_membership u999 (unknown subject)";
-    try 	
+    try   
       print_endline (List.fold_left (conc) "" (AuthX.methods.query_group_membership "u999"));
     with Not_found -> print_endline "subject Not_found, as expected.";
 
       hr "TEST 2d. AuthX.methods.query_group_membership a999 (unknown subject)";
-      try 	
+      try   
         print_endline (List.fold_left (conc) "" (AuthX.methods.query_group_membership "a999"));
       with Not_found -> print_endline "subject Not_found, as expected.";
 
         hr "TEST 2e. AuthX.methods.query_group_membership 999 (unknown subject)";
-        try 	
+        try   
           print_endline (List.fold_left (conc) "" (AuthX.methods.query_group_membership "999"));
         with Not_found -> print_endline "subject Not_found, as expected.";
 

@@ -75,7 +75,7 @@ let _ =
       if Hashtbl.mem mystat.events fname
       then
         let fileevents = Hashtbl.find mystat.events fname in
-        Hashtbl.replace mystat.events fname (newevt::fileevents)		    
+        Hashtbl.replace mystat.events fname (newevt::fileevents)        
       else
         Hashtbl.replace mystat.events fname [newevt]
     | None -> ()

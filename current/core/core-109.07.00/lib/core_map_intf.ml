@@ -9,7 +9,7 @@ module type Key_binable = Comparator.Pre_binable
 type ('key, 'comparator, 'z) without_comparator = 'z
 
 type ('key, 'comparator, 'z) with_comparator =
-comparator:('key, 'comparator) Comparator.t -> 'z
+  comparator:('key, 'comparator) Comparator.t -> 'z
 
 module type Accessors = sig
   type ('a, 'b, 'comparator) t

@@ -293,11 +293,11 @@ let create_vdi_tree rpc session sr name_label size ?resize ?(pattern_type=1) pat
   dump_vdi_info rpc session vdi2;  
 
   (* At this point, vdi and vdi2 are two leaf nodes:
-     	 *
-     	 *                   Original VDI (hidden)
-     	 *                     /             \ 
-     	 *                   vdi2           vdi
-     	 *)
+   *
+   *                   Original VDI (hidden)
+   *                     /             \ 
+   *                   vdi2           vdi
+  *)
   debug "Writing pattern to VDI";
   (* Write pattern type=1 variant=1 to vdi *)
   let result = with_attached_vdi rpc session vdi
@@ -312,15 +312,15 @@ let create_vdi_tree rpc session sr name_label size ?resize ?(pattern_type=1) pat
   dump_vdi_info rpc session vdi3;  
 
   (* At this point, we have: 
-     	 *
-     	 *                   Original VDI (hidden)
-     	 *                     /             \ 
-     	 *                   vdi2        Another hidden VDI
-     	 *                                /          \
-     	 *                              vdi3         vdi
-     	 * 
-     	 * Deleting vdi2 will leave the tree in a state where the two original hidden VDIs can be coalesced
-     	 *)
+   *
+   *                   Original VDI (hidden)
+   *                     /             \ 
+   *                   vdi2        Another hidden VDI
+   *                                /          \
+   *                              vdi3         vdi
+   * 
+   * Deleting vdi2 will leave the tree in a state where the two original hidden VDIs can be coalesced
+  *)
   debug "Writing pattern to VDI";
   (* Write pattern type=1 variant=2 to vdi *)
   let result = with_attached_vdi rpc session vdi

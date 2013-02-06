@@ -62,10 +62,10 @@ let update_env () =
       Dbsync_slave.update_env __context other_config;
       if Pool_role.is_master () then Dbsync_master.update_env __context;
       (* we sync dom0 config files on slaves; however, we don't want
-         	  to do this in dbsync_slave since we want the master to have
-         	  been set on the pool record before we run it [otherwise we
-         	  try and sync config files from the old master if someone's
-         	  done a pool.designate_new_master!] *)
+         to do this in dbsync_slave since we want the master to have
+         been set on the pool record before we run it [otherwise we
+         try and sync config files from the old master if someone's
+         done a pool.designate_new_master!] *)
       if not (Pool_role.is_master ()) then resync_dom0_config_files();
     )
 

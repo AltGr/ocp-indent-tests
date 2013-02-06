@@ -237,7 +237,7 @@ let register_task __context id =
       Hashtbl.replace task_to_id_tbl task id;
     );
   (* Since we've bound the XenAPI Task to the xenopsd Task, and the xenopsd Task
-     	   is cancellable, mark the XenAPI Task as cancellable too. *)
+     is cancellable, mark the XenAPI Task as cancellable too. *)
   set_cancellable ~__context;
   id
 

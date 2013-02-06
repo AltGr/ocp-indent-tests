@@ -106,13 +106,13 @@ external is_mmapped : t -> bool = "bigstring_is_mmapped_stub" "noalloc"
     @raise Invalid_argument if the designated ranges are out of bounds.
 *)
 type ('src, 'dst) blit
-=  src : 'src
--> ?src_pos : int
--> ?src_len : int
--> dst : 'dst
--> ?dst_pos : int
--> unit
--> unit
+  =  src : 'src
+  -> ?src_pos : int
+  -> ?src_len : int
+  -> dst : 'dst
+  -> ?dst_pos : int
+  -> unit
+  -> unit
 
 val blit                  : (t     , t     ) blit
 val blit_string_bigstring : (string, t     ) blit

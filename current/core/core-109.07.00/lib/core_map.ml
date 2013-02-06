@@ -15,9 +15,9 @@ module Tree0 = struct
       (2) you add a new Map version to stable.ml
   *)
   type ('k, 'v) t =
-  | Empty
-  | Leaf of 'k * 'v
-  | Node of ('k, 'v) t * 'k * 'v * ('k, 'v) t * int
+    | Empty
+    | Leaf of 'k * 'v
+    | Node of ('k, 'v) t * 'k * 'v * ('k, 'v) t * int
 
   type ('k, 'v) tree = ('k, 'v) t
 
@@ -399,8 +399,8 @@ module Tree0 = struct
 
   module Enum = struct
     type ('k, 'v) t =
-    | End
-    | More of 'k * 'v * ('k, 'v) tree * ('k, 'v) t
+      | End
+      | More of 'k * 'v * ('k, 'v) tree * ('k, 'v) t
 
     let rec cons t e =
       match t with
@@ -673,9 +673,9 @@ end
     (2) you add a new Map version to stable.ml
 *)
 type ('k, 'v, 'comparator) t =
-{ tree : ('k, 'v) Tree0.t;
-  comparator : ('k, 'comparator) Comparator.t;
-}
+  { tree : ('k, 'v) Tree0.t;
+    comparator : ('k, 'comparator) Comparator.t;
+  }
 
 let comparator t = t.comparator
 

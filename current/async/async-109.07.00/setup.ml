@@ -2137,7 +2137,7 @@ module OASISFileUtil = struct
 end
 
 
-
+# 2142 "setup.ml"
 module BaseEnvLight = struct
 (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseEnvLight.ml" *)
 
@@ -2235,7 +2235,7 @@ module BaseEnvLight = struct
 end
 
 
-
+# 2240 "setup.ml"
 module BaseContext = struct
 (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseContext.ml" *)
 
@@ -4475,7 +4475,7 @@ module BaseSetup = struct
 end
 
 
-
+# 4480 "setup.ml"
 module InternalConfigurePlugin = struct
 (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/internal/InternalConfigurePlugin.ml" *)
 
@@ -5228,7 +5228,7 @@ module InternalInstallPlugin = struct
 end
 
 
-
+# 5233 "setup.ml"
 module OCamlbuildCommon = struct
 (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/ocamlbuild/OCamlbuildCommon.ml" *)
 
@@ -5553,7 +5553,7 @@ module OCamlbuildDocPlugin = struct
 end
 
 
-
+# 5558 "setup.ml"
 module CustomPlugin = struct
 (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/custom/CustomPlugin.ml" *)
 
@@ -5689,7 +5689,7 @@ module CustomPlugin = struct
 end
 
 
-
+# 5694 "setup.ml"
 open OASISTypes;;
 
 let setup_t =
@@ -5940,7 +5940,7 @@ let setup_t =
 
 let setup () = BaseSetup.setup setup_t;;
 
-
+# 5946 "setup.ml"
 (* OASIS_STOP *)
 
 

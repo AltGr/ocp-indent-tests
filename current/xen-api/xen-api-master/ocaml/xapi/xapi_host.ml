@@ -45,11 +45,11 @@ let set_power_on_mode ~__context ~self ~power_on_mode ~power_on_config =
   Xapi_host_helpers.update_allowed_operations ~__context ~self
 
 (** Before we re-enable this host we make sure it's safe to do so. It isn't if:
-   	+ we're in the middle of an HA shutdown/reboot and have our fencing temporarily disabled.
-   	+ xapi hasn't properly started up yet.
-   	+ HA is enabled and this host has broken storage or networking which would cause protected VMs
-   	to become non-agile
-   	+ our license doesn't support pooling and we're a slave
+   + we're in the middle of an HA shutdown/reboot and have our fencing temporarily disabled.
+   + xapi hasn't properly started up yet.
+   + HA is enabled and this host has broken storage or networking which would cause protected VMs
+   to become non-agile
+   + our license doesn't support pooling and we're a slave
 *)
 let assert_safe_to_reenable ~__context ~self =
   assert_startup_complete ();
@@ -96,12 +96,12 @@ let bugreport_upload ~__context ~host ~url ~options =
     end
 
 (** Check that a) there are no running VMs present on the host, b) there are no VBDs currently
-   	attached to dom0, c) host is disabled.
+   attached to dom0, c) host is disabled.
 
-   	This is approximately maintainance mode as defined by the gui. However, since
-   	we haven't agreed on an exact definition of this mode, we'll not call this maintainance mode here, but we'll
-   	use a synonym. According to http://thesaurus.com/browse/maintenance, bacon is a synonym
-   	for maintainance, hence the name of the following function.
+   This is approximately maintainance mode as defined by the gui. However, since
+   we haven't agreed on an exact definition of this mode, we'll not call this maintainance mode here, but we'll
+   use a synonym. According to http://thesaurus.com/browse/maintenance, bacon is a synonym
+   for maintainance, hence the name of the following function.
 *)
 let assert_bacon_mode ~__context ~host =
   if Db.Host.get_enabled ~__context ~self:host
@@ -185,7 +185,7 @@ let string_of_per_vm_plan p =
     String.concat "," (e :: t)
 
 (** Return a table mapping VMs to 'per_vm_plan' types indicating either a target
-   	Host or a reason why the VM cannot be migrated. *)
+   Host or a reason why the VM cannot be migrated. *)
 let compute_evacuation_plan_no_wlb ~__context ~host =
   let all_hosts = Db.Host.get_all ~__context in
   let enabled_hosts = List.filter (fun self -> Db.Host.get_enabled ~__context ~self) all_hosts in
@@ -193,9 +193,9 @@ let compute_evacuation_plan_no_wlb ~__context ~host =
   let target_hosts = List.filter (fun self -> self <> host) enabled_hosts in
 
   (* PR-1007: During a rolling pool upgrade, we are only allowed to
-     	   migrate VMs to hosts that have the same or higher version as
-     	   the source host. So as long as host versions aren't decreasing,
-     	   we're allowed to migrate VMs between hosts. *)
+     migrate VMs to hosts that have the same or higher version as
+     the source host. So as long as host versions aren't decreasing,
+     we're allowed to migrate VMs between hosts. *)
   debug "evacuating host version: %s" (Helpers.version_string_of ~__context host) ;
   let target_hosts = List.filter
       (fun target ->
@@ -226,8 +226,8 @@ let compute_evacuation_plan_no_wlb ~__context ~host =
     begin
 
       (* If HA is enabled we require that non-protected VMs are suspended. This gives us the property that
-         			   the result obtained by executing the evacuation plan and disabling the host looks the same (from the HA
-         			   planner's PoV) to the result obtained following a host failure and VM restart. *)
+         the result obtained by executing the evacuation plan and disabling the host looks the same (from the HA
+         planner's PoV) to the result obtained following a host failure and VM restart. *)
       let pool = Helpers.get_pool ~__context in
       let protected_vms, unprotected_vms =
         if Db.Pool.get_ha_enabled ~__context ~self:pool
@@ -270,7 +270,7 @@ let compute_evacuation_plan_no_wlb ~__context ~host =
         (all_user_vms);
 
       (* Compute the binpack which takes only memory size into account. We will check afterwards for storage
-         			   and network availability. *)
+         and network availability. *)
       let plan = Xapi_ha_vm_failover.compute_evacuation_plan ~__context (List.length all_hosts) target_hosts migratable_vms in
       (* Check if the plan was actually complete: if some VMs are missing it means there wasn't enough memory *)
       let vms_handled = List.map fst plan in
@@ -304,17 +304,17 @@ let get_vms_which_prevent_evacuation ~__context ~self =
 
 let compute_evacuation_plan_wlb ~__context ~self =
 (* We treat xapi as primary when it comes to "hard" errors, i.e. those that aren't down to memory constraints.  These are things like
-   	 VM_REQUIRES_SR or VM_MISSING_PV_DRIVERS.
+   VM_REQUIRES_SR or VM_MISSING_PV_DRIVERS.
 
-   	 We treat WLB as primary when it comes to placement of things that can actually move.  WLB will return a list of migrations to perform,
-   	 and we pass those on.  WLB will only return a partial set of migrations -- if there's not enough memory available, or if the VM can't
-   	 move, then it will simply omit that from the results.
+   We treat WLB as primary when it comes to placement of things that can actually move.  WLB will return a list of migrations to perform,
+   and we pass those on.  WLB will only return a partial set of migrations -- if there's not enough memory available, or if the VM can't
+   move, then it will simply omit that from the results.
 
-   	 So the algorithm is:
-   	   Record all the recommendations made by WLB.
-   	   Record all the non-memory errors from compute_evacuation_plan_no_wlb.  These might overwrite recommendations by WLB, which is the
-   	   right thing to do because WLB doesn't know about all the HA corner cases (for example), but xapi does.
-   	   If there are any VMs left over, record them as HOST_NOT_ENOUGH_FREE_MEMORY, because we assume that WLB thinks they don't fit.
+   So the algorithm is:
+   Record all the recommendations made by WLB.
+   Record all the non-memory errors from compute_evacuation_plan_no_wlb.  These might overwrite recommendations by WLB, which is the
+   right thing to do because WLB doesn't know about all the HA corner cases (for example), but xapi does.
+   If there are any VMs left over, record them as HOST_NOT_ENOUGH_FREE_MEMORY, because we assume that WLB thinks they don't fit.
 *)
 
   let error_vms = compute_evacuation_plan_no_wlb ~__context ~host:self in
@@ -325,8 +325,8 @@ let compute_evacuation_plan_wlb ~__context ~self =
     debug "WLB recommends VM evacuation: %s to %s" (Db.VM.get_name_label ~__context ~self:v) (String.concat "," detail);
 
     (* Sanity check
-       	Note: if the vm being moved is dom0 then this is a power management rec and this check does not apply
-       	*)
+       Note: if the vm being moved is dom0 then this is a power management rec and this check does not apply
+    *)
     let resident_h = (Db.VM.get_resident_on ~__context ~self:v) in
     let target_uuid = List.hd (List.tl detail) in
     if get_dom0_vm ~__context target_uuid != v &&  Db.Host.get_uuid ~__context ~self:resident_h = target_uuid
@@ -469,8 +469,8 @@ let enable  ~__context ~host =
     info "Host.enabled: setting host %s (%s) to enabled because of user request" (Ref.string_of host) (Db.Host.get_hostname ~__context ~self:host);
     Db.Host.set_enabled ~__context ~self:host ~value:true;
     (* Normally we schedule a plan recomputation when we successfully plug in our storage. In the case
-       	   when some of our storage was broken and required maintenance, we end up here, manually re-enabling
-       	   the host. If we're overcommitted then this might fix the problem. *)
+       when some of our storage was broken and required maintenance, we end up here, manually re-enabling
+       the host. If we're overcommitted then this might fix the problem. *)
     let pool = Helpers.get_pool ~__context in
     if Db.Pool.get_ha_enabled ~__context ~self:pool && Db.Pool.get_ha_overcommitted ~__context ~self:pool
     then Helpers.call_api_functions ~__context (fun rpc session_id -> Client.Client.Pool.ha_schedule_plan_recomputation rpc session_id)
@@ -494,15 +494,15 @@ let shutdown_and_reboot_common ~__context ~host label description operation cmd 
   (* This helps us distinguish between an HA fence and a reboot *)
   Localdb.put Constants.host_restarted_cleanly "true";
   (* This tells the master that the shutdown is still ongoing: it can be used to continue
-     	 masking other operations even after this call return.
+     masking other operations even after this call return.
 
-     	 If xapi restarts then this task will be reset by the startup code, which is unfortunate
-     	 but the host will stay disabled provided host_disabled_until_reboot is still set... so
-     	 safe but ugly. *)
+     If xapi restarts then this task will be reset by the startup code, which is unfortunate
+     but the host will stay disabled provided host_disabled_until_reboot is still set... so
+     safe but ugly. *)
   Server_helpers.exec_with_new_task ~subtask_of:(Context.get_task_id __context) ~task_description:description ~task_in_database:true label (fun __newcontext ->
     Db.Host.add_to_current_operations ~__context ~self:host ~key:(Ref.string_of (Context.get_task_id __newcontext)) ~value:operation;
     (* Do the shutdown in a background thread with a delay to give this API call
-       	 a reasonable chance of succeeding. *)
+       a reasonable chance of succeeding. *)
     ignore(Thread.create (fun () ->
         Thread.delay 10.;
         ignore(Sys.command cmd)) ()))
@@ -618,7 +618,7 @@ let create ~__context ~uuid ~name_label ~name_description ~hostname ~address ~ex
 
 let destroy ~__context ~self =
   (* Fail if the host is still online: the user should either isolate the machine from the network
-     	 or use Pool.eject. *)
+     or use Pool.eject. *)
   let hostname = Db.Host.get_hostname ~__context ~self in
   if is_host_alive ~__context ~host:self then begin
     error "Host.destroy successfully contacted host %s; host is not offline; refusing to destroy record" hostname;
@@ -651,7 +651,7 @@ let ha_release_resources ~__context ~host = Xapi_ha.ha_release_resources __conte
 let ha_wait_for_shutdown_via_statefile ~__context ~host = Xapi_ha.ha_wait_for_shutdown_via_statefile __context host
 let ha_xapi_healthcheck ~__context =
   (* Consider checking the status of various internal tasks / tickling locks but for now assume
-     	 that, since we got here unharmed, all is well.*)
+     that, since we got here unharmed, all is well.*)
   not(Xapi_fist.fail_healthcheck ())
 
 let preconfigure_ha ~__context ~host ~statefiles ~metadata_vdi ~generation =
@@ -739,12 +739,12 @@ let change_management_interface ~__context interface primary_address_type =
   debug "Changing management interface";
   Xapi_mgmt_iface.run ~__context interface primary_address_type;
   (* once the inventory file has been rewritten to specify new interface, sync up db with
-     	   state of world.. *)
+     state of world.. *)
   Xapi_mgmt_iface.on_dom0_networking_change ~__context
 
 let local_management_reconfigure ~__context ~interface =
   (* Only let this one through if we are in emergency mode, otherwise use
-     	 Host.management_reconfigure *)
+     Host.management_reconfigure *)
   if not !Xapi_globs.slave_emergency_mode
   then raise (Api_errors.Server_error (Api_errors.pool_not_in_emergency_mode, []));
   change_management_interface ~__context interface
@@ -832,7 +832,7 @@ let set_hostname_live ~__context ~host ~hostname =
        raise (Api_errors.Server_error(Api_errors.auth_already_enabled, [current_auth_type;current_service_name]))
     );
     (* hostname is valid if contains only alpha, decimals, and hyphen
-       	 (for hyphens, only in middle position) *)
+       (for hyphens, only in middle position) *)
     let is_invalid_hostname hostname =
       let len = String.length hostname in
       let i = ref 0 in
@@ -1019,8 +1019,8 @@ let detect_nonhomogeneous_external_auth_in_host ~__context ~host =
 (* type and service_name. Fails if an auth/directory service is already enabled for this host (must disable first).*)
 (*
 * Each Host object will contain a string field, external_auth_type which will specify the type of the external auth/directory service.
-	  o In the case of AD, this will contain the string "AD". (If we subsequently allow other types of external auth/directory service to be configured, e.g. LDAP, then new type strings will be defined accordingly)
-	  o When no external authentication service is configured, this will contain the empty string
+    o In the case of AD, this will contain the string "AD". (If we subsequently allow other types of external auth/directory service to be configured, e.g. LDAP, then new type strings will be defined accordingly)
+    o When no external authentication service is configured, this will contain the empty string
 * Each Host object will contain a (string*string) Map field, external_auth_configuration. This field is provided so that a particular xapi authentiation module has the option of persistently storing any configuration parameters (represented as key/value pairs) within the agent database.
 * Each Host object will contain a string field, external_auth_service_name, which contains sufficient information to uniquely identify and address the external authentication/directory service. (e.g. in the case of AD this would be a domain name)
 *)
@@ -1259,7 +1259,7 @@ let license_apply ~__context ~host ~contents =
     )
     (fun () ->
       (* The language will have been moved to a standard location if it was valid, and
-         			 * should be removed otherwise -> always remove the file at the tmp path, if any. *)
+       * should be removed otherwise -> always remove the file at the tmp path, if any. *)
       Unixext.unlink_safe tmp
     )
 
@@ -1409,7 +1409,7 @@ let sync_vlans ~__context ~host =
     (* Check to see if the slave has any existing pif(s) that for the specified device, network, vlan... *)
     let existing_pif = List.filter (fun (slave_pif_ref, slave_pif_record) ->
         (* Is slave VLAN PIF that we're considering (slave_pif_ref) the one that corresponds
-           			 * to the master_pif we're considering (master_pif_ref)? *)
+         * to the master_pif we're considering (master_pif_ref)? *)
         true
         && slave_pif_record.API.pIF_network = master_pif_rec.API.pIF_network
         && slave_pif_record.API.pIF_VLAN = master_pif_rec.API.pIF_VLAN
@@ -1421,7 +1421,7 @@ let sync_vlans ~__context ~host =
     then
       begin
         (* On the master, we find the pif, p, that underlies the VLAN
-           				 * (e.g. "eth0" underlies "eth0.25") and then find the network that p's on: *)
+         * (e.g. "eth0" underlies "eth0.25") and then find the network that p's on: *)
         let network_of_pif_underneath_vlan_on_master = get_network_of_pif_underneath_vlan master_pif_ref in
         let pifs = Db.PIF.get_records_where ~__context ~expr:(And (
               Eq (Field "host", Literal (Ref.string_of host)),
@@ -1439,7 +1439,7 @@ let sync_vlans ~__context ~host =
               ~device:pif_rec.API.pIF_device)
         | _ ->
           (* This should never happen since we should never have more than one of _our_ pifs
-             					 * on the same network *)
+           * on the same network *)
           ()
       end
   in
@@ -1470,7 +1470,7 @@ let sync_tunnels ~__context ~host =
     (* check to see if I have any existing pif(s) that for the specified device, network, vlan... *)
     let existing_pif = List.filter (fun (_, slave_pif_record) ->
         (* Is the slave's tunnel access PIF that we're considering (slave_pif_ref)
-           			 * the one that corresponds to the master's tunnel access PIF we're considering (master_pif_ref)? *)
+         * the one that corresponds to the master's tunnel access PIF we're considering (master_pif_ref)? *)
         slave_pif_record.API.pIF_network = master_pif_rec.API.pIF_network
       ) slave_tunnel_pifs in
     (* If the slave doesn't have any such PIF then make one: *)
@@ -1493,7 +1493,7 @@ let sync_tunnels ~__context ~host =
                 ~network:master_pif_rec.API.pIF_network ~host)
         | _ ->
           (* This should never happen cos we should never have more than one of _our_ pifs
-             					 * on the same nework *)
+           * on the same nework *)
           ()
       end
   in
@@ -1512,7 +1512,7 @@ let sync_pif_currently_attached ~__context ~host ~bridges =
   (* PIF -> bridge option: None means "dangling PIF" *)
   let pif_to_bridge =
     (* Create a list pairing each PIF with the bridge for the network 
-       		   that it is on *)
+       that it is on *)
     List.map (fun (pif, pif_r) ->
       let net = pif_r.API.pIF_network in
       let bridge =

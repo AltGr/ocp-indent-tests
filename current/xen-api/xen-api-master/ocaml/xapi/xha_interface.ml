@@ -318,7 +318,7 @@ module LiveSetInformation = struct
     }
     let of_xml_element = function
       | Xml.Element("host_raw_data", _, children) ->
-        let table = hash_table_of_leaf_xml_element_list children in			    
+        let table = hash_table_of_leaf_xml_element_list children in          
         let find x = 
           try Hashtbl.find table x 
           with Not_found ->
@@ -332,8 +332,8 @@ module LiveSetInformation = struct
         Some ({
           id = uuid (find "HostID");
           time_since_last_update_on_statefile     = int (find "time_since_last_update_on_statefile"    );
-          time_since_last_heartbeat               = int (find "time_since_last_heartbeat"              );	
-          time_since_xapi_restart_first_attempted = int (find "time_since_xapi_restart_first_attempted");	
+          time_since_last_heartbeat               = int (find "time_since_last_heartbeat"              );  
+          time_since_xapi_restart_first_attempted = int (find "time_since_xapi_restart_first_attempted");  
           heartbeat_active_list_on_heartbeat      = set uuid (find "heartbeat_active_list_on_heartbeat");
           heartbeat_active_list_on_statefile      = set uuid (find "heartbeat_active_list_on_statefile");
         })
@@ -356,7 +356,7 @@ module LiveSetInformation = struct
           let find x = 
             try Hashtbl.find table x 
             with Not_found ->
-              invalid_arg (Printf.sprintf "Missing entry '%s' within 'warning_on_local_host' element" x) in		  
+              invalid_arg (Printf.sprintf "Missing entry '%s' within 'warning_on_local_host' element" x) in      
           let bool x = find x = "TRUE" in
           Some({
             statefile_lost                        = bool "statefile_lost";
@@ -412,7 +412,7 @@ module LiveSetInformation = struct
             xapi_healthcheck_min     = int (find "Xapi_healthcheck_latency_min");
             xapi_healthcheck_max     = int (find "Xapi_healthcheck_latency_max");
             host_raw_data            = host_raw_data;
-          })				  
+          })          
         end
       | _ ->
         None
@@ -498,63 +498,63 @@ end
 (*
 (** Reads all lines from a input channel. *)
 let string_of_channel input_channel =
-	let rec string_of_channel input_channel input =
-		try
-			let line = input_line input_channel in
-			string_of_channel input_channel (input ^ line ^ "\n")
-		with End_of_file ->
-			input
-	in
-		string_of_channel input_channel ""
+  let rec string_of_channel input_channel input =
+    try
+      let line = input_line input_channel in
+      string_of_channel input_channel (input ^ line ^ "\n")
+    with End_of_file ->
+      input
+  in
+    string_of_channel input_channel ""
 
 (** Reads all lines from a file. *)
 let string_of_file file_path=
-	let input_channel = open_in file_path in
-	string_of_channel input_channel
+  let input_channel = open_in file_path in
+  string_of_channel input_channel
 *)
 (* === Daemon configuration test === *)
 (*
 module DaemonConfigurationTest = struct
 
-	include DaemonConfiguration
+  include DaemonConfiguration
 
-	module HostTest = struct
+  module HostTest = struct
 
-		include Host
+    include Host
 
-		let mock_host_0 = {
-			uuid = "3a0d6864-42c6-4f82-8df9-d4cf3d747e2c";
-			address = "0.0.0.0"
-		}
-		let mock_host_1 = {
-			uuid = "96044fa9-2b43-444a-b764-f94fe10a5dec";
-			address = "0.0.0.1"
-		}
-		let mock_host_2 = {
-			uuid = "0447c77b-dc3f-4e75-8b97-eafb79a350fe";
-			address = "0.0.0.2"
-		}
-		let mock_host_3 = {
-			uuid = "7d9217cf-d59c-4b72-8116-7f860d4089c1";
-			address = "0.0.0.3"
-		}
-		let mock_hosts = [mock_host_0; mock_host_1; mock_host_2; mock_host_3]
+    let mock_host_0 = {
+      uuid = "3a0d6864-42c6-4f82-8df9-d4cf3d747e2c";
+      address = "0.0.0.0"
+    }
+    let mock_host_1 = {
+      uuid = "96044fa9-2b43-444a-b764-f94fe10a5dec";
+      address = "0.0.0.1"
+    }
+    let mock_host_2 = {
+      uuid = "0447c77b-dc3f-4e75-8b97-eafb79a350fe";
+      address = "0.0.0.2"
+    }
+    let mock_host_3 = {
+      uuid = "7d9217cf-d59c-4b72-8116-7f860d4089c1";
+      address = "0.0.0.3"
+    }
+    let mock_hosts = [mock_host_0; mock_host_1; mock_host_2; mock_host_3]
 
-	end
+  end
 
-	let ($) a b = b a
-	
-	let _ =
-		{
-			common_hosts               = HostTest.mock_hosts                   ;
-			common_generation_uuid     = "bac1a32e-8598-4aea-ba21-e13682e436d6";
-			common_udp_port            = 1234                                  ;
-			local_host_uuid            ="d45bd9d2-e0db-4a91-80f8-371de132c33e" ;
-			local_heart_beat_interface = "xebr0"                               ;
-			local_state_file           ="/dev/xvde"                            ;
-		}
-		$ DaemonConfiguration.to_xml_string
-		$ print_endline
+  let ($) a b = b a
+  
+  let _ =
+    {
+      common_hosts               = HostTest.mock_hosts                   ;
+      common_generation_uuid     = "bac1a32e-8598-4aea-ba21-e13682e436d6";
+      common_udp_port            = 1234                                  ;
+      local_host_uuid            ="d45bd9d2-e0db-4a91-80f8-371de132c33e" ;
+      local_heart_beat_interface = "xebr0"                               ;
+      local_state_file           ="/dev/xvde"                            ;
+    }
+    $ DaemonConfiguration.to_xml_string
+    $ print_endline
 
 end
 *)
@@ -562,46 +562,46 @@ end
 (*
 module LiveSetInformationTest = struct
 
-	include LiveSetInformation
+  include LiveSetInformation
 
-	module HostTest = struct
+  module HostTest = struct
 
-		include Host
+    include Host
 
-		let to_string host =
-			"host {" ^
-				"id = "                   ^ (Uuid.to_string host.id                  ) ^ "; " ^
-				"liveness = "             ^ (string_of_bool host.liveness            ) ^ "; " ^
-				"master = "               ^ (string_of_bool host.master              ) ^ "; " ^
-				"state_file_access = "    ^ (string_of_bool host.state_file_access   ) ^ "; " ^
-				"state_file_corrupted = " ^ (string_of_bool host.state_file_corrupted) ^ "; " ^
-				"excluded = "             ^ (string_of_bool host.excluded            ) ^
-			"}"
+    let to_string host =
+      "host {" ^
+        "id = "                   ^ (Uuid.to_string host.id                  ) ^ "; " ^
+        "liveness = "             ^ (string_of_bool host.liveness            ) ^ "; " ^
+        "master = "               ^ (string_of_bool host.master              ) ^ "; " ^
+        "state_file_access = "    ^ (string_of_bool host.state_file_access   ) ^ "; " ^
+        "state_file_corrupted = " ^ (string_of_bool host.state_file_corrupted) ^ "; " ^
+        "excluded = "             ^ (string_of_bool host.excluded            ) ^
+      "}"
 
-	end
+  end
 
-	let to_string info =
-		"info {" ^
-			"status        = " ^ (Status.to_string info.status         ) ^ "; " ^
-			"local_host_id = " ^ (Uuid.to_string   info.local_host_id  ) ^ "; " ^
-			"hosts = [" ^
-				String.concat "; " (
-					List.map (HostTest.to_string) (Hashtbl.fold_values info.hosts)
-				) ^
-			"]" ^
-		"}"
+  let to_string info =
+    "info {" ^
+      "status        = " ^ (Status.to_string info.status         ) ^ "; " ^
+      "local_host_id = " ^ (Uuid.to_string   info.local_host_id  ) ^ "; " ^
+      "hosts = [" ^
+        String.concat "; " (
+          List.map (HostTest.to_string) (Hashtbl.fold_values info.hosts)
+        ) ^
+      "]" ^
+    "}"
 
-	let ($) f a = a f
-	
-	let _ =
-		if Array.length Sys.argv != 2 then
-			print_endline "usage: xha_interface <path-to-xml-file>"
-		else
-			Sys.argv. (1)
-			$ string_of_file
-			$ LiveSetInformation.of_xml_string
-			$ to_string
-			$ print_endline
+  let ($) f a = a f
+  
+  let _ =
+    if Array.length Sys.argv != 2 then
+      print_endline "usage: xha_interface <path-to-xml-file>"
+    else
+      Sys.argv. (1)
+      $ string_of_file
+      $ LiveSetInformation.of_xml_string
+      $ to_string
+      $ print_endline
 
 end
 *)

@@ -123,7 +123,7 @@ module Sysfs = struct
       None
 
   (** Returns the features bitmap for the driver for [dev].
-     	 *  The features bitmap is a set of NETIF_F_ flags supported by its driver. *)
+   *  The features bitmap is a set of NETIF_F_ flags supported by its driver. *)
   let get_features dev =
     try
       Some (int_of_string (read_one_line (getpath dev "features")))
@@ -285,8 +285,8 @@ module Linux_bonding = struct
     try
       ignore (call_script modprobe ["bonding"]);
       (* is_bond_device() uses the contents of sysfs_bonding_masters to work out which devices
-         			 * have already been created. Unfortunately the driver creates "bond0" automatically at
-         			 * modprobe init. Get rid of this now or our accounting will go wrong. *)
+       * have already been created. Unfortunately the driver creates "bond0" automatically at
+       * modprobe init. Get rid of this now or our accounting will go wrong. *)
       Sysfs.write_one_line bonding_masters "-bond0"
     with _ ->
       error "Failed to load bonding driver"
@@ -355,7 +355,7 @@ module Linux_bonding = struct
     if is_bond_device master then begin
       let current_props = get_bond_properties master in
       (* Find out which properties are known, but different from the current state,
-         			 * and only continue if there is at least one of those. *)
+       * and only continue if there is at least one of those. *)
       let props_to_update = List.filter (fun (prop, value) ->
           not (List.mem (prop, value) current_props) && List.mem prop known_props) properties in
       if props_to_update <> [] then
@@ -566,12 +566,12 @@ module Ovs = struct
 
   let handle_vlan_bug_workaround override bridge =
     (* This is a list of drivers that do support VLAN tx or rx acceleration, but
-       		 * to which the VLAN bug workaround should not be applied. This could be
-       		 * because these are known-good drivers (that is, they do not have any of
-       		 * the bugs that the workaround avoids) or because the VLAN bug workaround
-       		 * will not work for them and may cause other problems.
-       		 *
-       		 * This is a very short list because few drivers have been tested. *)
+     * to which the VLAN bug workaround should not be applied. This could be
+     * because these are known-good drivers (that is, they do not have any of
+     * the bugs that the workaround avoids) or because the VLAN bug workaround
+     * will not work for them and may cause other problems.
+     *
+     * This is a very short list because few drivers have been tested. *)
     let no_vlan_workaround_drivers = ["bonding"] in
     let phy_interfaces =
       try
@@ -819,7 +819,7 @@ module Bindings = struct
   external _get_status : Unix.file_descr -> string -> int * duplex = "stub_link_get_status"
 
   (** Returns speed and duplex for a given network interface.
-     	 *  Note: from kernel 2.6.33, this information is also present in sysfs. *)
+   *  Note: from kernel 2.6.33, this information is also present in sysfs. *)
   let get_status name =
     try
       with_fd (fun fd -> _get_status fd name)

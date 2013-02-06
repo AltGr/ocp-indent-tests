@@ -69,7 +69,7 @@ module Thread_state = struct
     let ts = 
       if IntMap.mem id snapshot 
       then f (IntMap.find id snapshot)
-      else f empty in		
+      else f empty in    
     Mutex.execute m
       (fun () ->
         thread_states := if ts = empty then IntMap.remove id !thread_states else IntMap.add id ts !thread_states

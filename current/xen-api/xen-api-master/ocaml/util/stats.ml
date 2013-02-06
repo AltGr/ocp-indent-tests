@@ -135,7 +135,7 @@ let log_db_call task_opt dbcall ty =
       let threadid = Thread.id (Thread.self ()) in
       Hashtbl.replace dbstats_threads threadid ((dbcall,ty)::(try Hashtbl.find dbstats_threads threadid with _ -> []));
       match task_opt with 
-      |	Some task ->
+      |  Some task ->
         Hashtbl.replace dbstats_task task ((dbcall,ty)::(try Hashtbl.find dbstats_task task with _ -> []))
       | None -> ()
 

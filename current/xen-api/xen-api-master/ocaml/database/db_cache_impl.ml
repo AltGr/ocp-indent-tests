@@ -103,7 +103,7 @@ let read_set_ref t rcd =
     let objref = rcd.where_value in
 
     let str = read_field_internal t many_tbl many_fld objref db in
-    String_unmarshall_helper.set (fun x -> x) str		
+    String_unmarshall_helper.set (fun x -> x) str    
   end else begin
     error "Illegal read_set_ref query { table = %s; where_field = %s; where_value = %s; return = %s }; falling back to linear scan" rcd.table rcd.where_field rcd.where_value rcd.return;
     Printf.printf "Illegal read_set_ref query { table = %s; where_field = %s; where_value = %s; return = %s }; falling back to linear scan\n%!" rcd.table rcd.where_field rcd.where_value rcd.return;
@@ -128,7 +128,7 @@ let read_record t tblname objref  =
   let row = Table.find_exn tblname objref tbl in
   let fvlist = Row.fold (fun k _ _ d env -> (k,d)::env) row [] in
   (* Unfortunately the interface distinguishes between Set(Ref _) types and 
-     	   ordinary fields *)
+     ordinary fields *)
   let schema = Schema.table tblname (Database.schema db) in
   let set_ref = List.filter (fun (k, _) ->
       try
@@ -165,7 +165,7 @@ let create_row_locked t tblname kvs' new_objref =
   let kvs' = List.map (fun (key, value) -> (key, ensure_utf8_xml value)) kvs' in
 
   (* we add the reference to the row itself so callers can use read_field_where to
-     	   return the reference: awkward if it is just the key *)
+     return the reference: awkward if it is just the key *)
   let kvs' = (Db_names.ref, new_objref) :: kvs' in
   let g = Manifest.generation (Database.manifest (get_database t)) in
   let row = List.fold_left (fun row (k, v) -> Row.add g k v row) Row.empty kvs' in
@@ -305,8 +305,8 @@ let spawn_db_flush_threads() =
 
             (* we set a coallesce period of min(5 mins, write_limit_period / write_limit_write_cycles) *)
             (* if we're not write limiting then set the coallesce period to 5 minutes; otherwise set coallesce period to divide the
-               					   number of write cycles across the ... 
-               					*)
+               number of write cycles across the ... 
+            *)
             let coallesce_time = float_of_int (5*60) (* coallesce writes for 5 minutes to avoid serializing db to disk all the time. *) in
             debug "In memory DB flushing thread created [%s]. %s" db_path
               (if dbconn.Parse_db_conf.mode <> Parse_db_conf.No_limit then
@@ -321,11 +321,11 @@ let spawn_db_flush_threads() =
                 begin
                   Thread.delay Db_backend.db_FLUSH_TIMER;
                   (* If I have some writing capacity left in this write period then consider doing a write; or
-                     								   if the connection is not write-limited then consider doing a write too.
-                     								   We also have to consider doing a write if exit_on_next_flush is set: because when this is
-                     								   set (by a signal handler) we want to do a flush whether or not our write limit has been
-                     								   exceeded.
-                     								*)
+                     if the connection is not write-limited then consider doing a write too.
+                     We also have to consider doing a write if exit_on_next_flush is set: because when this is
+                     set (by a signal handler) we want to do a flush whether or not our write limit has been
+                     exceeded.
+                  *)
                   if !Db_connections.exit_on_next_flush (* always flush straight away; this request is urgent *) ||
                      (* otherwise, we only write if (i) "coalesscing period has come to an end"; and (ii) "write limiting requirements are met": *)
                      ((not (in_coallescing_period())) (* see (i) above *) &&
@@ -340,7 +340,7 @@ let spawn_db_flush_threads() =
                         begin
                           my_writes_this_period := !my_writes_this_period + 1;
                           (* when we do a write, reset the coallesce_period_start to now -- recall that this
-                             												   variable tracks the time since last write *)
+                             variable tracks the time since last write *)
                           coallesce_period_start := Unix.gettimeofday()
                         end
                     end;

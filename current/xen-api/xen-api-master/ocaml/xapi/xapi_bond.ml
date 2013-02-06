@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU Lesser General Public License for more details.
  *)
 module D = Debug.Debugger(struct let name="xapi" end)
@@ -39,7 +39,7 @@ let choose_bond_device_name ~__context ~host =
 let copy_configuration ~__context from_pif to_pif =
   debug "Moving IP configuration from PIF %s to PIF %s" (Db.PIF.get_uuid ~__context ~self:from_pif)
     (Db.PIF.get_uuid ~__context ~self:to_pif);
-  let mode =	Db.PIF.get_ip_configuration_mode ~__context ~self:from_pif in
+  let mode =  Db.PIF.get_ip_configuration_mode ~__context ~self:from_pif in
   let ip = Db.PIF.get_IP ~__context ~self:from_pif in
   let netmask = Db.PIF.get_netmask ~__context ~self:from_pif in
   let gateway = Db.PIF.get_gateway ~__context ~self:from_pif in
@@ -202,7 +202,7 @@ let fix_bond ~__context ~bond =
   begin match List.filter (fun p -> Db.PIF.get_management ~__context ~self:p) members with
   | management_pif :: _ -> 
     (* The bond contains the management interface: move management to the master.
-       			 * This interface will be plugged automatically. *)
+     * This interface will be plugged automatically. *)
     debug "Moving management from slave to master";
     move_management ~__context management_pif master;
     (* Set the primary slave to the former management PIF. *)
@@ -269,7 +269,7 @@ let create ~__context ~network ~members ~mAC ~mode ~properties =
   Xapi_pif.assert_no_other_local_pifs ~__context ~host ~network;
 
   (* Validate MAC parameter; note an empty string is OK here, since that means 'inherit MAC from
-     	 * primary slave PIF' (see below) *)
+   * primary slave PIF' (see below) *)
   if mAC <> "" && (not (Helpers.is_valid_MAC mAC)) then
     raise (Api_errors.Server_error (Api_errors.mac_invalid, [mAC]));
 
@@ -282,7 +282,7 @@ let create ~__context ~network ~members ~mAC ~mode ~properties =
   let properties = add_defaults requirements properties in
 
   (* Prevent someone supplying the same PIF multiple times and bypassing the
-     	 * number of bond members check *)
+   * number of bond members check *)
   let members = List.setify members in
   let master = Ref.make () in
   let bond = Ref.make () in
@@ -312,9 +312,9 @@ let create ~__context ~network ~members ~mAC ~mode ~properties =
     if List.length (List.setify hosts) <> 1
     then raise (Api_errors.Server_error (Api_errors.pif_cannot_bond_cross_host, []));
     (*
-		if List.length members < 2
-		then raise (Api_errors.Server_error (Api_errors.pif_bond_needs_more_members, []));
-		*)
+    if List.length members < 2
+    then raise (Api_errors.Server_error (Api_errors.pif_bond_needs_more_members, []));
+    *)
 
     (* Collect information *)
     let member_networks = List.map (fun pif -> Db.PIF.get_network ~__context ~self:pif) members in
@@ -330,7 +330,7 @@ let create ~__context ~network ~members ~mAC ~mode ~properties =
     in
     let primary_slave =
       (* The primary slave is the management PIF, or the first member with IP configuration,
-         			 * or otherwise simply the first member in the list. *)
+       * or otherwise simply the first member in the list. *)
       match management_pif with
       | Some management_pif -> management_pif
       | None ->
@@ -362,7 +362,7 @@ let create ~__context ~network ~members ~mAC ~mode ~properties =
       ~primary_slave ~mode ~properties ~links_up:0L;
 
     (* Set the PIF.bond_slave_of fields of the members.
-       		 * The value of the Bond.slaves field is dynamically computed on request. *)
+     * The value of the Bond.slaves field is dynamically computed on request. *)
     List.iter (fun slave -> Db.PIF.set_bond_slave_of ~__context ~self:slave ~value:bond) members;
 
     (* Copy the IP configuration of the primary member to the master *)
@@ -371,7 +371,7 @@ let create ~__context ~network ~members ~mAC ~mode ~properties =
     begin match management_pif with
     | Some management_pif ->
       (* The bond contains the management interface: move management to the master.
-         			 * This interface will be plugged automatically. *)
+       * This interface will be plugged automatically. *)
       debug "Moving management from slave to master";
       move_management ~__context management_pif master
     | None ->

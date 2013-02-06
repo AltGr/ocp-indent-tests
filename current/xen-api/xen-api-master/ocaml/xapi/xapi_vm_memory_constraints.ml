@@ -21,15 +21,15 @@ module type T = sig
   include Vm_memory_constraints.T
 
   (** Asserts for the given set of constraints [c], that
-     	    [c.static_min] ≤ [c.dynamic_min] ≤ [c.dynamic_max] ≤ [c.static_max]. *)
+      [c.static_min] ≤ [c.dynamic_min] ≤ [c.dynamic_max] ≤ [c.static_max]. *)
   val assert_valid : constraints:t -> unit
 
   (** Asserts for the given set of constraints [c], that
-     	    [c.static_min] ≤ [c.dynamic_min] = [c.dynamic_max] = [c.static_max]. *)
+      [c.static_min] ≤ [c.dynamic_min] = [c.dynamic_max] = [c.static_max]. *)
   val assert_valid_and_pinned_at_static_max : constraints:t -> unit
 
   (** Asserts that the given set of constraints [c] is valid for the current
-     	    context. *)
+      context. *)
   val assert_valid_for_current_context :
     __context:Context.t -> vm:API.ref_VM -> constraints:t -> unit
 
@@ -56,18 +56,18 @@ module Vm_memory_constraints : T = struct
     then raise (Api_errors.Server_error (
           Api_errors.memory_constraint_violation,
           ["Memory limits must satisfy: \
-            				static_min ≤ dynamic_min ≤ dynamic_max ≤ static_max"]))
+            static_min ≤ dynamic_min ≤ dynamic_max ≤ static_max"]))
 
   let assert_valid_and_pinned_at_static_max ~constraints =
     if not (are_valid_and_pinned_at_static_max ~constraints)
     then raise (Api_errors.Server_error (
           Api_errors.memory_constraint_violation,
           ["Memory limits must satisfy: \
-            				static_min ≤ dynamic_min = dynamic_max = static_max"]))
+            static_min ≤ dynamic_min = dynamic_max = static_max"]))
 
   let assert_valid_for_current_context ~__context ~vm ~constraints =
     (* NB we don't want to prevent dom0 ballooning even if we do want to prevent
-       		 domU ballooning. *)
+       domU ballooning. *)
     (if Db.VM.get_is_control_domain ~__context ~self:vm || (Pool_features.is_enabled ~__context Features.DMC)
      then assert_valid
      else assert_valid_and_pinned_at_static_max)

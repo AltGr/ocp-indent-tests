@@ -3,9 +3,9 @@ open Core_extended.Std
 
 module Avltree = struct
   type ('k, 'v) t =
-  | Empty
-  | Node of ('k, 'v) node
-  | Leaf of 'k * 'v
+    | Empty
+    | Node of ('k, 'v) node
+    | Leaf of 'k * 'v
 
   (* This record adds an indirection, but it is necessary to make
      insert performance decent, otherwise we are killed by

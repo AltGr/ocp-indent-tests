@@ -19,9 +19,9 @@ let get_dbs_and_gen_counts() =
   List.map (fun conn->(Parse_db_conf.generation_read conn, conn)) (Db_conn_store.read_db_connections())
 
 (** Returns true if the supplied connection actually exists, false otherwise.
-   	Note that, although the two files should be present (or absent) together,
-   	after upgrade we only have a database. In this case the generation
-   	defaults back to 0L *)
+   Note that, although the two files should be present (or absent) together,
+   after upgrade we only have a database. In this case the generation
+   defaults back to 0L *)
 let exists connection = 
   Sys.file_exists connection.Parse_db_conf.path
 
@@ -72,7 +72,7 @@ let flush_dirty_and_maybe_exit dbconn exit_spec =
   Db_conn_store.with_db_conn_lock dbconn
     (fun () ->
       (* if we're being told to shutdown by signal handler then flush every connection
-         	  - the rationale is that we're not sure which db connections will be available on next restart *)
+         - the rationale is that we're not sure which db connections will be available on next restart *)
       if !exit_on_next_flush then
         begin
           let (_: bool) = Backend_xml.flush_dirty dbconn in

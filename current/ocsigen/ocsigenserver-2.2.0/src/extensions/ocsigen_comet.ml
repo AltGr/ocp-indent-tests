@@ -81,39 +81,39 @@ let rec parse_options = function
 (*** CORE ***)
 
 module Channels :
-  sig
+sig
 
-    exception Too_many_virtual_channels
-    (* raised when calling [create] while [max_virtual_channels] is [Some x] and
-     * creating a new channel would make the virtual channel count greater than
-     * [x]. *)
-    exception Non_unique_channel_name
-    (* raised when creating a channel with a name already associated. *)
+  exception Too_many_virtual_channels
+  (* raised when calling [create] while [max_virtual_channels] is [Some x] and
+   * creating a new channel would make the virtual channel count greater than
+   * [x]. *)
+  exception Non_unique_channel_name
+  (* raised when creating a channel with a name already associated. *)
 
-    type t
-    (* the type of channels :
-     * channels can be written on or read from using the following functions
-    *)
-    type chan_id = string
+  type t
+  (* the type of channels :
+   * channels can be written on or read from using the following functions
+  *)
+  type chan_id = string
 
-    val create : ?name:string -> unit -> t
-    val read : t -> (string * OStream.outcome Lwt.u option) Lwt.t
-    val write : t -> (string * OStream.outcome Lwt.u option) -> unit
+  val create : ?name:string -> unit -> t
+  val read : t -> (string * OStream.outcome Lwt.u option) Lwt.t
+  val write : t -> (string * OStream.outcome Lwt.u option) -> unit
 
-    val listeners : t -> int
-    (* The up-to-date count of registered clients *)
-    val send_listeners : t -> int -> unit
-      (* [send_listeners c i] adds [i] to [listeners c]. [i] may be negative. *)
+  val listeners : t -> int
+  (* The up-to-date count of registered clients *)
+  val send_listeners : t -> int -> unit
+    (* [send_listeners c i] adds [i] to [listeners c]. [i] may be negative. *)
 
-    val find_channel : chan_id -> t
-    (* may raise Not_found if the channel was collected or never created.
-     * Basically ids are meant for clients to tell a server to start listening
-     * to it. *)
-    val get_id : t -> chan_id
-      (* [find_channel (get_id ch)] returns [ch] if the channel wasn't destroyed
-       * that is. *)
+  val find_channel : chan_id -> t
+  (* may raise Not_found if the channel was collected or never created.
+   * Basically ids are meant for clients to tell a server to start listening
+   * to it. *)
+  val get_id : t -> chan_id
+    (* [find_channel (get_id ch)] returns [ch] if the channel wasn't destroyed
+     * that is. *)
 
-  end = struct
+end = struct
 
   exception Too_many_virtual_channels
   exception Non_unique_channel_name
@@ -217,8 +217,8 @@ end
 
 
 module Messages :
-  (* All about messages from between clients and server *)
-  (*
+(* All about messages from between clients and server *)
+(*
    * The client sends a POST request with a "registration" parameter containing
    * a list of channel ids. Separator for the list are semi-colon : ';'.
    *
@@ -227,24 +227,24 @@ module Messages :
    * where channel_id is the id of a channel that the client registered upon and
    * value is the string that was written upon the associated channel.
    * *)
-  sig
+sig
 
-    val decode_upcomming :
-      OX.request -> (Channels.t list * Channels.chan_id list) Lwt.t
-        (* decode incomming message : the result is the list of channels to listen
-           to (on the left) or to signal non existence (on the right). *)
+  val decode_upcomming :
+    OX.request -> (Channels.t list * Channels.chan_id list) Lwt.t
+      (* decode incomming message : the result is the list of channels to listen
+         to (on the left) or to signal non existence (on the right). *)
 
-    val encode_downgoing :
-      Channels.chan_id list
-      -> (Channels.t * string * OStream.outcome Lwt.u option) list option
-      -> string OStream.t
-        (* Encode outgoing messages : the first argument is the list of channels
-         * that have already been collected.
-         * The results is the stream to send to the client*)
+  val encode_downgoing :
+    Channels.chan_id list
+    -> (Channels.t * string * OStream.outcome Lwt.u option) list option
+    -> string OStream.t
+      (* Encode outgoing messages : the first argument is the list of channels
+       * that have already been collected.
+       * The results is the stream to send to the client*)
 
-    val encode_ended : Channels.chan_id list -> string
+  val encode_ended : Channels.chan_id list -> string
 
-  end = struct
+end = struct
 
   (* constants *)
   let channel_separator = "\n"
@@ -331,28 +331,28 @@ module Messages :
 end
 
 module Security :
-  sig
+sig
 
-    val set_timeout : ?reset:bool -> float -> unit
-      (* Set the [timeout] constant for new connections. Existing connections are
-       * not affected unless [?reset] is [Some true] *)
+  val set_timeout : ?reset:bool -> float -> unit
+    (* Set the [timeout] constant for new connections. Existing connections are
+     * not affected unless [?reset] is [Some true] *)
 
-    val deactivate : unit -> unit
-      (* Stop serving comet connections and kill all current connections. *)
+  val deactivate : unit -> unit
+    (* Stop serving comet connections and kill all current connections. *)
 
-    val activate : unit -> unit
-      (* (Re)start serving connections *)
+  val activate : unit -> unit
+    (* (Re)start serving connections *)
 
-    val activated : unit -> bool
-      (* activation state *)
+  val activated : unit -> bool
+    (* activation state *)
 
-    val kill : unit React.E.t
-        (* The event reflecting willingness to kill connections *)
+  val kill : unit React.E.t
+      (* The event reflecting willingness to kill connections *)
 
-    val command_function : string -> string list -> unit Lwt.t
-        (* To be registered with Ocsigen_extension.register_command_function *)
+  val command_function : string -> string list -> unit Lwt.t
+      (* To be registered with Ocsigen_extension.register_command_function *)
 
-  end = struct
+end = struct
 
   let (kill, kill_all_connections) = React.E.create ()
 
@@ -402,15 +402,15 @@ module Security :
 end
 
 module Main :
-  (* a client can wait for all the channels on which it
-   * is registered and return with the first result. *)
-  sig
+(* a client can wait for all the channels on which it
+ * is registered and return with the first result. *)
+sig
 
-    val main : OX.request -> unit -> OFrame.result Lwt.t
-        (* treat an incoming request from a client. The unit part is for partial
-         * application in Ext_found parameter. *)
+  val main : OX.request -> unit -> OFrame.result Lwt.t
+      (* treat an incoming request from a client. The unit part is for partial
+       * application in Ext_found parameter. *)
 
-  end = struct
+end = struct
 
   let frame_503 () =
     Lwt.return

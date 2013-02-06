@@ -182,25 +182,25 @@ let create  ~__context ~host ~device_config ~(physical_size:int64) ~name_label ~
   debug "SR.create name_label=%s sm_config=[ %s ]" name_label (String.concat "; " (List.map (fun (k, v) -> k ^ " = " ^ v) sm_config));
   (* This breaks the udev SR which doesn't support sr_probe *)
   (*
-	let probe_result = probe ~__context ~host ~device_config ~_type ~sm_config in
-	begin 
-	  match Xml.parse_string probe_result with
-	    | Xml.Element("SRlist", _, children) -> ()
-	    | _ -> 
-		(* Figure out what was missing, then throw the appropriate error *)
-		match String.lowercase _type with
-		  | "lvmoiscsi" ->
-		      if not (List.exists (fun (s,_) -> "targetiqn" = String.lowercase s) device_config)
-		      then raise (Api_errors.Server_error ("SR_BACKEND_FAILURE_96",["";"";probe_result]))
-		      else if not (List.exists (fun (s,_) -> "scsiid" = String.lowercase s) device_config)
-		      then raise (Api_errors.Server_error ("SR_BACKEND_FAILURE_107",["";"";probe_result]))
-		  | _ -> ()
-	end;
+  let probe_result = probe ~__context ~host ~device_config ~_type ~sm_config in
+  begin 
+    match Xml.parse_string probe_result with
+      | Xml.Element("SRlist", _, children) -> ()
+      | _ -> 
+    (* Figure out what was missing, then throw the appropriate error *)
+    match String.lowercase _type with
+      | "lvmoiscsi" ->
+          if not (List.exists (fun (s,_) -> "targetiqn" = String.lowercase s) device_config)
+          then raise (Api_errors.Server_error ("SR_BACKEND_FAILURE_96",["";"";probe_result]))
+          else if not (List.exists (fun (s,_) -> "scsiid" = String.lowercase s) device_config)
+          then raise (Api_errors.Server_error ("SR_BACKEND_FAILURE_107",["";"";probe_result]))
+      | _ -> ()
+  end;
 *)
   let sr_uuid = Uuid.make_uuid() in
   let sr_uuid_str = Uuid.to_string sr_uuid in
   (* Create the SR in the database before creating on disk, so the backends can read the sm_config field. If an error happens here
-     	we have to clean up the record.*)
+     we have to clean up the record.*)
   let sr_ref =
     introduce  ~__context ~uuid:sr_uuid_str ~name_label
       ~name_description ~_type ~content_type ~shared ~sm_config

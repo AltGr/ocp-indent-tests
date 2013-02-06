@@ -123,19 +123,19 @@ let vm_compute_migrate_memory ~__context vm_ref =
     Int64.add current_memory_usage_bytes shadow_bytes
 
 (**
-   	The Pool master's view of the total memory and memory consumers on a host.
-   	This doesn't take into account dynamic changes i.e. those caused by
-   	ballooning. Therefore if we ask a question like, 'is there <x> amount of
-   	memory free to boot VM <y>' we will get one of 3 different answers:
-   	1. yes:
-   		the sum of the static_max's of all VMs with domains + the request
-   		is less than the total free.
-   	2. maybe:
-   		depending on the behaviour of the balloon drivers in the guest we
-   		may be able to free the memory.
-   	3. no:
-   		the sum of the dynamic_min's of all the VMs with domains + the
-   		request is more than the total free.
+   The Pool master's view of the total memory and memory consumers on a host.
+   This doesn't take into account dynamic changes i.e. those caused by
+   ballooning. Therefore if we ask a question like, 'is there <x> amount of
+   memory free to boot VM <y>' we will get one of 3 different answers:
+   1. yes:
+    the sum of the static_max's of all VMs with domains + the request
+    is less than the total free.
+   2. maybe:
+    depending on the behaviour of the balloon drivers in the guest we
+    may be able to free the memory.
+   3. no:
+    the sum of the dynamic_min's of all the VMs with domains + the
+    request is more than the total free.
 *)
 type host_memory_summary = {
   (** The maximum amount of memory that guests can use on this host. *)
@@ -169,9 +169,9 @@ let get_host_memory_summary ~__context ~host =
   }
 
 (**
-   	Given a host's memory summary and a policy flag (i.e. whether to only
-   	consider static_max or to consider dynamic balloon data) it returns the
-   	amount of free memory on the host.
+   Given a host's memory summary and a policy flag (i.e. whether to only
+   consider static_max or to consider dynamic balloon data) it returns the
+   amount of free memory on the host.
 *)
 let host_compute_free_memory_with_policy ~__context summary policy =
   let all_vms = summary.resident @ summary.scheduled in
@@ -183,33 +183,33 @@ let host_compute_free_memory_with_policy ~__context summary policy =
   max 0L host_mem_available
 
 (**
-   	Compute, from our managed data, how much memory is available on a host; this
-   	takes into account both VMs that are resident_on the host and also VMs that
-   	are scheduled_to_be_resident_on the host.
+   Compute, from our managed data, how much memory is available on a host; this
+   takes into account both VMs that are resident_on the host and also VMs that
+   are scheduled_to_be_resident_on the host.
 
-   	If ignore_scheduled_vm is set then we do not consider this VM as having any
-   	resources allocated via the scheduled_to_be_resident_on mechanism. This is
-   	used to ensure that, when we're executing this function with a view to
-   	starting a VM, v, and further that v is scheduled_to_be_resident on the
-   	specified host, that we do not count the resources required for v twice.
+   If ignore_scheduled_vm is set then we do not consider this VM as having any
+   resources allocated via the scheduled_to_be_resident_on mechanism. This is
+   used to ensure that, when we're executing this function with a view to
+   starting a VM, v, and further that v is scheduled_to_be_resident on the
+   specified host, that we do not count the resources required for v twice.
 
-   	If 'dump_stats=true' then we write to the debug log where we think the
-   	memory is being used.
+   If 'dump_stats=true' then we write to the debug log where we think the
+   memory is being used.
 *)
 let host_compute_free_memory_with_maximum_compression
     ?(dump_stats=false) ~__context ~host
     ignore_scheduled_vm =
   (*
-		Compute host free memory from what is actually running. Don't rely on
-		reported free memory, since this is an asychronously-computed metric
-		that's liable to change or be out of date.
-	*)
+    Compute host free memory from what is actually running. Don't rely on
+    reported free memory, since this is an asychronously-computed metric
+    that's liable to change or be out of date.
+  *)
   let summary = get_host_memory_summary ~__context ~host in
   (*
-		When we're considering starting ourselves, and the host has reserved
-		resources ready for us, then we need to make sure we don't count these
-		reserved resources twice.
-	*)
+    When we're considering starting ourselves, and the host has reserved
+    resources ready for us, then we need to make sure we don't count these
+    reserved resources twice.
+  *)
   let summary = { summary with scheduled = 
                     match ignore_scheduled_vm with
                     | None -> summary.scheduled (* no change *)

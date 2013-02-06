@@ -239,5 +239,5 @@ val import_convert : __context:Context.t -> _type:string -> username:string -> p
   sr:API.ref_SR -> remote_config:(string * string) list -> unit
 
 (** [query_services __context self] returns a Map of service type -> name label provided
-   	by the specific VM. *)
+   by the specific VM. *)
 val query_services : __context:Context.t -> self:API.ref_VM -> (string * string) list

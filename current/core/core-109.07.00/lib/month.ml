@@ -1,18 +1,18 @@
 module Stable = struct
   module V1 = struct
     type t =
-    | Jan
-    | Feb
-    | Mar
-    | Apr
-    | May
-    | Jun
-    | Jul
-    | Aug
-    | Sep
-    | Oct
-    | Nov
-    | Dec
+      | Jan
+      | Feb
+      | Mar
+      | Apr
+      | May
+      | Jun
+      | Jul
+      | Aug
+      | Sep
+      | Oct
+      | Nov
+      | Dec
     with sexp, compare, variants
 
     let failwithf = Core_printf.failwithf

@@ -79,11 +79,11 @@ let bool = find bool_of_string
 let rtc_timeoffset_of_vm ~__context (vm, vm_t) vbds =
   let timeoffset = string vm_t.API.vM_platform "0" "timeoffset" in
   (* If any VDI has on_boot = reset AND has a VDI.other_config:timeoffset
-     	   then we override the platform/timeoffset. This is needed because windows
-     	   stores the local time in timeoffset (the BIOS clock) but records whether
-     	   it has adjusted it for daylight savings in the system disk. If we reset
-     	   the system disk to an earlier snapshot then the BIOS clock needs to be
-     	   reset too. *)
+     then we override the platform/timeoffset. This is needed because windows
+     stores the local time in timeoffset (the BIOS clock) but records whether
+     it has adjusted it for daylight savings in the system disk. If we reset
+     the system disk to an earlier snapshot then the BIOS clock needs to be
+     reset too. *)
   let non_empty_vbds = List.filter (fun vbd -> not vbd.API.vBD_empty) vbds in
   let vdis = List.map (fun vbd -> vbd.API.vBD_VDI) non_empty_vbds in
   let vdis_with_timeoffset_to_be_reset_on_boot =
@@ -350,10 +350,10 @@ module MD = struct
     let open Vm in
     let scheduler_params =
       (* vcpu <-> pcpu affinity settings are stored here.
-         			   Format is either:
-         			   1,2,3         ::  all vCPUs receive this mask
-         			   1,2,3; 4,5,6  ::  vCPU n receives mask n. Unlisted vCPUs 
-         			                     receive first mask *)
+         Format is either:
+         1,2,3         ::  all vCPUs receive this mask
+         1,2,3; 4,5,6  ::  vCPU n receives mask n. Unlisted vCPUs 
+                           receive first mask *)
       let affinity =
         try
           List.map
@@ -430,7 +430,7 @@ module MD = struct
       on_reboot = on_normal_exit_behaviour vm.API.vM_actions_after_reboot;
       pci_msitranslate = pci_msitranslate;
       pci_power_mgmt = false;
-    }		
+    }    
 
 
 end
@@ -494,7 +494,7 @@ let metadata_m = Mutex.create ()
 
 module Xapi_cache = struct
 (** Keep a cache of the "xenops-translation" of XenAPI VM configuration,
-   		updated whenever we receive an event from xapi. *)
+   updated whenever we receive an event from xapi. *)
 
   let cache = Hashtbl.create 10 (* indexed by Vm.id *)
 
@@ -524,8 +524,8 @@ end
 
 module Xenops_cache = struct
 (** Remember the last events received from xenopsd so we can compute
-   		field-level differences. This allows us to minimise the number of
-   		database writes we issue upwards. *)
+   field-level differences. This allows us to minimise the number of
+   database writes we issue upwards. *)
 
   type t = {
     vm: Vm.state option;
@@ -813,10 +813,10 @@ let update_vm ~__context id =
             let b = Opt.map f previous in
             a <> b in
           (* Notes on error handling: if something fails we log and continue, to
-             					   maximise the amount of state which is correctly synced. If something
-             					   does fail then we may end up permanently out-of-sync until either a
-             					   process restart or an event is generated. We may wish to periodically
-             					   inject artificial events IF there has been an event sync failure? *)
+             maximise the amount of state which is correctly synced. If something
+             does fail then we may end up permanently out-of-sync until either a
+             process restart or an event is generated. We may wish to periodically
+             inject artificial events IF there has been an event sync failure? *)
           if different (fun x -> x.power_state) then begin
             try
               debug "Will update VM.allowed_operations because power_state has changed.";
@@ -824,7 +824,7 @@ let update_vm ~__context id =
               let power_state = xenapi_of_xenops_power_state (Opt.map (fun x -> (snd x).power_state) info) in
               debug "xenopsd event: Updating VM %s power_state <- %s" id (Record_util.power_state_to_string power_state);
               (* This will mark VBDs, VIFs as detached and clear resident_on
-                 							   if the VM has permenantly shutdown. *)
+                 if the VM has permenantly shutdown. *)
               Xapi_vm_lifecycle.force_state_reset ~__context ~self ~value:power_state;
 
               if power_state = `Suspended || power_state = `Halted then begin
@@ -1241,7 +1241,7 @@ let update_task ~__context id =
     | _ -> ()
   with Not_found ->
     (* Since this is called on all tasks, possibly after the task has been
-       		   destroyed, it's safe to ignore a Not_found exception here. *)
+       destroyed, it's safe to ignore a Not_found exception here. *)
     ()
      | e ->
        error "xenopsd event: Caught %s while updating task" (string_of_exn e)
@@ -1330,7 +1330,7 @@ let on_xapi_restart ~__context =
   let dbg = Context.string_of_task __context in
   manage_dom0 dbg;
   (* Destroy each active task in xenopsd, since the previous xapi
-     	   is not able to do it. *)
+     is not able to do it. *)
   let tasks = Client.TASK.list dbg in
   List.iter
     (fun t ->
@@ -1338,7 +1338,7 @@ let on_xapi_restart ~__context =
       Client.TASK.destroy dbg t.Task.id
     ) tasks;
   (* Any VM marked as 'Suspended' in xenopsd is broken because the
-     	   suspend or migrate must have failed in the middle. Remove these. *)
+     suspend or migrate must have failed in the middle. Remove these. *)
   List.iter
     (fun (vm, state) ->
       if state.Vm.power_state = Suspended then begin
@@ -1348,7 +1348,7 @@ let on_xapi_restart ~__context =
       end
     ) (Client.VM.list dbg ());
   (* For each VM resident on this host, check if the xenopsd
-     	   has forgotten about it: this means it has shut down *)
+     has forgotten about it: this means it has shut down *)
   let localhost = Helpers.get_localhost ~__context in
   let vms = Db.Host.get_resident_VMs ~__context ~self:localhost in
   let in_db = List.map (fun self -> id_of_vm ~__context ~self) vms in
@@ -1459,7 +1459,7 @@ let events_from_xapi () =
 
               let classes = List.map (fun x -> Printf.sprintf "VM/%s" (Ref.string_of x)) resident_VMs in
               (* NB we re-use the old token so we don't get events we've already
-                 							   received BUT we will not necessarily receive events for the new VMs *)
+                 received BUT we will not necessarily receive events for the new VMs *)
 
               while true do
                 let from = XenAPI.Event.from ~rpc ~session_id ~classes ~token:!token ~timeout:60. |> event_from_of_rpc in
@@ -1729,7 +1729,7 @@ let start ~__context ~self paused =
   transform_xenops_exn ~__context
     (fun () ->
       (* For all devices which we want xenopsd to manage, set currently_attached = true
-         			   so the metadata is pushed. *)
+         so the metadata is pushed. *)
       let vbds =
         (* xenopsd only manages empty VBDs for HVM guests *)
         let hvm = Helpers.will_boot_hvm ~__context ~self in
@@ -1761,7 +1761,7 @@ let start ~__context ~self paused =
         let dbg = Context.string_of_task __context in
         Events_from_xenopsd.wait dbg ();
         (* If the VM power_state is Halted, the event thread will have removed
-           				   the metadata and cleared resident_on. *)
+           the metadata and cleared resident_on. *)
         raise e
     );
   (* XXX: if the guest crashed or shutdown immediately then it may be offline now *)
@@ -1865,9 +1865,9 @@ let resume ~__context ~self ~start_paused ~force =
       let vdi = Db.VM.get_suspend_VDI ~__context ~self in
       let disk = disk_of_vdi ~__context ~self:vdi |> Opt.unbox in
       (* NB we don't set resident_on because we don't want to
-         			   modify the VM.power_state, {VBD,VIF}.currently_attached in the
-         			   failures cases. This means we must remove the metadata from
-         			   xenopsd on failure. *)
+         modify the VM.power_state, {VBD,VIF}.currently_attached in the
+         failures cases. This means we must remove the metadata from
+         xenopsd on failure. *)
       begin try
         with_events_suppressed ~__context ~self
           (fun () ->

@@ -83,7 +83,7 @@ let post_install_script rpc session_id __context install_vm vm (script, vbds) =
                   (match status with 
                   | Unix.WEXITED 0 -> (newpid,status) 
                   | (Unix.WEXITED n|Unix.WSIGNALED n|Unix.WSTOPPED n) -> raise (Subprocess_failed n))
-                else		 
+                else     
                   begin
                     Thread.delay 1.0;
                     refresh_session ();

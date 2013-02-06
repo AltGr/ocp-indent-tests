@@ -21,9 +21,9 @@ end = struct
   module Mutex = Mutex0
 
   type t =
-  { mutex : Mutex.t sexp_opaque;
-    condition : Condition.t sexp_opaque;
-  }
+    { mutex : Mutex.t sexp_opaque;
+      condition : Condition.t sexp_opaque;
+    }
   with sexp_of
 
   (* We keep a cache of unused blockers, since they are relatively costly to create, and
@@ -73,10 +73,10 @@ end
    * Performance -- do not spin trying to acquire the lock.  This is accomplished by
    waiting on a condition variable if a lock is contended. *)
 type t =
-{ mutable id_of_thread_holding_lock : int;
-  mutable num_using_blocker : int;
-  mutable blocker : Blocker.t option;
-}
+  { mutable id_of_thread_holding_lock : int;
+    mutable num_using_blocker : int;
+    mutable blocker : Blocker.t option;
+  }
 with fields, sexp_of
 
 let invariant t =
@@ -214,9 +214,9 @@ let rec lock t =
 let lock_exn t = ok_exn (lock t)
 
 type message =
-{ current_thread_id : int;
-  mutex : t;
-}
+  { current_thread_id : int;
+    mutex : t;
+  }
 with sexp_of
 
 let unlock t =

@@ -83,10 +83,10 @@ let get_subject_name __context session_id =
     ~fnname:"get_subject_name"
     ~fn_if_local_session:(fun()->
       (* we are in emergency mode here, do not call DB_Action:
-         			 - local sessions are not in the normal DB
-         			 - local sessions do not have a username field
-         			 - DB_Action will block forever trying to access an inaccessible master
-         			*)
+         - local sessions are not in the normal DB
+         - local sessions do not have a username field
+         - DB_Action will block forever trying to access an inaccessible master
+      *)
       ""
     )
     ~fn_if_local_superuser:(fun()->
@@ -159,7 +159,7 @@ let populate_audit_record_with_obj_names_of_refs line =
     let before_sexpr_str = String.sub line 0 sexpr_idx in
     (* remove the [...] prefix *)
     let sexpr_str = Stringext.String.sub_to_end line sexpr_idx in
-    let sexpr = SExpr_TS.of_string sexpr_str	in
+    let sexpr = SExpr_TS.of_string sexpr_str  in
     match sexpr with
     |SExpr.Node els -> begin
         if List.length els = 0
@@ -327,7 +327,7 @@ let rec sexpr_args_of __context name rpc_value action =
               ::[]
             )
         )
-    | _-> (*D.debug "sexpr_args_of:value=%s" (Xml.to_string xml_value);*)			
+    | _-> (*D.debug "sexpr_args_of:value=%s" (Xml.to_string xml_value);*)      
       (*None*)
       Some (get_sexpr_arg name (Rpc.to_string rpc_value) "" "")
     )
@@ -453,7 +453,7 @@ let sexpr_of __context session_id allowed_denied ok_error result_error ?args ?se
     SExpr.String (trackid session_id)::
       SExpr.String (get_subject_identifier __context session_id)::
       SExpr.String (get_subject_name __context session_id)::
-      SExpr.String (allowed_denied)::		
+      SExpr.String (allowed_denied)::    
       SExpr.String (ok_error ^ result_error)::
       SExpr.String (call_type_of action)::
       (*SExpr.String (Helper_hostname.get_hostname ())::*)
@@ -522,10 +522,10 @@ let denied ~__context ~session_id ~action ~permission ?args () =
   )
 
 let session_destroy ~__context ~session_id =
-  (*	
-	(* this is currently only creating spam in the audit log *)
-	let action="session.destroy" in
-	allowed_ok ~__context ~session_id ~action ~permission:action ()
+  (*  
+  (* this is currently only creating spam in the audit log *)
+  let action="session.destroy" in
+  allowed_ok ~__context ~session_id ~action ~permission:action ()
 *)
   ()
 

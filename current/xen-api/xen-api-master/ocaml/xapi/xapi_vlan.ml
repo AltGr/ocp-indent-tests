@@ -80,7 +80,7 @@ let destroy ~__context ~self =
     if Db.PIF.get_VLAN ~__context ~self:untagged_PIF < 0L then
       raise (Api_errors.Server_error (Api_errors.pif_is_physical, []));
     (* Because of the precondition in create_VLAN, this will always be the only PIF
-       		   connecting this host to the network. Therefore it is safe to detach the network. *)
+       connecting this host to the network. Therefore it is safe to detach the network. *)
     let network = Db.PIF.get_network ~__context ~self:untagged_PIF in
     let bridge = Db.Network.get_bridge ~__context ~self:network in
 

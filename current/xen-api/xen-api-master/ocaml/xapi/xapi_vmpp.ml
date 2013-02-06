@@ -64,8 +64,8 @@ let create_alert ~__context ~vmpp ~name ~priority ~body ~data =
   let value = data in
   let msg = 
     (* value is expected to be valid xml data,
-       		   whereas body is not expected to be a valid xml string
-       		*)
+       whereas body is not expected to be a valid xml string
+    *)
     "<message><email>"
     (* escape any invalid xml string *)
     ^(Xml.to_string (Xml.PCData body))
@@ -333,8 +333,8 @@ let assert_all_keys ~ty ~ks ~value ~db =
 
       (* for this ks, all keys must be present *)
       let ks_keys = Listext.List.setify (let (x,y)=List.split ks in x) in
-		  let value_keys = Listext.List.setify (let (x,y)=List.split value in x) in
-		  let diff = Listext.List.set_difference ks_keys value_keys in
+      let value_keys = Listext.List.setify (let (x,y)=List.split value in x) in
+      let diff = Listext.List.set_difference ks_keys value_keys in
       (if diff<>[] then err field (List.hd diff) "");
 *)
 
@@ -358,7 +358,7 @@ let assert_non_required_key ~ks ~key ~db =
       assert_req_values ~ks ~key ~value:"" ~db;
       (* check if the key is not expected in this ks *)
       if (List.mem_assoc key ks) then err key ""
-     	)
+     )
   *)
 
 let map_password_to_secret ~__context ~new_password ~db =

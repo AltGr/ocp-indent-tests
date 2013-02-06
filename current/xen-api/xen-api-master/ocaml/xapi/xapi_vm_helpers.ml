@@ -46,22 +46,22 @@ let set_is_a_template ~__context ~self ~value =
     with _ -> warn "Could not update VM install time because metrics object was missing"
   end else begin
     (* VM must be halted, or we couldn't have got this far.
-       		 * If we have a halted VM with ha_always_run = true, ha_restart_priority = "restart"
-       		 * and HA is enabled on the pool, then HA is about to restart the VM and we should
-       		 * block converting it into a template.
-       		 *
-       		 * This logic can't live in the allowed_operations code, or we'd have to update VM.allowed_operations
-       		 * across the pool when enabling or disabling HA. *)
+     * If we have a halted VM with ha_always_run = true, ha_restart_priority = "restart"
+     * and HA is enabled on the pool, then HA is about to restart the VM and we should
+     * block converting it into a template.
+     *
+     * This logic can't live in the allowed_operations code, or we'd have to update VM.allowed_operations
+     * across the pool when enabling or disabling HA. *)
     let ha_enabled = Db.Pool.get_ha_enabled ~__context ~self:(Helpers.get_pool ~__context) in
     if ha_enabled && (Helpers.is_xha_protected ~__context ~self)
     then raise
         (Api_errors.Server_error
            (Api_errors.vm_is_protected, [Ref.string_of self]))
     (* If the VM is not protected then we can convert the VM to a template,
-       		 * but we should clear the ha_always_run flag
-       		 * (which will be true if the VM has ha_restart_priority = "restart" and was shut down from inside).
-       		 *
-       		 * We don't want templates to have this flag, or HA will try to start them. *)
+     * but we should clear the ha_always_run flag
+     * (which will be true if the VM has ha_restart_priority = "restart" and was shut down from inside).
+     *
+     * We don't want templates to have this flag, or HA will try to start them. *)
     else Db.VM.set_ha_always_run ~__context ~self ~value:false;
     (* delete the vm metrics associated with the vm if it exists, when we templat'ize it *)
     try Db.VM_metrics.destroy ~__context ~self:m with _ -> ()
@@ -171,9 +171,9 @@ let destroy  ~__context ~self =
   debug "VM.destroy: deleting DB records";
 
   (* Should we be destroying blobs? It's possible to create a blob and then
-     	   add its reference to multiple objects. Perhaps we want to just leave the
-     	   blob? Or only delete it if there is no other reference to it? Is that
-     	   even possible to know? *)
+     add its reference to multiple objects. Perhaps we want to just leave the
+     blob? Or only delete it if there is no other reference to it? Is that
+     even possible to know? *)
   let blobs = Db.VM.get_blobs ~__context ~self in
   List.iter (fun (_,self) -> try Xapi_blob.destroy ~__context ~self with _ -> ()) blobs;
 
@@ -303,7 +303,7 @@ let assert_can_see_SRs ~__context ~self ~host =
   let vbds = List.filter (fun self -> not(Db.VBD.get_empty ~__context ~self)) vbds in
   let vdis = List.map (fun self -> Db.VBD.get_VDI ~__context ~self) vbds in
   (* If VM is currently suspended then consider the suspend_VDI. Note both power_state and the suspend VDI
-     	   are stored in R/O fields, not the last_boot_record *)
+     are stored in R/O fields, not the last_boot_record *)
   let suspend_vdi = if Db.VM.get_power_state ~__context ~self =`Suspended then [ Db.VM.get_suspend_VDI ~__context ~self ] else [] in
   let reqd_srs = List.map (fun self -> Db.VDI.get_SR ~__context ~self) (vdis @ suspend_vdi) in
   let not_available = which_specified_SRs_not_available_on_host ~__context ~reqd_srs ~host in
@@ -361,7 +361,7 @@ let assert_can_see_networks ~__context ~self ~host =
         ]));
 
   (* Also, for each of the available networks, we need to ensure that we can bring it
-     	 * up on the specified host; i.e. it doesn't need an enslaved PIF. *)
+   * up on the specified host; i.e. it doesn't need an enslaved PIF. *)
   List.iter
     (fun network->
       try
@@ -492,7 +492,7 @@ let assert_can_boot_here ~__context ~self ~host ~snapshot ?(do_sr_check=true) ?(
 
 let retrieve_wlb_recommendations ~__context ~vm ~snapshot =
   (* we have already checked the number of returned entries is correct in retrieve_vm_recommendations
-     	   But checking that there are no duplicates is also quite cheap, put them in a hash and overwrite duplicates *)
+     But checking that there are no duplicates is also quite cheap, put them in a hash and overwrite duplicates *)
   let recs = Hashtbl.create 12 in
   List.iter
     (fun (h, r) ->
@@ -660,13 +660,13 @@ let choose_host_for_vm ~__context ~vm ~snapshot =
           h
         | _ ->
           debug "Wlb has no recommendations. \
-                 						Using original algorithm";
+                 Using original algorithm";
           choose_host_for_vm_no_wlb ~__context ~vm ~snapshot
       end
     with
     | Api_errors.Server_error(error_type, error_detail) ->
       debug "Encountered error when using wlb for choosing host \
-             				\"%s: %s\". Using original algorithm"
+             \"%s: %s\". Using original algorithm"
         error_type
         (String.concat "" error_detail);
       begin
@@ -687,16 +687,16 @@ let choose_host_for_vm ~__context ~vm ~snapshot =
       choose_host_for_vm_no_wlb ~__context ~vm ~snapshot
     | Failure "float_of_string" ->
       debug "Star ratings from wlb could not be parsed to floats. \
-             				Using original algorithm";
+             Using original algorithm";
       choose_host_for_vm_no_wlb ~__context ~vm ~snapshot
     | _ ->
       debug "Encountered an unknown error when using wlb for \
-             				choosing host. Using original algorithm";
+             choosing host. Using original algorithm";
       choose_host_for_vm_no_wlb ~__context ~vm ~snapshot
   else
     begin
       debug "Using wlb recommendations for choosing a host has been \
-             				disabled or wlb is not available. Using original algorithm";
+             disabled or wlb is not available. Using original algorithm";
       choose_host_for_vm_no_wlb ~__context ~vm ~snapshot
     end
 
@@ -710,7 +710,7 @@ let validate_HVM_shadow_multiplier multiplier =
 let set_HVM_shadow_multiplier ~__context ~self ~value =
   if Db.VM.get_power_state ~__context ~self <> `Halted
   then failwith "assertion_failed: set_HVM_shadow_multiplier should only be \
-                 		called when the VM is Halted";
+                 called when the VM is Halted";
   validate_HVM_shadow_multiplier value;
   Db.VM.set_HVM_shadow_multiplier ~__context ~self ~value;
   update_memory_overhead ~__context ~vm:self
@@ -735,14 +735,14 @@ let allowed_VIF_devices_HVM_PP = vif_inclusive_range 0 6
 let allowed_VIF_devices_PV     = vif_inclusive_range 0 6
 
 (** [possible_VBD_devices_of_string s] returns a list of Device_number.t which
-   	represent possible interpretations of [s]. *)
+   represent possible interpretations of [s]. *)
 let possible_VBD_devices_of_string s =
   (* NB userdevice fields are arbitrary strings and device fields may be "" *)
   let parse hvm x = try Some (Device_number.of_string hvm x) with _ -> None in
   Listext.List.unbox_list [ parse true s; parse false s ]
 
 (** [all_used_VBD_devices __context self] returns a list of Device_number.t
-   	which are considered to be already in-use in the VM *)
+   which are considered to be already in-use in the VM *)
 let all_used_VBD_devices ~__context ~self =
   let all = Db.VM.get_VBDs ~__context ~self in
 

@@ -4,9 +4,9 @@ open Core.Std
 
 module Avltree = struct
   type ('k, 'v) t =
-  | Empty
-  | Node of ('k, 'v) t * 'k * 'v * int * ('k, 'v) t
-  | Leaf of 'k * 'v
+    | Empty
+    | Node of ('k, 'v) t * 'k * 'v * int * ('k, 'v) t
+    | Leaf of 'k * 'v
 
   (* We do this 'crazy' magic because we want to remove a level of
      indirection in the tree. If we didn't do this, we'd need to use a

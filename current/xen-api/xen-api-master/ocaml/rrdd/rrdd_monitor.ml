@@ -44,8 +44,8 @@ let create_fresh_rrd use_min_max dss =
  * archive the RRD. *)
 let update_rrds timestamp dss (uuid_domids : (string * int) list) rebooting_vms paused_vms =
   (* Here we do the synchronising between the dom0 view of the world
-     		 and our Hashtbl. By the end of this execute block, the Hashtbl
-     		 correctly represents the world *)
+     and our Hashtbl. By the end of this execute block, the Hashtbl
+     correctly represents the world *)
   let to_send_back = Mutex.execute mutex (fun _ ->
       let out_of_date, by_how_much =
         match !host_rrd with
@@ -82,11 +82,11 @@ let update_rrds timestamp dss (uuid_domids : (string * int) list) rebooting_vms 
                 ) else rrdi.rrd
               in
               (* CA-34383:
-                 						 * Memory updates from paused domains serve no useful purpose.
-                 						 * During a migrate such updates can also cause undesirable
-                 						 * discontinuities in the observed value of memory_actual.
-                 						 * Hence, we ignore changes from paused domains:
-                 						 *)
+               * Memory updates from paused domains serve no useful purpose.
+               * During a migrate such updates can also cause undesirable
+               * discontinuities in the observed value of memory_actual.
+               * Hence, we ignore changes from paused domains:
+              *)
               if not (List.mem vm_uuid paused_vms) then (
                 Rrd.ds_update_named rrd timestamp ~new_domid:(domid <> rrdi.domid)
                   (List.map (fun ds -> (ds.ds_name, (ds.ds_value, ds.ds_pdp_transform_function))) dss);

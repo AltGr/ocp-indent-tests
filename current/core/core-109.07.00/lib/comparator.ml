@@ -1,9 +1,9 @@
 open Sexplib
 
 type ('a, 'unique_id) t =
-{ compare : 'a -> 'a -> int;
-  sexp_of_t : 'a -> Sexp.t;
-}
+  { compare : 'a -> 'a -> int;
+    sexp_of_t : 'a -> Sexp.t;
+  }
 
 type ('a, 'unique_id) t_ = ('a, 'unique_id) t
 

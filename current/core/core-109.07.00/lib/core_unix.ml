@@ -138,14 +138,14 @@ module RLimit = struct
   type t = { cur : limit; max : limit } with sexp
 
   type resource =
-  | Core_file_size
-  | Cpu_seconds
-  | Data_segment
-  | File_size
-  | Num_file_descriptors
-  | Stack
-  | Virtual_memory
-  | Nice
+    | Core_file_size
+    | Cpu_seconds
+    | Data_segment
+    | File_size
+    | Num_file_descriptors
+    | Stack
+    | Virtual_memory
+    | Nice
   with sexp ;;
 
   let core_file_size       = Core_file_size
@@ -241,21 +241,21 @@ end
 
 (* System configuration *)
 type sysconf =
-| ARG_MAX
-| CHILD_MAX
-| HOST_NAME_MAX
-| LOGIN_NAME_MAX
-| OPEN_MAX
-| PAGESIZE
-| RE_DUP_MAX
-| STREAM_MAX
-| SYMLOOP_MAX
-| TTY_NAME_MAX
-| TZNAME_MAX
-| POSIX_VERSION
-| PHYS_PAGES
-| AVPHYS_PAGES
-| IOV_MAX
+  | ARG_MAX
+  | CHILD_MAX
+  | HOST_NAME_MAX
+  | LOGIN_NAME_MAX
+  | OPEN_MAX
+  | PAGESIZE
+  | RE_DUP_MAX
+  | STREAM_MAX
+  | SYMLOOP_MAX
+  | TTY_NAME_MAX
+  | TZNAME_MAX
+  | POSIX_VERSION
+  | PHYS_PAGES
+  | AVPHYS_PAGES
+  | IOV_MAX
 with sexp
 
 external sysconf : sysconf -> int64 = "unix_sysconf"
@@ -268,11 +268,11 @@ module IOVec = struct
 
   (* NOTE: DO NOT CHANGE THE MEMORY LAYOUT OF THIS TYPE!!! *)
   type 'buf t =
-  {
-    buf : 'buf;
-    pos : int;
-    len : int;
-  }
+    {
+      buf : 'buf;
+      pos : int;
+      len : int;
+    }
   with sexp
 
   type 'buf kind = 'buf
@@ -453,12 +453,12 @@ let wordexp ?flags str = wordexp (Wordexp_flags.make flags) str
 
 module Utsname = struct
   type t =
-  { sysname: string;
-    nodename: string;
-    release: string;
-    version: string;
-    machine: string;
-  }
+    { sysname: string;
+      nodename: string;
+      release: string;
+      version: string;
+      machine: string;
+    }
   with fields, sexp
 end
 
@@ -514,10 +514,10 @@ end
 module Mman = struct
   module Mcl_flags = struct
     type t =
-    (* Do not change the ordering of this type without also
-       changing the C stub. *)
-    | Current
-    | Future
+      (* Do not change the ordering of this type without also
+         changing the C stub. *)
+      | Current
+      | Future
     with sexp
   end
   external unix_mlockall   : Mcl_flags.t array -> unit = "unix_mlockall" ;;
@@ -553,18 +553,18 @@ let unary_dirname ?restart f = unary ?restart dirname_r f
 let unary_dir_handle ?restart f = unary ?restart dir_handle_r f
 
 type error =
-Unix.error =
-| E2BIG | EACCES | EAGAIN | EBADF | EBUSY | ECHILD | EDEADLK | EDOM | EEXIST
-| EFAULT | EFBIG | EINTR | EINVAL | EIO | EISDIR | EMFILE | EMLINK
-| ENAMETOOLONG | ENFILE | ENODEV | ENOENT | ENOEXEC | ENOLCK | ENOMEM | ENOSPC
-| ENOSYS | ENOTDIR | ENOTEMPTY | ENOTTY | ENXIO | EPERM | EPIPE | ERANGE
-| EROFS | ESPIPE | ESRCH | EXDEV | EWOULDBLOCK | EINPROGRESS | EALREADY
-| ENOTSOCK | EDESTADDRREQ | EMSGSIZE | EPROTOTYPE | ENOPROTOOPT
-| EPROTONOSUPPORT | ESOCKTNOSUPPORT | EOPNOTSUPP | EPFNOSUPPORT | EAFNOSUPPORT
-| EADDRINUSE | EADDRNOTAVAIL | ENETDOWN | ENETUNREACH | ENETRESET
-| ECONNABORTED | ECONNRESET | ENOBUFS | EISCONN | ENOTCONN | ESHUTDOWN
-| ETOOMANYREFS | ETIMEDOUT | ECONNREFUSED | EHOSTDOWN | EHOSTUNREACH | ELOOP
-| EOVERFLOW | EUNKNOWNERR of int
+    Unix.error =
+  | E2BIG | EACCES | EAGAIN | EBADF | EBUSY | ECHILD | EDEADLK | EDOM | EEXIST
+  | EFAULT | EFBIG | EINTR | EINVAL | EIO | EISDIR | EMFILE | EMLINK
+  | ENAMETOOLONG | ENFILE | ENODEV | ENOENT | ENOEXEC | ENOLCK | ENOMEM | ENOSPC
+  | ENOSYS | ENOTDIR | ENOTEMPTY | ENOTTY | ENXIO | EPERM | EPIPE | ERANGE
+  | EROFS | ESPIPE | ESRCH | EXDEV | EWOULDBLOCK | EINPROGRESS | EALREADY
+  | ENOTSOCK | EDESTADDRREQ | EMSGSIZE | EPROTOTYPE | ENOPROTOOPT
+  | EPROTONOSUPPORT | ESOCKTNOSUPPORT | EOPNOTSUPP | EPFNOSUPPORT | EAFNOSUPPORT
+  | EADDRINUSE | EADDRNOTAVAIL | ENETDOWN | ENETUNREACH | ENETRESET
+  | ECONNABORTED | ECONNRESET | ENOBUFS | EISCONN | ENOTCONN | ESHUTDOWN
+  | ETOOMANYREFS | ETIMEDOUT | ECONNREFUSED | EHOSTDOWN | EHOSTUNREACH | ELOOP
+  | EOVERFLOW | EUNKNOWNERR of int
 with sexp
 
 exception Unix_error = Unix.Unix_error
@@ -598,9 +598,9 @@ let unsetenv name =
 ;;
 
 type process_status = Unix.process_status =
-| WEXITED of int
-| WSIGNALED of int
-| WSTOPPED of int
+  | WEXITED of int
+  | WSIGNALED of int
+  | WSTOPPED of int
 with sexp
 
 module Exit = struct
@@ -723,17 +723,17 @@ let fork_exec ~prog ~args ?use_path ?env () =
 ;;
 
 type wait_flag =
-Unix.wait_flag =
-| WNOHANG
-| WUNTRACED
+    Unix.wait_flag =
+  | WNOHANG
+  | WUNTRACED
 with sexp
 
 type wait_on =
-[ `Any
-| `My_group
-| `Group of Pid.t
-| `Pid of Pid.t
-]
+  [ `Any
+  | `My_group
+  | `Group of Pid.t
+  | `Pid of Pid.t
+  ]
 with sexp
 
 type mode = wait_flag list with sexp_of
@@ -842,38 +842,38 @@ let stderr = Unix.stderr
 IFDEF OCAML_4 THEN
 
 type open_flag =
-Unix.open_flag =
-| O_RDONLY
-| O_WRONLY
-| O_RDWR
-| O_NONBLOCK
-| O_APPEND
-| O_CREAT
-| O_TRUNC
-| O_EXCL
-| O_NOCTTY
-| O_DSYNC
-| O_SYNC
-| O_RSYNC
-| O_SHARE_DELETE
+    Unix.open_flag =
+  | O_RDONLY
+  | O_WRONLY
+  | O_RDWR
+  | O_NONBLOCK
+  | O_APPEND
+  | O_CREAT
+  | O_TRUNC
+  | O_EXCL
+  | O_NOCTTY
+  | O_DSYNC
+  | O_SYNC
+  | O_RSYNC
+  | O_SHARE_DELETE
 with sexp
 
 ELSE
 
 type open_flag =
-Unix.open_flag =
-| O_RDONLY
-| O_WRONLY
-| O_RDWR
-| O_NONBLOCK
-| O_APPEND
-| O_CREAT
-| O_TRUNC
-| O_EXCL
-| O_NOCTTY
-| O_DSYNC
-| O_SYNC
-| O_RSYNC
+    Unix.open_flag =
+  | O_RDONLY
+  | O_WRONLY
+  | O_RDWR
+  | O_NONBLOCK
+  | O_APPEND
+  | O_CREAT
+  | O_TRUNC
+  | O_EXCL
+  | O_NOCTTY
+  | O_DSYNC
+  | O_SYNC
+  | O_RSYNC
 with sexp
 
 ENDIF (* OCAML_4 *)
@@ -923,27 +923,27 @@ let descr_of_in_channel = Unix.descr_of_in_channel
 let descr_of_out_channel = Unix.descr_of_out_channel
 
 type seek_command =
-Unix.seek_command =
-| SEEK_SET
-| SEEK_CUR
-| SEEK_END
+    Unix.seek_command =
+  | SEEK_SET
+  | SEEK_CUR
+  | SEEK_END
 with sexp
 
 type file_kind = Unix.file_kind =
-| S_REG
-| S_DIR
-| S_CHR
-| S_BLK
-| S_LNK
-| S_FIFO
-| S_SOCK
+  | S_REG
+  | S_DIR
+  | S_CHR
+  | S_BLK
+  | S_LNK
+  | S_FIFO
+  | S_SOCK
 with sexp
 
 let isatty = unary_fd Unix.isatty
 
 module Native_file = struct
   type stats =
-  Unix.stats = {
+      Unix.stats = {
     st_dev : int;
     st_ino : int;
     st_kind : file_kind;
@@ -981,13 +981,13 @@ module Native_file = struct
 end
 
 type lock_command =
-Unix.lock_command =
-| F_ULOCK
-| F_LOCK
-| F_TLOCK
-| F_TEST
-| F_RLOCK
-| F_TRLOCK
+    Unix.lock_command =
+  | F_ULOCK
+  | F_LOCK
+  | F_TLOCK
+  | F_TEST
+  | F_RLOCK
+  | F_TRLOCK
 with sexp
 
 let lockf fd ~mode ~len =
@@ -1038,7 +1038,7 @@ let ftruncate fd ~len =
 ;;
 
 type stats =
-Unix.LargeFile.stats = {
+    Unix.LargeFile.stats = {
   st_dev : int;
   st_ino : int;
   st_kind : file_kind;
@@ -1082,10 +1082,10 @@ let link ?(force = false) ~target ~link_name () =
 ;;
 
 type access_permission = Unix.access_permission =
-| R_OK
-| W_OK
-| X_OK
-| F_OK
+  | R_OK
+  | W_OK
+  | X_OK
+  | F_OK
 with sexp
 
 let chmod filename ~perm =
@@ -1201,11 +1201,11 @@ module Process_info = struct
   (* Any change to the order of these fields must be accompanied by a
      corresponding change to unix_stubs.c:ml_create_process. *)
   type t =
-  { pid : Pid.t;
-    stdin : File_descr.t;
-    stdout : File_descr.t;
-    stderr : File_descr.t;
-  }
+    { pid : Pid.t;
+      stdin : File_descr.t;
+      stdout : File_descr.t;
+      stderr : File_descr.t;
+    }
   with sexp
 end
 
@@ -1300,10 +1300,10 @@ let readlink = unary_filename Unix.readlink
 
 module Select_fds = struct
   type t =
-  { read : File_descr.t list;
-    write : File_descr.t list;
-    except : File_descr.t list;
-  }
+    { read : File_descr.t list;
+      write : File_descr.t list;
+      except : File_descr.t list;
+    }
   with sexp_of
 
   let empty = { read = []; write = []; except = [] }
@@ -1334,7 +1334,7 @@ let select ?restart ~read ~write ~except ~timeout () =
 let pause = Unix.pause
 
 type process_times =
-Unix.process_times = {
+    Unix.process_times = {
   tms_utime  : float;
   tms_stime  : float;
   tms_cutime : float;
@@ -1343,7 +1343,7 @@ Unix.process_times = {
 with sexp
 
 type tm =
-Unix.tm = {
+    Unix.tm = {
   tm_sec   : int;
   tm_min   : int;
   tm_hour  : int;
@@ -1398,9 +1398,9 @@ TEST =
   | _ -> true
 
 type interval_timer = Unix.interval_timer =
-| ITIMER_REAL
-| ITIMER_VIRTUAL
-| ITIMER_PROF
+  | ITIMER_REAL
+  | ITIMER_VIRTUAL
+  | ITIMER_PROF
 with sexp
 
 type interval_timer_status = Unix.interval_timer_status = {
@@ -1436,14 +1436,14 @@ let make_by f make_exn =
 
 module Passwd = struct
   type t =
-  { name : string;
-    passwd : string;
-    uid : int;
-    gid : int;
-    gecos : string;
-    dir : string;
-    shell : string;
-  }
+    { name : string;
+      passwd : string;
+      uid : int;
+      gid : int;
+      gecos : string;
+      dir : string;
+      shell : string;
+    }
   with sexp
 
   let of_unix u =
@@ -1508,11 +1508,11 @@ end
 
 module Group = struct
   type t =
-  { name : string;
-    passwd : string;
-    gid : int;
-    mem : string array;
-  }
+    { name : string;
+      passwd : string;
+      gid : int;
+      mem : string array;
+    }
   with sexp_of
 
   let of_unix u =
@@ -1577,11 +1577,11 @@ end
 
 module Host = struct
   type t =
-  { name : string;
-    aliases : string array;
-    family : Protocol_family.t;
-    addresses : Inet_addr0.t array;
-  }
+    { name : string;
+      aliases : string array;
+      family : Protocol_family.t;
+      addresses : Inet_addr0.t array;
+    }
   with sexp_of
 
   let of_unix u =
@@ -1645,10 +1645,10 @@ end
 
 module Protocol = struct
   type t =
-  { name : string;
-    aliases : string array;
-    proto : int;
-  }
+    { name : string;
+      aliases : string array;
+      proto : int;
+    }
   with sexp
 
   let of_unix u =
@@ -1672,11 +1672,11 @@ end
 
 module Service = struct
   type t =
-  { name : string;
-    aliases : string array;
-    port : int;
-    proto : string;
-  }
+    { name : string;
+      aliases : string array;
+      port : int;
+      proto : string;
+    }
   with sexp
 
   let of_unix u =
@@ -1712,21 +1712,21 @@ module Service = struct
 end
 
 type socket_domain = Unix.socket_domain =
-| PF_UNIX
-| PF_INET
-| PF_INET6
+  | PF_UNIX
+  | PF_INET
+  | PF_INET6
 with sexp, bin_io
 
 type socket_type = Unix.socket_type =
-| SOCK_STREAM
-| SOCK_DGRAM
-| SOCK_RAW
-| SOCK_SEQPACKET
+  | SOCK_STREAM
+  | SOCK_DGRAM
+  | SOCK_RAW
+  | SOCK_SEQPACKET
 with sexp, bin_io
 
 type sockaddr = Unix.sockaddr =
-| ADDR_UNIX of string
-| ADDR_INET of Inet_addr.t * int
+  | ADDR_UNIX of string
+  | ADDR_INET of Inet_addr.t * int
 with sexp, bin_io
 
 let domain_of_sockaddr = Unix.domain_of_sockaddr
@@ -1768,9 +1768,9 @@ let listen fd ~max =
 ;;
 
 type shutdown_command = Unix.shutdown_command =
-| SHUTDOWN_RECEIVE
-| SHUTDOWN_SEND
-| SHUTDOWN_ALL
+  | SHUTDOWN_RECEIVE
+  | SHUTDOWN_SEND
+  | SHUTDOWN_ALL
 with sexp
 
 let shutdown fd ~mode =
@@ -1788,10 +1788,10 @@ let getsockname = unary_fd Unix.getsockname
 let getpeername = unary_fd Unix.getpeername
 
 type msg_flag =
-Unix.msg_flag =
-| MSG_OOB
-| MSG_DONTROUTE
-| MSG_PEEK
+    Unix.msg_flag =
+  | MSG_OOB
+  | MSG_DONTROUTE
+  | MSG_PEEK
 with sexp
 
 let recv_send f fd ~buf ~pos ~len ~mode =
@@ -1818,33 +1818,33 @@ let sendto fd ~buf ~pos ~len ~mode ~addr =
 ;;
 
 type socket_bool_option = Unix.socket_bool_option =
-| SO_DEBUG
-| SO_BROADCAST
-| SO_REUSEADDR
-| SO_KEEPALIVE
-| SO_DONTROUTE
-| SO_OOBINLINE
-| SO_ACCEPTCONN
-| TCP_NODELAY
-| IPV6_ONLY
+  | SO_DEBUG
+  | SO_BROADCAST
+  | SO_REUSEADDR
+  | SO_KEEPALIVE
+  | SO_DONTROUTE
+  | SO_OOBINLINE
+  | SO_ACCEPTCONN
+  | TCP_NODELAY
+  | IPV6_ONLY
 with sexp
 
 type socket_int_option = Unix.socket_int_option =
-| SO_SNDBUF
-| SO_RCVBUF
-| SO_ERROR
-| SO_TYPE
-| SO_RCVLOWAT
-| SO_SNDLOWAT
+  | SO_SNDBUF
+  | SO_RCVBUF
+  | SO_ERROR
+  | SO_TYPE
+  | SO_RCVLOWAT
+  | SO_SNDLOWAT
 with sexp
 
 type socket_optint_option = Unix.socket_optint_option =
-| SO_LINGER
+  | SO_LINGER
 with sexp
 
 type socket_float_option = Unix.socket_float_option =
-| SO_RCVTIMEO
-| SO_SNDTIMEO
+  | SO_RCVTIMEO
+  | SO_SNDTIMEO
 with sexp
 
 let make_sockopt get set sexp_of_opt sexp_of_val =
@@ -1901,12 +1901,12 @@ type addr_info = Unix.addr_info = {
 } with sexp
 
 type getaddrinfo_option = Unix.getaddrinfo_option =
-| AI_FAMILY of socket_domain
-| AI_SOCKTYPE of socket_type
-| AI_PROTOCOL of int
-| AI_NUMERICHOST
-| AI_CANONNAME
-| AI_PASSIVE
+  | AI_FAMILY of socket_domain
+  | AI_SOCKTYPE of socket_type
+  | AI_PROTOCOL of int
+  | AI_NUMERICHOST
+  | AI_CANONNAME
+  | AI_PASSIVE
 with sexp
 
 let getaddrinfo host service opts =
@@ -1918,19 +1918,19 @@ let getaddrinfo host service opts =
 ;;
 
 type name_info =
-Unix.name_info = {
+    Unix.name_info = {
   ni_hostname : string;
   ni_service : string;
 }
 with sexp
 
 type getnameinfo_option =
-Unix.getnameinfo_option =
-| NI_NOFQDN
-| NI_NUMERICHOST
-| NI_NAMEREQD
-| NI_NUMERICSERV
-| NI_DGRAM
+    Unix.getnameinfo_option =
+  | NI_NOFQDN
+  | NI_NUMERICHOST
+  | NI_NAMEREQD
+  | NI_NUMERICSERV
+  | NI_DGRAM
 with sexp
 
 let getnameinfo addr opts =
@@ -1986,9 +1986,9 @@ module Terminal_io = struct
   let tcgetattr = unary_fd Unix.tcgetattr
 
   type setattr_when = Unix.setattr_when =
-  | TCSANOW
-  | TCSADRAIN
-  | TCSAFLUSH
+    | TCSANOW
+    | TCSADRAIN
+    | TCSAFLUSH
   with sexp
 
   let tcsetattr t fd ~mode =
@@ -2007,9 +2007,9 @@ module Terminal_io = struct
   let tcdrain = unary_fd Unix.tcdrain
 
   type flush_queue = Unix.flush_queue =
-  | TCIFLUSH
-  | TCOFLUSH
-  | TCIOFLUSH
+    | TCIFLUSH
+    | TCOFLUSH
+    | TCIOFLUSH
   with sexp
 
   let tcflush fd ~mode =
@@ -2018,10 +2018,10 @@ module Terminal_io = struct
   ;;
 
   type flow_action = Unix.flow_action =
-  | TCOOFF
-  | TCOON
-  | TCIOFF
-  | TCION
+    | TCOOFF
+    | TCOON
+    | TCIOFF
+    | TCION
   with sexp
 
   let tcflow fd ~mode =

@@ -22,78 +22,78 @@ end
    All other errors are mapped to EUNKNOWNERR.
 *)
 type error =
-Unix.error =
-E2BIG               (** Argument list too long *)
-| EACCES              (** Permission denied *)
-| EAGAIN              (** Resource temporarily unavailable; try again *)
-| EBADF               (** Bad file descriptor *)
-| EBUSY               (** Resource unavailable *)
-| ECHILD              (** No child process *)
-| EDEADLK             (** Resource deadlock would occur *)
-| EDOM                (** Domain error for math functions, etc. *)
-| EEXIST              (** File exists *)
-| EFAULT              (** Bad address *)
-| EFBIG               (** File too large *)
-| EINTR               (** Function interrupted by signal *)
-| EINVAL              (** Invalid argument *)
-| EIO                 (** Hardware I/O error *)
-| EISDIR              (** Is a directory *)
-| EMFILE              (** Too many open files by the process *)
-| EMLINK              (** Too many links *)
-| ENAMETOOLONG        (** Filename too long *)
-| ENFILE              (** Too many open files in the system *)
-| ENODEV              (** No such device *)
-| ENOENT              (** No such file or directory *)
-| ENOEXEC             (** Not an executable file *)
-| ENOLCK              (** No locks available *)
-| ENOMEM              (** Not enough memory *)
-| ENOSPC              (** No space left on device *)
-| ENOSYS              (** Function not supported *)
-| ENOTDIR             (** Not a directory *)
-| ENOTEMPTY           (** Directory not empty *)
-| ENOTTY              (** Inappropriate I/O control operation *)
-| ENXIO               (** No such device or address *)
-| EPERM               (** Operation not permitted *)
-| EPIPE               (** Broken pipe *)
-| ERANGE              (** Result too large *)
-| EROFS               (** Read-only file system *)
-| ESPIPE              (** Invalid seek e.g. on a pipe *)
-| ESRCH               (** No such process *)
-| EXDEV               (** Invalid link *)
+    Unix.error =
+    E2BIG               (** Argument list too long *)
+  | EACCES              (** Permission denied *)
+  | EAGAIN              (** Resource temporarily unavailable; try again *)
+  | EBADF               (** Bad file descriptor *)
+  | EBUSY               (** Resource unavailable *)
+  | ECHILD              (** No child process *)
+  | EDEADLK             (** Resource deadlock would occur *)
+  | EDOM                (** Domain error for math functions, etc. *)
+  | EEXIST              (** File exists *)
+  | EFAULT              (** Bad address *)
+  | EFBIG               (** File too large *)
+  | EINTR               (** Function interrupted by signal *)
+  | EINVAL              (** Invalid argument *)
+  | EIO                 (** Hardware I/O error *)
+  | EISDIR              (** Is a directory *)
+  | EMFILE              (** Too many open files by the process *)
+  | EMLINK              (** Too many links *)
+  | ENAMETOOLONG        (** Filename too long *)
+  | ENFILE              (** Too many open files in the system *)
+  | ENODEV              (** No such device *)
+  | ENOENT              (** No such file or directory *)
+  | ENOEXEC             (** Not an executable file *)
+  | ENOLCK              (** No locks available *)
+  | ENOMEM              (** Not enough memory *)
+  | ENOSPC              (** No space left on device *)
+  | ENOSYS              (** Function not supported *)
+  | ENOTDIR             (** Not a directory *)
+  | ENOTEMPTY           (** Directory not empty *)
+  | ENOTTY              (** Inappropriate I/O control operation *)
+  | ENXIO               (** No such device or address *)
+  | EPERM               (** Operation not permitted *)
+  | EPIPE               (** Broken pipe *)
+  | ERANGE              (** Result too large *)
+  | EROFS               (** Read-only file system *)
+  | ESPIPE              (** Invalid seek e.g. on a pipe *)
+  | ESRCH               (** No such process *)
+  | EXDEV               (** Invalid link *)
 
-| EWOULDBLOCK         (** Operation would block *)
-| EINPROGRESS         (** Operation now in progress *)
-| EALREADY            (** Operation already in progress *)
-| ENOTSOCK            (** Socket operation on non-socket *)
-| EDESTADDRREQ        (** Destination address required *)
-| EMSGSIZE            (** Message too long *)
-| EPROTOTYPE          (** Protocol wrong type for socket *)
-| ENOPROTOOPT         (** Protocol not available *)
-| EPROTONOSUPPORT     (** Protocol not supported *)
-| ESOCKTNOSUPPORT     (** Socket type not supported *)
-| EOPNOTSUPP          (** Operation not supported on socket *)
-| EPFNOSUPPORT        (** Protocol family not supported *)
-| EAFNOSUPPORT        (** Address family not supported by protocol family *)
-| EADDRINUSE          (** Address already in use *)
-| EADDRNOTAVAIL       (** Can't assign requested address *)
-| ENETDOWN            (** Network is down *)
-| ENETUNREACH         (** Network is unreachable *)
-| ENETRESET           (** Network dropped connection on reset *)
-| ECONNABORTED        (** Software caused connection abort *)
-| ECONNRESET          (** Connection reset by peer *)
-| ENOBUFS             (** No buffer space available *)
-| EISCONN             (** Socket is already connected *)
-| ENOTCONN            (** Socket is not connected *)
-| ESHUTDOWN           (** Can't send after socket shutdown *)
-| ETOOMANYREFS        (** Too many references: can't splice *)
-| ETIMEDOUT           (** Connection timed out *)
-| ECONNREFUSED        (** Connection refused *)
-| EHOSTDOWN           (** Host is down *)
-| EHOSTUNREACH        (** No route to host *)
-| ELOOP               (** Too many levels of symbolic links *)
-| EOVERFLOW           (** File size or position not representable *)
+  | EWOULDBLOCK         (** Operation would block *)
+  | EINPROGRESS         (** Operation now in progress *)
+  | EALREADY            (** Operation already in progress *)
+  | ENOTSOCK            (** Socket operation on non-socket *)
+  | EDESTADDRREQ        (** Destination address required *)
+  | EMSGSIZE            (** Message too long *)
+  | EPROTOTYPE          (** Protocol wrong type for socket *)
+  | ENOPROTOOPT         (** Protocol not available *)
+  | EPROTONOSUPPORT     (** Protocol not supported *)
+  | ESOCKTNOSUPPORT     (** Socket type not supported *)
+  | EOPNOTSUPP          (** Operation not supported on socket *)
+  | EPFNOSUPPORT        (** Protocol family not supported *)
+  | EAFNOSUPPORT        (** Address family not supported by protocol family *)
+  | EADDRINUSE          (** Address already in use *)
+  | EADDRNOTAVAIL       (** Can't assign requested address *)
+  | ENETDOWN            (** Network is down *)
+  | ENETUNREACH         (** Network is unreachable *)
+  | ENETRESET           (** Network dropped connection on reset *)
+  | ECONNABORTED        (** Software caused connection abort *)
+  | ECONNRESET          (** Connection reset by peer *)
+  | ENOBUFS             (** No buffer space available *)
+  | EISCONN             (** Socket is already connected *)
+  | ENOTCONN            (** Socket is not connected *)
+  | ESHUTDOWN           (** Can't send after socket shutdown *)
+  | ETOOMANYREFS        (** Too many references: can't splice *)
+  | ETIMEDOUT           (** Connection timed out *)
+  | ECONNREFUSED        (** Connection refused *)
+  | EHOSTDOWN           (** Host is down *)
+  | EHOSTUNREACH        (** No route to host *)
+  | ELOOP               (** Too many levels of symbolic links *)
+  | EOVERFLOW           (** File size or position not representable *)
 
-| EUNKNOWNERR of int  (** Unknown error *)
+  | EUNKNOWNERR of int  (** Unknown error *)
 with sexp
 
 module Error : sig
@@ -223,11 +223,11 @@ val fork : unit -> [ `In_the_child | `In_the_parent of Pid.t ]
 
 
 type wait_on =
-[ `Any
-| `Group of Pid.t
-| `My_group
-| `Pid of Pid.t
-]
+  [ `Any
+  | `Group of Pid.t
+  | `My_group
+  | `Pid of Pid.t
+  ]
 with sexp
 
 
@@ -287,39 +287,39 @@ IFDEF OCAML_4 THEN
 (** The flags to {!UnixLabels.openfile}. *)
 
 type open_flag =
-Unix.open_flag =
-O_RDONLY        (** Open for reading *)
-| O_WRONLY        (** Open for writing *)
-| O_RDWR          (** Open for reading and writing *)
-| O_NONBLOCK      (** Open in non-blocking mode *)
-| O_APPEND        (** Open for append *)
-| O_CREAT         (** Create if nonexistent *)
-| O_TRUNC         (** Truncate to 0 length if existing *)
-| O_EXCL          (** Fail if existing *)
-| O_NOCTTY        (** Don't make this dev a controlling tty *)
-| O_DSYNC         (** Writes complete as `Synchronised I/O data integrity completion' *)
-| O_SYNC          (** Writes complete as `Synchronised I/O file integrity completion' *)
-| O_RSYNC         (** Reads complete as writes (depending on O_SYNC/O_DSYNC) *)
-| O_SHARE_DELETE  (** Windows only: allow the file to be deleted while still open *)
+    Unix.open_flag =
+    O_RDONLY        (** Open for reading *)
+  | O_WRONLY        (** Open for writing *)
+  | O_RDWR          (** Open for reading and writing *)
+  | O_NONBLOCK      (** Open in non-blocking mode *)
+  | O_APPEND        (** Open for append *)
+  | O_CREAT         (** Create if nonexistent *)
+  | O_TRUNC         (** Truncate to 0 length if existing *)
+  | O_EXCL          (** Fail if existing *)
+  | O_NOCTTY        (** Don't make this dev a controlling tty *)
+  | O_DSYNC         (** Writes complete as `Synchronised I/O data integrity completion' *)
+  | O_SYNC          (** Writes complete as `Synchronised I/O file integrity completion' *)
+  | O_RSYNC         (** Reads complete as writes (depending on O_SYNC/O_DSYNC) *)
+  | O_SHARE_DELETE  (** Windows only: allow the file to be deleted while still open *)
 with sexp
 
 ELSE
 
 (** The flags to {!UnixLabels.openfile}. *)
 type open_flag =
-Unix.open_flag =
-O_RDONLY        (** Open for reading *)
-| O_WRONLY        (** Open for writing *)
-| O_RDWR          (** Open for reading and writing *)
-| O_NONBLOCK      (** Open in non-blocking mode *)
-| O_APPEND        (** Open for append *)
-| O_CREAT         (** Create if nonexistent *)
-| O_TRUNC         (** Truncate to 0 length if existing *)
-| O_EXCL          (** Fail if existing *)
-| O_NOCTTY        (** Don't make this dev a controlling tty *)
-| O_DSYNC         (** Writes complete as `Synchronised I/O data integrity completion' *)
-| O_SYNC          (** Writes complete as `Synchronised I/O file integrity completion' *)
-| O_RSYNC         (** Reads complete as writes (depending on O_SYNC/O_DSYNC) *)
+    Unix.open_flag =
+    O_RDONLY        (** Open for reading *)
+  | O_WRONLY        (** Open for writing *)
+  | O_RDWR          (** Open for reading and writing *)
+  | O_NONBLOCK      (** Open in non-blocking mode *)
+  | O_APPEND        (** Open for append *)
+  | O_CREAT         (** Create if nonexistent *)
+  | O_TRUNC         (** Truncate to 0 length if existing *)
+  | O_EXCL          (** Fail if existing *)
+  | O_NOCTTY        (** Don't make this dev a controlling tty *)
+  | O_DSYNC         (** Writes complete as `Synchronised I/O data integrity completion' *)
+  | O_SYNC          (** Writes complete as `Synchronised I/O file integrity completion' *)
+  | O_RSYNC         (** Reads complete as writes (depending on O_SYNC/O_DSYNC) *)
 with sexp
 
 ENDIF (* OCAML_4 *)
@@ -404,10 +404,10 @@ val descr_of_out_channel : Out_channel.t -> File_descr.t
 
 (** POSITIONING modes for {!UnixLabels.lseek}. *)
 type seek_command =
-Unix.seek_command =
-SEEK_SET (** indicates positions relative to the beginning of the file *)
-| SEEK_CUR (** indicates positions relative to the current position *)
-| SEEK_END (** indicates positions relative to the end of the file *)
+    Unix.seek_command =
+    SEEK_SET (** indicates positions relative to the beginning of the file *)
+  | SEEK_CUR (** indicates positions relative to the current position *)
+  | SEEK_END (** indicates positions relative to the end of the file *)
 with sexp
 
 (** Set the current position for a file descriptor *)
@@ -423,34 +423,34 @@ val ftruncate : File_descr.t -> len:int64 -> unit
 (** {6 File statistics} *)
 
 type file_kind =
-Unix.file_kind =
-S_REG                   (** Regular file *)
-| S_DIR                   (** Directory *)
-| S_CHR                   (** Character device *)
-| S_BLK                   (** Block device *)
-| S_LNK                   (** Symbolic link *)
-| S_FIFO                  (** Named pipe *)
-| S_SOCK                  (** Socket *)
+    Unix.file_kind =
+    S_REG                   (** Regular file *)
+  | S_DIR                   (** Directory *)
+  | S_CHR                   (** Character device *)
+  | S_BLK                   (** Block device *)
+  | S_LNK                   (** Symbolic link *)
+  | S_FIFO                  (** Named pipe *)
+  | S_SOCK                  (** Socket *)
 with sexp
 
 (** The informations returned by the {!UnixLabels.stat} calls. *)
 type stats =
-Unix.LargeFile.stats =
-{ st_dev : int;                       (** Device number *)
-  st_ino : int;                       (** Inode number *)
-  st_kind : file_kind;                (** Kind of the file *)
-  st_perm : file_perm;                (** Access rights *)
-  st_nlink : int;                     (** Number of links *)
-  st_uid : int;                       (** User id of the owner *)
-  st_gid : int;                       (** Group ID of the file's group *)
-  st_rdev : int;                      (** Device minor number *)
-  st_size : int64;                    (** Size in bytes *)
-  (* The floats below are really Time.t or Time.Span.t, but Time depends on Unix, so
-     the fix isn't so trivial.  Same for Native_file.stats below. *)
-  st_atime : float;                   (** Last access time *)
-  st_mtime : float;                   (** Last modification time *)
-  st_ctime : float                    (** Last status change time *)
-} with sexp
+    Unix.LargeFile.stats =
+  { st_dev : int;                       (** Device number *)
+    st_ino : int;                       (** Inode number *)
+    st_kind : file_kind;                (** Kind of the file *)
+    st_perm : file_perm;                (** Access rights *)
+    st_nlink : int;                     (** Number of links *)
+    st_uid : int;                       (** User id of the owner *)
+    st_gid : int;                       (** Group ID of the file's group *)
+    st_rdev : int;                      (** Device minor number *)
+    st_size : int64;                    (** Size in bytes *)
+    (* The floats below are really Time.t or Time.Span.t, but Time depends on Unix, so
+       the fix isn't so trivial.  Same for Native_file.stats below. *)
+    st_atime : float;                   (** Last access time *)
+    st_mtime : float;                   (** Last modification time *)
+    st_ctime : float                    (** Last status change time *)
+  } with sexp
 
 (** Return the information for the named file. *)
 val stat : string -> stats
@@ -471,19 +471,19 @@ val fstat : File_descr.t -> stats
 module Native_file : sig
   (** The informations returned by the {!UnixLabels.stat} calls. *)
   type stats = Unix.stats =
-  { st_dev : int;                       (** Device number *)
-    st_ino : int;                       (** Inode number *)
-    st_kind : file_kind;                (** Kind of the file *)
-    st_perm : file_perm;                (** Access rights *)
-    st_nlink : int;                     (** Number of links *)
-    st_uid : int;                       (** User id of the owner *)
-    st_gid : int;                       (** Group ID of the file's group *)
-    st_rdev : int;                      (** Device minor number *)
-    st_size : int;                      (** Size in bytes *)
-    st_atime : float;                   (** Last access time *)
-    st_mtime : float;                   (** Last modification time *)
-    st_ctime : float                    (** Last status change time *)
-  }
+    { st_dev : int;                       (** Device number *)
+      st_ino : int;                       (** Inode number *)
+      st_kind : file_kind;                (** Kind of the file *)
+      st_perm : file_perm;                (** Access rights *)
+      st_nlink : int;                     (** Number of links *)
+      st_uid : int;                       (** User id of the owner *)
+      st_gid : int;                       (** Group ID of the file's group *)
+      st_rdev : int;                      (** Device minor number *)
+      st_size : int;                      (** Size in bytes *)
+      st_atime : float;                   (** Last access time *)
+      st_mtime : float;                   (** Last modification time *)
+      st_ctime : float                    (** Last status change time *)
+    }
   with sexp
 
   (** Return the information for the named file. *)
@@ -507,13 +507,13 @@ end
 
 (** Commands for {!lockf}. *)
 type lock_command =
-Unix.lock_command =
-F_ULOCK  (** Unlock a region *)
-| F_LOCK   (** Lock a region for writing, and block if already locked *)
-| F_TLOCK  (** Lock a region for writing, or fail if already locked *)
-| F_TEST   (** Test a region for other process locks *)
-| F_RLOCK  (** Lock a region for reading, and block if already locked *)
-| F_TRLOCK (** Lock a region for reading, or fail if already locked *)
+    Unix.lock_command =
+    F_ULOCK  (** Unlock a region *)
+  | F_LOCK   (** Lock a region for writing, and block if already locked *)
+  | F_TLOCK  (** Lock a region for writing, or fail if already locked *)
+  | F_TEST   (** Test a region for other process locks *)
+  | F_RLOCK  (** Lock a region for reading, and block if already locked *)
+  | F_TRLOCK (** Lock a region for reading, or fail if already locked *)
 with sexp
 
 (** [lockf fd cmd size] place a lock on a file_descr that prevents any other process from
@@ -674,11 +674,11 @@ val mkfifo : string -> perm:file_perm -> unit
 
 module Process_info : sig
   type t =
-  { pid: Pid.t;
-    stdin: File_descr.t;
-    stdout: File_descr.t;
-    stderr: File_descr.t
-  }
+    { pid: Pid.t;
+      stdin: File_descr.t;
+      stdout: File_descr.t;
+      stderr: File_descr.t
+    }
   with sexp
 end
 
@@ -729,10 +729,10 @@ val open_process : string -> in_channel * out_channel
    and standard error of the command. *)
 module Process_channels : sig
   type t =
-  { stdin : out_channel;
-    stdout : in_channel;
-    stderr : in_channel;
-  }
+    { stdin : out_channel;
+      stdout : in_channel;
+      stderr : in_channel;
+    }
 end
 
 val open_process_full : string -> env:string array -> Process_channels.t
@@ -785,10 +785,10 @@ val readlink : string -> string
    component). *)
 module Select_fds : sig
   type t =
-  { read : File_descr.t list;
-    write : File_descr.t list;
-    except : File_descr.t list;
-  }
+    { read : File_descr.t list;
+      write : File_descr.t list;
+      except : File_descr.t list;
+    }
   with sexp_of
 
   val empty : t
@@ -815,27 +815,27 @@ val pause : unit -> unit
 
 (** The execution times (CPU times) of a process. *)
 type process_times =
-Unix.process_times =
-{ tms_utime : float;          (** User time for the process *)
-  tms_stime : float;          (** System time for the process *)
-  tms_cutime : float;         (** User time for the children processes *)
-  tms_cstime : float;         (** System time for the children processes *)
-}
+    Unix.process_times =
+  { tms_utime : float;          (** User time for the process *)
+    tms_stime : float;          (** System time for the process *)
+    tms_cutime : float;         (** User time for the children processes *)
+    tms_cstime : float;         (** System time for the children processes *)
+  }
 with sexp
 
 (** The type representing wallclock time and calendar date. *)
 type tm =
-Unix.tm =
-{ tm_sec : int;                       (** Seconds 0..59 *)
-  tm_min : int;                       (** Minutes 0..59 *)
-  tm_hour : int;                      (** Hours 0..23 *)
-  tm_mday : int;                      (** Day of month 1..31 *)
-  tm_mon : int;                       (** Month of year 0..11 *)
-  tm_year : int;                      (** Year - 1900 *)
-  tm_wday : int;                      (** Day of week (Sunday is 0) *)
-  tm_yday : int;                      (** Day of year 0..365 *)
-  tm_isdst : bool;                    (** Daylight time savings in effect *)
-}
+    Unix.tm =
+  { tm_sec : int;                       (** Seconds 0..59 *)
+    tm_min : int;                       (** Minutes 0..59 *)
+    tm_hour : int;                      (** Hours 0..23 *)
+    tm_mday : int;                      (** Day of month 1..31 *)
+    tm_mon : int;                       (** Month of year 0..11 *)
+    tm_year : int;                      (** Year - 1900 *)
+    tm_wday : int;                      (** Day of week (Sunday is 0) *)
+    tm_yday : int;                      (** Day of year 0..365 *)
+    tm_isdst : bool;                    (** Daylight time savings in effect *)
+  }
 with sexp
 
 (** Return the current time since 00:00:00 GMT, Jan. 1, 1970, in seconds. *)
@@ -892,12 +892,12 @@ val utimes : string -> access:float -> modif:float -> unit
 
 (** The three kinds of interval timers. *)
 type interval_timer =
-Unix.interval_timer =
-ITIMER_REAL
-(** decrements in real time, and sends the signal [SIGALRM] when expired.*)
-| ITIMER_VIRTUAL
-(**  decrements in process virtual time, and sends [SIGVTALRM] when expired. *)
-| ITIMER_PROF
+    Unix.interval_timer =
+    ITIMER_REAL
+  (** decrements in real time, and sends the signal [SIGALRM] when expired.*)
+  | ITIMER_VIRTUAL
+  (**  decrements in process virtual time, and sends [SIGVTALRM] when expired. *)
+  | ITIMER_PROF
 (** (for profiling) decrements both when the process
    is running and when the system is running on behalf of the
    process; it sends [SIGPROF] when expired. *)
@@ -905,10 +905,10 @@ with sexp
 
 (** The type describing the status of an interval timer *)
 type interval_timer_status =
-Unix.interval_timer_status =
-{ it_interval : float;          (** Period *)
-  it_value : float;             (** Current value of the timer *)
-}
+    Unix.interval_timer_status =
+  { it_interval : float;          (** Period *)
+    it_value : float;             (** Current value of the timer *)
+  }
 with sexp
 
 (** Return the current status of the given interval timer. *)
@@ -955,14 +955,14 @@ val setgid : int -> unit
 (** Structure of entries in the [passwd] database *)
 module Passwd : sig
   type t =
-  { name : string;
-    passwd : string;
-    uid : int;
-    gid : int;
-    gecos : string;
-    dir : string;
-    shell : string;
-  }
+    { name : string;
+      passwd : string;
+      uid : int;
+      gid : int;
+      gecos : string;
+      dir : string;
+      shell : string;
+    }
   with sexp
 
   val getbyname : string -> t option
@@ -989,11 +989,11 @@ end
 (** Structure of entries in the [groups] database. *)
 module Group : sig
   type t =
-  { name : string;
-    passwd : string;
-    gid : int;
-    mem : string array;
-  }
+    { name : string;
+      passwd : string;
+      gid : int;
+      mem : string array;
+    }
   with sexp_of
 
   val getbyname : string -> t option
@@ -1044,18 +1044,18 @@ end
 
 (** The type of socket domains. *)
 type socket_domain = Unix.socket_domain =
-| PF_UNIX                             (** Unix domain *)
-| PF_INET                             (** Internet domain *)
-| PF_INET6                            (* Internet domain (IPv6) *)
+  | PF_UNIX                             (** Unix domain *)
+  | PF_INET                             (** Internet domain *)
+  | PF_INET6                            (* Internet domain (IPv6) *)
 with sexp, bin_io
 
 (** The type of socket kinds, specifying the semantics of
    communications. *)
 type socket_type = Unix.socket_type =
-| SOCK_STREAM                         (** Stream socket *)
-| SOCK_DGRAM                          (** Datagram socket *)
-| SOCK_RAW                            (** Raw socket *)
-| SOCK_SEQPACKET                      (* Sequenced packets socket *)
+  | SOCK_STREAM                         (** Stream socket *)
+  | SOCK_DGRAM                          (** Datagram socket *)
+  | SOCK_RAW                            (** Raw socket *)
+  | SOCK_SEQPACKET                      (* Sequenced packets socket *)
 with sexp, bin_io
 
 (** The type of socket addresses. [ADDR_UNIX name] is a socket
@@ -1064,8 +1064,8 @@ with sexp, bin_io
    domain; [addr] is the Internet address of the machine, and
    [port] is the port number. *)
 type sockaddr = Unix.sockaddr =
-| ADDR_UNIX of string
-| ADDR_INET of Inet_addr.t * int
+  | ADDR_UNIX of string
+  | ADDR_INET of Inet_addr.t * int
 with sexp, bin_io
 
 (** Return the socket domain adequate for the given socket address. *)
@@ -1099,10 +1099,10 @@ val listen : File_descr.t -> max:int -> unit
 
 (** The type of commands for [shutdown]. *)
 type shutdown_command =
-Unix.shutdown_command =
-SHUTDOWN_RECEIVE                    (** Close for receiving *)
-| SHUTDOWN_SEND                       (** Close for sending *)
-| SHUTDOWN_ALL                        (** Close both *)
+    Unix.shutdown_command =
+    SHUTDOWN_RECEIVE                    (** Close for receiving *)
+  | SHUTDOWN_SEND                       (** Close for sending *)
+  | SHUTDOWN_ALL                        (** Close both *)
 with sexp
 
 (** Shutdown a socket connection. [SHUTDOWN_SEND] as second argument
@@ -1121,9 +1121,9 @@ val getpeername : File_descr.t -> sockaddr
 (** The flags for {!UnixLabels.recv},  {!UnixLabels.recvfrom},
    {!UnixLabels.send} and {!UnixLabels.sendto}. *)
 type msg_flag = Unix.msg_flag =
-MSG_OOB
-| MSG_DONTROUTE
-| MSG_PEEK
+    MSG_OOB
+  | MSG_DONTROUTE
+  | MSG_PEEK
 with sexp
 
 (** Receive data from an unconnected socket. *)
@@ -1152,44 +1152,44 @@ val sendto :
    and modified with {!UnixLabels.setsockopt}.  These options have a boolean
    ([true]/[false]) value. *)
 type socket_bool_option =
-SO_DEBUG               (** Record debugging information *)
-| SO_BROADCAST           (** Permit sending of broadcast messages *)
-| SO_REUSEADDR           (** Allow reuse of local addresses for bind *)
-| SO_KEEPALIVE           (** Keep connection active *)
-| SO_DONTROUTE           (** Bypass the standard routing algorithms *)
-| SO_OOBINLINE           (** Leave out-of-band data in line *)
-| SO_ACCEPTCONN          (* Report whether socket listening is enabled *)
-| TCP_NODELAY            (** Control the Nagle algorithm for TCP sockets *)
-| IPV6_ONLY              (** Forbid binding an IPv6 socket to an IPv4 address *)
+    SO_DEBUG               (** Record debugging information *)
+  | SO_BROADCAST           (** Permit sending of broadcast messages *)
+  | SO_REUSEADDR           (** Allow reuse of local addresses for bind *)
+  | SO_KEEPALIVE           (** Keep connection active *)
+  | SO_DONTROUTE           (** Bypass the standard routing algorithms *)
+  | SO_OOBINLINE           (** Leave out-of-band data in line *)
+  | SO_ACCEPTCONN          (* Report whether socket listening is enabled *)
+  | TCP_NODELAY            (** Control the Nagle algorithm for TCP sockets *)
+  | IPV6_ONLY              (** Forbid binding an IPv6 socket to an IPv4 address *)
 with sexp
 
 (** The socket options that can be consulted with {!UnixLabels.getsockopt_int}
    and modified with {!UnixLabels.setsockopt_int}.  These options have an
    integer value. *)
 type socket_int_option =
-SO_SNDBUF              (** Size of send buffer *)
-| SO_RCVBUF              (** Size of received buffer *)
-| SO_ERROR               (** Report the error status and clear it *)
-| SO_TYPE                (** Report the socket type *)
-| SO_RCVLOWAT            (** Minimum number of bytes to process for input operations *)
-| SO_SNDLOWAT            (* Minimum number of bytes to process for output operations *)
+    SO_SNDBUF              (** Size of send buffer *)
+  | SO_RCVBUF              (** Size of received buffer *)
+  | SO_ERROR               (** Report the error status and clear it *)
+  | SO_TYPE                (** Report the socket type *)
+  | SO_RCVLOWAT            (** Minimum number of bytes to process for input operations *)
+  | SO_SNDLOWAT            (* Minimum number of bytes to process for output operations *)
 with sexp
 
 (** The socket options that can be consulted with {!UnixLabels.getsockopt_optint}
    and modified with {!UnixLabels.setsockopt_optint}.  These options have a
    value of type [int option], with [None] meaning ``disabled''. *)
 type socket_optint_option =
-SO_LINGER              (** Whether to linger on closed connections
-                          with sexp                      that have data present, and for how long
-                           (in seconds) *)
+    SO_LINGER              (** Whether to linger on closed connections
+                              with sexp                      that have data present, and for how long
+                               (in seconds) *)
 
 (** The socket options that can be consulted with {!UnixLabels.getsockopt_float}
    and modified with {!UnixLabels.setsockopt_float}.  These options have a
    floating-point value representing a time in seconds.
    The value 0 means infinite timeout. *)
 type socket_float_option =
-SO_RCVTIMEO            (** Timeout for input operations *)
-| SO_SNDTIMEO            (** Timeout for output operations *)
+    SO_RCVTIMEO            (** Timeout for input operations *)
+  | SO_SNDTIMEO            (** Timeout for output operations *)
 with sexp
 
 (** Return the current status of a boolean-valued option
@@ -1252,11 +1252,11 @@ val gethostname : unit -> string
 module Host : sig
   (** Structure of entries in the [hosts] database. *)
   type t =
-  { name : string;
-    aliases : string array;
-    family : Protocol_family.t;
-    addresses : Inet_addr.t array;
-  }
+    { name : string;
+      aliases : string array;
+      family : Protocol_family.t;
+      addresses : Inet_addr.t array;
+    }
   with sexp_of
 
   (** Find an entry in [hosts] with the given name.
@@ -1276,10 +1276,10 @@ end
 module Protocol : sig
   (** Structure of entries in the [protocols] database. *)
   type t =
-  { name : string;
-    aliases : string array;
-    proto : int;
-  }
+    { name : string;
+      aliases : string array;
+      proto : int;
+    }
   with sexp
 
   (** Find an entry in [protocols] with the given name. *)
@@ -1294,11 +1294,11 @@ end
 module Service : sig
   (** Structure of entries in the [services] database. *)
   type t =
-  { name : string;
-    aliases : string array;
-    port : int;
-    proto : string;
-  }
+    { name : string;
+      aliases : string array;
+      port : int;
+      proto : string;
+    }
   with sexp
 
   (** Find an entry in [services] with the given name. *)
@@ -1312,25 +1312,25 @@ end
 
 (** Address information returned by {!Unix.getaddrinfo}. *)
 type addr_info =
-{ ai_family : socket_domain;          (** Socket domain *)
-  ai_socktype : socket_type;          (** Socket type *)
-  ai_protocol : int;                  (** Socket protocol number *)
-  ai_addr : sockaddr;                 (** Address *)
-  ai_canonname : string               (* Canonical host name  *)
-}
+  { ai_family : socket_domain;          (** Socket domain *)
+    ai_socktype : socket_type;          (** Socket type *)
+    ai_protocol : int;                  (** Socket protocol number *)
+    ai_addr : sockaddr;                 (** Address *)
+    ai_canonname : string               (* Canonical host name  *)
+  }
 with sexp
 
 (** Options to {!Unix.getaddrinfo}. *)
 type getaddrinfo_option =
-AI_FAMILY of socket_domain          (** Impose the given socket domain *)
-| AI_SOCKTYPE of socket_type          (** Impose the given socket type *)
-| AI_PROTOCOL of int                  (** Impose the given protocol  *)
-| AI_NUMERICHOST                      (** Do not call name resolver,
-                                          expect numeric IP address *)
-| AI_CANONNAME                        (** Fill the [ai_canonname] field
-                                          of the result *)
-| AI_PASSIVE                          (* Set address to ``any'' address
-                                          for use with {!Unix.bind} *)
+    AI_FAMILY of socket_domain          (** Impose the given socket domain *)
+  | AI_SOCKTYPE of socket_type          (** Impose the given socket type *)
+  | AI_PROTOCOL of int                  (** Impose the given protocol  *)
+  | AI_NUMERICHOST                      (** Do not call name resolver,
+                                            expect numeric IP address *)
+  | AI_CANONNAME                        (** Fill the [ai_canonname] field
+                                            of the result *)
+  | AI_PASSIVE                          (* Set address to ``any'' address
+                                            for use with {!Unix.bind} *)
 with sexp
 
 (** [getaddrinfo host service opts] returns a list of {!Unix.addr_info}
@@ -1354,19 +1354,19 @@ val getaddrinfo:
 
 (** Host and service information returned by {!Unix.getnameinfo}. *)
 type name_info =
-{ ni_hostname : string;               (** Name or IP address of host *)
-  ni_service : string;
-}               (** Name of service or port number *)
+  { ni_hostname : string;               (** Name or IP address of host *)
+    ni_service : string;
+  }               (** Name of service or port number *)
 with sexp
 
 (** Options to {!Unix.getnameinfo}. *)
 type getnameinfo_option =
-NI_NOFQDN            (** Do not qualify local host names *)
-| NI_NUMERICHOST       (** Always return host as IP address *)
-| NI_NAMEREQD          (** Fail if host name cannot be determined *)
-| NI_NUMERICSERV       (** Always return service as port number *)
-| NI_DGRAM             (* Consider the service as UDP-based
-                           instead of the default TCP *)
+    NI_NOFQDN            (** Do not qualify local host names *)
+  | NI_NUMERICHOST       (** Always return host as IP address *)
+  | NI_NAMEREQD          (** Fail if host name cannot be determined *)
+  | NI_NUMERICSERV       (** Always return service as port number *)
+  | NI_DGRAM             (* Consider the service as UDP-based
+                             instead of the default TCP *)
 with sexp
 
 (** [getnameinfo addr opts] returns the host name and service name
@@ -1462,10 +1462,10 @@ module Terminal_io : sig
   val tcdrain : File_descr.t -> unit
 
   type flush_queue =
-  Unix.flush_queue =
-  TCIFLUSH
-  | TCOFLUSH
-  | TCIOFLUSH
+      Unix.flush_queue =
+      TCIFLUSH
+    | TCOFLUSH
+    | TCIOFLUSH
   with sexp
 
   (** Discard data written on the given file descriptor but not yet
@@ -1476,12 +1476,12 @@ module Terminal_io : sig
   val tcflush : File_descr.t -> mode:flush_queue -> unit
 
   type flow_action
-  = Unix.flow_action =
-  | TCOOFF
-  | TCOON
-  | TCIOFF
-  | TCION
-  with sexp
+    = Unix.flow_action =
+      | TCOOFF
+      | TCOON
+      | TCIOFF
+      | TCION
+    with sexp
 
   (** Suspend or restart reception or transmission of data on
      the given file descriptor, depending on the second argument:
@@ -1543,11 +1543,11 @@ module IOVec : sig
       All C-functions in our bindings that handle I/O-vectors depend on it.
   *)
   type 'buf t = private
-  {
-    buf : 'buf;  (** Buffer holding the I/O-vector *)
-    pos : int;  (** Position of I/O-vector in buffer *)
-    len : int;  (** Length of I/O-vector in buffer *)
-  }
+    {
+      buf : 'buf;  (** Buffer holding the I/O-vector *)
+      pos : int;  (** Position of I/O-vector in buffer *)
+      len : int;  (** Length of I/O-vector in buffer *)
+    }
   with sexp
 
   type 'buf kind  (** Kind of I/O-vector buffers *)
@@ -1726,21 +1726,21 @@ end
 
 (** {2 System configuration} *)
 type sysconf =
-| ARG_MAX
-| CHILD_MAX
-| HOST_NAME_MAX
-| LOGIN_NAME_MAX
-| OPEN_MAX
-| PAGESIZE
-| RE_DUP_MAX
-| STREAM_MAX
-| SYMLOOP_MAX
-| TTY_NAME_MAX
-| TZNAME_MAX
-| POSIX_VERSION
-| PHYS_PAGES
-| AVPHYS_PAGES
-| IOV_MAX
+  | ARG_MAX
+  | CHILD_MAX
+  | HOST_NAME_MAX
+  | LOGIN_NAME_MAX
+  | OPEN_MAX
+  | PAGESIZE
+  | RE_DUP_MAX
+  | STREAM_MAX
+  | SYMLOOP_MAX
+  | TTY_NAME_MAX
+  | TZNAME_MAX
+  | POSIX_VERSION
+  | PHYS_PAGES
+  | AVPHYS_PAGES
+  | IOV_MAX
 with sexp
 
 external sysconf : sysconf -> int64 = "unix_sysconf"

@@ -541,7 +541,7 @@ let standard_type11_strings =
   ["oem-1", "Xen";
    "oem-2", "MS_VM_CERT/SHA1/bdbeb6e0a816d43fa6d3fe8aaef04c2bad9d3e3d"]
 
-(** Generic BIOS strings *)	 
+(** Generic BIOS strings *)   
 let generic_bios_strings =
   ["bios-vendor", "Xen";
    "bios-version", "";
@@ -797,8 +797,8 @@ let read_external_config () =
   let unknown_key k v = D.warn "Unknown key/value pairs: (%s, %s)" k v in
   if Sys.file_exists xapi_globs_conf then begin
     (* Will raise exception if xapi_globs.conf is mis-formatted. It's up to the
-       		   caller to inspect and handle the failure.
-       		*)
+       caller to inspect and handle the failure.
+    *)
     Config.read xapi_globs_conf xapi_globs_spec unknown_key;
     D.info "Read global variables successfully from %s" xapi_globs_conf
   end

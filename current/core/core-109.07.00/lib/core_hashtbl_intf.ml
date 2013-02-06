@@ -19,10 +19,10 @@ end
 
 module Hashable = struct
   type 'a t =
-  { hash : 'a -> int;
-    compare : 'a -> 'a -> int;
-    sexp_of_t : 'a -> Sexp.t;
-  }
+    { hash : 'a -> int;
+      compare : 'a -> 'a -> int;
+      sexp_of_t : 'a -> Sexp.t;
+    }
 
   (* Copied from Inria hashtbl.ml *)
   external hash_param : int -> int -> 'a -> int = "caml_hash_univ_param" "noalloc"
@@ -46,10 +46,10 @@ end
 
 module type Hashable = sig
   type 'a t = 'a Hashable.t =
-  { hash : 'a -> int;
-    compare : 'a -> 'a -> int;
-    sexp_of_t : 'a -> Sexp.t;
-  }
+    { hash : 'a -> int;
+      compare : 'a -> 'a -> int;
+      sexp_of_t : 'a -> Sexp.t;
+    }
 
   val poly : 'a t
 
@@ -200,15 +200,15 @@ module type Accessors = sig
 end
 
 type ('key, 'z) create_options_without_hashable =
-?growth_allowed:bool (* defaults to true *)
--> ?size:int (* initial size -- default 128 *)
--> 'z
+  ?growth_allowed:bool (* defaults to true *)
+  -> ?size:int (* initial size -- default 128 *)
+  -> 'z
 
 type ('key, 'z) create_options_with_hashable =
-?growth_allowed:bool (* defaults to true *)
--> ?size:int (* initial size -- default 128 *)
--> hashable:'key Hashable.t
--> 'z
+  ?growth_allowed:bool (* defaults to true *)
+  -> ?size:int (* initial size -- default 128 *)
+  -> hashable:'key Hashable.t
+  -> 'z
 
 module type Creators = sig
   type ('a, 'b) t

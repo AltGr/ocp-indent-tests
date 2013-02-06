@@ -23,19 +23,19 @@ open D
 let inventory_filename = Util_globs_inventory.inventory_filename
 
 (* Keys which must exist: *)
-let _installation_uuid		= "INSTALLATION_UUID"
-let _control_domain_uuid	= "CONTROL_DOMAIN_UUID"
-let _management_interface	= "MANAGEMENT_INTERFACE"
-let _management_address_type	= "MANAGEMENT_ADDRESS_TYPE"
+let _installation_uuid    = "INSTALLATION_UUID"
+let _control_domain_uuid  = "CONTROL_DOMAIN_UUID"
+let _management_interface  = "MANAGEMENT_INTERFACE"
+let _management_address_type  = "MANAGEMENT_ADDRESS_TYPE"
 let _build_number           = "BUILD_NUMBER"
 
 (* Optional keys: *)
-let _current_interfaces		= "CURRENT_INTERFACES"
-let _oem_manufacturer		= "OEM_MANUFACTURER"
-let _oem_model				= "OEM_MODEL"
-let _oem_build_number		= "OEM_BUILD_NUMBER"
-let _machine_serial_number	= "MACHINE_SERIAL_NUMBER"
-let _machine_serial_name	= "MACHINE_SERIAL_NAME"
+let _current_interfaces    = "CURRENT_INTERFACES"
+let _oem_manufacturer    = "OEM_MANUFACTURER"
+let _oem_model        = "OEM_MODEL"
+let _oem_build_number    = "OEM_BUILD_NUMBER"
+let _machine_serial_number  = "MACHINE_SERIAL_NUMBER"
+let _machine_serial_name  = "MACHINE_SERIAL_NAME"
 
 let loaded_inventory = ref false
 let inventory = Hashtbl.create 10
@@ -78,7 +78,7 @@ let read_inventory_contents () =
       string_of_table (minimum_default_entries ()))
   end;
   (* Perhaps we should blank the old inventory before we read the new one?
-     	   What is the desired behaviour? *)
+     What is the desired behaviour? *)
   Unixext.file_lines_iter (fun line ->
     match parse_inventory_entry line with
     | Some (k, v) -> Hashtbl.add inventory k v

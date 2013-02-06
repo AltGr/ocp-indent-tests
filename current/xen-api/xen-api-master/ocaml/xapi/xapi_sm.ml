@@ -125,7 +125,7 @@ let register_plugin ~__context query_result =
   let open Storage_interface in
   let driver = String.lowercase query_result.driver in
   if is_v1 query_result.version then begin
-    info "Not registering SM plugin %s (version %s < 2.0)" driver query_result.version;		
+    info "Not registering SM plugin %s (version %s < 2.0)" driver query_result.version;    
   end else begin
     unregister_plugin ~__context query_result;
     create_from_query_result ~__context query_result

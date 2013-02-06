@@ -483,7 +483,7 @@ let reboot_wait cli vmid =
   with
     _ -> false
 
-type run_command_output = string list * Unix.process_status	
+type run_command_output = string list * Unix.process_status  
 
 (** Shutdown hard *)
 let shutdown_phase3 cli vmid =
@@ -542,7 +542,7 @@ let shutdown_phase1 cli vmid =
         begin
           log Log.Warn "shutdown_phase1: Use of guest agent requested, but IP address for VM is not known";
           next ()
-        end	
+        end  
     with 
       (OpFailed x) as e ->
       let (_: run_command_output) = run_command !Commands.list_domains in
@@ -581,7 +581,7 @@ let reboot_phase1 cli vmid =
           (* Guest powerstate nolonger glitches to Halted in the middle of a reboot *)
           let (_: bool) = reboot_wait cli vmid in
           wait_for_up cli vmid;
-        end	
+        end  
       else
         begin
           log Log.Warn "reboot_phase1: Use of guest agent requested, but no IP address for VM available!";
@@ -646,7 +646,7 @@ let change_vm_state cli vmid st =
           raise (OpFailed "Failed to resume VM")
         | GAFailed -> 
           log Log.Error "change_vm_state: VM resume failed: failed to contact guest agent";
-          raise (OpFailed "Failed to resume VM")		  
+          raise (OpFailed "Failed to resume VM")      
       end;
   end;
   log Log.Info "new state: %s " (get_state cli vmid);

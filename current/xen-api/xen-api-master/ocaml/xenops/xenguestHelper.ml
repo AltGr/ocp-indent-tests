@@ -39,7 +39,7 @@ type t = in_channel * out_channel * Unix.file_descr * Unix.file_descr * Forkhelp
 let connect path domid (args: string list) (fds: (string * Unix.file_descr) list) : t =
   debug "connect: args = [ %s ]" (String.concat " " args);
   (* Need to send commands and receive responses from the
-     	   slave process *)
+     slave process *)
 
   let using_xiu = Xenctrl.is_fake () in
 

@@ -141,8 +141,8 @@ let do_db_xml_rpc_persistent_with_reopen ~host ~path (req: string) : Db_interfac
           with_http request
             (fun (response, _) ->
               (* XML responses must have a content-length because we cannot use the Xml.parse_in
-                 				   in_channel function: the input channel will buffer an arbitrary amount of stuff
-                 				   and we'll be out of sync with the next request. *)
+                 in_channel function: the input channel will buffer an arbitrary amount of stuff
+                 and we'll be out of sync with the next request. *)
               let res = match response.Http.Response.content_length with
                 | None -> raise Content_length_required
                 | Some l -> begin
@@ -164,7 +164,7 @@ let do_db_xml_rpc_persistent_with_reopen ~host ~path (req: string) : Db_interfac
         error "Received HTTP error %s (%s) from master. This suggests our master address is wrong. Sleeping for %.0fs and then restarting." http_code err_msg !Xapi_globs.permanent_master_failure_retry_interval;
         Thread.delay !Xapi_globs.permanent_master_failure_retry_interval;
         exit Xapi_globs.restart_return_code
-      |	e ->
+      |  e ->
         begin
           error "Caught %s" (Printexc.to_string e);
           (* RPC failed - there's no way we can recover from this so try reopening connection every 2s + backoff delay *)

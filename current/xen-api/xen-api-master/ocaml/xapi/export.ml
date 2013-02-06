@@ -533,7 +533,7 @@ let handler (req: Request.t) s _ =
             end
           | e ->
             error "Caught exception in export handler: %s" (Printexc.to_string e);
-            raise e	       
+            raise e         
         end
       else
         (* Xapi_http.with_context always completes the task at the end *)
@@ -545,7 +545,7 @@ let handler (req: Request.t) s _ =
                 (* This is the signal to say we've taken responsibility from the CLI server for completing the task *)
                 (* The GUI can deal with this itself, but the CLI is complicated by the thin cli/cli server split *)
                 TaskHelper.set_progress ~__context 0.0;
-                let refresh_session = Xapi_session.consider_touching_session rpc session_id in	      
+                let refresh_session = Xapi_session.consider_touching_session rpc session_id in        
                 let task_id = Ref.string_of (Context.get_task_id __context) in
                 let preserve_power_state = 
                   let all = req.Request.cookie @ req.Request.query in

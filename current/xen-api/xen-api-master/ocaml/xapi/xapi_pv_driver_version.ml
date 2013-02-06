@@ -116,7 +116,7 @@ let get_product_vsn () =
  **)
 let compare_vsn_with_product_vsn ?(relaxed=false) (pv_maj, pv_min, pv_mic) (prod_maj, prod_min, prod_mic) =
   (* out of date if micro version not specified -- reqd since Miami Beta1 was
-     	   shipped withoutmicro versions! *)
+     shipped withoutmicro versions! *)
   if pv_mic = -1 then -1
   else if relaxed && check_vsn_special pv_maj pv_min then 0
   else if relaxed then compare_vsn2 (pv_maj, pv_min) (prod_maj, prod_min)
@@ -174,7 +174,7 @@ let get_drivers_version os_version drivers_version =
     let major = int_of_string (List.assoc "major" drivers_version) in
     let minor = int_of_string (List.assoc "minor" drivers_version) in
     (* in rolling upgrade rio slaves will not put micro vsn in database, but we musn't report
-       			 "Unknown", since then is_ok_for_migrate check will fail... *)
+       "Unknown", since then is_ok_for_migrate check will fail... *)
     let micro = lookup_driver_key_with_default "micro" (-1) in
     (* added in Orlando *)
     let build = lookup_driver_key_with_default "build" (-1) in

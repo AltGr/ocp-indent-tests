@@ -42,10 +42,10 @@ let configs = [
 
 (************** helpers **************)
 let test_failure n s =
-  printf "test %3d (%20s):	FAILURE\n%!" n s
+  printf "test %3d (%20s):  FAILURE\n%!" n s
 
 let test_succeed n s =
-  printf "test %3d (%20s):	SUCCEED\n%!" n s
+  printf "test %3d (%20s):  SUCCEED\n%!" n s
 
 (************* xen helpers ************)
 let list_domid xc =

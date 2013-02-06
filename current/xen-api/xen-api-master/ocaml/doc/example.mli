@@ -19,14 +19,14 @@ val g : int -> unit
  *  Note that also the values of a type are given descriptions of their own. *)
 type t =
   {
-    a : string;	(** [a] is a useful string *)
-    b : int;	(** [b] is an awesome number *)
+    a : string;  (** [a] is a useful string *)
+    b : int;  (** [b] is an awesome number *)
   }
 
 (** A variant type *)
 type q =
-  | Test of int * string	(** Testing *)
-  | AnotherTest			(** More testing *)
+  | Test of int * string  (** Testing *)
+  | AnotherTest      (** More testing *)
 
 (** {2 Another heading} *)
 

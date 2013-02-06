@@ -23,7 +23,7 @@ open D
 let himn_addr = ref None
 
 (* Stores a key into the table in Http_srv which identifies the server thread bound
-   	 to the management IP. *)
+   to the management IP. *)
 let management_interface_server = ref []
 let specific_addresses_only = ref false
 let localhost_server_started = ref false
@@ -42,7 +42,7 @@ let restart_stunnel () =
 
 let stop () =
   debug "Shutting down the old management interface (if any)";
-  List.iter (fun i -> Http_svr.stop i) !management_interface_server;	
+  List.iter (fun i -> Http_svr.stop i) !management_interface_server;  
   management_interface_server := [];
   localhost_server_started := false;
   himn_addr := None
@@ -78,7 +78,7 @@ let start ~__context ?addr () =
 
   if Pool_role.is_master () && (addr = Unix.inet_addr_any || addr = Unix.inet6_addr_any) then begin
     (* NB if we synchronously bring up the management interface on a master with a blank
-       		   database this can fail... this is ok because the database will be synchronised later *)
+       database this can fail... this is ok because the database will be synchronised later *)
     Server_helpers.exec_with_new_task "refreshing consoles"
       (fun __context ->
         Dbsync_master.set_master_ip ~__context;
@@ -140,9 +140,9 @@ let wait_for_management_ip ~__context =
 let on_dom0_networking_change ~__context =
   debug "Checking to see if hostname or management IP has changed";
   (* Need to update:
-     	   1 Host.hostname
-     	   2 Host.address
-     	   3. Console URIs *)
+     1 Host.hostname
+     2 Host.address
+     3. Console URIs *)
   let new_hostname = Helpers.reget_hostname () in
   let localhost = Helpers.get_localhost ~__context in
   if Db.Host.get_hostname ~__context ~self:localhost <> new_hostname then begin

@@ -44,7 +44,7 @@ let get_master ~rpc ~session_id =
 (* Pre-join asserts *)
 let pre_join_checks ~__context ~rpc ~session_id ~force =
   (* I cannot join a Pool unless my management interface exists in the db, otherwise
-     	   Pool.eject will fail to rewrite network interface files. *)
+     Pool.eject will fail to rewrite network interface files. *)
   let assert_management_interface_exists () =
     try
       let (_: API.ref_PIF) = Xapi_host.get_management_interface ~__context ~host:(Helpers.get_localhost ~__context) in
@@ -393,9 +393,9 @@ let rec create_or_get_host_on_master __context rpc session_id (host_ref, host) :
           ~edition:host.API.host_edition
           ~license_server:host.API.host_license_server 
           (* CA-51925: local_cache_sr can only be written by Host.enable_local_caching_sr but this API
-             				 * call is forwarded to the host in question. Since, during a pool-join, the host is offline,
-             				 * we need an alternative way of preserving the value of the local_cache_sr field, so it's
-             				 * been added to the constructor. *)
+           * call is forwarded to the host in question. Since, during a pool-join, the host is offline,
+           * we need an alternative way of preserving the value of the local_cache_sr field, so it's
+           * been added to the constructor. *)
           ~local_cache_sr
           ~chipset_info:host.API.host_chipset_info
       in
@@ -528,9 +528,9 @@ let create_or_get_network_on_master __context rpc session_id (network_ref, netwo
   let new_network_ref =
     if is_physical || is_himn then
       (* Physical network or Host Internal Management Network:
-         			 * try to join an existing network with the same bridge name, or create one.
-         			 * This relies on the convention that physical PIFs with the same device name need to be connected.
-         			 * Furthermore, there should be only one Host Internal Management Network in a pool. *)
+       * try to join an existing network with the same bridge name, or create one.
+       * This relies on the convention that physical PIFs with the same device name need to be connected.
+       * Furthermore, there should be only one Host Internal Management Network in a pool. *)
       try
         let pool_networks = Client.Network.get_all_records ~rpc ~session_id in
         let net_ref, _ = List.find (fun (_, net) -> net.API.network_bridge = my_bridge) pool_networks in
@@ -546,7 +546,7 @@ let create_or_get_network_on_master __context rpc session_id (network_ref, netwo
     else begin
       debug "Recreating network '%s' as internal network." network.API.network_name_label;
       (* This call will generate a new 'xapi#' bridge name rather than keeping the
-         			 * current, possibly colliding one. *)
+       * current, possibly colliding one. *)
       Client.Network.create ~rpc ~session_id
         ~name_label:network.API.network_name_label
         ~name_description:network.API.network_name_description
@@ -663,7 +663,7 @@ let update_non_vm_metadata ~__context ~rpc ~session_id =
 let join_common ~__context ~master_address ~master_username ~master_password ~force =
   (* get hold of cluster secret - this is critical; if this fails whole pool join fails *)
   (* Note: this is where the license restrictions are checked on the other side.. if we're trying to join
-     	a host that does not support pooling then an error will be thrown at this stage *)
+     a host that does not support pooling then an error will be thrown at this stage *)
   let rpc = rpc master_address in
   let session_id =
     try Client.Session.login_with_password rpc master_username master_password Xapi_globs.api_version_string
@@ -684,9 +684,9 @@ let join_common ~__context ~master_address ~master_username ~master_password ~fo
     end;
 
     (* this is where we try and sync up as much state as we can
-       		with the master. This is "best effort" rather than
-       		critical; if we fail part way through this then we carry
-       		on with the join *)
+       with the master. This is "best effort" rather than
+       critical; if we fail part way through this then we carry
+       on with the join *)
     try
       update_non_vm_metadata ~__context ~rpc ~session_id;
       Importexport.remote_metadata_export_import ~__context ~rpc ~session_id ~remote_address:master_address `All
@@ -697,8 +697,8 @@ let join_common ~__context ~master_address ~master_username ~master_password ~fo
       Client.Session.logout rpc session_id);
 
   (* Attempt to unplug all our local storage. This is needed because
-     	   when we restart as a slave, all the references will be wrong
-     	   and these may have been cached by the storage layer. *)
+     when we restart as a slave, all the references will be wrong
+     and these may have been cached by the storage layer. *)
   Helpers.call_api_functions ~__context (fun rpc session_id ->
     let me = Helpers.get_localhost ~__context in
     List.iter
@@ -747,9 +747,9 @@ let recover_slaves ~__context =
           let local_fn = emergency_reset_master ~master_address:my_address in
 
           (* We have to use a new context here because the slave is currently doing a
-             	     Task.get_name_label on real tasks, which will block on slaves that we're 
-             	     trying to recover. Get around this by creating a dummy task, for which 
-             	     the name-label bit is bypassed *)
+             Task.get_name_label on real tasks, which will block on slaves that we're 
+             trying to recover. Get around this by creating a dummy task, for which 
+             the name-label bit is bypassed *)
           let newcontext = Context.make "emergency_reset_master" in
           Message_forwarding.do_op_on_localsession_nolivecheck ~local_fn ~__context:newcontext ~host:hostref 
             (fun session_id rpc -> Client.Pool.emergency_reset_master rpc session_id my_address);
@@ -874,11 +874,11 @@ let eject ~__context ~host =
     end;
 
     (* delete /local/ databases specified in the db.conf, so they get recreated on restart.
-       		 * We must leave any remote database alone because these are owned by the pool and
-       		 * not by this node. *)
+     * We must leave any remote database alone because these are owned by the pool and
+     * not by this node. *)
     (* get the slave backup lock so we know no more backups are going to be taken --
-       		 * we keep this lock till the bitter end, where we restart below ;)
-       		 *)
+     * we keep this lock till the bitter end, where we restart below ;)
+    *)
     Mutex.lock Pool_db_backup.slave_backup_m;
     finally
       (fun () ->
@@ -891,7 +891,7 @@ let eject ~__context ~host =
         (* XXX: on OEM edition the db.conf is rebuilt on every boot *)
         Parse_db_conf.write_db_conf local;
         (* Forget anything we know about configured remote databases: this prevents
-           			any initscript reminding us about them after reboot *)
+           any initscript reminding us about them after reboot *)
         Helpers.log_exn_continue
           (Printf.sprintf "Moving remote database file to backup: %s"
              Xapi_globs.remote_db_conf_fragment_path)
@@ -900,9 +900,9 @@ let eject ~__context ~host =
               Xapi_globs.remote_db_conf_fragment_path
               (Xapi_globs.remote_db_conf_fragment_path ^ ".bak")) ();
         (* Reset the domain 0 network interface naming configuration
-           			 * back to a fresh-install state for the currently-installed
-           			 * hardware.
-           			 *)
+         * back to a fresh-install state for the currently-installed
+         * hardware.
+        *)
         ignore
           (Forkhelpers.execute_command_get_output
              "/etc/sysconfig/network-scripts/interface-rename.py"
@@ -934,7 +934,7 @@ let sync_database ~__context =
               (fun rpc session_id -> Client.Host.request_backup rpc session_id host generation true))
           (Db.Host.get_all ~__context)
       end
-    )	 
+    )   
 
 (* This also means me, since call will have been forwarded from the current master *)
 let designate_new_master ~__context ~host =
@@ -944,7 +944,7 @@ let designate_new_master ~__context ~host =
     then raise (Api_errors.Server_error(Api_errors.ha_is_enabled, []));
 
     (* Only the master can sync the *current* database; only the master
-       		   knows the current generation count etc. *)
+       knows the current generation count etc. *)
     Helpers.call_api_functions ~__context
       (fun rpc session_id ->
         Client.Pool.sync_database rpc session_id);
@@ -997,7 +997,7 @@ let hello ~__context ~host_uuid ~host_address =
       );
 
       (* Set the host to disabled initially: when it has finished initialising and is ready to 
-         	   host VMs it will mark itself as enabled again. *)
+         host VMs it will mark itself as enabled again. *)
       info "Host.enabled: setting host %s (%s) to disabled" (Ref.string_of host_ref) (Db.Host.get_hostname ~__context ~self:host_ref);
       Db.Host.set_enabled ~__context ~self:host_ref ~value:false;
       debug "Host_metrics.live: setting host %s (%s) to alive" (Ref.string_of host_ref) (Db.Host.get_hostname ~__context ~self:host_ref);
@@ -1009,10 +1009,10 @@ let hello ~__context ~host_uuid ~host_address =
 
       (* Make sure we mark this host as live again *)
       Mutex.execute Xapi_globs.hosts_which_are_shutting_down_m
-        (fun () -> Xapi_globs.hosts_which_are_shutting_down := List.filter (fun x -> x <> host_ref) !Xapi_globs.hosts_which_are_shutting_down);	
+        (fun () -> Xapi_globs.hosts_which_are_shutting_down := List.filter (fun x -> x <> host_ref) !Xapi_globs.hosts_which_are_shutting_down);  
 
       (* Update the heartbeat timestamp for this host so we don't mark it as 
-         	   offline in the next db_gc *)
+         offline in the next db_gc *)
       let (_: (string * string) list) = Db_gc.tickle_heartbeat ~__context host_ref [] in
       `ok
     with e ->
@@ -1044,8 +1044,8 @@ let create_VLAN ~__context ~device ~network ~vLAN =
                 Db.PIF.destroy ~__context ~self:pif
               else
                 (* If theres any other error, leave the PIF to be destroyed
-                   			 manually. We certainly don't want the Db to be out of
-                   			 sync with reality *)
+                   manually. We certainly don't want the Db to be out of
+                   sync with reality *)
                 ()
             | _ -> ()
           ) pifs) in
@@ -1066,8 +1066,8 @@ let create_VLAN ~__context ~device ~network ~vLAN =
               raise e
         ) hosts in
       (* CA-22381: best-effort plug of the newly-created VLAN PIFs. Note if any of these calls fail
-         	  then nothing is rolled-back and the system will be left with some unplugged VLAN PIFs, which may
-         	  confuse the HA agility calculation (but nothing else since everything else can plug on demand) *)
+         then nothing is rolled-back and the system will be left with some unplugged VLAN PIFs, which may
+         confuse the HA agility calculation (but nothing else since everything else can plug on demand) *)
       List.iter (fun pif -> Helpers.log_exn_continue (Printf.sprintf "Plugging VLAN PIF %s" (Ref.string_of pif)) (fun () -> Client.PIF.plug rpc session_id pif) ()) pifs;
       pifs
     )
@@ -1113,8 +1113,8 @@ let create_VLAN_from_PIF ~__context ~pif ~network ~vLAN =
           pifs_on_live_hosts in
       let vlan_pifs = List.map (fun vlan -> Db.VLAN.get_untagged_PIF ~__context ~self:vlan) vlans in
       (* CA-22381: best-effort plug of the newly-created VLAN PIFs. Note if any of these calls fail
-         	  then nothing is rolled-back and the system will be left with some unplugged VLAN PIFs, which may
-         	  confuse the HA agility calculation (but nothing else since everything else can plug on demand) *)
+         then nothing is rolled-back and the system will be left with some unplugged VLAN PIFs, which may
+         confuse the HA agility calculation (but nothing else since everything else can plug on demand) *)
       List.iter (fun pif -> Helpers.log_exn_continue (Printf.sprintf "Plugging VLAN PIF %s" (Ref.string_of pif)) (fun () -> Client.PIF.plug rpc session_id pif) ()) vlan_pifs;
       vlan_pifs)
 
@@ -1437,7 +1437,7 @@ let disable_external_auth ~__context ~pool ~config =
     let hosts = get_master_slaves_list ~__context in
     let host_msgs_list =
       List.map (fun host ->
-        try	(* forward the call to the host in the pool *)
+        try  (* forward the call to the host in the pool *)
           call_fn_on_host ~__context (Client.Host.disable_external_auth ~config) host;
           (* no failed host to add to the filtered list, just visit next host *)
           (host,"","")
@@ -1547,10 +1547,10 @@ let enable_redo_log ~__context ~sr =
     with e ->
       let msg = "failed to create a VDI for the redo log on the SR with the given UUID." in
       raise (Api_errors.Server_error(Api_errors.cannot_enable_redo_log, [msg]))
-  in	
+  in  
 
   (* ensure VDI is static, and set a flag in the local DB, such that the redo log can be
-     	 * re-enabled after a restart of xapi *)
+   * re-enabled after a restart of xapi *)
   begin try
     debug "Ensuring redo-log VDI is static on all hosts in the pool";
     let hosts = Db.Host.get_all ~__context in
@@ -1576,7 +1576,7 @@ let enable_redo_log ~__context ~sr =
   Db.Pool.set_redo_log_enabled ~__context ~self:pool ~value:true;
 
   (* enable the new redo log, unless HA is enabled (which means a redo log
-     	 * is already in use) *)
+   * is already in use) *)
   if not (Db.Pool.get_ha_enabled ~__context ~self:pool) then begin
     Redo_log.enable Xapi_ha.ha_redo_log Xapi_globs.gen_metadata_vdi_reason;
     Localdb.put Constants.redo_log_enabled "true"
@@ -1589,7 +1589,7 @@ let disable_redo_log ~__context =
   (* disable redo-log state flag and switch off redo log if HA is disabled *)
   let pool = Helpers.get_pool ~__context in
   Db.Pool.set_redo_log_enabled ~__context ~self:pool ~value:false;
-  if not (Db.Pool.get_ha_enabled ~__context ~self:pool) then begin		
+  if not (Db.Pool.get_ha_enabled ~__context ~self:pool) then begin    
     Redo_log_usage.stop_using_redo_log Xapi_ha.ha_redo_log;
     Redo_log.disable Xapi_ha.ha_redo_log;
 

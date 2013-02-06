@@ -5,11 +5,11 @@ module Array = Core_array
 module Entry = struct
   module T = struct
     type ('key, 'data) t =
-    { mutable key : 'key;             (* the int is fixed, but the 'key can change *)
-      mutable data : 'data;
-      (* The index in [defined_entries] where this [Entry.t] is placed. *)
-      mutable defined_entries_index : int;
-    }
+      { mutable key : 'key;             (* the int is fixed, but the 'key can change *)
+        mutable data : 'data;
+        (* The index in [defined_entries] where this [Entry.t] is placed. *)
+        mutable defined_entries_index : int;
+      }
     with fields, sexp_of
   end
   include T
@@ -18,19 +18,19 @@ end
 open Entry.T
 
 type ('key, 'data) t_detailed =
-{ num_keys : int;
-  sexp_of_key : ('key -> Sexp.t) option;
-  key_to_int : 'key -> int;
-  (* The number of entries in the table, not the length of the arrays below. *)
-  mutable length : int;
-  (* (key, data) is in the table
-     iff [entries_by_key.(key_to_index key) = { key; data }] *)
-  entries_by_key : ('key, 'data) Entry.t option array;
-  (* The first [length] elements of [defined_entries] hold the data in the table.
-     This is an optimization for fold, to keep us from wasting iterations when
-     the array is sparse. *)
-  defined_entries : ('key, 'data) Entry.t option array;
-}
+  { num_keys : int;
+    sexp_of_key : ('key -> Sexp.t) option;
+    key_to_int : 'key -> int;
+    (* The number of entries in the table, not the length of the arrays below. *)
+    mutable length : int;
+    (* (key, data) is in the table
+       iff [entries_by_key.(key_to_index key) = { key; data }] *)
+    entries_by_key : ('key, 'data) Entry.t option array;
+    (* The first [length] elements of [defined_entries] hold the data in the table.
+       This is an optimization for fold, to keep us from wasting iterations when
+       the array is sparse. *)
+    defined_entries : ('key, 'data) Entry.t option array;
+  }
 with fields, sexp_of
 
 type ('a, 'b) t = ('a, 'b) t_detailed
@@ -127,9 +127,9 @@ let to_alist t = map_entries t ~f:(fun ~key ~data -> (key, data))
 
 module Serialized = struct
   type ('key, 'data) t =
-  { num_keys : int;
-    alist : ('key * 'data) list;
-  }
+    { num_keys : int;
+      alist : ('key * 'data) list;
+    }
   with bin_io, sexp
 end
 

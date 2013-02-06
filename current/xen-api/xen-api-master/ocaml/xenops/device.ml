@@ -76,8 +76,8 @@ module Generic = struct
         t.Xst.rm frontend_path;
         t.Xst.rm backend_path;
         (* CA-16259: don't clear the 'hotplug_path' because this is where we
-           		   record our own use of /dev/loop devices. Clearing this causes us to leak
-           		   one per PV .iso *)
+           record our own use of /dev/loop devices. Clearing this causes us to leak
+           one per PV .iso *)
 
         t.Xst.mkdir frontend_path;
         t.Xst.setperms frontend_path (device.frontend.domid, Xsraw.PERM_NONE, [ (device.backend.domid, Xsraw.PERM_READ) ]);
@@ -179,7 +179,7 @@ module Generic = struct
       (* After CA-14804 we deleted the error node *)
       (* After CA-73099 we stopped doing that *)
       (* ... but in the case of a "managed" domain,
-         		   this transient should be ignored anyway *)
+         this transient should be ignored anyway *)
       raise (Device_error (x, error)) in
 
     let cancel = Device x in
@@ -227,39 +227,39 @@ module Generic = struct
    If an error node appears, throw Device_error. If the predicate returns true then
    return unit. If the timeout expires throw Device_disconnect_timeout. *)
 let wait_for_error_or ~xs ?(timeout=Hotplug.hotplug_timeout) doc predicate otherpath domid kind devid = 
-	let doc' = Printf.sprintf "%s (timeout = %f; %s)" doc timeout (print_device domid kind devid) in
-  	let errorpath = error_node domid kind devid in
-	debug "Device.wait_for_error_or %s (watching [ %s; %s ])" doc' otherpath errorpath;
+  let doc' = Printf.sprintf "%s (timeout = %f; %s)" doc timeout (print_device domid kind devid) in
+    let errorpath = error_node domid kind devid in
+  debug "Device.wait_for_error_or %s (watching [ %s; %s ])" doc' otherpath errorpath;
 
-	let finished = ref false and error = ref None in
-	let callback watch =
-		finished := predicate ();
-		error := (try Some (xs.Xs.read errorpath) with Xenbus.Xb.Noent -> None);
-		(* We return if the predicate is true of an error node has appeared *)
-		!finished || !error <> None in
-	begin try
-		Xs.monitor_paths xs [ otherpath, "X";
-				      errorpath, "X" ] timeout callback;
-	with
-		Xs.Timeout ->
-			warn "Device.wait_for_error_or %s: timeout" doc';
-			raise (Device_disconnect_timeout (domid, kind, devid))
-	end;
-	begin match !error with
-	| Some error ->
-		warn "Device.wait_for_error_or %s: failed: %s" doc' error;
-		raise (Device_error (domid, kind, devid, error))
-	| None ->
-		debug "Device.wait_for_error_or %s: succeeded" doc'
-	end
+  let finished = ref false and error = ref None in
+  let callback watch =
+    finished := predicate ();
+    error := (try Some (xs.Xs.read errorpath) with Xenbus.Xb.Noent -> None);
+    (* We return if the predicate is true of an error node has appeared *)
+    !finished || !error <> None in
+  begin try
+    Xs.monitor_paths xs [ otherpath, "X";
+              errorpath, "X" ] timeout callback;
+  with
+    Xs.Timeout ->
+      warn "Device.wait_for_error_or %s: timeout" doc';
+      raise (Device_disconnect_timeout (domid, kind, devid))
+  end;
+  begin match !error with
+  | Some error ->
+    warn "Device.wait_for_error_or %s: failed: %s" doc' error;
+    raise (Device_error (domid, kind, devid, error))
+  | None ->
+    debug "Device.wait_for_error_or %s: succeeded" doc'
+  end
 
 (** When destroying a whole domain, we blow away the frontend tree of individual devices.
     NB we only ever blow away the frontend (blowing away the backend risks resource leaks)
     NB we only ever blow away frontends of domUs which are being destroyed - we don't
     expect them to recover from this! *)
 let destroy ~xs domid kind devid =
-	let frontend_path = get_frontend_path ~xs domid kind devid in
-	xs.Xs.rm frontend_path
+  let frontend_path = get_frontend_path ~xs domid kind devid in
+  xs.Xs.rm frontend_path
 *)
 
   let really_kill pid =
@@ -404,7 +404,7 @@ module Vbd = struct
     then begin
       debug "Device.Vbd.shutdown_common: shutdown-done appeared";
       (* Delete the trees (otherwise attempting to plug the device in again doesn't
-               work.) This also clears any stale error nodes. *)
+             work.) This also clears any stale error nodes. *)
       Generic.rm_device_state ~xs x
     end else begin
       let error_path = error_path_of_device ~xs x in
@@ -456,11 +456,11 @@ module Vbd = struct
   let release (task: Xenops_task.t) ~xs (x: device) =
     debug "Device.Vbd.release %s" (string_of_device x);
     (* Make sure blktap/blkback fire the udev remove event by deleting the
-       	   backend now *)
+       backend now *)
     Generic.safe_rm ~xs (backend_path_of_device ~xs x);
     Hotplug.release task ~xs x;
     (* As for add above, if the frontend is in dom0, we can wait for the frontend 
-       	 * to unplug as well as the backend. CA-13506 *)
+     * to unplug as well as the backend. CA-13506 *)
     if x.frontend.domid = 0 then Hotplug.wait_for_frontend_unplug task ~xs x
 
   let free_device ~xs bus_type domid =
@@ -503,13 +503,13 @@ module Vbd = struct
     debug "Device.Vbd.add (device_number=%s | params=%s | phystype=%s)"
       (to_debug_string device_number) x.params (string_of_physty x.phystype);
     (* Notes:
-       	   1. qemu accesses devices images itself and so needs the path of the original
-                 file (in params)
-              2. when windows PV drivers initialise, the new blockfront connects to the
-                 up-til-now idle blockback.
-              3. when the VM is fully PV, Ioemu devices do not work; all devices must be PV
-       	   4. in the future an HVM guest might support a mixture of both
-       	*)
+       1. qemu accesses devices images itself and so needs the path of the original
+                file (in params)
+             2. when windows PV drivers initialise, the new blockfront connects to the
+                up-til-now idle blockback.
+             3. when the VM is fully PV, Ioemu devices do not work; all devices must be PV
+       4. in the future an HVM guest might support a mixture of both
+    *)
 
     List.iter (fun (k, v) -> Hashtbl.add back_tbl k v) x.extra_backend_keys;
 
@@ -522,7 +522,7 @@ module Vbd = struct
     Hashtbl.add_list back_tbl [
       "frontend-id", sprintf "%u" domid;
       (* Prevents the backend hotplug scripts from running if the frontend disconnects.
-         		   This allows the xenbus connection to re-establish itself *)
+         This allows the xenbus connection to re-establish itself *)
       "online", "1";
       "removable", if x.unpluggable then "1" else "0";
       "state", string_of_int (Xenbus_utils.int_of Xenbus_utils.Initialising);
@@ -553,14 +553,14 @@ module Vbd = struct
     Hotplug.wait_for_plug task ~xs device;
     debug "Device.Vbd successfully added; device_is_online = %b" (Hotplug.device_is_online ~xs device);
     (* 'Normally' we connect devices to other domains, and cannot know whether the
-       	   device is 'available' from their userspace (or even if they have a userspace).
-       	   The best we can do is just to wait for the backend hotplug scripts to run,
-       	   indicating that the backend has locked the resource.
-       	   In the case of domain 0 we can do better: we have custom hotplug scripts
-       	   which call us back when the device is actually available to userspace. We need
-       	   to wait for this condition to make the template installers work.
-       	   NB if the custom hotplug script fires this implies that the xenbus state
-       	   reached "connected", so we don't have to check for that first. *)
+       device is 'available' from their userspace (or even if they have a userspace).
+       The best we can do is just to wait for the backend hotplug scripts to run,
+       indicating that the backend has locked the resource.
+       In the case of domain 0 we can do better: we have custom hotplug scripts
+       which call us back when the device is actually available to userspace. We need
+       to wait for this condition to make the template installers work.
+       NB if the custom hotplug script fires this implies that the xenbus state
+       reached "connected", so we don't have to check for that first. *)
     if device.frontend.domid = 0 then begin
       try
         (* CA-15605: clean up on dom0 block-attach failure *)
@@ -597,8 +597,8 @@ module Vbd = struct
     let path = backend ^ "/params" in
 
     (* unfortunately qemu filter the request if on the same string it has,
-       	   so we trick it by having a different string, but the same path, adding a
-       	   spurious '/' character at the beggining of the string.  *)
+       so we trick it by having a different string, but the same path, adding a
+       spurious '/' character at the beggining of the string.  *)
     let oldval = try xs.Xs.read path with _ -> "" in
     let pathtowrite =
       if oldval = params then (
@@ -1083,13 +1083,13 @@ module PCI = struct
             {
                 (* XXX: I don't think we can guarantee how the C compiler will
                    lay out bitfields.
-       			   unsigned int reserved1:2;
-       			   unsigned int reg:6;
-       			   unsigned int func:3;
-       			   unsigned int dev:5;
-       			   unsigned int bus:8;
-       			   unsigned int reserved2:7;
-       			   unsigned int enable:1;
+             unsigned int reserved1:2;
+             unsigned int reg:6;
+             unsigned int func:3;
+             unsigned int dev:5;
+             unsigned int bus:8;
+             unsigned int reserved2:7;
+             unsigned int enable:1;
                 *)
                 Xenlight.v = (func lsl 8) lor (dev lsl 11) lor (bus lsl 16);
                 domain = domain;
@@ -1103,26 +1103,26 @@ module PCI = struct
     (* XXX: this will crash because of the logging policy within the
        Xenlight ocaml bindings.
        let add_libxl ~msitranslate ~pci_power_mgmt pcidevs domid =
-       	List.iter
-       		(fun dev ->
-       			try
-       				Xenlight.pci_add (pci_info_of ~msitranslate ~pci_power_mgmt dev) domid
-       			with e ->
-       				debug "Xenlight.pci_add: %s" (Printexc.to_string e);
-       				raise e
-       		) pcidevs
+       List.iter
+        (fun dev ->
+          try
+            Xenlight.pci_add (pci_info_of ~msitranslate ~pci_power_mgmt dev) domid
+          with e ->
+            debug "Xenlight.pci_add: %s" (Printexc.to_string e);
+            raise e
+        ) pcidevs
     *)
     (* XXX: this will crash because of the logging policy within the
        Xenlight ocaml bindings.
        let release_libxl ~msitranslate ~pci_power_mgmt pcidevs domid =
-       	List.iter
-       		(fun dev ->
-       			try
-       				Xenlight.pci_remove (pci_info_of ~msitranslate ~pci_power_mgmt dev) domid
-       			with e ->
-       				debug "Xenlight.pci_remove: %s" (Printexc.to_string e);
-       				raise e
-       		) pcidevs
+       List.iter
+        (fun dev ->
+          try
+            Xenlight.pci_remove (pci_info_of ~msitranslate ~pci_power_mgmt dev) domid
+          with e ->
+            debug "Xenlight.pci_remove: %s" (Printexc.to_string e);
+            raise e
+        ) pcidevs
     *)
 
   (* XXX: we don't want to use the 'xl' command here because the "interface"
@@ -1217,7 +1217,7 @@ module PCI = struct
         bind_to_pciback devstr
       | Some "pciback" ->
         debug "pci: device %s already bounded to pciback" devstr;
-        do_flr devstr		    
+        do_flr devstr        
       | Some d         ->
         debug "pci: unbounding device %s from driver %s" devstr d;
         let f = s ^ "/driver/unbind" in
@@ -1760,16 +1760,16 @@ module Dm = struct
     debug "qemu-dm: should be running in the background (stdout redirected to syslog)";
 
     (* There are two common-cases:
-       	   1. (in development) the qemu process may crash
-       	   2. (in production) We know qemu is ready (and the domain may be unpaused) when
-       	      device-misc/dm-ready is set in the store. See xs-xen.pq.hg:hvm-late-unpause *)
+       1. (in development) the qemu process may crash
+       2. (in production) We know qemu is ready (and the domain may be unpaused) when
+          device-misc/dm-ready is set in the store. See xs-xen.pq.hg:hvm-late-unpause *)
 
     let qemu_domid = 0 in (* See stubdom.ml for the corresponding kernel code *)
     let dm_ready = Printf.sprintf "/local/domain/%d/device-model/%d/state" qemu_domid domid in
     let qemu_pid = Forkhelpers.getpid pid in
     debug "qemu-dm: pid = %d. Waiting for %s" qemu_pid dm_ready;
     (* We can't block for both a xenstore key and a process disappearing so we
-       	   block for 5s at a time *)
+       block for 5s at a time *)
     begin
       let finished = ref false in
       let watch = Watch.value_to_appear dm_ready |> Watch.map (fun _ -> ()) in
@@ -1796,7 +1796,7 @@ module Dm = struct
       done
     end;
 
-    (* At this point we expect qemu to outlive us; we will never call waitpid *)	
+    (* At this point we expect qemu to outlive us; we will never call waitpid *)  
     Forkhelpers.dontwaitpid pid
 
   let start (task: Xenops_task.t) ~xs ~dmpath ?timeout info domid =
@@ -1830,7 +1830,7 @@ module Dm = struct
       best_effort "removing qemu-pid from xenstore"
         (fun () -> xs.Xs.rm qemu_pid_path);
       (* best effort to delete the qemu chroot dir; we deliberately want this to fail if the dir is not empty cos it may contain
-         			   core files that bugtool will pick up; the xapi init script cleans out this directory with "rm -rf" on boot *)
+         core files that bugtool will pick up; the xapi init script cleans out this directory with "rm -rf" on boot *)
       best_effort "removing core files from /var/xen/qemu"
         (fun () -> Unix.rmdir ("/var/xen/qemu/"^(string_of_int qemu_pid)));
       best_effort "removing device model path from xenstore"

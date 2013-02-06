@@ -92,12 +92,12 @@ let request_sender =
 
 (*****************************************************************************)
 module T = Hashtbl.Make(
-    struct
-      type t = int * (Unix.inet_addr * int * bool)
-      (* client ID, (IP, port, doing HEAD request) *)
-      let equal = (=)
-      let hash = Hashtbl.hash
-    end)
+  struct
+    type t = int * (Unix.inet_addr * int * bool)
+    (* client ID, (IP, port, doing HEAD request) *)
+    let equal = (=)
+    let hash = Hashtbl.hash
+  end)
 
 let connection_table = T.create 100
   (*
@@ -121,11 +121,11 @@ let connection_table = T.create 100
 module FT = struct
   module T =
     Hashtbl.Make(
-      struct
-        type t = Unix.inet_addr * int * bool (* IP, port, doing HEAD request *)
-        let equal = (=)
-        let hash = Hashtbl.hash
-      end)
+    struct
+      type t = Unix.inet_addr * int * bool (* IP, port, doing HEAD request *)
+      let equal = (=)
+      let hash = Hashtbl.hash
+    end)
 
   let free_connection_table = T.create 100
     (* contains unused opened output connections *)
@@ -211,11 +211,11 @@ let remove_on_error_from_free_conn key ((_, gf) as v) =
 
 (*****************************************************************************)
 module KT = Hashtbl.Make(
-    struct
-      type t = Unix.inet_addr * int
-      let equal = (=)
-      let hash = Hashtbl.hash
-    end)
+  struct
+    type t = Unix.inet_addr * int
+    let equal = (=)
+    let hash = Hashtbl.hash
+  end)
 
 type k = Probing of int | Yes | No of float (* last failure date *)
 

@@ -3,12 +3,12 @@
 open Bigstring
 
 type t =
-{
-  mutable bstr : Bigstring.t;
-  mutable pos : int;
-  mutable len : int;
-  init : Bigstring.t;
-}
+  {
+    mutable bstr : Bigstring.t;
+    mutable pos : int;
+    mutable len : int;
+    init : Bigstring.t;
+  }
 
 (*
 let invariant t =

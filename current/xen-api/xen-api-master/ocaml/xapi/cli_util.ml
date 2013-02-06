@@ -92,10 +92,10 @@ let track_http_operation ?use_existing_task fd rpc session_id (make_command: API
         debug "Waiting for the task to be completed";
         wait_for_task_completion rpc session_id task_id;
         (*
-	 (* Events for tasks have been deleted *)
-	 while Client.Task.get_status rpc session_id task_id = `pending do
-	   Thread.delay 5.
-	 done;
+   (* Events for tasks have been deleted *)
+   while Client.Task.get_status rpc session_id task_id = `pending do
+     Thread.delay 5.
+   done;
 *)
         if Client.Task.get_status rpc session_id task_id = `success then begin
           let result = Client.Task.get_result rpc session_id task_id in
@@ -124,7 +124,7 @@ let track_http_operation ?use_existing_task fd rpc session_id (make_command: API
       end)
     (fun () ->
       (* if we created our own task then destroy it again; if the task was supplied to us then don't destroy it --
-         	  if clients pass a task in on the command-line then they are responsible for destroying *)
+         if clients pass a task in on the command-line then they are responsible for destroying *)
       match use_existing_task with
         None -> log_exn_continue "destroying task" (fun x -> Client.Task.destroy rpc session_id x) task_id
       | Some _ -> ()
@@ -224,12 +224,12 @@ type someone =
   | SpecificHost of API.ref_host (** I want to talk to [h] (who may be the master *)
 
 (** Return a uri prefix which will cause the CLI to talk to either the 
-   	master or to a specific host (which may be the master). This will
-   	work even when the management interface is disabled. *)
+   master or to a specific host (which may be the master). This will
+   work even when the management interface is disabled. *)
 let rec uri_of_someone rpc session_id = function
   | Master -> 
     (* See ocaml/xe-cli/newcli.ml:parse_url *)
-    ""		
+    ""    
   | SpecificHost h ->
     let pool = List.hd (Client.Pool.get_all rpc session_id) in
     let pool_master = Client.Pool.get_master rpc session_id pool in

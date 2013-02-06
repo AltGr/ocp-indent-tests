@@ -58,7 +58,7 @@ let to_string alert =
     Printf.sprintf "[%s] host=%s; host-name=\"%s\"; pbd=%s; scsi_id=%s; current=%d; max=%d"
       (time_of_float alert.timestamp) (String.escaped (Uuid.to_string alert.host))
       alert.host_name (Uuid.to_string alert.pbd) alert.scsi_id alert.current alert.max
-  else	
+  else  
     Printf.sprintf "[%s] host=%s; host-name=\"%s\"; root=true; current=%d; max=%d"
       (time_of_float alert.timestamp) (String.escaped (Uuid.to_string alert.host))
       alert.host_name alert.current alert.max
@@ -166,7 +166,7 @@ let listener rpc session queue =
         List.iter (fun alert -> with_global_lock (fun () -> Queue.push alert queue)) alerts;
         update_snapshot pbd_ref (keep_mpath pbd_rec.API.pBD_other_config)
       | _ -> () (* this should never happens *)
-      end			
+      end      
     | Event_helper.Host (host_ref, host_rec_opt) ->
       begin match event.op, host_rec_opt with
       | `add, Some host_rec -> 

@@ -44,7 +44,7 @@ let xmlrpc_to_sexpr (root:xml) =
     | h, [] -> []
     | h, (PCData text)::_ ->
       let text = String.strip String.isspace text in
-      SExpr.String text::[] 	 
+      SExpr.String text::[]    
 
     (* empty <value>s have default value '' *)
     | h,((Element ("value", _, []))::siblings) ->

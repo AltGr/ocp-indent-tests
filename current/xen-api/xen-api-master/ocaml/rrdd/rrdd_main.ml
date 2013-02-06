@@ -363,7 +363,7 @@ let update_vbds doms =
     let device_name = devid |> of_xenstore_key |> to_linux_device in
     let vbd_name = Printf.sprintf "vbd_%s" device_name in
     (* If blktap fails to cleanup then we might find a backend domid which doesn't
-       			 correspond to an active domain uuid. Skip these for now. *)
+       correspond to an active domain uuid. Skip these for now. *)
     let newacc =
       try
         let uuid = uuid_of_domid doms domid in
@@ -605,7 +605,7 @@ let read_config () =
 (* Entry point. *)
 let _ =
   (* Prevent shutdown due to sigpipe interrupt. This protects against
-     	 * potential stunnel crashes. *)
+   * potential stunnel crashes. *)
   Sys.set_signal Sys.sigpipe Sys.Signal_ignore;
 
   (* Enable the new logging library. *)

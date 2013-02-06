@@ -29,7 +29,7 @@ let inet_rpc xml =
   let version = "1.1" and path = "/" in
   let http = 80 and https = !Xapi_globs.https_port in
   (* Bypass SSL for localhost, this works even if the management interface
-     	   is disabled. *)
+     is disabled. *)
   let open Xmlrpc_client in
   let transport =
     if Pool_role.is_master ()
@@ -234,7 +234,7 @@ let bind inetaddr =
     | Unix.ADDR_INET(ip, port) -> Printf.sprintf "INET %s:%d" (Unix.string_of_inet_addr ip) port
     | Unix.ADDR_UNIX path -> Printf.sprintf "UNIX %s" path in
   (* Sometimes we see failures which we hope are transient. If this
-     	   happens then we'll retry a couple of times before failing. *)
+     happens then we'll retry a couple of times before failing. *)
   let result = ref None in
   let start = Unix.gettimeofday () in
   let timeout = 30.0 in (* 30s *)

@@ -4,14 +4,14 @@ let debug = ref false
 
 module Unpack_one = struct
   type ('value, 'partial_unpack) t =
-  ?partial_unpack:'partial_unpack
-  -> ?pos:int
-  -> ?len:int
-  -> Bigstring.t
-  -> [ `Ok of 'value * int
-     | `Not_enough_data of 'partial_unpack * int
-     | `Invalid_data of Error.t
-     ]
+    ?partial_unpack:'partial_unpack
+    -> ?pos:int
+    -> ?len:int
+    -> Bigstring.t
+    -> [ `Ok of 'value * int
+       | `Not_enough_data of 'partial_unpack * int
+       | `Invalid_data of Error.t
+       ]
 
   let map t ~f =
     fun ?partial_unpack ?pos ?len buf ->
@@ -71,25 +71,25 @@ module Unpack_one = struct
 end
 
 type ('a, 'b) alive =
-{ mutable partial_unpack : 'b option;
-  unpack_one : ('a, 'b) Unpack_one.t sexp_opaque;
-  (* [buf] holds unconsumed chars *)
-  mutable buf : Bigstring.t;
-  (* [pos] is the start of unconsumed data in [buf] *)
-  mutable pos : int;
-  (* [len] is the length of unconsumed data in [buf] *)
-  mutable len : int;
-}
+  { mutable partial_unpack : 'b option;
+    unpack_one : ('a, 'b) Unpack_one.t sexp_opaque;
+    (* [buf] holds unconsumed chars *)
+    mutable buf : Bigstring.t;
+    (* [pos] is the start of unconsumed data in [buf] *)
+    mutable pos : int;
+    (* [len] is the length of unconsumed data in [buf] *)
+    mutable len : int;
+  }
 with sexp_of
 
 type ('a, 'b) state =
-| Alive of ('a, 'b) alive
-| Dead of Error.t
+  | Alive of ('a, 'b) alive
+  | Dead of Error.t
 with sexp_of
 
 type ('a, 'b) t =
-{ mutable state : ('a, 'b) state;
-}
+  { mutable state : ('a, 'b) state;
+  }
 with sexp_of
 
 let sexp_of_any _ = Sexp.Atom "<VALUE>"

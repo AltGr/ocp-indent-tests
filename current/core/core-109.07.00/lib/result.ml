@@ -1,8 +1,8 @@
 module Stable = struct
   module V1 = struct
     type ('a, 'b) t =
-    | Ok of 'a
-    | Error of 'b
+      | Ok of 'a
+      | Error of 'b
     with sexp, bin_io, compare
   end
 
@@ -113,9 +113,9 @@ let ok_or_failwith = function
 
 module Export = struct
   type ('ok, 'err) _result =
-  ('ok, 'err) t =
-  | Ok of 'ok
-  | Error of 'err
+    ('ok, 'err) t =
+    | Ok of 'ok
+    | Error of 'err
 end
 
 let combine t1 t2 ~ok ~err =

@@ -32,10 +32,10 @@ let refresh_internal ~__context ~self =
   let bridge = Db.Network.get_bridge ~__context ~self:network in
 
   (* Update the specified PIF field in the database, if
-     	 * and only if a corresponding value can be read from
-     	 * the underlying network device and if that value is
-     	 * different from the current field value.
-     	 *)
+   * and only if a corresponding value can be read from
+   * the underlying network device and if that value is
+   * different from the current field value.
+  *)
   let maybe_update_database
       field_name get_field set_field get_value print_value =
     Opt.iter
@@ -173,7 +173,7 @@ let assert_not_slave_management_pif ~__context ~self =
 
 let assert_no_protection_enabled ~__context ~self =
   (* If HA or redo-log is enabled and PIF is attached
-     	 * then refuse to reconfigure the interface at all *)
+   * then refuse to reconfigure the interface at all *)
   if Db.PIF.get_currently_attached ~__context ~self
   then begin
     let pool = List.hd (Db.Pool.get_all ~__context) in
@@ -187,7 +187,7 @@ let assert_no_protection_enabled ~__context ~self =
 
 let abort_if_network_attached_to_protected_vms ~__context ~self =
   (* Abort a PIF.unplug if the Network
-     	 * has VIFs connected to protected VMs *)
+   * has VIFs connected to protected VMs *)
   let pool = Helpers.get_pool ~__context in
   if Db.Pool.get_ha_enabled ~__context ~self:pool
      && not (Db.Pool.get_ha_allow_overcommit ~__context ~self:pool)
@@ -311,7 +311,7 @@ let introduce_internal
   let bridge = bridge_naming_convention device in
 
   (* If we are not told which network to use,
-     	 * apply the default convention *)
+   * apply the default convention *)
   let net_ref =
     match network with
     | None -> find_or_create_network bridge device ~__context
@@ -335,15 +335,15 @@ let introduce_internal
       ~iPv6:[] ~ipv6_gateway:"" ~primary_address_type:`IPv4 in
 
   (* If I'm a pool slave and this pif represents my management
-     	 * interface then leave it alone: if the interface goes down
-     	 * (through a call to "up") then I lose my connection to the
-     	 * master's database and the call to "up" (which uses the API
-     	 * and requires the database) blocks until the slave restarts
-     	 * in emergency mode.
-     	 *)
+   * interface then leave it alone: if the interface goes down
+   * (through a call to "up") then I lose my connection to the
+   * master's database and the call to "up" (which uses the API
+   * and requires the database) blocks until the slave restarts
+   * in emergency mode.
+  *)
   (* Rob: nothing seems to be done with the pool slave case
-     	 * mentioned in this comment...?
-     	 *)
+   * mentioned in this comment...?
+  *)
   if is_my_management_pif ~__context ~self:pif
   then begin
     debug "NIC is the management interface";
@@ -352,10 +352,10 @@ let introduce_internal
   end;
 
   (* When a new PIF is introduced then we clear it from the cache w.r.t
-     	 * the monitor thread; this ensures that the PIF metrics (including
-     	 * carrier and vendor etc.) will eventually get updated [and that
-     	 * subsequent changes to this PIFs' device's dom0 configuration
-     	 * will be reflected accordingly]. *)
+   * the monitor thread; this ensures that the PIF metrics (including
+   * carrier and vendor etc.) will eventually get updated [and that
+   * subsequent changes to this PIFs' device's dom0 configuration
+   * will be reflected accordingly]. *)
   Monitor_dbcalls.clear_cache_for_pif ~pif_name:device;
 
   (* return ref of newly created pif record *)
@@ -409,10 +409,10 @@ let introduce ~__context ~host ~mAC ~device =
   let t = make_tables ~__context ~host in
 
   (* Allow callers to omit the MAC address. Ideally, we should
-     	 * use an option type (instead of treating the empty string
-     	 * as a special value). However we must preserve the existing
-     	 * function signature as it appears in the published API.
-     	 *)
+   * use an option type (instead of treating the empty string
+   * as a special value). However we must preserve the existing
+   * function signature as it appears in the published API.
+  *)
   let mAC =
     if mAC = ""
     then List.assoc_default device t.device_to_mac_table ""
@@ -428,7 +428,7 @@ let introduce ~__context ~host ~mAC ~device =
         (Api_errors.duplicate_pif_device_name, [device]));
 
   (* Assert that a network interface exists with *
-     	 * the specified device name and MAC address.  *)
+   * the specified device name and MAC address.  *)
   if not (List.mem (device, mAC) t.device_to_mac_table)
   then raise (Api_errors.Server_error (Api_errors
         .could_not_find_network_interface_with_specified_device_name_and_mac_address,
@@ -564,7 +564,7 @@ let reconfigure_ipv6 ~__context ~self ~mode ~iPv6 ~gateway ~dNS =
     Nm.bring_pif_up ~__context ~management_interface:management self;
     if mode = `DHCP || mode = `Autoconf then
       (* Refresh IP address fields in case dhclient was already running, and
-         			 * we are not getting a host-signal-networking-change callback. *)
+       * we are not getting a host-signal-networking-change callback. *)
       Helpers.update_pif_address ~__context ~self
   end;
   Monitor_dbcalls.clear_cache_for_pif ~pif_name:(Db.PIF.get_device ~__context ~self)
@@ -583,7 +583,7 @@ let reconfigure_ip ~__context ~self ~mode ~iP ~netmask ~gateway ~dNS =
           (Api_errors.invalid_ip_address_specified, [ "netmask" ]));
   end;
   (* for all IP parameters, if they're not empty
-     	 * then check they contain valid IP address *)
+   * then check they contain valid IP address *)
   List.iter
     (fun (param,value)->
       if value <> "" && (not (is_valid_ip value))
@@ -591,8 +591,8 @@ let reconfigure_ip ~__context ~self ~mode ~iP ~netmask ~gateway ~dNS =
             (Api_errors.invalid_ip_address_specified, [ param ])))
     ["IP",iP; "netmask",netmask; "gateway",gateway];
   (* Do NOT check DNS is a valid IP cos it can be a number
-     	 * of things, including a list of IPs separated by commas
-     	 *)
+   * of things, including a list of IPs separated by commas
+  *)
   (* If this is a management PIF, make sure the IP config mode isn't None *)
   let management=Db.PIF.get_management ~__context ~self in
   let primary_address_type=Db.PIF.get_primary_address_type ~__context ~self in
@@ -618,14 +618,14 @@ let reconfigure_ip ~__context ~self ~mode ~iP ~netmask ~gateway ~dNS =
     Nm.bring_pif_up ~__context ~management_interface:management self;
     if mode = `DHCP then
       (* Refresh IP address fields in case dhclient was already running, and
-         			 * we are not getting a host-signal-networking-change callback. *)
+       * we are not getting a host-signal-networking-change callback. *)
       Helpers.update_pif_address ~__context ~self
   end;
   (* We clear the monitor thread's cache for the PIF to resync the dom0 device
-     	 * state with the PIF db record; this fixes a race where the you do a
-     	 * PIF.reconfigure_ip to set mode=dhcp, but you have already got an IP on
-     	 * the dom0 device (e.g. because it's a management i/f that was brought up
-     	 * independently by init scripts) *)
+   * state with the PIF db record; this fixes a race where the you do a
+   * PIF.reconfigure_ip to set mode=dhcp, but you have already got an IP on
+   * the dom0 device (e.g. because it's a management i/f that was brought up
+   * independently by init scripts) *)
   Monitor_dbcalls.clear_cache_for_pif ~pif_name:(Db.PIF.get_device ~__context ~self)
 
 let set_primary_address_type ~__context ~self ~primary_address_type =
@@ -682,8 +682,8 @@ let rec plug ~__context ~self =
 let calculate_pifs_required_at_start_of_day ~__context =
   let localhost = Helpers.get_localhost ~__context in
   (* Select all PIFs on the host that are not bond slaves, and are physical, or bond master, or
-     	 * have IP configuration. The latter means that any VLAN or tunnel PIFs without IP address
-     	 * are excluded. *)
+   * have IP configuration. The latter means that any VLAN or tunnel PIFs without IP address
+   * are excluded. *)
   Db.PIF.get_records_where ~__context
     ~expr:(
       And (
@@ -705,7 +705,7 @@ let start_of_day_best_effort_bring_up () =
       "Configured network backend: %s"
       (Netdev.string_of_kind Netdev.network.Netdev.kind);
     (* Clear the state of the network daemon, before refreshing it by plugging
-       		 * the most important PIFs (see above). *)
+     * the most important PIFs (see above). *)
     Net.clear_state ();
     Server_helpers.exec_with_new_task
       "Bringing up physical PIFs"

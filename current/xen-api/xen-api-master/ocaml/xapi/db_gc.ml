@@ -39,7 +39,7 @@ let valid_ref x = Db.is_valid_ref x
 
 let gc_connector ~__context get_all get_record valid_ref1 valid_ref2 delete_record =
   let db = Context.database_of __context in
-  let module DB = (val (Db_cache.get db) : Db_interface.DB_ACCESS) in	  
+  let module DB = (val (Db_cache.get db) : Db_interface.DB_ACCESS) in    
   let all_refs = get_all ~__context in
   let do_gc ref =
     let print_valid b = if b then "valid" else "INVALID" in
@@ -191,7 +191,7 @@ let check_host_liveness ~__context =
 
         if now -. host_time < !Xapi_globs.host_assumed_dead_interval then begin
           (* From the heartbeat PoV the host looks alive. We try to (i) minimise database sets; and (ii) 
-             	     avoid toggling the host back to live if it has been marked as shutting_down. *)
+             avoid toggling the host back to live if it has been marked as shutting_down. *)
           Mutex.execute Xapi_globs.hosts_which_are_shutting_down_m
             (fun () ->
               let shutting_down = List.exists (fun x -> x=host) !Xapi_globs.hosts_which_are_shutting_down in
@@ -371,7 +371,7 @@ let detect_rolling_upgrade ~__context =
   try
     (* If my platform version is different to any host (including myself) then we're in a rolling upgrade mode *)
     (* NB: it is critical this code runs once in the master of a pool of one before the dbsync, since this
-       		   is the only time at which the master's Version will be out of sync with its database record *)
+       is the only time at which the master's Version will be out of sync with its database record *)
     let all_hosts = Db.Host.get_all ~__context in
     let platform_versions = List.map (fun host -> Helpers.version_string_of ~__context host) all_hosts in
 
@@ -538,7 +538,7 @@ let start_heartbeat_thread() =
                   else debug "Caught exception in heartbeat thread: %s" (ExnHelper.string_of_exn e);
                 | e ->
                   debug "Caught exception in heartbeat thread: %s" (ExnHelper.string_of_exn e);
-              done)	    
+              done)      
         with
         | Api_errors.Server_error(code, params) when code = Api_errors.session_authentication_failed ->
           debug "Master did not recognise our pool secret: we must be pointing at the wrong master. Restarting.";

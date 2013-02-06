@@ -57,24 +57,24 @@ let of_message (obj: obj) (x: message) =
   let all = match x.msg_tag with
     | FromField(_, { DT.field_has_effect = false }) ->
       (* for simple cases, the database handles these. Recall that for
-         	 Set(Ref x) types, the magic is in the constructor of the other
-         	 end of the relation *)
+         Set(Ref x) types, the magic is in the constructor of the other
+         end of the relation *)
       []
     | FromField(_, { DT.field_has_effect = true }) -> 
       self
     | FromObject(Make) -> 
       (* Lock this instance and, for any Ref x argument where it corresponds to the
-         	 'N' side of a 1-N relationship and where the '1' side field has 
-         	 field_has_effect = true.
+         'N' side of a 1-N relationship and where the '1' side field has 
+         field_has_effect = true.
          Example: creating a VBD with a VM ref *)
       from_ref_relationships obj (* NB self doesn't exist yet *)
     | FromObject(Delete) ->
       (* Lock this instance and, for any Ref x field which is in a relationship,
-         	 lock those other objects if they have field_has_effect = true 
-         	 Example: deleting a VBD
-         	 (Note: deleting a VM containing a Set(Ref VBD) won't cause a side-effect
+         lock those other objects if they have field_has_effect = true 
+         Example: deleting a VBD
+         (Note: deleting a VM containing a Set(Ref VBD) won't cause a side-effect
           on the VBD because we currently ban fields of type Ref _ having
-         	  field_has_effect = true) *)
+         field_has_effect = true) *)
       (* XXX: need to fetch IDs from the database *)
       self
     (*

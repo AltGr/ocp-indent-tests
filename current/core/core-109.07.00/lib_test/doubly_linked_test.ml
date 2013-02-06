@@ -708,42 +708,42 @@ module Bisimulation = struct
 
   module F = struct
     type t =
-    | Clear of l
-    | Copy of l
-    | Create
-    | Elt_equal of e * e
-    | Elt_sexp of e
-    | Elt_value of e
-    | Equal of l * l
-    | Exists of l * p
-    | Filter_inplace of l * p
-    | Find_elt of l * p
-    | Find of l * p
-    | First_elt of l
-    | First of l
-    | For_all of l * p
-    | Insert_after of l * e * v
-    | Insert_before of l * e * v
-    | Insert_first of l * v
-    | Insert_last of l * v
-    | Invariant of l
-    | Is_empty of l
-    | Is_first of l * e
-    | Is_last of l * e
-    | Last_elt of l
-    | Last of l
-    | Length of l
-    | Next of l * e
-    | Of_list of v list
-    | Of_sexp of Sexp.t
-    | Prev of l * e
-    | Remove_first of l
-    | Remove_last of l
-    | Remove of l * e
-    | To_array of l
-    | To_list of l
-    | To_sexp of l
-    | Transfer of l * l
+      | Clear of l
+      | Copy of l
+      | Create
+      | Elt_equal of e * e
+      | Elt_sexp of e
+      | Elt_value of e
+      | Equal of l * l
+      | Exists of l * p
+      | Filter_inplace of l * p
+      | Find_elt of l * p
+      | Find of l * p
+      | First_elt of l
+      | First of l
+      | For_all of l * p
+      | Insert_after of l * e * v
+      | Insert_before of l * e * v
+      | Insert_first of l * v
+      | Insert_last of l * v
+      | Invariant of l
+      | Is_empty of l
+      | Is_first of l * e
+      | Is_last of l * e
+      | Last_elt of l
+      | Last of l
+      | Length of l
+      | Next of l * e
+      | Of_list of v list
+      | Of_sexp of Sexp.t
+      | Prev of l * e
+      | Remove_first of l
+      | Remove_last of l
+      | Remove of l * e
+      | To_array of l
+      | To_list of l
+      | To_sexp of l
+      | Transfer of l * l
     with sexp_of, variants
   end
   open F

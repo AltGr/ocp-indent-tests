@@ -14,13 +14,13 @@ open Std_internal
 *)
 module T : sig
   type 'a t = private
-  | True
-  | False
-  | And of 'a t * 'a t
-  | Or of 'a t * 'a t
-  | Not of 'a t
-  | If of 'a t * 'a t * 'a t
-  | Base of 'a
+    | True
+    | False
+    | And of 'a t * 'a t
+    | Or of 'a t * 'a t
+    | Not of 'a t
+    | If of 'a t * 'a t * 'a t
+    | Base of 'a
   with bin_io, compare
 
   val invariant : 'a t -> unit
@@ -36,13 +36,13 @@ module T : sig
 end = struct
 
   type 'a t =
-  | True
-  | False
-  | And of 'a t * 'a t
-  | Or of 'a t * 'a t
-  | Not of 'a t
-  | If of 'a t * 'a t * 'a t
-  | Base of 'a
+    | True
+    | False
+    | And of 'a t * 'a t
+    | Or of 'a t * 'a t
+    | Not of 'a t
+    | If of 'a t * 'a t * 'a t
+    | Base of 'a
   with bin_io, compare
 
   let invariant =
@@ -100,13 +100,13 @@ module Stable = struct
     (* THIS TYPE AND ITS SERIALIZATIONS SHOULD NEVER BE CHANGED - PLEASE SPEAK WITH
        ANOTHER DEVELOPER IF YOU NEED MORE DETAIL *)
     type 'a t = 'a T.t = private
-    | True
-    | False
-    | And of 'a t * 'a t
-    | Or of 'a t * 'a t
-    | Not of 'a t
-    | If of 'a t * 'a t * 'a t
-    | Base of 'a
+      | True
+      | False
+      | And of 'a t * 'a t
+      | Or of 'a t * 'a t
+      | Not of 'a t
+      | If of 'a t * 'a t * 'a t
+      | Base of 'a
     with bin_io, compare, sexp
 
     (* the remainder of this signature consists of functions used in the definitions
@@ -121,13 +121,13 @@ module Stable = struct
   end = struct
 
     type 'a t = 'a T.t = private
-    | True
-    | False
-    | And of 'a t * 'a t
-    | Or of 'a t * 'a t
-    | Not of 'a t
-    | If of 'a t * 'a t * 'a t
-    | Base of 'a
+      | True
+      | False
+      | And of 'a t * 'a t
+      | Or of 'a t * 'a t
+      | Not of 'a t
+      | If of 'a t * 'a t * 'a t
+      | Base of 'a
 
     include (T : sig type 'a t with bin_io, compare end with type 'a t := 'a t)
 

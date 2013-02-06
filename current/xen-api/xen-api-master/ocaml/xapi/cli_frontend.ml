@@ -888,9 +888,9 @@ let rec cmdtable_data : (string*cmd_spec) list =
       reqd=["min"; "max"];
       optn=[];
       help="Configure the dynamic memory range of a VM. The dynamic memory \
-            		range defines soft lower and upper limits for a VM's memory. It's \
-            		possible to change these fields when a VM is running or halted. The \
-            		dynamic range must fit within the static range.";
+            range defines soft lower and upper limits for a VM's memory. It's \
+            possible to change these fields when a VM is running or halted. The \
+            dynamic range must fit within the static range.";
       implementation=No_fd Cli_operations.vm_memory_dynamic_range_set;
       flags=[Vm_selectors];
     };
@@ -900,9 +900,9 @@ let rec cmdtable_data : (string*cmd_spec) list =
       reqd=["min"; "max"];
       optn=[];
       help="Configure the static memory range of a VM. The static memory \
-            		range defines hard lower and upper limits for a VM's memory. It's \
-            		possible to change these fields only when a VM is halted. The static \
-            		range must encompass the dynamic range.";
+            range defines hard lower and upper limits for a VM's memory. It's \
+            possible to change these fields only when a VM is halted. The static \
+            range must encompass the dynamic range.";
       implementation=No_fd Cli_operations.vm_memory_static_range_set;
       flags=[Vm_selectors];
     };
@@ -921,8 +921,8 @@ let rec cmdtable_data : (string*cmd_spec) list =
       reqd=["target"];
       optn=[];
       help="Set the memory target for a halted or running VM. The given \
-            		value must be within the range defined by the VM's memory_static_min \
-            		and memory_static_max values.";
+            value must be within the range defined by the VM's memory_static_min \
+            and memory_static_max values.";
       implementation=No_fd Cli_operations.vm_memory_target_set;
       flags=[Vm_selectors];
     };
@@ -2103,7 +2103,7 @@ add a mapping of 'path' -> '/tmp', the command line should contain the argument 
       help="Display per-host thread diagnostic information.";
       implementation=No_fd Cli_operations.host_get_thread_diagnostics;
       flags=[];
-    };	  
+    };    
     "host-sm-dp-destroy",
     {
       reqd=["uuid"; "dp"];

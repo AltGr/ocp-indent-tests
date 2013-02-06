@@ -50,15 +50,15 @@ let string_of_vdi_type vdi_type =
 
 module SMAPIv1 = struct
 (** xapi's builtin ability to call local SM plugins using the existing
-   	    protocol. The code here should only call the SM functions and encapsulate
-   	    the return or error properly. It should not perform side-effects on
-   	    the xapi database: these should be handled in the layer above so they
-   	    can be shared with other SM implementation types.
+    protocol. The code here should only call the SM functions and encapsulate
+    the return or error properly. It should not perform side-effects on
+    the xapi database: these should be handled in the layer above so they
+    can be shared with other SM implementation types.
 
-   	    Where this layer has to perform interface adjustments (see VDI.activate
-   	    and the read/write debacle), this highlights desirable improvements to
-   	    the backend interface.
-   	*)
+    Where this layer has to perform interface adjustments (see VDI.activate
+    and the read/write debacle), this highlights desirable improvements to
+    the backend interface.
+*)
 
   type context = Smint.request
 
@@ -117,7 +117,7 @@ module SMAPIv1 = struct
           let sr = Db.SR.get_by_uuid ~__context ~uuid:sr in
 
           (* Existing backends expect an SRMaster flag to be added
-             					   through the device-config. *)
+             through the device-config. *)
           let srmaster = Helpers.i_am_srmaster ~__context ~sr in
           let device_config = (Sm.sm_master srmaster) :: device_config in
           Sm.call_sm_functions ~__context ~sR:sr
@@ -239,7 +239,7 @@ module SMAPIv1 = struct
             )
         )
     (* Allow us to remember whether a VDI is attached read/only or read/write.
-       		   If this is meaningful to the backend then this should be recorded there! *)
+       If this is meaningful to the backend then this should be recorded there! *)
     let vdi_read_write = Hashtbl.create 10
     let vdi_read_write_m = Mutex.create ()
 
@@ -510,7 +510,7 @@ module SMAPIv1 = struct
           (* PR-1255: the backend should do this for us. *)
           let sr_ref = Db.SR.get_by_uuid ~__context ~uuid:sr in
           (* Return a nearest-first list of similar VDIs. "near" should mean
-             					   "has similar blocks" but we approximate this with distance in the tree *)
+             "has similar blocks" but we approximate this with distance in the tree *)
           let module StringMap = Map.Make(struct type t = string let compare = compare end) in
           let _vhdparent = "vhd-parent" in
           let open Db_filter_types in
@@ -834,7 +834,7 @@ let update_task ~__context id =
     | _ -> ()
   with Not_found ->
     (* Since this is called on all tasks, possibly after the task has been
-       		   destroyed, it's safe to ignore a Not_found exception here. *)
+       destroyed, it's safe to ignore a Not_found exception here. *)
     ()
      | e ->
        error "storage event: Caught %s while updating task" (Printexc.to_string e)
@@ -988,7 +988,7 @@ let deactivate_and_detach ~__context ~vbd ~domid =
   transform_storage_exn
     (fun () ->
       (* It suffices to destroy the datapath: any attached or activated VDIs will be
-         			   automatically detached and deactivated. *)
+         automatically detached and deactivated. *)
       on_vdi ~__context ~vbd ~domid
         (fun rpc dbg dp sr vdi ->
           let module C = Storage_interface.Client(struct let rpc = rpc end) in
@@ -1059,8 +1059,8 @@ let refresh_local_vdi_activations ~__context =
     List.map Ref.of_string ks in
 
   (* If this VDI is currently locked to this host, remove the lock.
-     	   If this VDI is currently locked to a non-existent host (note host references
-     	   change across pool join), remove the lock. *)
+     If this VDI is currently locked to a non-existent host (note host references
+     change across pool join), remove the lock. *)
   let unlock_vdi (vdi_ref, vdi_rec) = 
     (* VDI is already unlocked is the common case: avoid eggregious logspam *)
     let hosts = hosts_of vdi_rec in
@@ -1127,7 +1127,7 @@ let refresh_local_vdi_activations ~__context =
    However we would need to fix the LVHD "attach provisioning mode". *)
 let vbd_attach_order ~__context vbds = 
   (* return RW devices first since the storage layer can't upgrade a
-     	   'RO attach' into a 'RW attach' *)
+     'RO attach' into a 'RW attach' *)
   let rw, ro = List.partition (fun self -> Db.VBD.get_mode ~__context ~self = `RW) vbds in
   rw @ ro
 

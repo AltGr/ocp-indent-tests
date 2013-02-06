@@ -45,7 +45,7 @@ let rec to_xml v =
   | VEnum e -> XMLRPC.To.string e
   | VMap vvl -> XMLRPC.To.structure (List.map (fun (v1,v2)-> to_string v1, to_xml v2) vvl)
   | VSet vl -> XMLRPC.To.array (List.map (fun v->to_xml v) vl)
-  | VRef r -> XMLRPC.To.string r	
+  | VRef r -> XMLRPC.To.string r  
 
 open Printf
 

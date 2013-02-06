@@ -7,10 +7,10 @@
 open Sexplib
 
 type ('a, 'unique_id) t =
-private
-{ compare : 'a -> 'a -> int;
-  sexp_of_t : 'a -> Sexp.t;
-}
+  private
+  { compare : 'a -> 'a -> int;
+    sexp_of_t : 'a -> Sexp.t;
+  }
 
 (* for avoiding circular references *)
 type ('a, 'unique_id) t_ = ('a, 'unique_id) t

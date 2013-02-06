@@ -126,7 +126,7 @@ let permission_of_action ?args ~keys _action =
           ((List.fold_left (fun ss s->ss^s^",") "" arg_keys))
           ((List.fold_left (fun ss s->ss^(Rpc.to_string s)^",") "" arg_values))
       ;
-        get_keyERR_permission_name action "DENY_WRGLEN" (* will always deny *)	
+        get_keyERR_permission_name action "DENY_WRGLEN" (* will always deny *)  
       end
       else (* keys and values have the same length *)
         let rec get_permission_name_of_keys arg_keys arg_values =

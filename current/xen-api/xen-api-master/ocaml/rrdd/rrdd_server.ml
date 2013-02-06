@@ -77,7 +77,7 @@ module Deprecated = struct
     let pool_secret = get_pool_secret () in
     let uri = if is_host then Constants.get_host_rrd_uri else Constants.get_vm_rrd_uri in
     (* Add in "dbsync = true" to the query to make sure the master
-       		 * doesn't try to redirect here! *)
+     * doesn't try to redirect here! *)
     let uri = uri ^ "?uuid=" ^ uuid ^ "&dbsync=true" in
     let request =
       Http.Request.make ~user_agent:Xapi_globs.xapi_user_agent
@@ -99,9 +99,9 @@ module Deprecated = struct
 
   (* DEPRECATED *)
   (* This used to be called from dbsync in two cases:
-     	 * 1. For the local host after a xapi restart or host restart.
-     	 * 2. For running VMs after a xapi restart.
-     	 * It is now only used to load the host's RRD after xapi restart. *)
+   * 1. For the local host after a xapi restart or host restart.
+   * 2. For running VMs after a xapi restart.
+   * It is now only used to load the host's RRD after xapi restart. *)
   let load_rrd _ ~(uuid : string) ~(domid : int) ~(is_host : bool)
       ~(timescale : int) () : unit =
     try
@@ -185,7 +185,7 @@ let migrate_rrd _ ?(session_id : string option) ~(remote_address : string)
     log_backtrace ()
   | e ->
     (*debug "Caught exception while trying to push VM %s RRDs: %s"
-       			vm_uuid (ExnHelper.string_of_exn e);*)
+       vm_uuid (ExnHelper.string_of_exn e);*)
     log_backtrace ()
 
 (* Called on host shutdown/reboot to send the Host RRD to the master for
@@ -313,11 +313,11 @@ module Plugin = struct
       fd
 
   (* A function that reads using Unixext.really_read a string of specified
-     	 * length from the specified file. *)
+   * length from the specified file. *)
   let read_string ~(fd : Unix.file_descr) ~(length : int) : string =
     try
       (* CA-92154: use Unixext.really_read since Unix.read will
-         			 * not read a string longer than 16384 bytes *)
+       * not read a string longer than 16384 bytes *)
       Unixext.really_read_string fd length
     with _ ->
       log_backtrace ();
@@ -338,7 +338,7 @@ module Plugin = struct
     match rpc with Rpc.Enum l -> l | _ -> raise Invalid_payload
 
   (* [assoc_opt ~key ~default l] gets string value associated with [key] in
-     	 * [l], returning [default] if no mapping is found. *)
+   * [l], returning [default] if no mapping is found. *)
   let assoc_opt ~(key : string) ~(default : string)
       (l : (string * Rpc.t) list) : string =
     try Rpc.string_of_rpc (List.assoc key l) with
@@ -378,7 +378,7 @@ module Plugin = struct
     | _ -> raise Invalid_payload
 
   (* A function that converts a JSON type into a datasource type, assigning
-     	 * default values appropriately. *)
+   * default values appropriately. *)
   let ds_of_rpc ((name, rpc) : (string * Rpc.t)) : (Rrd.ds_owner * Ds.ds) =
     try
       let open Rpc in
@@ -407,7 +407,7 @@ module Plugin = struct
       log_backtrace (); raise e
 
   (* A function that parses the payload written by a plugin into the payload
-     	 * type. *)
+   * type. *)
   let parse_payload ~(json : string) : payload =
     try
       let open Rpc in
@@ -423,7 +423,7 @@ module Plugin = struct
     Hashtbl.create 20
 
   (* Throw No_update exception if previous checksum is the same as the current
-     	 * one for this plugin. Otherwise, replace previous with current.*)
+   * one for this plugin. Otherwise, replace previous with current.*)
   let verify_checksum_freshness ~(uid : string) ~(checksum : string) : unit =
     try
       if checksum = Hashtbl.find last_read_checksum uid then raise No_update
@@ -431,8 +431,8 @@ module Plugin = struct
       Hashtbl.replace last_read_checksum uid checksum
 
   (* The function that reads the file that corresponds to the plugin with the
-     	 * specified uid, and returns the contents of the file in terms of the
-     	 * payload type, or throws an exception. *)
+   * specified uid, and returns the contents of the file in terms of the
+   * payload type, or throws an exception. *)
   let read_file (uid : string) : payload =
     try
       let path = Filename.concat base_path uid in
@@ -460,7 +460,7 @@ module Plugin = struct
       | _ -> raise Read_error
 
   (* The function that tells the plugin what to write at the top of its output
-     	 * file. *)
+   * file. *)
   let get_header _ () : string = header
 
   (* The function that a plugin can use to determine which file to write to. *)
@@ -468,17 +468,17 @@ module Plugin = struct
     Filename.concat base_path uid
 
   (* A map storing currently registered plugins, and their sampling
-     	 * frequencies. *)
+   * frequencies. *)
   let registered : (string, Rrd.sampling_frequency) Hashtbl.t =
     Hashtbl.create 20
 
   (* The mutex that protects the list of registered plugins against race
-     	 * conditions and data corruption. *)
+   * conditions and data corruption. *)
   let registered_m : Mutex.t = Mutex.create ()
 
   (* Returns the number of seconds until the next reading phase for the
-     	 * sampling frequency given at registration by the plugin with the specified
-     	 * unique ID. If the plugin is not registered, -1 is returned. *)
+   * sampling frequency given at registration by the plugin with the specified
+   * unique ID. If the plugin is not registered, -1 is returned. *)
   let next_reading _ ~(uid : string) : float =
     let open Rrdd_shared in
     if Mutex.execute registered_m (fun _ -> Hashtbl.mem registered uid)
@@ -488,7 +488,7 @@ module Plugin = struct
     else -1.
 
   (* The function registers a plugin, and returns the number of seconds until
-     	 * the next reading phase for the specified sampling frequency. *)
+   * the next reading phase for the specified sampling frequency. *)
   let register _ ~(uid : string) ~(frequency : Rrd.sampling_frequency)
     : float =
     Mutex.execute registered_m (fun _ ->
@@ -498,7 +498,7 @@ module Plugin = struct
     next_reading ~uid ()
 
   (* The function deregisters a plugin. After this call, the framework will
-     	 * process its output file at most once more. *)
+   * process its output file at most once more. *)
   let deregister _ ~(uid : string) : unit =
     Mutex.execute registered_m (fun _ ->
       Hashtbl.remove registered uid

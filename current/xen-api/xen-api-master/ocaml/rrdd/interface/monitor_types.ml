@@ -17,19 +17,19 @@
 
 (*
 type vcpuinfo = {
-	online: bool;
-	blocked: bool;
-	running: bool;
-	cputime: int64;
-	cpumap: int32;
+  online: bool;
+  blocked: bool;
+  running: bool;
+  cputime: int64;
+  cpumap: int32;
 }
 
 let from_xenctrl_vcpuinfo vi : Xenctrl.vcpuinfo -> vcpuinfo = {
-	online = vi.Xenctrl.online;
-	blocked = vi.Xenctrl.blocked;
-	running = vi.Xenctrl.running;
-	cputime = vi.Xenctrl.cputime;
-	cpumap = vi.Xenctrl.cpumap;
+  online = vi.Xenctrl.online;
+  blocked = vi.Xenctrl.blocked;
+  running = vi.Xenctrl.running;
+  cputime = vi.Xenctrl.cputime;
+  cpumap = vi.Xenctrl.cpumap;
 }
 *)
 

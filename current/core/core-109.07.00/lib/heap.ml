@@ -13,14 +13,14 @@ let def_gfactor, def_sfactor, def_min_size = Res.DefStrat.default
 exception Empty with sexp
 
 type 'el t =
-{ ar : 'el heap_el array;
-  cmp : 'el -> 'el -> int;
-}
+  { ar : 'el heap_el array;
+    cmp : 'el -> 'el -> int;
+  }
 and 'el heap_el =
-{ mutable heap : 'el t sexp_opaque;
-  mutable pos : int;
-  mutable el : 'el;
-}
+  { mutable heap : 'el t sexp_opaque;
+    mutable pos : int;
+    mutable el : 'el;
+  }
 with sexp_of
 
 let heap_el_is_valid h_el = h_el.pos >= 0

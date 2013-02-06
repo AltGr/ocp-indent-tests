@@ -162,9 +162,9 @@ let check api emergency_calls =
       failwith "Can't have a Ref field with a side-effect: it makes the destructors too complicated"
                                         | x -> x) system in
   (* Sanity check: all Set(Ref _) fields should be one of:
-     	 1. one-to-many: the many end should be DynamicRO
-     	 2. many-to-many: the many end should be DynamicRO or RW
-     	 3. something else with field_ignore_foreign_key
+     1. one-to-many: the many end should be DynamicRO
+     2. many-to-many: the many end should be DynamicRO or RW
+     3. something else with field_ignore_foreign_key
   *)
   let rec flatten_fields fs acc =
     match fs with

@@ -416,9 +416,9 @@ let create_host_cpu ~__context =
 
 
   (* The boot-time CPU info is copied into a file in @ETCDIR@/ in the xenservices init script;
-     	   we use that to generate CPU records from. This ensures that if xapi is started after someone has
-     	   modified dom0's VCPUs we don't change out host config... [Important to get this right, otherwise
-     	   pool homogeneity checks fail] *)
+     we use that to generate CPU records from. This ensures that if xapi is started after someone has
+     modified dom0's VCPUs we don't change out host config... [Important to get this right, otherwise
+     pool homogeneity checks fail] *)
   let get_cpuinfo () =
     let cpu_info_file =
       try Unix.access Xapi_globs.cpu_info_file [ Unix.F_OK ]; Xapi_globs.cpu_info_file

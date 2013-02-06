@@ -424,8 +424,8 @@ let vif_of_devid ~__context ~vm devid =
   else List.assoc devid table
 
 (** Return the domid on the *local host* associated with a specific VM.
-   	Note that if this is called without the VM lock then the result is undefined: the
-   	domid might immediately change after the call returns. Caller beware! *)
+   Note that if this is called without the VM lock then the result is undefined: the
+   domid might immediately change after the call returns. Caller beware! *)
 let domid_of_vm ~__context ~self =
   let uuid = Uuid.uuid_of_string (Db.VM.get_uuid ~__context ~self) in
   let all = Xenctrl.with_intf (fun xc -> Xenctrl.domain_getinfolist xc 0) in
@@ -987,7 +987,7 @@ let short_string_of_ref x =
 
 let force_loopback_vbd ~__context =
   (* Workaround assumption in SMRT: if a global flag is set, force use
-     	   of loopback VBDs. *)
+     of loopback VBDs. *)
   let pool = get_pool ~__context in
   let other_config = Db.Pool.get_other_config ~__context ~self:pool in
   List.mem_assoc "force_loopback_vbd" other_config

@@ -326,7 +326,7 @@ let cd_guest_verified (cli : Util.t_cli) vmid =
       set_ignore_errors true;
       change_vm_state cli vmid Shutdown ;
       set_ignore_errors false
-    with e -> 	remove_all_cds cli vmid; raise e
+    with e ->   remove_all_cds cli vmid; raise e
   in
 
   let tests = 
@@ -458,7 +458,7 @@ let disk_guest_verified (cli : Util.t_cli) vmid =
       log Error "Expected results containing: 'testing'";
       log Error "Returned strings:";
       List.iter (fun line -> log Error "%s" line) lines;
-      fatal_error:=true;	
+      fatal_error:=true;  
     | None -> 
       log Info "Stopping VM and detaching disk";
       set_ignore_errors true;
@@ -480,35 +480,35 @@ let disk_guest_verified (cli : Util.t_cli) vmid =
     let rec doit n =
       if n=0 then () 
       else begin
-	List.iter cdattach cdset;
-	log Info "Attached cd(s)";
-	let cdnames = List.map (fun (a,b,c) -> a) cdset in
-	check_attached_cds cli vmid cdnames;
-	log Info "Attached cd(s) verified by xapi";
-	let cddevices = List.map (fun (a,b,c) -> b) cdset in
-	let gacmd = "checkcd " ^ (String.concat " " cddevices) in
-	let ip = get_client_ip vmid in
-	let lines = run_ga_command ip gacmd in
-	let lines = List.map String.lowercase lines in
-	let results = List.map (fun (a,b,c) -> grep lines c) cdset in
-	let results = List.flatten results in
-	if List.length results <> List.length cdset 
-	then
-	  begin
-	    log Error "CD test failed";
-	    log Error "Expected results containing: %s" (String.concat "," (List.map (fun (a,b,c) -> c) cdset));
-	  end;
-	log Info "Test succeeded! Detaching all cds";
-	remove_all_cds cli vmid;
-	let lines = run_ga_command ip gacmd in
-	let lines = List.map String.lowercase lines in
-	let results = List.map (fun (a,b,c) -> grep lines c) cdset in
-	let results = List.flatten results in
-	if List.length results <> 0 then
-	  begin
-	    log Error "CD test failed";
-	    log Error "Found non-null results when nothing was expected!"
-	  end
+  List.iter cdattach cdset;
+  log Info "Attached cd(s)";
+  let cdnames = List.map (fun (a,b,c) -> a) cdset in
+  check_attached_cds cli vmid cdnames;
+  log Info "Attached cd(s) verified by xapi";
+  let cddevices = List.map (fun (a,b,c) -> b) cdset in
+  let gacmd = "checkcd " ^ (String.concat " " cddevices) in
+  let ip = get_client_ip vmid in
+  let lines = run_ga_command ip gacmd in
+  let lines = List.map String.lowercase lines in
+  let results = List.map (fun (a,b,c) -> grep lines c) cdset in
+  let results = List.flatten results in
+  if List.length results <> List.length cdset 
+  then
+    begin
+      log Error "CD test failed";
+      log Error "Expected results containing: %s" (String.concat "," (List.map (fun (a,b,c) -> c) cdset));
+    end;
+  log Info "Test succeeded! Detaching all cds";
+  remove_all_cds cli vmid;
+  let lines = run_ga_command ip gacmd in
+  let lines = List.map String.lowercase lines in
+  let results = List.map (fun (a,b,c) -> grep lines c) cdset in
+  let results = List.flatten results in
+  if List.length results <> 0 then
+    begin
+      log Error "CD test failed";
+      log Error "Found non-null results when nothing was expected!"
+    end
       end
     in doit 100;
     log Info "Test succeeded! Shutting VM down";
@@ -576,7 +576,7 @@ let vif (cli : Util.t_cli) vmid =
     List.iter testfunc vifs
   in 
   List.iter test_net nets;
-  log Info "VIF test succeeded!"	
+  log Info "VIF test succeeded!"  
 
 let online_vif (cli : Util.t_cli) vmid =
   let domainname = get_param cli vmid "name-label" in

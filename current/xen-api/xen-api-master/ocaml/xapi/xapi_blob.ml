@@ -63,7 +63,7 @@ let send_blobs ~__context ~remote_address ~session_id uuid_map =
 let migrate_push ~__context ~rpc ~remote_address ~session_id ~old_vm ~new_vm =
   let vm_blobs = Db.VM.get_blobs ~__context ~self:old_vm in
   (* Create new blob objects on remote host, and return a map
-     		   from new blob uuids to old blob refs *)
+     from new blob uuids to old blob refs *)
   let uuid_map = List.map
       (fun (_,self) ->
         let name = Db.Blob.get_name_label ~__context ~self

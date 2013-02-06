@@ -69,8 +69,8 @@ let gen_test highapi =
              sprintf "let oc = open_out \"xml-light2_%s.xml\" in" (OU.alias_of_ty ty);
              sprintf "Printf.fprintf oc \"%%s\" (Xml.to_string (API.Legacy.To.%s x));" (OU.alias_of_ty ty);
              "close_out oc;";
-           (*					sprintf "let s = Xml.to_string (API.Legacy.To.%s x) in" (OU.alias_of_ty ty);*)
-           (*					sprintf "let y =" *)
+           (*          sprintf "let s = Xml.to_string (API.Legacy.To.%s x) in" (OU.alias_of_ty ty);*)
+           (*          sprintf "let y =" *)
            ]
          ) all_types)
      ])

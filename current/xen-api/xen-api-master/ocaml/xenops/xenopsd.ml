@@ -59,8 +59,8 @@ let read_config_file () =
   let unknown_key k v = debug "Unknown key/value pairs: (%s, %s)" k v in
   if Sys.file_exists !config_file then begin
     (* Will raise exception if config is mis-formatted. It's up to the
-       		   caller to inspect and handle the failure.
-       		*)
+       caller to inspect and handle the failure.
+    *)
     Config.read !config_file config_spec unknown_key;
     debug "Read global variables successfully from %s" !config_file
   end

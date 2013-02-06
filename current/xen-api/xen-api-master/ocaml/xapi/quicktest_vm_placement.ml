@@ -343,15 +343,15 @@ module Summarisation = struct
 
   (** Raw input and output data for the summarise_host_snapshot function. *)
   let rec summarise_host_snapshot_input_output_data = [  (*
-	(---------------------------------------------------), (-------------)
-	(                     INPUT:                        ), (   OUTPUT:   )
-	(---------------------------------------------------), (-------------)
-	(                 host snapshot                     ), (   host      )
-	([-------------],[-------------],[-------------]    ), (   snapshot  )
-	([  guests     ],[  guests     ],[  guests     ]    ), (   summary   )
-	([  resident   ],[  scheduled  ],[  extra      ]    ), (             )
-	([-------------],[-------------],[-------------]    ), (-------------)
-	([ xpqrs; xpqrs],[ xpqrs; xpqrs],[ xpqrs; xpqrs],x,t), (A, P, Q, R, S)*)
+  (---------------------------------------------------), (-------------)
+  (                     INPUT:                        ), (   OUTPUT:   )
+  (---------------------------------------------------), (-------------)
+  (                 host snapshot                     ), (   host      )
+  ([-------------],[-------------],[-------------]    ), (   snapshot  )
+  ([  guests     ],[  guests     ],[  guests     ]    ), (   summary   )
+  ([  resident   ],[  scheduled  ],[  extra      ]    ), (             )
+  ([-------------],[-------------],[-------------]    ), (-------------)
+  ([ xpqrs; xpqrs],[ xpqrs; xpqrs],[ xpqrs; xpqrs],x,t), (A, P, Q, R, S)*)
     ([             ],[             ],[             ],0,0), (0, 0, 0, 0, 0) ;
     ([             ],[             ],[             ],0,8), (8, 0, 0, 0, 0) ;
     ([             ],[             ],[             ],1,8), (7, 0, 0, 0, 0) ;

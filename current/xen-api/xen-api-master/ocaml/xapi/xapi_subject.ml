@@ -49,14 +49,14 @@ let create ~__context ~subject_identifier ~other_config =
     end
   else
     (*
-		(* one of other_config's fields MUST be 'subject_name' (see interface requirement: ocaml/auth/auth_signature.ml) *)
-		(* any other name-value pair is optional *)
-		if not (List.mem_assoc "subject_name" other_config) 
-		then
-			let msg = "" (*(String.concat " " (List.map (fun (a,b) -> Printf.sprintf "(%s:%s)" a b) other_config))*) in
-			raise (Api_errors.Server_error(Api_errors.subject_name_not_provided, []))
-		else
-	*)
+    (* one of other_config's fields MUST be 'subject_name' (see interface requirement: ocaml/auth/auth_signature.ml) *)
+    (* any other name-value pair is optional *)
+    if not (List.mem_assoc "subject_name" other_config) 
+    then
+      let msg = "" (*(String.concat " " (List.map (fun (a,b) -> Printf.sprintf "(%s:%s)" a b) other_config))*) in
+      raise (Api_errors.Server_error(Api_errors.subject_name_not_provided, []))
+    else
+  *)
     (* add the new subject to the db *)
     let ref=Ref.make() in 
     let uuid=Uuid.to_string (Uuid.make_uuid()) in
@@ -142,9 +142,9 @@ let update_all_subjects ~__context =
 (* This function returns all permissions associated with a subject *)
 let get_permissions_name_label ~__context ~self =
   (* for each role in subject.roles:
-     	  fold get_all_permissions ~__context ~role
-     	  setify
-     	*)
+     fold get_all_permissions ~__context ~role
+     setify
+  *)
   Listext.List.setify
     (List.fold_left 
        (fun accu role -> 

@@ -96,11 +96,11 @@ with rpc
 (** Each database field has a qualifier associated with it: *)
 type qualifier =
   | RW        (** Read-write database field whose initial value is specified at the
-                 	              * time of object construction. *)
+                * time of object construction. *)
   | StaticRO  (** Read-only database field whose final value is specified at the time
-                 	              * of object construction. *)
+                * of object construction. *)
   | DynamicRO (** Read-only database field whose value is computed dynamically and
-                 	              * not specified at the time of object construction. *)
+                * not specified at the time of object construction. *)
 with rpc
 
 (** Release keeps track of which versions of opensource/internal products fields and messages are included in *)

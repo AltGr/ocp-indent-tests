@@ -61,10 +61,10 @@ let parameter_count_mismatch_failure func expected received =
    If has_task is set then __context has a real task in it that has to be completed. *)
 let exec ?marshaller ?f_forward ~__context f =
   (* NB:
-     	  1. If we are a slave we process the call locally assuming the locks have
-     	  already been taken by the master
-     	  2. If we are the master, locks are only necessary for the potentially-forwarded
-     	  (ie side-effecting) operations and not things like the database layer *)
+     1. If we are a slave we process the call locally assuming the locks have
+     already been taken by the master
+     2. If we are the master, locks are only necessary for the potentially-forwarded
+     (ie side-effecting) operations and not things like the database layer *)
   try
     let result = 
       if not(Pool_role.is_master ()) 

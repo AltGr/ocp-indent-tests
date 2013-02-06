@@ -49,11 +49,11 @@ let version_check db =
   end 
 
 (** Makes a new database suitable for xapi by rewriting some configuration from the current
-   	database. *)
+   database. *)
 let prepare_database_for_restore ~old_context ~new_context = 
 
   (* To prevent duplicate installation_uuids or duplicate IP address confusing the
-        "no other masters" check we remove all hosts from the backup except the master. *)
+       "no other masters" check we remove all hosts from the backup except the master. *)
 
   (* Look up the pool master: *)
   let pool = Helpers.get_pool ~__context:new_context in
@@ -84,7 +84,7 @@ let prepare_database_for_restore ~old_context ~new_context =
   (* Rewrite this host's PIFs' MAC addresses based on device name. *)
 
   (* First inspect the current machine's configuration and build up a table of 
-        device name -> PIF reference. *)
+       device name -> PIF reference. *)
   let all_pifs = Db.Host.get_PIFs ~__context:old_context ~self:(Helpers.get_localhost ~__context:old_context) in
 
   let device_to_ref = 
@@ -92,26 +92,26 @@ let prepare_database_for_restore ~old_context ~new_context =
     List.map (fun self -> Db.PIF.get_device ~__context:old_context ~self, self) physical in
 
   (* Since it's difficult for us to change the @INVENTORY@ and the ifcfg-
-        files, we /preserve/ the current management PIF across the restore. NB this interface
-        might be a bond or a vlan. *)
+       files, we /preserve/ the current management PIF across the restore. NB this interface
+       might be a bond or a vlan. *)
   let mgmt_dev = 
     match List.filter (fun self -> Db.PIF.get_management ~__context:old_context ~self) all_pifs with
     | [ dev ] -> Some (Db.PIF.get_device ~__context:old_context ~self:dev)
     | _ -> None (* no management interface configured *) in
 
   (* The PIFs of the master host in the backup need their MAC addresses adjusting
-        to match the current machine. For safety the new machine needs to have at least
-        the same number and same device names as the backup being restored. (Note that
-        any excess interfaces will be forgotten and need to be manually reintroduced)
-        
-        Additionally we require the currently configured management interface device name
-        is found in the backup so we can re-use the existing ifcfg- files in /etc/.
-        We need this because the interface-reconfigure --force-up relies on the existing
-        config files. Ideally a master startup (such as that in the restore db code) would
-        actively regenerate the config files but this is too invasive a change for CA-15164.
-        
-        PIFs whose device name are not recognised or those belonging to (now dead) 
-        slaves are forgotten. *)
+       to match the current machine. For safety the new machine needs to have at least
+       the same number and same device names as the backup being restored. (Note that
+       any excess interfaces will be forgotten and need to be manually reintroduced)
+       
+       Additionally we require the currently configured management interface device name
+       is found in the backup so we can re-use the existing ifcfg- files in /etc/.
+       We need this because the interface-reconfigure --force-up relies on the existing
+       config files. Ideally a master startup (such as that in the restore db code) would
+       actively regenerate the config files but this is too invasive a change for CA-15164.
+       
+       PIFs whose device name are not recognised or those belonging to (now dead) 
+       slaves are forgotten. *)
 
   let found_mgmt_if = ref false in
   let ifs_in_backup = ref [] in
@@ -129,11 +129,11 @@ let prepare_database_for_restore ~old_context ~new_context =
       (* We only need to rewrite the MAC addresses of physical PIFs *)
       if physical then begin
         (* If this is a physical PIF but we can't find the device name 
-           				   on the restore target, bail out. *)
+           on the restore target, bail out. *)
         if not(List.mem_assoc device device_to_ref)
         then raise (Api_errors.Server_error(Api_errors.restore_target_missing_device, [ device ]));
         (* Otherwise rewrite the MAC address to match the current machine
-           				   and set the management flag accordingly *)
+           and set the management flag accordingly *)
         let existing_pif = List.assoc device device_to_ref in
         Db.PIF.set_MAC ~__context:new_context ~self ~value:(Db.PIF.get_MAC ~__context:old_context ~self:existing_pif)
       end;

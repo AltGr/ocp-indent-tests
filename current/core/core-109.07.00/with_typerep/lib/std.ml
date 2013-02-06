@@ -222,18 +222,18 @@ module Month = struct
       include (Month.Stable.V1 : (module type of Month.Stable.V1 with type t := t))
       module T = struct
         type t =
-        | Jan
-        | Feb
-        | Mar
-        | Apr
-        | May
-        | Jun
-        | Jul
-        | Aug
-        | Sep
-        | Oct
-        | Nov
-        | Dec
+          | Jan
+          | Feb
+          | Mar
+          | Apr
+          | May
+          | Jun
+          | Jul
+          | Aug
+          | Sep
+          | Oct
+          | Nov
+          | Dec
         with typerep
       end
       include Typestructable.Of_typerepable(T)

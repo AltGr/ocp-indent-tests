@@ -31,11 +31,11 @@ let phys_equal = (==)
     (2) you add a new Hashtbl version to stable.ml
 *)
 type ('k, 'v) t =
-{ mutable table : ('k, 'v) Avltree.t array;
-  mutable length : int;
-  growth_allowed: bool;
-  hashable: 'k Hashable.t;
-}
+  { mutable table : ('k, 'v) Avltree.t array;
+    mutable length : int;
+    growth_allowed: bool;
+    hashable: 'k Hashable.t;
+  }
 
 type ('k, 'v) hashtbl = ('k, 'v) t
 

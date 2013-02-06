@@ -10,8 +10,8 @@ module Stable = struct
        DETAILS *)
     module T = struct
       type 'a t =
-      | Interval of 'a * 'a
-      | Empty
+        | Interval of 'a * 'a
+        | Empty
       with bin_io, of_sexp, variants, compare
 
       type 'a interval = 'a t with bin_io, of_sexp

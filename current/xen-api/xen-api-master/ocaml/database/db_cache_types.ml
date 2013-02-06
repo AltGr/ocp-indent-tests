@@ -1,7 +1,7 @@
 open Db_exn
 
 (** Database tables, columns and rows are all indexed by string, each
-   	using a specialised StringMap *)
+   using a specialised StringMap *)
 module StringMap = struct
   include Map.Make(struct
       type t = string
@@ -40,7 +40,7 @@ module Map2 = functor(V: VAL) -> struct
       let newv = f old in
       if newv == old 
       then row 
-      else updatefn ()				
+      else updatefn ()        
     else
       updatefn ()
   let fold_over_recent since f = StringMap.fold (fun x y z -> if y.updated > since then f y.created y.updated 0L x y.v z else z)
@@ -294,8 +294,8 @@ module Database = struct
             let one_tbl = TableSet.find one_tblname tables in
             let many_tbl = TableSet.find many_tblname tables in
             (* Initialise all VM.VBDs = [] (otherwise VMs with no
-               						   VBDs may be missing a VBDs field altogether on
-               						   upgrade) *)
+               VBDs may be missing a VBDs field altogether on
+               upgrade) *)
             let many_tbl' = Table.fold
                 (fun vm _ _ row acc ->
                   let row' = Row.add g many_fldname (SExpr.string_of (SExpr.Node [])) row in
@@ -461,9 +461,9 @@ let set_field tblname objref fldname newval db =
 let update_generation tblname objref db =
   let g = Manifest.generation (Database.manifest db) in
   (* We update the generation twice so that we can return the lower count
-     	   for the "event.inject" API to guarantee that the token from a later
-     	   event.from will always compare as strictly greater. See the definition
-     	   of the event token datatype. *)
+     for the "event.inject" API to guarantee that the token from a later
+     event.from will always compare as strictly greater. See the definition
+     of the event token datatype. *)
   (Database.increment ++ Database.increment
    ++ ((Database.update
      ++ (TableSet.update g tblname Table.empty)

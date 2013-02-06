@@ -64,7 +64,7 @@ let _ =
       let max_point = get_max inputs in
 
       (* To make sure that each added gaussian really adds 1 unit of area, we extend the bins
-         	  3 sigmas to the left and right *)
+         3 sigmas to the left and right *)
       let min_point = List.map (fun (r,n) -> r, n -. 3. *. sigma) min_point 
       and max_point = List.map (fun (r,n) -> r, n +. 3. *. sigma) max_point in
 
@@ -80,10 +80,10 @@ let _ =
           (* -- Apply the Weierstrass transform -- *)
 
           (* NB Each call to Hist.convolve (i.e. each VM timing measured) increases the total area under the curve by 1.
-             	       By dividing through by 'n' (where 'n' is the total number of VMs i.e. points) we make the total area under
-             	       the curve equal 1 so we can consider the result as a probability density function. In particular this means
-             	       we can directly compare curves for 10, 100, 1000 measurements without worrying about scale factors and
-             	       also trade speed for estimation accuracy. *)
+             By dividing through by 'n' (where 'n' is the total number of VMs i.e. points) we make the total area under
+             the curve equal 1 so we can consider the result as a probability density function. In particular this means
+             we can directly compare curves for 10, 100, 1000 measurements without worrying about scale factors and
+             also trade speed for estimation accuracy. *)
           let num_points = float_of_int (List.length points) in
 
           List.iter (fun y -> Hist.convolve x (fun z -> (gaussian y sigma z) /. num_points)) points;

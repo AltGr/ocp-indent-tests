@@ -363,7 +363,7 @@ let oem_patch_stream_handler (req: Request.t) s _ =
                     (match fingerprint with 
                     | Some f ->
                       (* base64 encoded fingerprint of our public patch signing key *)
-                      if not (List.mem (Base64.encode f) oem_patch_keys) 		             
+                      if not (List.mem (Base64.encode f) oem_patch_keys)                  
                       then 
                         (
                           debug "Got fingerprint: %s" f;
@@ -682,9 +682,9 @@ let precheck ~__context ~self ~host =
     (fun () -> run_precheck ~__context ~self ~host)
     (fun () ->
       (* This prevents leaking space on the slave if the patch is repeatedly uploaded, prechecked and then destroyed *)
-      if not (Pool_role.is_master ()) then begin		   
+      if not (Pool_role.is_master ()) then begin       
         let path = Db.Pool_patch.get_filename ~__context ~self in
-        Unixext.unlink_safe path;		   
+        Unixext.unlink_safe path;       
       end
     )
 

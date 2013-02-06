@@ -653,9 +653,9 @@ let alert_record rpc session_id pool =
   let x () = match !record with 
     | Some x -> x 
     | None -> 
-	let x = Client.Alert.get_record rpc session_id !_ref in
-	record := Some x;
-	x
+  let x = Client.Alert.get_record rpc session_id !_ref in
+  record := Some x;
+  x
   in
   { setref=(fun r -> _ref := r; record := None );
     setrefrec=(fun (a,b) -> _ref := a; record := Some b);
@@ -1083,7 +1083,7 @@ let host_record rpc session_id host =
       make_field ~name:"API-version-vendor-implementation"
         ~get:(fun () -> Record_util.s2sm_to_string "; " (x ()).API.host_API_version_vendor_implementation)
         ~get_map:(fun () -> (x ()).API.host_API_version_vendor_implementation) ();
-      make_field ~name:"logging"						 ~get:(fun () -> Record_util.s2sm_to_string "; " (x ()).API.host_logging)
+      make_field ~name:"logging"             ~get:(fun () -> Record_util.s2sm_to_string "; " (x ()).API.host_logging)
         ~add_to_map:(fun k v -> Client.Host.add_to_logging rpc session_id host k v)
         ~remove_from_map:(fun k -> Client.Host.remove_from_logging rpc session_id host k)
         ~get_map:(fun () -> (x ()).API.host_logging) ();
@@ -1527,10 +1527,10 @@ let dr_task_record rpc session_id dr_task =
       u.get ();
       true
     with
-   	_ -> false
+   _ -> false
    in
    try let (n,r) = List.find findfn all in (n,r ref) with _ -> ("Unknown",[])
-   	*)
+*)
 
 let pgpu_record rpc session_id pgpu =
   let _ref = ref pgpu in

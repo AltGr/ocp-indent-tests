@@ -107,8 +107,8 @@ module C = Storage_interface.Client(struct let rpc = Storage_access.rpc end)
 
 let plug ~__context ~self =
   (* It's possible to end up with a PBD being plugged after "unbind" is
-     	   called if SR.create races with a PBD.plug (see Storage_access.create_sr)
-     	   Since "bind" is idempotent it is safe to always call it. *)
+     called if SR.create races with a PBD.plug (see Storage_access.create_sr)
+     Since "bind" is idempotent it is safe to always call it. *)
   let query_result = Storage_access.bind ~__context ~pbd:self in
   let currently_attached = Db.PBD.get_currently_attached ~__context ~self in
   if not currently_attached then

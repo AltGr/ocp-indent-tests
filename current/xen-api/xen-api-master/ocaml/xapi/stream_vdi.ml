@@ -281,7 +281,7 @@ let recv_all refresh_session ifd (__context:Context.t) rpc session_id vsn force 
                   if not(force) then raise e
               end;
 
-            stream_from suffix (Int64.add skipped_size (Int64.add offset length))	    
+            stream_from suffix (Int64.add skipped_size (Int64.add offset length))      
           end in
         stream_from "-1" 0L;
         Unixext.fsync ofd) in
@@ -331,10 +331,10 @@ let recv_all_zurich refresh_session ifd (__context:Context.t) rpc session_id pre
               next ();
               stream_from suffix
             end 
-          | None -> 	       
+          | None ->          
             (* Since we don't count uncompressed bytes we aren't sure if we've
-               		  really finished unfortunately. We can at least check to see if we
-               	          were cancelled... *)
+               really finished unfortunately. We can at least check to see if we
+               were cancelled... *)
             TaskHelper.exn_if_cancelling ~__context;
             () in
         stream_from "";

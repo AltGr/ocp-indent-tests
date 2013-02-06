@@ -244,7 +244,7 @@ let copy_vm_record ?(snapshot_info_record) ~__context ~vm ~disk_op ~new_name ~ne
     ~install_time:(default Date.never (may (fun x -> x.Db_actions.vM_metrics_install_time) m))
     ~state:(default [] (may (fun x -> x.Db_actions.vM_metrics_state) m))
     ~last_updated:(default Date.never (may (fun x -> x.Db_actions.vM_metrics_last_updated) m))
-    ~other_config:(default [] (may (fun x -> x.Db_actions.vM_metrics_other_config) m));	
+    ~other_config:(default [] (may (fun x -> x.Db_actions.vM_metrics_other_config) m));  
 
   let guest_metrics = Xapi_vm_helpers.copy_guest_metrics ~__context ~vm in
 
@@ -306,7 +306,7 @@ let copy_vm_record ?(snapshot_info_record) ~__context ~vm ~disk_op ~new_name ~ne
     ~pV_args:all.Db_actions.vM_PV_args
     ~pV_bootloader:all.Db_actions.vM_PV_bootloader
     ~pV_bootloader_args:all.Db_actions.vM_PV_bootloader_args
-    ~pV_legacy_args:all.Db_actions.vM_PV_legacy_args	  
+    ~pV_legacy_args:all.Db_actions.vM_PV_legacy_args    
     ~pCI_bus:all.Db_actions.vM_PCI_bus
     ~other_config
     ~domid:(-1L)
@@ -334,7 +334,7 @@ let copy_vm_record ?(snapshot_info_record) ~__context ~vm ~disk_op ~new_name ~ne
 ;
 
   (* update the VM's parent field in case of snapshot. Note this must be done after "ref"
-     	   has been created, so that its "children" field can be updated by the database layer *)
+     has been created, so that its "children" field can be updated by the database layer *)
   begin match disk_op with
   | Disk_op_clone | Disk_op_copy _-> ()
   | Disk_op_snapshot | Disk_op_checkpoint -> Db.VM.set_parent ~__context ~self:vm ~value:ref
@@ -386,8 +386,8 @@ let clone ?(snapshot_info_record) disk_op ~__context ~vm ~new_name =
         List.iter (fun (vbd, newvdi, _) -> 
           let vbd = Xapi_vbd_helpers.copy ~__context ~vm:ref ~vdi:newvdi vbd in
           (* CA-58405: when we make a clone/snapshot/checkpoint we consider the clone/snapshot/checkpoint VM
-             					   to "own" all the clone/snapshot/checkpoint *disks* irrespective of the ownership of the original
-             					   disks. We wish the clone/snapshot/checkpoint disks to be cleaned up with the VM. *)
+             to "own" all the clone/snapshot/checkpoint *disks* irrespective of the ownership of the original
+             disks. We wish the clone/snapshot/checkpoint disks to be cleaned up with the VM. *)
           if Db.VBD.get_type ~__context ~self:vbd = `Disk then begin
             let other_config = Db.VBD.get_other_config ~__context ~self:vbd in
             if not(List.mem_assoc Xapi_globs.owner_key other_config)
@@ -425,5 +425,5 @@ let clone ?(snapshot_info_record) disk_op ~__context ~vm ~new_name =
 
     with e -> 
       delete_disks rpc session_id cloned_disks;
-      raise e							   
+      raise e                 
     end)

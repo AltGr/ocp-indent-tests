@@ -22,7 +22,7 @@ module D = Debug.Debugger(struct let name="xapi" end)
 open D
 
 (** Given an operation, [allowed_power_states] returns all the possible power state for
-   	wich this operation can be performed. *)
+   wich this operation can be performed. *)
 let allowed_power_states ~__context ~vmr ~(op:API.vm_operations) =
   let all_power_states =
     [`Halted; `Paused; `Suspended; `Running] in
@@ -89,8 +89,8 @@ let allowed_power_states ~__context ~vmr ~(op:API.vm_operations) =
 let is_allowed_sequentially ~__context ~vmr ~power_state ~op =
   List.mem power_state (allowed_power_states ~__context ~vmr ~op)
 
-(**	check if [op] can be done while [current_ops] are already in progress.
-   	Remark: we do not test whether the power-state is valid. *)
+(**  check if [op] can be done while [current_ops] are already in progress.
+   Remark: we do not test whether the power-state is valid. *)
 let is_allowed_concurrently ~(op:API.vm_operations) ~current_ops =
   (* declare below the non-conflicting concurrent sets. *)
   let long_copies = [`clone; `copy; `export ]
@@ -348,7 +348,7 @@ let get_info ~__context ~self =
         Some 
           ((try List.assoc "on_boot" sm_config = "reset" with _ -> false),
            (try String.lowercase (List.assoc "caching" sm_config) = "true" with _ -> false))
-      with _ -> None) all.Db_actions.vM_VBDs in	
+      with _ -> None) all.Db_actions.vM_VBDs in  
   all, gm, clone_suspended_vm_enabled, vdis_reset_and_caching
 
 let is_operation_valid ~__context ~self ~op =

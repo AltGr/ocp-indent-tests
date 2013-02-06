@@ -2,9 +2,9 @@ type t = Less | Equal | Greater with bin_io, compare, sexp
 
 module Export = struct
   type _ordering = t =
-  | Less
-  | Equal
-  | Greater
+    | Less
+    | Equal
+    | Greater
 end
 
 let of_int n =

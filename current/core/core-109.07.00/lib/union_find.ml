@@ -32,8 +32,8 @@ type 'a root = {
 
 type 'a t = { mutable parent : 'a parent; }
 and 'a parent =
-| Parent of 'a t
-| Root of 'a root
+  | Parent of 'a t
+  | Root of 'a root
 
 let create v = { parent = Root { value = v; rank = 0; }; }
 

@@ -274,8 +274,8 @@ let login_no_password ~__context ~uname ~host ~pool ~is_local_superuser ~subject
   let user = Ref.null in (* always return a null reference to the deprecated user object *)
   let parent = try Context.get_session_id __context with _ -> Ref.null in
   (*match uname with   (* the user object is deprecated in favor of subject *)
-     	      Some uname -> Helpers.get_user ~__context uname
-     	    | None -> Ref.null in*)
+      Some uname -> Helpers.get_user ~__context uname
+     | None -> Ref.null in*)
   (* This info line is important for tracking, auditability and client accountability purposes on XenServer *)
   (* Never print the session id nor uuid: they are secret values that should be known only to the user that *)
   (* has just logged in. Instead, we print a non-invertible hash as the tracking id for the session id *)
@@ -376,7 +376,7 @@ let login_with_password ~__context ~uname ~pwd ~version = wipe_params_after_fn [
             ~pool:false ~is_local_superuser:true ~subject:(Ref.null) ~auth_user_sid:"" ~auth_user_name:uname
             ~rbac_permissions:[]
         end
-      in	
+      in  
       let thread_delay_and_raise_error ?(error=Api_errors.session_authentication_failed) uname msg =
         let some_seconds = 5.0 in
         Thread.delay some_seconds; (* sleep a bit to avoid someone brute-forcing the password *)
@@ -384,7 +384,7 @@ let login_with_password ~__context ~uname ~pwd ~version = wipe_params_after_fn [
         then raise (Api_errors.Server_error (error,[uname;msg]))
         else raise (Api_errors.Server_error (error,["session.login_with_password";msg]))
       in
-      (	match (Db.Host.get_external_auth_type ~__context ~self:(Helpers.get_localhost ~__context)) with
+      (  match (Db.Host.get_external_auth_type ~__context ~self:(Helpers.get_localhost ~__context)) with
 
       | "" as auth_type -> (* no external authentication *)
         begin
@@ -425,7 +425,7 @@ let login_with_password ~__context ~uname ~pwd ~version = wipe_params_after_fn [
                     info "Failed to externally authenticate user %s from %s: %s" uname (Context.get_origin __context) msg;
                     thread_delay_and_raise_error uname msg
                   end
-                ) in	
+                ) in  
 
                 (* as per tests in CP-827, there should be no need to call is_subject_suspended function here, *)
                 (* because the authentication server in 2.1 will already reflect if account/password expired, *)
@@ -568,7 +568,7 @@ let login_with_password ~__context ~uname ~pwd ~version = wipe_params_after_fn [
 let change_password  ~__context ~old_pwd ~new_pwd = wipe_params_after_fn [old_pwd;new_pwd] (fun () ->
     let session_id = Context.get_session_id __context in
     (*let user = Db.Session.get_this_user ~__context ~self:session_id in
-       	let uname = Db.User.get_short_name ~__context ~self:user in*)
+       let uname = Db.User.get_short_name ~__context ~self:user in*)
     let uname = local_superuser in (* user class has been deprecated *)
 
     if (Db.Session.get_is_local_superuser ~__context ~self:session_id) then
@@ -577,13 +577,13 @@ let change_password  ~__context ~old_pwd ~new_pwd = wipe_params_after_fn [old_pw
   CA-13567: If you have root priviledges then we do not authenticate old_pwd; right now, since we only
             ever have root priviledges we just comment this out.
 
-	begin
-	  try
-	    do_auth uname old_pwd
-	  with (Failure msg) ->
-	    debug "Failed to authenticate user %s: %s" uname msg;
-	    raise (Api_errors.Server_error (Api_errors.session_authentication_failed,[uname;msg]))
-	end;
+  begin
+    try
+      do_auth uname old_pwd
+    with (Failure msg) ->
+      debug "Failed to authenticate user %s: %s" uname msg;
+      raise (Api_errors.Server_error (Api_errors.session_authentication_failed,[uname;msg]))
+  end;
 *)
         try
           do_local_change_password uname new_pwd;
@@ -632,7 +632,7 @@ let get_group_subject_identifier_from_session ~__context ~session =
   try
     Db.Subject.get_subject_identifier ~__context ~self:subj
   with
-  |	Db_exn.DBCache_NotFound ("missing row",_,_) ->
+  |  Db_exn.DBCache_NotFound ("missing row",_,_) ->
     (* expected error: subject was removed from subject list *)
     ""
   | e -> (* unexpected error *)
@@ -678,7 +678,7 @@ let logout_subject_identifier ~__context ~subject_identifier=
         or
         (* 3.2. any sids of the group that authenticated the user *)
         (* TODO: better to look up the membership closure *)
-        (get_group_subject_identifier_from_session ~__context ~session:s)	= subject_identifier
+        (get_group_subject_identifier_from_session ~__context ~session:s)  = subject_identifier
       )
 
     ) all_sessions in

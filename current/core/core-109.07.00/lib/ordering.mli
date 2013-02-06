@@ -18,9 +18,9 @@
 *)
 
 type t =
-| Less
-| Equal
-| Greater
+  | Less
+  | Equal
+  | Greater
 with bin_io, compare, sexp
 
 (** [of_int n] is
@@ -33,7 +33,7 @@ val of_int : int -> t
 
 module Export : sig
   type _ordering = t =
-  | Less
-  | Equal
-  | Greater
+    | Less
+    | Equal
+    | Greater
 end

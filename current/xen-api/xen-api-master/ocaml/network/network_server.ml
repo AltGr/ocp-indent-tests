@@ -46,7 +46,7 @@ let read_config () =
   with Network_config.Read_error ->
     (* No configuration file found. *)
     (* Perhaps it is an upgrade from the pre-networkd era. If network.dbcache exists, try to configure the
-       		 * management interface using the old scripts. *)
+     * management interface using the old scripts. *)
     if (try Unix.access (Filename.concat Fhs.vardir "network.dbcache") [Unix.F_OK]; true with _ -> false) then
       legacy_management_interface_start ()
     else
@@ -431,7 +431,7 @@ module Bridge = struct
               mode
             end else begin
               debug "%s isn't a valid setting for other_config:vswitch-controller-fail-mode; \
-                     								defaulting to 'standalone'" mode;
+                     defaulting to 'standalone'" mode;
               "standalone"
             end
         in
@@ -735,7 +735,7 @@ let on_startup () =
     Bridge.determine_backend ();
     let remove_centos_config () =
       (* Remove DNSDEV and GATEWAYDEV from Centos networking file, because the interfere
-         			 * with this daemon. *)
+       * with this daemon. *)
       try
         let file = String.rtrim (Unixext.string_of_file "/etc/sysconfig/network") in
         let args = String.split '\n' file in

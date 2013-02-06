@@ -2,9 +2,9 @@
    Then, use Pervasives.(<), for example, where needed. *)
 
 type compare =
-[`no_polymorphic_compare]
--> [`no_polymorphic_compare]
--> [`no_polymorphic_compare]
+  [`no_polymorphic_compare]
+  -> [`no_polymorphic_compare]
+  -> [`no_polymorphic_compare]
 
 val compare : compare
 val (<)     : compare

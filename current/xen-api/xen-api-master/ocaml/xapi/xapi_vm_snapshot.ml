@@ -303,10 +303,10 @@ let update_vifs_and_vbds ~__context ~snapshot ~vm =
         List.map (fun (vbd, vdi, _) -> Xapi_vbd_helpers.copy ~__context ~vm ~vdi vbd) cloned_disks in
       (* XXX: no VBDs stored in the LBR now *)
       (*
-			(* To include the case of checkpoints we must also update the VBD references in the LBR *)
-			let snapshot = Helpers.get_boot_record ~__context ~self:vm in
-			Helpers.set_boot_record ~__context ~self:vm { snapshot with API.vM_VBDs = vbds };
-			  *)
+      (* To include the case of checkpoints we must also update the VBD references in the LBR *)
+      let snapshot = Helpers.get_boot_record ~__context ~self:vm in
+      Helpers.set_boot_record ~__context ~self:vm { snapshot with API.vM_VBDs = vbds };
+        *)
       TaskHelper.set_progress ~__context 0.8;
 
       debug "Update the suspend_VDI";
@@ -395,7 +395,7 @@ let revert ~__context ~snapshot ~vm =
   debug "Reverting %s to %s" (Ref.string_of vm) (Ref.string_of snapshot);
 
   (* This is destructive and relatively fast. There's no point advertising cancel since it
-     	   will result in a broken VM. *)
+     will result in a broken VM. *)
   TaskHelper.set_not_cancellable ~__context;
   try
     let power_state = Db.VM.get_power_state ~__context ~self:snapshot in
@@ -428,7 +428,7 @@ let revert ~__context ~snapshot ~vm =
       raise e
     | _ -> raise (Api_errors.Server_error (Api_errors.vm_revert_failed, [Ref.string_of snapshot; Ref.string_of vm]))
 
-let	create_vm_from_snapshot ~__context ~snapshot =
+let  create_vm_from_snapshot ~__context ~snapshot =
   let old_vm = Db.VM.get_snapshot_of ~__context ~self:snapshot in
   try 
     let snapshots = 

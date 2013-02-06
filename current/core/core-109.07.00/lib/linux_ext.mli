@@ -7,21 +7,21 @@ open Core_unix
 module Sysinfo : sig
   (** Result of sysinfo syscall (man 2 sysinfo) *)
   type t =
-  { uptime : Span.t;  (** time since boot *)
-    load1 : int;  (** load average over the last minute *)
-    load5 : int;  (** load average over the last 5 minutes*)
-    load15 : int;  (** load average over the last 15 minutes *)
-    total_ram : int;  (** total usable main memory *)
-    free_ram : int;  (** available memory size *)
-    shared_ram : int;  (** amount of shared memory *)
-    buffer_ram : int;  (** memory used by buffers *)
-    total_swap : int;  (** total swap page size *)
-    free_swap : int;  (** available swap space *)
-    procs : int;  (** number of current processes *)
-    totalhigh : int;  (** Total high memory size *)
-    freehigh : int;  (** Available high memory size *)
-    mem_unit : int;  (** Memory unit size in bytes *)
-  } with sexp, bin_io
+    { uptime : Span.t;  (** time since boot *)
+      load1 : int;  (** load average over the last minute *)
+      load5 : int;  (** load average over the last 5 minutes*)
+      load15 : int;  (** load average over the last 15 minutes *)
+      total_ram : int;  (** total usable main memory *)
+      free_ram : int;  (** available memory size *)
+      shared_ram : int;  (** amount of shared memory *)
+      buffer_ram : int;  (** memory used by buffers *)
+      total_swap : int;  (** total swap page size *)
+      free_swap : int;  (** available swap space *)
+      procs : int;  (** number of current processes *)
+      totalhigh : int;  (** Total high memory size *)
+      freehigh : int;  (** Available high memory size *)
+      mem_unit : int;  (** Memory unit size in bytes *)
+    } with sexp, bin_io
 
   val sysinfo : (unit -> t) Or_error.t
 end

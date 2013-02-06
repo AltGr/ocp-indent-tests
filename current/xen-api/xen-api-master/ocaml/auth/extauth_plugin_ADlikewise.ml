@@ -93,14 +93,14 @@ struct
           (fun () ->
             debug "Created process pid %s for cmd %s" (Forkhelpers.string_of_pidty pid) debug_cmd;
             (* Insert this delay to reproduce the cannot write to stdin bug: 
-               		   Thread.delay 5.; *)
+               Thread.delay 5.; *)
             (* WARNING: we don't close the in_readme because otherwise in the case where the likewise 
-               		   binary doesn't expect any input there is a race between it finishing (and closing the last
-               		   reference to the in_readme) and us attempting to write to in_writeme. If likewise wins the
-               		   race then our write will fail with EPIPE (Unix.error 31 in ocamlese). If we keep a reference
-               		   to in_readme then our write of "\n" will succeed.
+               binary doesn't expect any input there is a race between it finishing (and closing the last
+               reference to the in_readme) and us attempting to write to in_writeme. If likewise wins the
+               race then our write will fail with EPIPE (Unix.error 31 in ocamlese). If we keep a reference
+               to in_readme then our write of "\n" will succeed.
 
-               		   An alternative fix would be to not write anything when stdin_string = "" *)
+               An alternative fix would be to not write anything when stdin_string = "" *)
 
             (* push stdin_string to recently created process' STDIN *)
             begin 
@@ -206,7 +206,7 @@ struct
               | _ ->  (* general Likewise error *)
                 raise (Auth_signature.Auth_service_error (Auth_signature.E_GENERIC,(Printf.sprintf "(%i) %s" code errmsg)))
             end
-        end	  
+        end    
       )
 
   let get_joined_domain_name () =
@@ -302,10 +302,10 @@ struct
 
   (* subject_id get_subject_identifier(string subject_name)
 
-     	Takes a subject_name (as may be entered into the XenCenter UI when defining subjects -- 
-     	see Access Control wiki page); and resolves it to a subject_id against the external 
-     	auth/directory service. 
-     	Raises Not_found (*Subject_cannot_be_resolved*) if authentication is not succesful.
+     Takes a subject_name (as may be entered into the XenCenter UI when defining subjects -- 
+     see Access Control wiki page); and resolves it to a subject_id against the external 
+     auth/directory service. 
+     Raises Not_found (*Subject_cannot_be_resolved*) if authentication is not succesful.
   *)
   let get_subject_identifier _subject_name = 
     try
@@ -320,13 +320,13 @@ struct
 
   (* subject_id Authenticate_username_password(string username, string password)
 
-     	Takes a username and password, and tries to authenticate against an already configured 
-     	auth service (see XenAPI requirements Wiki page for details of how auth service configuration 
-     	takes place and the appropriate vlaues are stored within the XenServer Metadata). 
-     	If authentication is successful then a subject_id is returned representing the account 
-     	corresponding to the supplied credentials (where the subject_id is in a namespace managed by 
-     	the auth module/service itself -- e.g. maybe a SID or something in the AD case). 
-     	Raises auth_failure if authentication is not successful
+     Takes a username and password, and tries to authenticate against an already configured 
+     auth service (see XenAPI requirements Wiki page for details of how auth service configuration 
+     takes place and the appropriate vlaues are stored within the XenServer Metadata). 
+     If authentication is successful then a subject_id is returned representing the account 
+     corresponding to the supplied credentials (where the subject_id is in a namespace managed by 
+     the auth module/service itself -- e.g. maybe a SID or something in the AD case). 
+     Raises auth_failure if authentication is not successful
   *)
 
   let authenticate_username_password _username password = 
@@ -342,7 +342,7 @@ struct
 
   (* subject_id Authenticate_ticket(string ticket)
 
-     	As above but uses a ticket as credentials (i.e. for single sign-on)
+     As above but uses a ticket as credentials (i.e. for single sign-on)
   *)
   (* not implemented now, not needed for our tests, only for a *)
   (* future single sign-on feature *)
@@ -351,13 +351,13 @@ struct
 
   (* ((string*string) list) query_subject_information(string subject_identifier)
 
-     	Takes a subject_identifier and returns the user record from the directory service as 
-     	key/value pairs. In the returned string*string map, there _must_ be a key called 
-     	subject_name that refers to the name of the account (e.g. the user or group name as may 
-     	be displayed in XenCenter). There is no other requirements to include fields from the user 
-     	record -- initially qI'd imagine that we wouldn't bother adding anything else here, but 
-     	it's a string*string list anyway for possible future expansion. 
-     	Raises Not_found (*Subject_cannot_be_resolved*) if subject_id cannot be resolved by external auth service
+     Takes a subject_identifier and returns the user record from the directory service as 
+     key/value pairs. In the returned string*string map, there _must_ be a key called 
+     subject_name that refers to the name of the account (e.g. the user or group name as may 
+     be displayed in XenCenter). There is no other requirements to include fields from the user 
+     record -- initially qI'd imagine that we wouldn't bother adding anything else here, but 
+     it's a string*string list anyway for possible future expansion. 
+     Raises Not_found (*Subject_cannot_be_resolved*) if subject_id cannot be resolved by external auth service
   *)
   let query_subject_information subject_identifier = 
 
@@ -379,39 +379,39 @@ struct
     if subject_is_group 
     then (* subject is group *)
       (* in this case, a few info fields are not available: UPN, Uid, Gecos, Account {disabled,expired,locked}, Password expired *)
-      [	("subject-name", unmap_lw_space_chars (get_value "Name" infolist));
-        ("subject-gid", get_value "Gid" infolist);
-        ("subject-sid", get_value "SID" infolist);
-        ("subject-is-group", "true");
+      [  ("subject-name", unmap_lw_space_chars (get_value "Name" infolist));
+         ("subject-gid", get_value "Gid" infolist);
+         ("subject-sid", get_value "SID" infolist);
+         ("subject-is-group", "true");
       (*(* comma-separated list of subjects that are contained in this subject *)
-         			("contains-byname", List.fold_left (fun (n,v) m ->m^","^v) "" (List.filter (fun (n,v)->n="Member") infolist));*)
+         ("contains-byname", List.fold_left (fun (n,v) m ->m^","^v) "" (List.filter (fun (n,v)->n="Member") infolist));*)
       ]
     else (* subject is user *)
       let subject_name = unmap_lw_space_chars (get_value "Name" infolist) in
       let subject_gecos = get_value "Gecos" infolist in
-      [	("subject-name", subject_name);
-        ("subject-upn", get_value "UPN" infolist);
-        ("subject-uid", get_value "Uid" infolist);
-        ("subject-gid", get_value "Gid" infolist);
-        ("subject-sid", get_value "SID" infolist);
-        ("subject-gecos", subject_gecos);
-        ("subject-displayname", if subject_gecos="" then subject_name else subject_gecos);
-        (*("subject-homedir", get_value "Home dir" infolist);*)
-        (*("subject-shell", get_value "Shell" infolist);*)
-        ("subject-is-group", "false");
-        ("subject-account-disabled", get_value "Account disabled" infolist);
-        ("subject-account-expired", get_value "Account expired" infolist);
-        ("subject-account-locked", get_value "Account locked" infolist);
-        ("subject-password-expired", get_value "Password Expired" infolist);
+      [  ("subject-name", subject_name);
+         ("subject-upn", get_value "UPN" infolist);
+         ("subject-uid", get_value "Uid" infolist);
+         ("subject-gid", get_value "Gid" infolist);
+         ("subject-sid", get_value "SID" infolist);
+         ("subject-gecos", subject_gecos);
+         ("subject-displayname", if subject_gecos="" then subject_name else subject_gecos);
+         (*("subject-homedir", get_value "Home dir" infolist);*)
+         (*("subject-shell", get_value "Shell" infolist);*)
+         ("subject-is-group", "false");
+         ("subject-account-disabled", get_value "Account disabled" infolist);
+         ("subject-account-expired", get_value "Account expired" infolist);
+         ("subject-account-locked", get_value "Account locked" infolist);
+         ("subject-password-expired", get_value "Password Expired" infolist);
       ]
 
 
   (* (string list) query_group_membership(string subject_identifier)
 
-     	Takes a subject_identifier and returns its group membership (i.e. a list of subject 
-     	identifiers of the groups that the subject passed in belongs to). The set of groups returned 
-     	_must_ be transitively closed wrt the is_member_of relation if the external directory service 
-     	supports nested groups (as AD does for example)
+     Takes a subject_identifier and returns its group membership (i.e. a list of subject 
+     identifiers of the groups that the subject passed in belongs to). The set of groups returned 
+     _must_ be transitively closed wrt the is_member_of relation if the external directory service 
+     supports nested groups (as AD does for example)
   *)
   let query_group_membership subject_identifier = 
 
@@ -434,7 +434,7 @@ struct
       subject_sid_membership_list
 
   (*
-	In addition, there are some event hooks that auth modules implement as follows:
+  In addition, there are some event hooks that auth modules implement as follows:
 *)
 
   let is_likewise_server_available max =
@@ -500,17 +500,17 @@ struct
 
   (* unit on_enable(((string*string) list) config_params)
 
-     	Called internally by xapi _on each host_ when a client enables an external auth service for the 
-     	pool via the XenAPI [see AD integration wiki page]. The config_params here are the ones passed 
-     	by the client as part of the corresponding XenAPI call.
-     	On receiving this hook, the auth module should:
-     	(i) do whatever it needs to do (if anything) to register with the external auth/directory 
-     		service [using the config params supplied to get access]
-     	(ii) Write the config_params that it needs to store persistently in the XenServer metadata 
-     		into the Pool.external_auth_configuration field. [Note - the rationale for making the plugin 
-     		write the config params it needs long-term into the XenServer metadata itself is so it can 
-     		explicitly filter any one-time credentials [like AD username/password for example] that it 
-     		does not need long-term.]
+     Called internally by xapi _on each host_ when a client enables an external auth service for the 
+     pool via the XenAPI [see AD integration wiki page]. The config_params here are the ones passed 
+     by the client as part of the corresponding XenAPI call.
+     On receiving this hook, the auth module should:
+     (i) do whatever it needs to do (if anything) to register with the external auth/directory 
+      service [using the config params supplied to get access]
+     (ii) Write the config_params that it needs to store persistently in the XenServer metadata 
+      into the Pool.external_auth_configuration field. [Note - the rationale for making the plugin 
+      write the config params it needs long-term into the XenServer metadata itself is so it can 
+      explicitly filter any one-time credentials [like AD username/password for example] that it 
+      does not need long-term.]
   *)
   let on_enable config_params =
   (* but in the ldap plugin, we should 'join the AD/kerberos domain', i.e. we should*)
@@ -621,10 +621,10 @@ struct
 
   (* unit on_disable()
 
-     	Called internally by xapi _on each host_ when a client disables an auth service via the XenAPI. 
-     	The hook will be called _before_ the Pool configuration fields relating to the external-auth 
-     	service are cleared (i.e. so you can access the config params you need from the pool metadata 
-     	within the body of the on_disable method)
+     Called internally by xapi _on each host_ when a client disables an auth service via the XenAPI. 
+     The hook will be called _before_ the Pool configuration fields relating to the external-auth 
+     service are cleared (i.e. so you can access the config params you need from the pool metadata 
+     within the body of the on_disable method)
   *)
   let on_disable config_params =
   (* but in the ldap plugin, we should 'leave the AD/kerberos domain', i.e. we should *)
@@ -719,8 +719,8 @@ struct
 
   (* unit on_xapi_initialize(bool system_boot)
 
-     	Called internally by xapi whenever it starts up. The system_boot flag is true iff xapi is 
-     	starting for the first time after a host boot
+     Called internally by xapi whenever it starts up. The system_boot flag is true iff xapi is 
+     starting for the first time after a host boot
   *)
   let on_xapi_initialize system_boot =
   (* the AD server is initialized outside xapi, by init.d scripts *)
@@ -739,7 +739,7 @@ struct
 
   (* unit on_xapi_exit()
 
-     	Called internally when xapi is doing a clean exit.
+     Called internally when xapi is doing a clean exit.
   *)
   let on_xapi_exit () =
   (* nothing to do here in this unix plugin *) 

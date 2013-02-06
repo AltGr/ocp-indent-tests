@@ -97,7 +97,7 @@ let set_ha_restart_priority ~__context ~self ~value =
   if current <> value then begin
     Db.VM.set_ha_restart_priority ~__context ~self ~value;
     (* If the VM is running then immediately turn on or off "protection"
-       		   for the VM by setting ha_always_run *)
+       for the VM by setting ha_always_run *)
     if Db.VM.get_power_state ~__context ~self = `Running
     then Db.VM.set_ha_always_run ~__context ~self ~value:(value = Constants.ha_restart)
   end
@@ -118,7 +118,7 @@ let set_memory_static_range ~__context ~self ~min ~max =
   (* Called on the master only when the VM is offline *)
   if Db.VM.get_power_state ~__context ~self <> `Halted
   then failwith "assertion_failed: set_memory_static_range should only be \
-                 		called when the VM is Halted";
+                 called when the VM is Halted";
   (* Check the range constraints *)
   let constraints = Vm_memory_constraints.get ~__context ~vm_ref:self in
   let constraints = {constraints with Vm_memory_constraints.
@@ -145,7 +145,7 @@ let set_memory_limits ~__context ~self
   (* Called on the master only when the VM is halted. *)
   if Db.VM.get_power_state ~__context ~self <> `Halted
   then failwith "assertion_failed: set_memory_limits should only be \
-                 		called when the VM is Halted";
+                 called when the VM is Halted";
   (* Check that the new limits are in the correct order. *)
   let constraints = {Vm_memory_constraints.
                       static_min  = static_min;
@@ -217,9 +217,9 @@ let assert_host_is_localhost ~__context ~host =
 
 let start_on  ~__context ~vm ~host ~start_paused ~force =
   (* If we modify this to support start_on other-than-localhost,
-     	   insert a precheck to insure that we're starting on an
-     	   appropriately versioned host during an upgrade, as per
-     	   PR-1007. See the first lines of resume above *)
+     insert a precheck to insure that we're starting on an
+     appropriately versioned host during an upgrade, as per
+     PR-1007. See the first lines of resume above *)
   assert_host_is_localhost ~__context ~host;
   start ~__context ~vm ~start_paused ~force
 
@@ -295,11 +295,11 @@ let power_state_reset ~__context ~vm =
       if running then raise (Api_errors.Server_error(Api_errors.domain_exists, [ Ref.string_of vm ]))
     end else begin
       (* If resident on another host, check if that host is alive: if so
-         	 then refuse to perform the reset, since we have delegated state management
-         	 to this host and we trust it -- this call is intended for coping with
-         	 host failures and backup restores, not for working around agent bugs.
-         	 If the host agent software is malfunctioning, then it should be restarted
-         	 (via Host.restart_agent or 'service xapi restart') *)
+         then refuse to perform the reset, since we have delegated state management
+         to this host and we trust it -- this call is intended for coping with
+         host failures and backup restores, not for working around agent bugs.
+         If the host agent software is malfunctioning, then it should be restarted
+         (via Host.restart_agent or 'service xapi restart') *)
       debug "VM.power_state_reset vm=%s resident_on<>localhost; checking liveness of remote host" (Ref.string_of vm);
       if Xapi_host.is_host_alive ~__context ~host:resident then begin
         error "VM.power_state_reset vm=%s resident_on=%s; host is alive so refusing to reset power-state"
@@ -332,9 +332,9 @@ let resume ~__context ~vm ~start_paused ~force =
 
 let resume_on  ~__context ~vm ~host ~start_paused ~force =
   (* If we modify this to support resume_on other-than-localhost,
-     	   insert a precheck to insure that we're starting on an
-     	   appropriately versioned host during an upgrade, as per
-     	   PR-1007. See the first lines of resume above *)
+     insert a precheck to insure that we're starting on an
+     appropriately versioned host during an upgrade, as per
+     PR-1007. See the first lines of resume above *)
   assert_host_is_localhost ~__context ~host;
   resume ~__context ~vm ~start_paused ~force
 
@@ -553,7 +553,7 @@ let provision ~__context ~vm =
 let set_VCPUs_max ~__context ~self ~value =
   if Db.VM.get_power_state ~__context ~self <> `Halted
   then failwith "assertion_failed: set_VCPUs_max should only be \
-                 		called when the VM is Halted";
+                 called when the VM is Halted";
   let vcpus_at_startup = Db.VM.get_VCPUs_at_startup ~__context ~self in
   if value < 1L || value < vcpus_at_startup then invalid_value
       "VCPU values must satisfy: 0 < VCPUs_at_startup ≤ VCPUs_max"
@@ -637,7 +637,7 @@ let wait_memory_target_live ~__context ~self =
       (* a debug message saying how long we've waited: *)
       if is_power_of_2 accumulated_wait_time_seconds then debug
           "Waited %i second(s) for VM %s to reach \
-           				its target = %Ld bytes; actual = %Ld bytes."
+           its target = %Ld bytes; actual = %Ld bytes."
           accumulated_wait_time_seconds id
           memory_target_bytes memory_actual_bytes;
       (* The memory target has not yet been reached: *)
@@ -733,7 +733,7 @@ let maximise_memory ~__context ~self ~total ~approximate =
   let r = { r with API.vM_VCPUs_max = if approximate then 64L else r.API.vM_VCPUs_max } in
 
   (* Need to find the maximum input value to this function so that it still evaluates
-        to true *)
+       to true *)
   let will_fit static_max =
     let r = { r with API.vM_memory_static_max = static_max } in
     let normal, shadow = Memory_check.vm_compute_start_memory ~__context ~policy:Memory_check.Static_max r in
@@ -741,7 +741,7 @@ let maximise_memory ~__context ~self ~total ~approximate =
 
   let max = Helpers.bisect will_fit 0L total in
   (* Round down to the nearest MiB boundary... there's a slight mismatch between the
-        boot_free_mem - sum(static_max) value and the results of querying the free pages in Xen.*)
+       boot_free_mem - sum(static_max) value and the results of querying the free pages in Xen.*)
   Int64.(mul (mul (div (div max 1024L) 1024L) 1024L) 1024L)
 
 (* In the master's forwarding layer with the global forwarding lock *)
@@ -811,11 +811,11 @@ let set_suspend_VDI ~__context ~self ~value =
   let dst_vdi = value in
   if src_vdi <> dst_vdi then
     (*
-	 * We don't care if the future host can see current suspend VDI or not, but
-	 * we want to make sure there's at least a host can see all the VDIs of the
-	 * VM + the new suspend VDI. We raise an exception if there's no suitable
-	 * host.
-	 *)
+   * We don't care if the future host can see current suspend VDI or not, but
+   * we want to make sure there's at least a host can see all the VDIs of the
+   * VM + the new suspend VDI. We raise an exception if there's no suitable
+   * host.
+   *)
     let vbds = Db.VM.get_VBDs ~__context ~self in
     let vbds = List.filter (fun self -> not (Db.VBD.get_empty ~__context ~self)) vbds in
     let vdis = List.map (fun self -> Db.VBD.get_VDI ~__context ~self) vbds in

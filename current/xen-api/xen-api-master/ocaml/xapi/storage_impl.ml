@@ -59,7 +59,7 @@
       VDI_1_a, VDI_1, b, ... VDI_n_z: one lock per VDI for serialising all VDI.* ops per-SR
       + various locks to protect accesses to individual tables
 
-   	We hold locks in one of the following sequences:
+   We hold locks in one of the following sequences:
       VDI_p_q : for a VDI operation
       SR_p    : for an SR.attach
       SR_p, VDI_p_a, VDI_p_b, ..., VDI_p_z : for an SR.detach (to "quiesce" the SR)
@@ -118,7 +118,7 @@ module Vdi = struct
     leaked = [];
   }
   (** [superstate x] returns the actual state of the backing VDI by finding the "max" of
-     	    the states from the clients' PsoV *)
+      the states from the clients' PsoV *)
   let superstate x = Vdi_automaton.superstate (List.map snd x.dps)
 
   let get_dp_state dp t =
@@ -294,7 +294,7 @@ module Wrapper = functor(Impl: Server_impl) -> struct
             | Vdi_automaton.Attach ro_rw ->
               let read_write = (ro_rw = Vdi_automaton.RW) in
               let x = Impl.VDI.attach context ~dbg ~dp ~sr ~vdi ~read_write in
-              { vdi_t with Vdi.attach_info = Some x }	
+              { vdi_t with Vdi.attach_info = Some x }  
             | Vdi_automaton.Activate ->
               Impl.VDI.activate context ~dbg ~dp ~sr ~vdi; vdi_t
             | Vdi_automaton.Deactivate ->
@@ -324,13 +324,13 @@ module Wrapper = functor(Impl: Server_impl) -> struct
             (* Compute the overall state ('superstate') of the VDI *)
             let superstate = Vdi.superstate vdi_t in
             (* We first assume the operation succeeds and compute the new
-               						   datapath+VDI state *)
+               datapath+VDI state *)
             let new_vdi_t = Vdi.perform (Dp.make dp) this_op vdi_t in
             (* Compute the new overall state ('superstate') *)
             let superstate' = Vdi.superstate new_vdi_t in
             (* Compute the real operations which would drive the system from
-               						   superstate to superstate'. These may fail: if so we revert the
-               						   datapath+VDI state to the most appropriate value. *)
+               superstate to superstate'. These may fail: if so we revert the
+               datapath+VDI state to the most appropriate value. *)
             let ops = Vdi_automaton.(-) superstate superstate' in
             side_effects context dbg dp sr sr_t vdi vdi_t ops
           with e ->
@@ -340,21 +340,21 @@ module Wrapper = functor(Impl: Server_impl) -> struct
         in
 
         (* Even if there were no side effects on the underlying VDI, we still need
-           				   to update the SR to update this DP's view of the state.
-           				   However if nothing changed (e.g. because this was the detach of a DP
-           				   which had not attached this VDI) then we won't need to update our on-disk state *)
+           to update the SR to update this DP's view of the state.
+           However if nothing changed (e.g. because this was the detach of a DP
+           which had not attached this VDI) then we won't need to update our on-disk state *)
         let vdi_t' = Vdi.perform (Dp.make dp) this_op vdi_t' in
         if vdi_t <> vdi_t' then begin
           Sr.replace vdi vdi_t' sr_t;
           (* If the new VDI state is "detached" then we remove it from the table
-             					   altogether *)
+             altogether *)
           debug "dbg:%s dp:%s sr:%s vdi:%s superstate:%s" dbg dp sr vdi (Vdi_automaton.string_of_state (Vdi.superstate vdi_t'));
           if Vdi.superstate vdi_t' = Vdi_automaton.Detached
           then Sr.remove vdi sr_t;
 
           (* FH1: Perform the side-effect first: in the case of a failure half-way
-             					   through we would rather perform the side-effect twice than never at
-             					   all. *)
+             through we would rather perform the side-effect twice than never at
+             all. *)
           Everything.to_file !host_state_path (Everything.make ());
         end;
         vdi_t'
@@ -427,7 +427,7 @@ module Wrapper = functor(Impl: Server_impl) -> struct
             (fun () ->
               let state = perform_nolock context ~dbg ~dp ~sr ~vdi
                   (Vdi_automaton.Attach (if read_write then Vdi_automaton.RW else Vdi_automaton.RO)) in
-              Opt.unbox state.Vdi.attach_info							
+              Opt.unbox state.Vdi.attach_info              
             ))
 
     let activate context ~dbg ~dp ~sr ~vdi =
@@ -585,8 +585,8 @@ module Wrapper = functor(Impl: Server_impl) -> struct
     let create context ~dbg ~id = id
 
     (** [destroy_sr context dp sr allow_leak vdi_already_locked] attempts to free
-       		    the resources associated with [dp] in [sr]. If [vdi_already_locked] then
-       		    it is assumed that all VDIs are already locked. *)
+        the resources associated with [dp] in [sr]. If [vdi_already_locked] then
+        it is assumed that all VDIs are already locked. *)
     let destroy_sr context ~dbg ~dp ~sr ~allow_leak vdi_already_locked =
       (* Every VDI in use by this session should be detached and deactivated *)
       match Host.find sr !Host.host with
@@ -696,8 +696,8 @@ module Wrapper = functor(Impl: Server_impl) -> struct
             Impl.SR.attach context ~dbg ~sr ~device_config;
             Host.replace sr (Sr.empty ()) !Host.host;
             (* FH1: Perform the side-effect first: in the case of a
-               						   failure half-way through we would rather perform the
-               						   side-effect twice than never at all. *)
+               failure half-way through we would rather perform the
+               side-effect twice than never at all. *)
             Everything.to_file !host_state_path (Everything.make ())
           | Some _ ->
             (* Operation is idempotent *)
@@ -746,7 +746,7 @@ module Wrapper = functor(Impl: Server_impl) -> struct
 
     let destroy context ~dbg ~sr = 
       info "SR.destroy dbg:%s sr:%s" dbg sr;
-      detach_destroy_common context ~dbg ~sr Impl.SR.destroy			
+      detach_destroy_common context ~dbg ~sr Impl.SR.destroy      
   end
 
   module Policy = struct

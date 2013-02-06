@@ -54,7 +54,7 @@ let find_role_by_name_label name_label = Hashtbl.find static_role_by_name_label_
 let get_all ~__context = 
   List.map (fun r -> ref_of_role r) get_all_static_roles
   (*@ (* concatenate with Db table *)
-     	Db.Role.get_all ~__context*)
+     Db.Role.get_all ~__context*)
 
 let is_valid_role ~__context ~role =
   Hashtbl.mem static_role_by_ref_tbl role
@@ -68,7 +68,7 @@ let get_common ~__context ~self ~static_fn ~db_fn =
 
 (*    val get_record : __context:Context.t -> self:ref_role -> role_t*)
 let get_api_record ~static_record =
-  {	(* Db_actions.role_t -> API.role_t *)
+  {  (* Db_actions.role_t -> API.role_t *)
     API.role_uuid=static_record.Db_actions.role_uuid;
     API.role_name_label=static_record.Db_actions.role_name_label;
     API.role_name_description=static_record.Db_actions.role_name_description;
@@ -99,8 +99,8 @@ let get_all_records_where ~__context ~expr =
       (fun r -> ((ref_of_role r),(get_api_record ~static_record:r)))
       get_all_static_roles
       (*@ (* concatenate with Db table *)
-         			(* TODO: this line is crashing for some unknown reason, but not needed in RBAC 1 *)
-         			Db.Role.get_all_records_where ~__context ~expr*)
+         (* TODO: this line is crashing for some unknown reason, but not needed in RBAC 1 *)
+         Db.Role.get_all_records_where ~__context ~expr*)
 
 (*    val get_all_records : __context:Context.t -> ref_role_to_role_t_map*)
 let get_all_records ~__context =
@@ -149,15 +149,15 @@ let get_subroles ~__context ~self =
 
     (*    val get_is_basic : __context:Context.t -> self:ref_role -> bool*)
     (*let get_is_basic ~__context ~self =
-       	get_common ~__context ~self
-       		~static_fn:(fun static_record -> static_record.role_is_basic)
-       		~db_fn:(fun ~__context ~self -> Db.Role.get_is_basic ~__context ~self)
+       get_common ~__context ~self
+        ~static_fn:(fun static_record -> static_record.role_is_basic)
+        ~db_fn:(fun ~__context ~self -> Db.Role.get_is_basic ~__context ~self)
     *)
     (*    val get_is_complete : __context:Context.t -> self:ref_role -> bool*)
     (*let get_is_complete ~__context ~self =
-       	get_common ~__context ~self
-       		~static_fn:(fun static_record -> static_record.role_is_complete)
-       		~db_fn:(fun ~__context ~self -> Db.Role.get_is_complete ~__context ~self)
+       get_common ~__context ~self
+        ~static_fn:(fun static_record -> static_record.role_is_complete)
+        ~db_fn:(fun ~__context ~self -> Db.Role.get_is_complete ~__context ~self)
     *)
 
     (* XenCenter needs these functions *)
@@ -231,26 +231,26 @@ let get_by_permission_name_label ~__context ~label =
 (*    val create : __context:Context.t -> id:string -> name:string -> description:string -> permissions:string_set -> is_basic:bool -> is_complete:bool -> ref_role*)
 (* we do not allow repeated name_labels in the role table *)
 let create ~__context ~name_label ~name_description ~subroles =
-	(* disabled in RBAC 1.0 *)
-	(*
-	let ref=Ref.make() in 
-	let uuid=Uuid.to_string (Uuid.make_uuid()) in
-	(* TODO: verify the uniqueness of id *)
-	if id = "no" 
-	then raise (Api_errors.Server_error (Api_errors.role_not_found, []))
-	else
-	Db.Role.create ~__context ~ref ~uuid ~id ~name ~description ~permissions ~is_basic ~is_complete;
-	ref
-	*)
-	Ref.null
+  (* disabled in RBAC 1.0 *)
+  (*
+  let ref=Ref.make() in 
+  let uuid=Uuid.to_string (Uuid.make_uuid()) in
+  (* TODO: verify the uniqueness of id *)
+  if id = "no" 
+  then raise (Api_errors.Server_error (Api_errors.role_not_found, []))
+  else
+  Db.Role.create ~__context ~ref ~uuid ~id ~name ~description ~permissions ~is_basic ~is_complete;
+  ref
+  *)
+  Ref.null
 
 (*    val destroy : __context:Context.t -> self:ref_role -> unit*)
 let destroy ~__context ~self =
-	(* disabled in RBAC 1.0 *)
-	(* in RBAC 2.0: it is only possible to delete a role if it is not in*)
-	(* any subject.roles fields *)
-	(* Db.Role.destroy ~__context ~self*)
-	()
+  (* disabled in RBAC 1.0 *)
+  (* in RBAC 2.0: it is only possible to delete a role if it is not in*)
+  (* any subject.roles fields *)
+  (* Db.Role.destroy ~__context ~self*)
+  ()
 
 (*    val set_uuid : __context:Context.t -> self:ref_role -> value:string -> unit*)
 let set_uuid ~__context ~self ~value = ()

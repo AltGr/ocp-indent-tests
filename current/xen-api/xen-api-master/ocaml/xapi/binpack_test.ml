@@ -160,7 +160,7 @@ let check_planning_performance filename n' r' i =
           let start = Unix.gettimeofday () in
           let always = h.plan_always_possible c in
           (* If it should always be possible then look for a proof. Don't fail if we can't find one; only fail if we find
-             	     a counterexample showing it doesn't work *)
+             a counterexample showing it doesn't work *)
           if always then ignore(prove_plan_is_possible_via_counterexample_search h c);
           let time = Unix.gettimeofday () -. start in
           if always then set successes n r (get successes n r + 1);

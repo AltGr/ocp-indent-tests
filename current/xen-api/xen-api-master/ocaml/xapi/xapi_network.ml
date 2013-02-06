@@ -60,7 +60,7 @@ let attach_internal ?(management_interface=false) ~__context ~self () =
   let local_pifs = Xapi_network_attach_helpers.get_local_pifs ~__context ~network:self ~host in
 
   (* Ensure internal bridge exists and is up. external bridges will be
-     	   brought up by call to interface-reconfigure. *)
+     brought up by call to interface-reconfigure. *)
   if List.length(local_pifs) = 0 then create_internal_bridge ~bridge:net.API.network_bridge ~uuid:net.API.network_uuid;
 
   (* Check if we're a Host-Internal Management Network (HIMN) (a.k.a. guest-installer network) *)
@@ -69,8 +69,8 @@ let attach_internal ?(management_interface=false) ~__context ~self () =
     set_himn_ip ~__context net.API.network_bridge net.API.network_other_config;
 
   (* Create the new PIF.
-     	   NB if we're doing this as part of a management-interface-reconfigure then
-     	   we might be just about to loose our current management interface... *)
+     NB if we're doing this as part of a management-interface-reconfigure then
+     we might be just about to loose our current management interface... *)
   List.iter (fun pif ->
     if Db.PIF.get_currently_attached ~__context ~self:pif = false || management_interface then begin
       Xapi_network_attach_helpers.assert_no_slave ~__context pif;
@@ -112,8 +112,8 @@ let deregister_vif ~__context vif =
     (fun () ->
       Hashtbl.remove active_vifs_to_networks vif;
       (* If a network has PIFs, then we create/destroy when the PIFs are plugged/unplugged.
-         			   If a network is entirely internal, then we remove it after we've stopped using it
-         			   *unless* someone else is still using it. *)
+         If a network is entirely internal, then we remove it after we've stopped using it
+         *unless* someone else is still using it. *)
       if internal_only then begin
         (* Are there any more vifs using this network? *)
         let others = Hashtbl.fold (fun v n acc -> if n = network then v :: acc else acc)

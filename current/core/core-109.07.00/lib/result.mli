@@ -10,8 +10,8 @@
     The return type of ric_of_ticker could be [string option], but [(string, string)
     Result.t] gives more control over the error message. *)
 type ('ok, 'err) t =
-| Ok of 'ok
-| Error of 'err
+  | Ok of 'ok
+  | Error of 'err
 with bin_io, sexp, compare
 
 include Monad.S2 with type ('a,'err) t := ('a,'err) t
@@ -71,9 +71,9 @@ val ok_unit : (unit, _) t
 
 module Export : sig
   type ('ok, 'err) _result =
-  ('ok, 'err) t =
-  | Ok of 'ok
-  | Error of 'err
+    ('ok, 'err) t =
+    | Ok of 'ok
+    | Error of 'err
 end
 
 module Stable : sig

@@ -38,7 +38,7 @@ let upgrade_vm_memory_for_dmc () =
   Db.VM.set_memory_static_min ~__context ~self ~value:5L;
   Db.VM.set_memory_dynamic_min ~__context ~self ~value:1L;
   Db.VM.set_memory_target ~__context ~self ~value:2L;
-  Db.VM.set_memory_dynamic_max ~__context ~self ~value:3L;	
+  Db.VM.set_memory_dynamic_max ~__context ~self ~value:3L;  
   Db.VM.set_memory_static_max ~__context ~self ~value:4L;
   (* Apply the upgrade rule *)
   upgrade_vm_memory_for_dmc.fn ~__context;

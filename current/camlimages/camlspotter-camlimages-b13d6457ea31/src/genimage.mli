@@ -20,7 +20,7 @@ open Image_intf
 module MakeRawImage : functor (E : ENCODE) -> (RAWIMAGE with type elt = E.t);;
 
 module Make : functor (RI : RAWIMAGE) ->
-  functor (CON : CONTAINER with type rawimage = RI.t) ->
+functor (CON : CONTAINER with type rawimage = RI.t) ->
   IMAGE with type t = CON.container
          and  type elt = RI.elt;;
 

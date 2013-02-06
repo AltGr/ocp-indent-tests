@@ -31,17 +31,17 @@
 open Std_internal
 
 type 'a t = private
-| True
-| False
-| And of 'a t * 'a t
-| Or of 'a t * 'a t
-| Not of 'a t
-| If of 'a t * 'a t * 'a t
-| Base of 'a
+  | True
+  | False
+  | And of 'a t * 'a t
+  | Or of 'a t * 'a t
+  | Not of 'a t
+  | If of 'a t * 'a t * 'a t
+  | Base of 'a
 with bin_io, compare, sexp
-(** Note that the sexps are not directly inferred from the type above -- there are lots of
-    fancy shortcuts.  Also, the sexps for ['a] must not look anything like blang sexps.
-    Otherwise [t_of_sexp] will fail. *)
+  (** Note that the sexps are not directly inferred from the type above -- there are lots of
+      fancy shortcuts.  Also, the sexps for ['a] must not look anything like blang sexps.
+      Otherwise [t_of_sexp] will fail. *)
 
 (* smart constructors that simplify away constants whenever possible *)
 val base     : 'a -> 'a t
@@ -134,13 +134,13 @@ val invariant : 'a t -> unit
 module Stable : sig
   module V1 : sig
     type 'a t = private
-    | True
-    | False
-    | And of 'a t * 'a t
-    | Or of 'a t * 'a t
-    | Not of 'a t
-    | If of 'a t * 'a t * 'a t
-    | Base of 'a
+      | True
+      | False
+      | And of 'a t * 'a t
+      | Or of 'a t * 'a t
+      | Not of 'a t
+      | If of 'a t * 'a t * 'a t
+      | Base of 'a
     with sexp, bin_io, compare
   end with type 'a t = private 'a t
 end

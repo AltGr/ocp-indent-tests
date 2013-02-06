@@ -782,8 +782,8 @@ let gen_cmds rpc session_id =
        (Client.Role.get_by_uuid) (role_record) "role" [] ["uuid";"name";"description";"subroles"] rpc session_id) @
     (make_param_funs (Client.VMPP.get_all) (Client.VMPP.get_all_records_where) (Client.VMPP.get_by_uuid) (vmpp_record) "vmpp" [] ["uuid";"name-label";"name-description";"is-policy-enabled";"backup-type";"backup-retention-value";"backup-frequency";"backup-schedule";"is-backup-running";"backup-last-run-time";"archive-target-type";"archive-target-config";"archive-frequency";"archive-schedule";"is-archive-running";"archive-last-run-time";"is-alarm-enabled";"alarm-config";"VMs"] rpc session_id) @
     (*
-		  (make_param_funs (Client.Blob.get_all) (Client.Blob.get_all_records_where) (Client.Blob.get_by_uuid) (blob_record) "blob" [] ["uuid";"mime-type"] rpc session_id) @
-		 *)
+      (make_param_funs (Client.Blob.get_all) (Client.Blob.get_all_records_where) (Client.Blob.get_by_uuid) (blob_record) "blob" [] ["uuid";"mime-type"] rpc session_id) @
+     *)
     (make_param_funs (Client.Message.get_all) (Client.Message.get_all_records_where) (Client.Message.get_by_uuid) (message_record) "message" [] [] rpc session_id) @
     (make_param_funs (Client.Secret.get_all) (Client.Secret.get_all_records_where) (Client.Secret.get_by_uuid) (secret_record) "secret" [] [] rpc session_id) @
     (make_param_funs (Client.VM_appliance.get_all) (Client.VM_appliance.get_all_records_where) (Client.VM_appliance.get_by_uuid) (vm_appliance_record) "appliance" [] [] rpc session_id) @
@@ -792,8 +792,8 @@ let gen_cmds rpc session_id =
     (make_param_funs (Client.VGPU.get_all) (Client.VGPU.get_all_records_where) (Client.VGPU.get_by_uuid) (vgpu_record) "vgpu" [] ["uuid";"vm-uuid";"device";"gpu-group-uuid"] rpc session_id) @
     (make_param_funs (Client.DR_task.get_all) (Client.DR_task.get_all_records_where) (Client.DR_task.get_by_uuid) (dr_task_record) "drtask" [] [] rpc session_id)
     (*
-		  @ (make_param_funs (Client.Alert.get_all) (Client.Alert.get_all_records_where) (Client.Alert.get_by_uuid) (alert_record) "alert" [] ["uuid";"message";"level";"timestamp";"system";"task"] rpc session_id)
-		 *)
+      @ (make_param_funs (Client.Alert.get_all) (Client.Alert.get_all_records_where) (Client.Alert.get_by_uuid) (alert_record) "alert" [] ["uuid";"message";"level";"timestamp";"system";"task"] rpc session_id)
+     *)
 
 (* NB, might want to put these back in at some point
  * let zurich_params_gone =
@@ -1097,7 +1097,7 @@ let vdi_introduce printer rpc session_id params =
   let uuid = List.assoc "uuid" params in
   let sR = Client.SR.get_by_uuid rpc session_id (List.assoc "sr-uuid" params) in
   (* CA-13140: Some of the backends set their own name-labels, and the VDI introduce will
-     	   not override them if we pass in the empty string.  *)
+     not override them if we pass in the empty string.  *)
   let name_label = try List.assoc "name-label" params with _ -> "" in
   let name_description = if List.mem_assoc "name-description" params then List.assoc "name-description" params else "" in
   let _type = vdi_type_of_string (List.assoc "type" params) in
@@ -1576,7 +1576,7 @@ let vm_destroy printer rpc session_id params =
   marshal fd (Command (Print (Printf.sprintf "Got %d event(s)!\n" (List.length events))));
   let doevent event =
   let tbl = match Event_helper.record_of_event event with
-(*	| Event_helper.VM x -> let record = vm_record rpc session_id (Ref.of_string event.Event_types.reference) in record.set_ref x; tbl
+(*  | Event_helper.VM x -> let record = vm_record rpc session_id (Ref.of_string event.Event_types.reference) in record.set_ref x; tbl
   | Event_helper.VDI x -> let record = vdi_record rpc session_id (Ref.of_string event.Event_types.reference) in f x; tbl
   | Event_helper.SR x -> let record = sr_record rpc session_id (Ref.of_string event.Event_types.reference) in f x; tbl*)
   | _ -> failwith "bah!"
@@ -1617,7 +1617,7 @@ let event_wait_gen rpc session_id classname record_matches =
       | "role" -> List.map (fun x -> (role_record rpc session_id x).fields) (Client.Role.get_all rpc session_id)
       | "vmpp" -> List.map (fun x -> (vmpp_record rpc session_id x).fields) (Client.VMPP.get_all rpc session_id)
       | "secret" -> List.map (fun x -> (secret_record rpc session_id x).fields) (Client.Secret.get_all rpc session_id)
-      (*				| "alert" -> List.map (fun x -> (alert_record rpc session_id x).fields) (Client.Alert.get_all rpc session_id) *)
+      (*        | "alert" -> List.map (fun x -> (alert_record rpc session_id x).fields) (Client.Alert.get_all rpc session_id) *)
       | _ -> failwith ("Cli listening for class '"^classname^"' not currently implemented")
     in
 
@@ -1678,9 +1678,9 @@ let event_wait printer rpc session_id params =
   let filter_params = List.filter (fun (p,_) -> not (List.mem p ("class"::stdparams))) params in
 
   (* Each filter_params is a key value pair:
-     	   (key, value) if the user entered "key=value"
-     	   (key, "/=" value) if the user entered "key=/=value"
-     	   We now parse these into a slightly nicer form *)
+     (key, value) if the user entered "key=value"
+     (key, "/=" value) if the user entered "key=/=value"
+     We now parse these into a slightly nicer form *)
 
   let filter_params = List.map
       (fun (key, value) ->
@@ -2178,8 +2178,8 @@ let vm_install_real printer rpc session_id template name description params =
       Client.VM.get_suspend_SR rpc session_id template in
 
   (* It's fine that we still don't have a SR information till this step, we'll do
-     	   a VM.clone instead of VM.copy. However we need to figure out sr_uuid for
-     	   provisioning disks if any. *)
+     a VM.clone instead of VM.copy. However we need to figure out sr_uuid for
+     provisioning disks if any. *)
   let sr_uuid = match sr_ref with
     | Some r when r <> Ref.null -> Client.SR.get_uuid rpc session_id r
     | _ ->
@@ -2479,7 +2479,7 @@ let vm_migrate printer rpc session_id params =
   let params = List.map (fun (k, v) -> if (k = "host-uuid") || (k = "host-name") then ("host", v) else (k, v)) params in
   let options = List.map_assoc_with_key (string_of_bool +++ bool_of_string) (List.restrict_with_default "false" ["force"; "live"] params) in
   (* If we specify all of: remote-master, remote-username, remote-password
-     	   then we're using the new codepath *)
+     then we're using the new codepath *)
   if List.mem_assoc "remote-master" params && (List.mem_assoc "remote-username" params)
      && (List.mem_assoc "remote-password" params) then begin
     printer (Cli_printer.PMsg "Performing a Storage XenMotion migration. Your VM's VDIs will be migrated with the VM.");
@@ -2932,7 +2932,7 @@ let download_file ~__context rpc session_id task fd filename uri label =
     | Response OK -> true
     | Response Failed ->
       (* Need to check whether the thin cli managed to contact the server
-         				   or not. If not, we need to mark the task as failed *)
+         or not. If not, we need to mark the task as failed *)
       if Client.Task.get_progress rpc session_id task < 0.0
       then Db_actions.DB_Action.Task.set_status ~__context ~self:task ~value:`failure;
       false
@@ -2941,7 +2941,7 @@ let download_file ~__context rpc session_id task fd filename uri label =
   wait_for_task_complete rpc session_id task;
 
   (* Check the server status -- even if the client thinks it's ok, we need
-     	   to check that the server does too. *)
+     to check that the server does too. *)
   match Client.Task.get_status rpc session_id task with
   | `success ->
     if ok
@@ -3049,7 +3049,7 @@ let vm_import fd printer rpc session_id params =
       debug "Looking like a Zurich/Geneva XVA";
       (* Zurich/Geneva style XVA import *)
       (* If a task was passed in, use that - else create a new one. UI uses "task_id" to pass reference [UI uses ThinCLI for Geneva import];
-         						xe now allows task-uuid on cmd-line *)
+         xe now allows task-uuid on cmd-line *)
       let using_existing_task = (List.mem_assoc "task_id" params) || (List.mem_assoc "task-uuid" params) in
       let importtask =
         if List.mem_assoc "task_id" params
@@ -3098,12 +3098,12 @@ let vm_import fd printer rpc session_id params =
                       let finished = ref false in
                       while not(!finished) do
                       (* Nb.
-                         														* The check for task cancelling is done here in the cli server. This is due to the fact that we've got
-                         														* 3 parties talking to one another here: the thin cli, the cli server and the import handler. If the
-                         														* import handler was checking, it would close its socket on task cancelling. This only happens after
-                         														* each chunk is sent. Unfortunately the cli server wouldn't notice until it had already requested the
-                         														* data from the thin cli, and would have to wait for it to finish sending its chunk before it could
-                         														* alert it to the failure. *)
+                       * The check for task cancelling is done here in the cli server. This is due to the fact that we've got
+                       * 3 parties talking to one another here: the thin cli, the cli server and the import handler. If the
+                       * import handler was checking, it would close its socket on task cancelling. This only happens after
+                       * each chunk is sent. Unfortunately the cli server wouldn't notice until it had already requested the
+                       * data from the thin cli, and would have to wait for it to finish sending its chunk before it could
+                       * alert it to the failure. *)
 
                         (let l=Client.Task.get_current_operations rpc session_id importtask in
                         if List.exists (fun (_,x) -> x=`cancel) l then raise (Api_errors.Server_error(Api_errors.task_cancelled,[])));
@@ -3829,7 +3829,7 @@ let wait_for_task rpc session_id task __context fd op_str =
     | Response OK -> true
     | Response Failed ->
       (* Need to check whether the thin cli managed to contact the server or
-         			   not. If not, we need to mark the task as failed *)
+         not. If not, we need to mark the task as failed *)
       if Client.Task.get_progress rpc session_id task < 0.0
       then Db_actions.DB_Action.Task.set_status ~__context
           ~self:task ~value:`failure;

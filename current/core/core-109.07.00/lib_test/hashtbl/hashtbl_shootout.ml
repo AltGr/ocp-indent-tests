@@ -309,20 +309,20 @@ module Arg = struct
   open Arg
 
   type tests =
-  [ `insert_and_lookup
-  | `insert_and_lookup_no_growth
-  | `memory_overhead
-  | `memory_overhead_no_growth
-  | `worst_case ]
+    [ `insert_and_lookup
+    | `insert_and_lookup_no_growth
+    | `memory_overhead
+    | `memory_overhead_no_growth
+    | `worst_case ]
   with sexp
 
   type t =
-  [ `Htree
-  | `Fastcache
-  | `Standard
-  | `Super_htree
-  | `Standard_map
-  | `Fast_map ]
+    [ `Htree
+    | `Fastcache
+    | `Standard
+    | `Super_htree
+    | `Standard_map
+    | `Fast_map ]
 
   let tbl = ref `Htree
   let tests = ref "(insert_and_lookup insert_and_lookup_no_growth memory_overhead memory_overhead_no_growth)"

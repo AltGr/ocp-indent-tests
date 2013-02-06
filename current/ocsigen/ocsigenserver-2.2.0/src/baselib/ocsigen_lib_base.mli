@@ -83,23 +83,23 @@ end
 
 (** Circular lists *)
 module Clist :
-  sig
-    type 'a t
-    type 'a node
-    val make : 'a -> 'a node
-    val create : unit -> 'a t
-    val insert : 'a t -> 'a node -> unit
-    val remove : 'a node -> unit
-    val value : 'a node -> 'a
-    val in_list : 'a node -> bool
-    val is_empty : 'a t -> bool
+sig
+  type 'a t
+  type 'a node
+  val make : 'a -> 'a node
+  val create : unit -> 'a t
+  val insert : 'a t -> 'a node -> unit
+  val remove : 'a node -> unit
+  val value : 'a node -> 'a
+  val in_list : 'a node -> bool
+  val is_empty : 'a t -> bool
 
-    (** Infinite iteration on circular lists *)
-    val iter : ('a -> unit) -> 'a t -> unit
+  (** Infinite iteration on circular lists *)
+  val iter : ('a -> unit) -> 'a t -> unit
 
-    (** Infinite fold on circular lists (use with care!) *)
-    val fold_left : ('a -> 'b -> 'a) -> 'a -> 'b t -> 'a
-  end
+  (** Infinite fold on circular lists (use with care!) *)
+  val fold_left : ('a -> 'b -> 'a) -> 'a -> 'b t -> 'a
+end
 
 module Int : sig
   module Table : Map.S with type key = int

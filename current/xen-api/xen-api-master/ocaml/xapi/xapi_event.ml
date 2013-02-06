@@ -36,7 +36,7 @@ module Token = struct
 
   let to_string (last,last_t) =
     (* We prefix with zeroes so tokens which differ only in the generation
-       		   can be compared lexicographically as strings. *)
+       can be compared lexicographically as strings. *)
     Printf.sprintf "%020Ld,%020Ld" last last_t
 end
 
@@ -161,7 +161,7 @@ let event_add ?snapshot ty op reference  =
           if to_drop <> [] then
             highest_forgotten_id := Int64.of_string (List.hd to_drop).id;
         (* debug "After event queue GC: keeping %d; dropping %d (highest dropped id = %Ld)" 
-           		  (List.length to_keep) (List.length to_drop) !highest_forgotten_id *)
+           (List.length to_keep) (List.length to_drop) !highest_forgotten_id *)
         )
     end
 
@@ -257,7 +257,7 @@ let events_read id_start id_end =
         some_events_lost := !highest_forgotten_id >= id_start;
         List.find_all (fun ev -> check_ev ev) !queue) in
   (* Note we may actually retrieve fewer events than we expect because the
-     	   queue may have been coalesced. *)
+     queue may have been coalesced. *)
   if !some_events_lost (* is true *) then events_lost ();
 
   (* NB queue is kept in reverse order *)
@@ -270,8 +270,8 @@ let rec next ~__context =
   let subscription = get_subscription ~__context in
 
   (* Return a <from_id, end_id> exclusive range that is guaranteed to be specific to this 
-     	   thread. Concurrent calls will grab wholly disjoint ranges. Note the range might be
-     	   empty. *)
+     thread. Concurrent calls will grab wholly disjoint ranges. Note the range might be
+     empty. *)
   let grab_range () = 
     (* Briefly hold both the general and the specific mutex *)
     Mutex.execute event_lock 
@@ -450,7 +450,7 @@ let heartbeat ~__context =
     Db_lock.with_lock 
       (fun () ->
         (* We must hold the database lock since we are sending an update for a real object
-           			  and we don't want to accidentally transmit an older snapshot. *)
+           and we don't want to accidentally transmit an older snapshot. *)
         let pool = try Some (Helpers.get_pool ~__context) with _ -> None in
         match pool with
         | Some pool ->

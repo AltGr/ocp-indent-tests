@@ -33,13 +33,13 @@ let check_operation_error ~__context ?(sr_records=[]) ?(pbd_records=[]) ?(vbd_re
   let reset_on_boot = record.Db_actions.vDI_on_boot = `reset in
 
   (* Policy:
-     	   1. any current_operation implies exclusivity; fail everything else
-     	   2. if doing a VM start then assume the sharing check is done elsewhere
-     	      (so VMs may share disks but our operations cannot)
-     	   3. for other operations, fail if any VBD has currently-attached=true or any VBD 
-     	      has a current_operation itself
-     	   4. HA prevents you from deleting statefiles or metadata volumes
-     	   *)
+     1. any current_operation implies exclusivity; fail everything else
+     2. if doing a VM start then assume the sharing check is done elsewhere
+        (so VMs may share disks but our operations cannot)
+     3. for other operations, fail if any VBD has currently-attached=true or any VBD 
+        has a current_operation itself
+     4. HA prevents you from deleting statefiles or metadata volumes
+  *)
   if List.length current_ops > 0
   then Some(Api_errors.other_operation_in_progress,["VDI"; _ref])
   else
@@ -69,8 +69,8 @@ let check_operation_error ~__context ?(sr_records=[]) ?(pbd_records=[]) ?(vbd_re
       let has_current_operation v = v.Db_actions.vBD_current_operations <> [] in
 
       (* If the VBD is currently_attached then some operations can still be performed ie:
-         			   VDI.clone (if the VM is suspended we have to have the 'allow_clone_suspended_vm'' flag)
-         			   VDI.snapshot; VDI.resize_online; 'blocked' (CP-831) *)
+         VDI.clone (if the VM is suspended we have to have the 'allow_clone_suspended_vm'' flag)
+         VDI.snapshot; VDI.resize_online; 'blocked' (CP-831) *)
       let operation_can_be_performed_live = match op with
         | `snapshot -> true
         | `resize_online -> true
@@ -375,7 +375,7 @@ let snapshot_and_clone call_f ~__context ~vdi ~driver_params =
 
   let call_snapshot () = 
     let open Storage_access in
-    let task = Context.get_task_id __context in	
+    let task = Context.get_task_id __context in  
     let open Storage_interface in
     let vdi' = Db.VDI.get_location ~__context ~self:vdi in
     let vdi_info = {
@@ -420,9 +420,9 @@ let snapshot ~__context ~vdi ~driver_params =
   (* Record the fact this is a snapshot *)
 
   (*(try Db.VDI.remove_from_other_config ~__context ~self:newvdi ~key:Xapi_globs.snapshot_of with _ -> ());
-     	  (try Db.VDI.remove_from_other_config ~__context ~self:newvdi ~key:Xapi_globs.snapshot_time with _ -> ());
-     	  Db.VDI.add_to_other_config ~__context ~self:newvdi ~key:Xapi_globs.snapshot_of ~value:a.Db_actions.vDI_uuid;
-     	  Db.VDI.add_to_other_config ~__context ~self:newvdi ~key:Xapi_globs.snapshot_time ~value:(Date.to_string (Date.of_float (Unix.gettimeofday ())));*)
+     (try Db.VDI.remove_from_other_config ~__context ~self:newvdi ~key:Xapi_globs.snapshot_time with _ -> ());
+     Db.VDI.add_to_other_config ~__context ~self:newvdi ~key:Xapi_globs.snapshot_of ~value:a.Db_actions.vDI_uuid;
+     Db.VDI.add_to_other_config ~__context ~self:newvdi ~key:Xapi_globs.snapshot_time ~value:(Date.to_string (Date.of_float (Unix.gettimeofday ())));*)
   Db.VDI.set_is_a_snapshot ~__context ~self:newvdi ~value:true;
   Db.VDI.set_snapshot_of ~__context ~self:newvdi ~value:vdi;
   Db.VDI.set_snapshot_time ~__context ~self:newvdi ~value:(Date.of_float (Unix.gettimeofday ()));
@@ -457,7 +457,7 @@ let destroy ~__context ~self =
       then Db.VDI.destroy ~__context ~self;
 
       (* destroy all the VBDs now rather than wait for the GC thread. This helps
-         	   prevent transient glitches but doesn't totally prevent races. *)
+         prevent transient glitches but doesn't totally prevent races. *)
       List.iter (fun vbd ->
         Helpers.log_exn_continue (Printf.sprintf "destroying VBD: %s" (Ref.string_of vbd))
           (fun vbd -> Db.VBD.destroy ~__context ~self:vbd) vbd) vbds;
@@ -517,13 +517,13 @@ let clone ~__context ~vdi ~driver_params =
         in
         (try
           (* Remove the vdi_clone from the SR's current operations, this prevents the whole
-             	  SR being locked for the duration of the slow copy *)
+             SR being locked for the duration of the slow copy *)
           let task_id = Ref.string_of (Context.get_task_id __context) in
           Db.SR.remove_from_current_operations ~__context ~self:a.Db_actions.vDI_SR ~key:task_id;
           Xapi_sr_operations.update_allowed_operations ~__context ~self:a.Db_actions.vDI_SR;
           (* Remove the clone from the VDI's current operations since the dom0 block-attach
-             	  will protect the VDI anyway. There's no point refreshing the VDI's allowed operations
-             	  because they're going to change when the VBD.plug happens. *)
+             will protect the VDI anyway. There's no point refreshing the VDI's allowed operations
+             because they're going to change when the VBD.plug happens. *)
           Db.VDI.remove_from_current_operations ~__context ~self:vdi ~key:task_id;
 
           Sm_fs_ops.copy_vdi ~__context vdi newvdi;

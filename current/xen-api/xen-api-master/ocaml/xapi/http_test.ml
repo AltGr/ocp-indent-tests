@@ -90,7 +90,7 @@ let do_http_rpc host port path body f =
     while true do
       let line = input_line ic in
       (* NB input_line removes the final '\n'.
-                RFC1945 says to expect a '\r\n' (- '\n' = '\r') *)
+               RFC1945 says to expect a '\r\n' (- '\n' = '\r') *)
       match line with
       | "" | "\r" -> raise Not_found
       | _ -> ()

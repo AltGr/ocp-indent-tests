@@ -197,7 +197,7 @@ module PCI_DB = struct
       include Pci
       let namespace = "PCI"
       type key = id
-      let key k = [ fst k; "pci." ^ (snd k) ]	
+      let key k = [ fst k; "pci." ^ (snd k) ]  
     end)
   let vm_of = fst
   let string_of_id (a, b) = a ^ "." ^ b
@@ -428,8 +428,8 @@ module Redirector = struct
 
   let pop =
     (* We must prevent worker threads all calling Queues.pop before we've
-       		   successfully put the redirection in place. Otherwise we end up with
-       		   parallel threads operating on the same VM. *)
+       successfully put the redirection in place. Otherwise we end up with
+       parallel threads operating on the same VM. *)
     let n = Mutex.create () in
     fun () ->
       Mutex.execute n
@@ -472,7 +472,7 @@ module Redirector = struct
         )
 
   end
-end		
+end    
 
 module Worker = struct
   type state =
@@ -722,7 +722,7 @@ let export_metadata vdi_map vif_map id =
    However we would need to fix the LVHD "attach provisioning mode". *)
 let vbd_plug_order vbds =
   (* return RW devices first since the storage layer can't upgrade a
-     	   'RO attach' into a 'RW attach' *)
+     'RO attach' into a 'RW attach' *)
   let rw, ro = List.partition (fun vbd -> vbd.Vbd.mode = Vbd.ReadWrite) vbds in
   rw @ ro
 
@@ -742,7 +742,7 @@ let rec atomics_of_operation = function
       VM_build id;
     ] @ (List.map (fun vbd -> VBD_set_active (vbd.Vbd.id, true))
         (VBD_DB.vbds id)
-    ) @	(List.concat (List.map (fun vbd -> Opt.default [] (Opt.map
+    ) @  (List.concat (List.map (fun vbd -> Opt.default [] (Opt.map
               (fun x -> [ VBD_epoch_begin (vbd.Vbd.id, x) ]) vbd.Vbd.backend))
           (VBD_DB.vbds id |> vbd_plug_order))
     ) @ (List.map (fun vbd -> VBD_plug vbd.Vbd.id)
@@ -753,14 +753,14 @@ let rec atomics_of_operation = function
         (VIF_DB.vifs id |> vif_plug_order)
     ) @ [
       (* Unfortunately this has to be done after the vbd,vif 
-         			   devices have been created since qemu reads xenstore keys
-         			   in preference to its own commandline. After this is
-         			   fixed we can consider creating qemu as a part of the
-         			   'build' *)
+         devices have been created since qemu reads xenstore keys
+         in preference to its own commandline. After this is
+         fixed we can consider creating qemu as a part of the
+         'build' *)
       VM_create_device_model (id, false);
     (* We hotplug PCI devices into HVM guests via qemu, since
-       			   otherwise hotunplug triggers some kind of unfixed race
-       			   condition causing an interrupt storm. *)
+       otherwise hotunplug triggers some kind of unfixed race
+       condition causing an interrupt storm. *)
     ] @ (List.map (fun pci -> PCI_plug pci.Pci.id)
         (PCI_DB.pcis id |> pci_plug_order)
     ) @ [
@@ -793,11 +793,11 @@ let rec atomics_of_operation = function
         (VIF_DB.vifs id |> vif_plug_order)
     ) @ [
       (* Unfortunately this has to be done after the devices have been created since
-         			   qemu reads xenstore keys in preference to its own commandline. After this is
-         			   fixed we can consider creating qemu as a part of the 'build' *)
+         qemu reads xenstore keys in preference to its own commandline. After this is
+         fixed we can consider creating qemu as a part of the 'build' *)
       VM_create_device_model (id, true);
     (* We hotplug PCI devices into HVM guests via qemu, since otherwise hotunplug triggers
-       			   some kind of unfixed race condition causing an interrupt storm. *)
+       some kind of unfixed race condition causing an interrupt storm. *)
     ] @ (List.map (fun pci -> PCI_plug pci.Pci.id)
         (PCI_DB.pcis id |> pci_plug_order)
     )
@@ -851,7 +851,7 @@ let rec atomics_of_operation = function
     ] @ (atomics_of_operation (VM_restore_devices id)
     ) @ [
       (* At this point the domain is considered survivable. *)
-      VM_set_domain_action_request(id, None)			
+      VM_set_domain_action_request(id, None)      
     ]
   | VBD_hotplug id ->
     [
@@ -939,8 +939,8 @@ let perform_atomic ~progress_callback ?subtask (op: atomic) (t: Xenops_task.t) :
       ) (fun () -> VBD_DB.signal id)
   | VBD_insert (id, disk) ->
     (* NB this is also used to "refresh" ie signal a qemu that it should
-       			   re-open a device, useful for when a physical CDROM is inserted into
-       			   the host. *)
+       re-open a device, useful for when a physical CDROM is inserted into
+       the host. *)
     debug "VBD.insert %s" (VBD_DB.string_of_id id);
     let vbd_t = VBD_DB.read_exn id in
     let power = (B.VM.get_state (VM_DB.read_exn (fst id))).Vm.power_state in
@@ -1032,9 +1032,9 @@ let perform_atomic ~progress_callback ?subtask (op: atomic) (t: Xenops_task.t) :
     let start = Unix.gettimeofday () in
     let vm = VM_DB.read_exn id in
     (* Spend at most the first minute waiting for a clean shutdown ack. This allows
-       			   us to abort early. *)
+       us to abort early. *)
     if not (B.VM.request_shutdown t vm reason (min 60. timeout))
-    then raise (Failed_to_acknowledge_shutdown_request);		
+    then raise (Failed_to_acknowledge_shutdown_request);    
     let remaining_timeout = max 0. (timeout -. (Unix.gettimeofday () -. start)) in
     if not (B.VM.wait_shutdown t vm reason remaining_timeout)
     then raise (Failed_to_shutdown(id, timeout))
@@ -1183,7 +1183,7 @@ and perform ?subtask (op: operation) (t: Xenops_task.t) : unit =
     | VM_poweroff (id, timeout) ->
       debug "VM.poweroff %s" id;
       perform_atomics (atomics_of_operation op) t;
-      VM_DB.signal id			
+      VM_DB.signal id      
     | VM_reboot (id, timeout) ->
       debug "VM.reboot %s" id;
       rebooting id (fun () -> perform_atomics (atomics_of_operation op) t);
@@ -1286,8 +1286,8 @@ and perform ?subtask (op: operation) (t: Xenops_task.t) : unit =
     | VM_receive_memory (id, memory_limit, s) ->
       debug "VM.receive_memory %s" id;
       let open Xenops_migrate in
-      (*			let state = B.VM.get_state (VM_DB.read_exn id) in
-         			debug "VM.receive_memory %s power_state = %s" id (state.Vm.power_state |> rpc_of_power_state |> Jsonrpc.to_string);*)
+      (*      let state = B.VM.get_state (VM_DB.read_exn id) in
+            debug "VM.receive_memory %s power_state = %s" id (state.Vm.power_state |> rpc_of_power_state |> Jsonrpc.to_string);*)
 
       (try
         Handshake.send s Handshake.Success
@@ -1695,7 +1695,7 @@ module VM = struct
         let md = s |> Jsonrpc.of_string |> Metadata.t_of_rpc in
         let id = md.Metadata.vm.Vm.id in
         (* We allow a higher-level toolstack to replace the metadata of a running VM.
-           				   Any changes will take place on next reboot. *)
+           Any changes will take place on next reboot. *)
         if DB.exists id
         then debug "Overwriting VM metadata for VM: %s" id;
         let vm = add' md.Metadata.vm in

@@ -202,9 +202,9 @@ end
 module Flag = struct
 
   type action =
-  | No_arg of (Env.t -> Env.t)
-  | Arg    of (string -> Env.t -> Env.t) * Completer.t
-  | Rest   of (string list -> unit)
+    | No_arg of (Env.t -> Env.t)
+    | Arg    of (string -> Env.t -> Env.t) * Completer.t
+    | Rest   of (string list -> unit)
 
   type t = {
     name : string;
@@ -494,11 +494,11 @@ module Anon = struct
   end = struct
 
     type 'a t =
-    | Done of 'a
-    | Test of (more:bool -> 'a t)
-    | More of string (* name of the expected argument *)
-      * (string -> (Env.t -> Env.t) * 'a t)
-      * Completer.t
+      | Done of 'a
+      | Test of (more:bool -> 'a t)
+      | More of string (* name of the expected argument *)
+        * (string -> (Env.t -> Env.t) * 'a t)
+        * Completer.t
 
     let return a = Done a
 
@@ -943,8 +943,8 @@ module Base = struct
 end
 
 type t =
-| Base of Base.t
-| Group of group
+  | Base of Base.t
+  | Group of group
 
 and group = {
   summary : string;

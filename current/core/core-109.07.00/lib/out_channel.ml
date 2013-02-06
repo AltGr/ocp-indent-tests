@@ -10,10 +10,10 @@ let stdout = Pervasives.stdout
 let stderr = Pervasives.stderr
 
 type 'a with_create_args =
-?binary:bool (* defaults to true *)
--> ?append:bool (* defaults to false *)
--> ?perm:int
--> 'a
+  ?binary:bool (* defaults to true *)
+  -> ?append:bool (* defaults to false *)
+  -> ?perm:int
+  -> 'a
 
 let create ?(binary = true) ?(append = false) ?(perm = 0o666) file =
   let flags = [Open_wronly; Open_creat] in

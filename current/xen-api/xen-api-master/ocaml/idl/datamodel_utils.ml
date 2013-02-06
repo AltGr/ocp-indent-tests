@@ -384,7 +384,7 @@ let messages_of_obj (x: obj) document_order : message list =
                             msg_session = true;
                             msg_has_effect = false;
                             msg_allowed_roles = x.obj_implicit_msg_allowed_roles;
-                            msg_tag = FromObject GetByLabel } in	       
+                            msg_tag = FromObject GetByLabel } in         
   (* Get Record *)
   let get_record = { common with
                      msg_name = "get_record";

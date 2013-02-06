@@ -25,10 +25,10 @@ let check_threads () =
 
 module Fd_redirection = struct
   type do_redirect =
-  [ `Dev_null
-  | `File_append of string
-  | `File_truncate of string
-  ]
+    [ `Dev_null
+    | `File_append of string
+    | `File_truncate of string
+    ]
 
   type t = [ `Do_not_redirect | do_redirect ]
 end

@@ -210,7 +210,7 @@ module Poly : sig
       with type ('a, 'b, 'c) options := ('a, 'b, 'c) without_comparator
   end
 end
-  with type ('a, 'b, 'c) tree = ('a, 'b, 'c) tree
+with type ('a, 'b, 'c) tree = ('a, 'b, 'c) tree
 
 module type Key = Key
 

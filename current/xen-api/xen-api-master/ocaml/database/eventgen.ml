@@ -77,7 +77,7 @@ let database_callback event db =
 
   let other_tbl_refs tblname = follow_references tblname in
   let other_tbl_refs_for_this_field tblname fldname =
-    List.filter (fun (_,fld) -> fld=fldname) (other_tbl_refs tblname) in	
+    List.filter (fun (_,fld) -> fld=fldname) (other_tbl_refs tblname) in  
 
   let is_valid_ref r = 
     try
@@ -139,7 +139,7 @@ let database_callback event db =
     begin match find_get_record tblname ~__context:context ~self:objref () with
     | None ->
       error "Failed to generate DEL event for %s %s" tblname objref;
-    (*				Printf.printf "Failed to generate DEL event for %s %s\n%!" tblname objref; *)
+    (*        Printf.printf "Failed to generate DEL event for %s %s\n%!" tblname objref; *)
     | Some snapshot ->
       events_notify ~snapshot tblname "del" objref
     end
@@ -156,7 +156,7 @@ let database_callback event db =
     List.iter (function
     | tbl, ref, None ->
       error "Failed to generate MOD event on %s %s" tbl ref;
-    (*					Printf.printf "Failed to generate MOD event on %s %s\n%!" tbl ref; *)
+    (*          Printf.printf "Failed to generate MOD event on %s %s\n%!" tbl ref; *)
     | tbl, ref, Some s -> 
       events_notify ~snapshot:s tbl "mod" ref
     ) other_tbl_ref_events
@@ -175,14 +175,14 @@ let database_callback event db =
     begin match snapshot() with
     | None ->
       error "Failed to generate ADD event for %s %s" tblname new_objref;
-    (*				Printf.printf "Failed to generate ADD event for %s %s\n%!" tblname new_objref; *)
+    (*        Printf.printf "Failed to generate ADD event for %s %s\n%!" tblname new_objref; *)
     | Some snapshot ->
       events_notify ~snapshot tblname "add" new_objref;
     end;
     List.iter (function
     | tbl, ref, None ->
       error "Failed to generate MOD event for %s %s" tbl ref;
-    (* 				Printf.printf "Failed to generate MOD event for %s %s\n%!" tbl ref;*)
+    (*         Printf.printf "Failed to generate MOD event for %s %s\n%!" tbl ref;*)
     | tbl, ref, Some s ->
       events_notify ~snapshot:s tbl "mod" ref
     ) other_tbl_events

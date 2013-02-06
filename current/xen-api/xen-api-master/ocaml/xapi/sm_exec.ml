@@ -202,7 +202,7 @@ let exec_xmlrpc ?context ?(needs_session=true) (driver: string) (call: call) =
       raise (Api_errors.Server_error (Api_errors.sr_device_in_use, []))
     | XMLRPC.Fault(144l, _) ->
       (* Any call which returns this 'VDIMissing' error really ought to have
-         	   been provided both an SR and VDI reference... *)
+         been provided both an SR and VDI reference... *)
       let sr = default "" (may Ref.string_of call.sr_ref)
       and vdi = default "" (may Ref.string_of call.vdi_ref) in
       raise (Api_errors.Server_error (Api_errors.vdi_missing, [ sr; vdi ]))

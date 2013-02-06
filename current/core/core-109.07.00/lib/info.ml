@@ -24,14 +24,14 @@ type sexp = Sexp.t = Atom of string | List of sexp list (* constructor import *)
 
 module Message = struct
   type t =
-  | Could_not_construct of Sexp.t
-  | String of string
-  | Sexp of Sexp.t
-  | Tag_sexp of string * Sexp.t * Source_code_position0.t option
-  | Tag_t of string * t
-  | Tag_arg of string * Sexp.t * t
-  | Of_list of int option * t list
-  | With_backtrace of t * string (* backtrace *)
+    | Could_not_construct of Sexp.t
+    | String of string
+    | Sexp of Sexp.t
+    | Tag_sexp of string * Sexp.t * Source_code_position0.t option
+    | Tag_t of string * t
+    | Tag_arg of string * Sexp.t * t
+    | Of_list of int option * t list
+    | With_backtrace of t * string (* backtrace *)
   with bin_io, sexp_of
 
   let rec to_strings_hum t ac =

@@ -23,11 +23,11 @@
  * Command-line parameters
  * -----------------------
  *
- * -device		[mandatory] Gives the path to the block device.
- * -ctrlsock <file>	Requests that a file is used as a Unix domain socket to listen on for read/write commands.
- * -datasock <file>	Requests that a file is used as a Unix domain socket to use to transfer database contents.
- * -empty       	Requests that the block device is emptied and re-initialised.
- * -dump		Requests that the contents of the block device are written to STDOUT.
+ * -device    [mandatory] Gives the path to the block device.
+ * -ctrlsock <file>  Requests that a file is used as a Unix domain socket to listen on for read/write commands.
+ * -datasock <file>  Requests that a file is used as a Unix domain socket to use to transfer database contents.
+ * -empty         Requests that the block device is emptied and re-initialised.
+ * -dump    Requests that the contents of the block device are written to STDOUT.
  *
  * The -device option is mandatory. Options -ctrlsock and -datasock must be specified together; these are mutually exclusive with either -empty or -dump.
  *)

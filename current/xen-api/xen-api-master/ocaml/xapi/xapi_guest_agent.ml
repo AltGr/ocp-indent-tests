@@ -193,8 +193,8 @@ let all (lookup: string -> string option) (list: string -> string list) ~__conte
          ||
          device_id_cached <> device_id)
     (* Nb. we're ignoring the memory updates as far as the VM_guest_metrics API object is concerned. We are putting them into an RRD instead *)
-    (*	   ||
-       	   memory_cached <> memory)*)
+    (*     ||
+         memory_cached <> memory)*)
     then 
       begin
         let gm = 
@@ -215,7 +215,7 @@ let all (lookup: string -> string option) (list: string -> string list) ~__conte
             new_ref in
 
         (* We unconditionally reset the database values but observe that the database
-           	     checks whether a value has actually changed before doing anything *)
+           checks whether a value has actually changed before doing anything *)
         if(pv_drivers_version_cached <> pv_drivers_version) then
           Db.VM_guest_metrics.set_PV_drivers_version ~__context ~self:gm ~value:pv_drivers_version;
         if(os_version_cached <> os_version) then
@@ -226,8 +226,8 @@ let all (lookup: string -> string option) (list: string -> string list) ~__conte
           Db.VM_guest_metrics.set_other ~__context ~self:gm ~value:other;
           Helpers.call_api_functions ~__context (fun rpc session_id -> Client.Client.VM.update_allowed_operations rpc session_id self);
         end;
-        (*	  if(memory_cached <> memory) then
-           	    Db.VM_guest_metrics.set_memory ~__context ~self:gm ~value:memory; *)
+        (*    if(memory_cached <> memory) then
+              Db.VM_guest_metrics.set_memory ~__context ~self:gm ~value:memory; *)
 
         Db.VM_guest_metrics.set_last_updated ~__context ~self:gm ~value:(Date.of_float last_updated);
 
@@ -269,7 +269,7 @@ let all (lookup: string -> string option) (list: string -> string list) ~__conte
             (Db.VM.get_VBDs ~__context ~self);
           List.iter (fun self -> Xapi_vif_helpers.update_allowed_operations ~__context ~self)
             (Db.VM.get_VIFs ~__context ~self);
-        end;	  
+        end;    
       end (* else debug "Ignored spurious guest agent update" *)
   end
 

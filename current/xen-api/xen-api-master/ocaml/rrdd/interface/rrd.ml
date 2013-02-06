@@ -113,7 +113,7 @@ type rra = {
   rra_row_cnt : int;                     (** number of entries to store *)
   rra_pdp_cnt : int;                     (** number of pdps per cdp *)
   rra_xff : float;                       (** proportion of missing pdps at which
-                                            					     we mark the cdp as unknown *)
+                                            we mark the cdp as unknown *)
   rra_data: Fring.t array;          (** stored data *)
   rra_cdps : cdp_prep array;             (** scratch area for consolidated datapoint preparation *)
 
@@ -180,9 +180,9 @@ let do_cfs rra start_pdp_offset pdps =
     if isnan pdps.(i)
     then begin 
       (* CDP is an accumulator for the average. If we've got some unknowns, we need to
-         	 renormalize. ie, CDP contains \sum_{i=0}^j{ (1/n) x_i} where n is the number of
-         	 values we expect to have. If we have unknowns, we need to multiply the whole
-         	 thing by \frac{n_{old}}{n_{new}} *)
+         renormalize. ie, CDP contains \sum_{i=0}^j{ (1/n) x_i} where n is the number of
+         values we expect to have. If we have unknowns, we need to multiply the whole
+         thing by \frac{n_{old}}{n_{new}} *)
       let olddiv = rra.rra_pdp_cnt - cdp.cdp_unknown_pdps in
       let newdiv = olddiv - start_pdp_offset in
       if newdiv > 0 then (
@@ -208,12 +208,12 @@ let rra_update rrd proc_pdp_st elapsed_pdp_st pdps =
     if rra_step_cnt > 0 then 
       begin
         (* When writing multiple CDP values into the archive, the
-           	   first one (primary) is calculated using the values we
-           	   already had accumulated from the last update, whereas any
-           	   subsequent values (secondary) are calculated just using the
-           	   current PDP. It turns out that the secondary values are
-           	   simply the PDPs as whichever CF is used, a CDP of many
-           	   repeated values is simply the value itself. *)
+           first one (primary) is calculated using the values we
+           already had accumulated from the last update, whereas any
+           subsequent values (secondary) are calculated just using the
+           current PDP. It turns out that the secondary values are
+           simply the PDPs as whichever CF is used, a CDP of many
+           repeated values is simply the value itself. *)
         let primaries = Array.map (fun cdp ->  
             if cdp.cdp_unknown_pdps <= (int_of_float (rra.rra_xff *. float_of_int rra.rra_pdp_cnt)) 
             then cdp.cdp_value 
@@ -720,7 +720,7 @@ let from_xml input =
   match tree with
   | El ("rrd",elts) ->
     let dss = List.filter_map (function El ("ds",elts) -> Some (process_ds elts) | _ -> None) elts in
-    let rras = List.filter_map (function El ("rra",elts) -> Some (process_rra elts) | _ -> None) elts in 	
+    let rras = List.filter_map (function El ("rra",elts) -> Some (process_rra elts) | _ -> None) elts in   
     let kvs = kvs elts in
     let rrd = {last_updated=float_of_string (List.assoc "lastupdate" kvs);
                timestep=Int64.of_string (List.assoc "step" kvs);
@@ -747,7 +747,7 @@ let from_xml input =
 (** Repeatedly call [f string] where [string] contains a fragment of the RRD XML *)
 let xml_to_fd rrd fd =
   (* We use an output channel for Xmlm-compat buffered output. Provided we flush
-     	   at the end we should be safe. *)  
+     at the end we should be safe. *)  
   let with_out_channel_output fd f = 
     let oc = Unix.out_channel_of_descr fd in
     finally
@@ -883,9 +883,9 @@ let iter_to_string_list f x =
 let to_bigbuffer ?(json=false) rrd =
   let b = Bigbuffer.make () in
   begin
-	if json 
-	then Bigbuffer.append_string b (to_json rrd) (* XXX: might be too big *)
-  	else iter_over_xml rrd (Bigbuffer.append_string b)
+  if json 
+  then Bigbuffer.append_string b (to_json rrd) (* XXX: might be too big *)
+    else iter_over_xml rrd (Bigbuffer.append_string b)
   end;
   b
 *)

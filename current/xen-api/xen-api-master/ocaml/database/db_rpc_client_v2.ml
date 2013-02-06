@@ -36,7 +36,7 @@ module Make = functor(RPC: Db_interface.RPC) -> struct
     | Response.Read_missing_uuid (x, y, z) -> 
       raise (Read_missing_uuid (x,y,z))
     | Response.Too_many_values (x, y, z) -> 
-      raise (Too_many_values (x,y,z))			
+      raise (Too_many_values (x,y,z))      
     | y -> y
 
   let get_table_from_ref _ x =

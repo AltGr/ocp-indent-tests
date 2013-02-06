@@ -87,7 +87,7 @@ let import vdi (req: Request.t) (s: Unix.file_descr) _ =
   Xapi_http.assert_credentials_ok "VDI.import" ~http_action:"put_import_raw_vdi" req;
 
   (* Perform the SR reachability check using a fresh context/task because
-     	   we don't want to complete the task in the forwarding case *)
+     we don't want to complete the task in the forwarding case *)
   Server_helpers.exec_with_new_task "VDI.import" 
     (fun __context -> 
       Helpers.call_api_functions ~__context 
@@ -108,7 +108,7 @@ let handler (req: Request.t) (s: Unix.file_descr) _ =
   Xapi_http.assert_credentials_ok "VDI.import" ~http_action:"put_import_raw_vdi" req;
 
   (* Using a fresh context/task because we don't want to complete the
-     	   task in the forwarding case *)
+     task in the forwarding case *)
   Server_helpers.exec_with_new_task "VDI.import" 
     (fun __context ->
       import (vdi_of_req ~__context req) req s ()

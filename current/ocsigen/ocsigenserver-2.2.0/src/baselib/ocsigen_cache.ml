@@ -26,85 +26,85 @@
 let (>>=) = Lwt.bind
 
 module Dlist :
-  sig
+sig
 
-    type 'a t
-    type 'a node
-    val create : ?timer:float -> int -> 'a t
-    val add : 'a -> 'a t -> 'a option
-    val newest : 'a t -> 'a node option
-    val oldest : 'a t -> 'a node option
+  type 'a t
+  type 'a node
+  val create : ?timer:float -> int -> 'a t
+  val add : 'a -> 'a t -> 'a option
+  val newest : 'a t -> 'a node option
+  val oldest : 'a t -> 'a node option
 
-    (** Removes an element from its list.
-        If the element is not in a list, it does nothing.
-        If it is in a list, it calls the finaliser, then removes the element.
-        If the finaliser fails with an exception,
-        the element is removed and the exception is raised again.
-    *)
-    val remove : 'a node -> unit
+  (** Removes an element from its list.
+      If the element is not in a list, it does nothing.
+      If it is in a list, it calls the finaliser, then removes the element.
+      If the finaliser fails with an exception,
+      the element is removed and the exception is raised again.
+  *)
+  val remove : 'a node -> unit
 
-    (** Removes the element from its list without finalising,
-        then adds it as newest. *)
-    val up : 'a node -> unit
+  (** Removes the element from its list without finalising,
+      then adds it as newest. *)
+  val up : 'a node -> unit
 
-    val size : 'a t -> int
-    val maxsize : 'a t -> int
+  val size : 'a t -> int
+  val maxsize : 'a t -> int
 
-    (** returns the timer of the Dlist *)
-    val get_timer : 'a t -> float option
+  (** returns the timer of the Dlist *)
+  val get_timer : 'a t -> float option
 
-    val value : 'a node -> 'a
-    val list_of : 'a node -> 'a t option
+  val value : 'a node -> 'a
+  val list_of : 'a node -> 'a t option
 
-    (** remove the n oldest values ;
-        returns the list of removed values *)
-    val remove_n_oldest : 'a t -> int -> 'a list
+  (** remove the n oldest values ;
+      returns the list of removed values *)
+  val remove_n_oldest : 'a t -> int -> 'a list
 
-    (** fold over the elements from the cache starting from the newest
-        to the oldest *)
-    val fold : ('b -> 'a -> 'b) -> 'b -> 'a t -> 'b
+  (** fold over the elements from the cache starting from the newest
+      to the oldest *)
+  val fold : ('b -> 'a -> 'b) -> 'b -> 'a t -> 'b
 
-    (** fold over the elements from the cache starting from the oldest
-        to the newest *)
-    val fold_back : ('b -> 'a -> 'b) -> 'b -> 'a t -> 'b
+  (** fold over the elements from the cache starting from the oldest
+      to the newest *)
+  val fold_back : ('b -> 'a -> 'b) -> 'b -> 'a t -> 'b
 
-    (** lwt version of fold *)
-    val lwt_fold : ('b -> 'a -> 'b Lwt.t) -> 'b -> 'a t -> 'b Lwt.t
+  (** lwt version of fold *)
+  val lwt_fold : ('b -> 'a -> 'b Lwt.t) -> 'b -> 'a t -> 'b Lwt.t
 
-    (** lwt version of fold_back *)
-    val lwt_fold_back : ('b -> 'a -> 'b Lwt.t) -> 'b -> 'a t -> 'b Lwt.t
+  (** lwt version of fold_back *)
+  val lwt_fold_back : ('b -> 'a -> 'b Lwt.t) -> 'b -> 'a t -> 'b Lwt.t
 
-    (** Move a node from one dlist to another one, without finalizing.
-        If one value is removed from the destination list (because its
-        maximum size is reached), it is returned (after finalisation). *)
-    val move : 'a node -> 'a t -> 'a option
+  (** Move a node from one dlist to another one, without finalizing.
+      If one value is removed from the destination list (because its
+      maximum size is reached), it is returned (after finalisation). *)
+  val move : 'a node -> 'a t -> 'a option
 
-    (** change the maximum size ;
-        returns the list of removed values, if any. *)
-    val set_maxsize : 'a t -> int -> 'a list
+  (** change the maximum size ;
+      returns the list of removed values, if any. *)
+  val set_maxsize : 'a t -> int -> 'a list
 
-    (** record a function to be called automatically on a piece of data
-        just before it disappears from the list
-        (either by explicit removal or because the maximum size is exceeded) *)
-    val add_finaliser_before : ('a node -> unit) -> 'a t -> unit
+  (** record a function to be called automatically on a piece of data
+      just before it disappears from the list
+      (either by explicit removal or because the maximum size is exceeded) *)
+  val add_finaliser_before : ('a node -> unit) -> 'a t -> unit
 
-    (** replace all finalizers by a new one. Be very careful while using this. *)
-    val set_finaliser_before : ('a node -> unit) -> 'a t -> unit
+  (** replace all finalizers by a new one. Be very careful while using this. *)
+  val set_finaliser_before : ('a node -> unit) -> 'a t -> unit
 
-    (** returns the finalizers. *)
-    val get_finaliser_before : 'a t -> ('a node -> unit)
+  (** returns the finalizers. *)
+  val get_finaliser_before : 'a t -> ('a node -> unit)
 
-    (** record a function to be called automatically on a piece of data
-        just after it disappears from the list
-        (either by explicit removal or because the maximum size is exceeded) *)
-    val add_finaliser_after : ('a node -> unit) -> 'a t -> unit
+  (** record a function to be called automatically on a piece of data
+      just after it disappears from the list
+      (either by explicit removal or because the maximum size is exceeded) *)
+  val add_finaliser_after : ('a node -> unit) -> 'a t -> unit
 
-    (** replace all finalizers by a new one. Be very careful while using this. *)
-    val set_finaliser_after : ('a node -> unit) -> 'a t -> unit
+  (** replace all finalizers by a new one. Be very careful while using this. *)
+  val set_finaliser_after : ('a node -> unit) -> 'a t -> unit
 
-    (** returns the finalizers. *)
-    val get_finaliser_after : 'a t -> ('a node -> unit)
-  end = struct
+  (** returns the finalizers. *)
+  val get_finaliser_after : 'a t -> ('a node -> unit)
+end = struct
 
   type 'a node =
       { mutable value : 'a;
@@ -442,20 +442,20 @@ module Weak =  Weak.Make(struct type t = unit -> unit
 let clear_all = Weak.create 17
 
 module Make =
-functor (A: sig
-    type key
-    type value
-  end) ->
+  functor (A: sig
+      type key
+      type value
+    end) ->
   struct
 
     type data = A.key
 
     module H = Hashtbl.Make(
-        struct
-          type t = A.key
-          let equal a a' = a = a'
-          let hash = Hashtbl.hash
-        end)
+      struct
+        type t = A.key
+        let equal a a' = a = a'
+        let hash = Hashtbl.hash
+      end)
 
     type t =
         { mutable pointers : A.key Dlist.t;

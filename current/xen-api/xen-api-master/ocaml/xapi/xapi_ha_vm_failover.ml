@@ -86,7 +86,7 @@ let host_of_non_agile_vm ~__context all_hosts_and_snapshots_sorted (vm, snapshot
       with _ -> false) all_hosts_and_snapshots_sorted) with
   | (host, host_snapshot) :: _ -> 
     (* Multiple hosts are possible because "not agile" means "not restartable on every host". It is 
-       	 possible to unplug PBDs so that only a proper subset of hosts (not the singleton element) supports a VM. *)
+       possible to unplug PBDs so that only a proper subset of hosts (not the singleton element) supports a VM. *)
     debug "Non-agile VM %s (%s) considered pinned to Host %s (%s)" (Helpers.short_string_of_ref vm) snapshot.API.vM_name_label (Helpers.short_string_of_ref host) host_snapshot.API.host_hostname;
     [ vm, host ]
   | [] ->
@@ -101,27 +101,27 @@ let host_of_non_agile_vm ~__context all_hosts_and_snapshots_sorted (vm, snapshot
 *)
 let compute_restart_plan ~__context ~all_protected_vms ?(change=no_configuration_change) num_failures = 
 (* This function must be deterministic: for the same set of hosts and set of VMs it must produce the same output.
-   	   We rely partially on the binpacker enforcing its own ordering over hosts and vms, so it's not critical for us
-   	   to sort the result of Db.*.get_all calls generally. However the handling of non-agile VMs needs special care. *)
+   We rely partially on the binpacker enforcing its own ordering over hosts and vms, so it's not critical for us
+   to sort the result of Db.*.get_all calls generally. However the handling of non-agile VMs needs special care. *)
 
   (* We first must deal with protected but currently offline VMs: we need to simulate the start of these VMs before we can 
-     	   ask any questions about future host failures, since we need to know on which hosts these VMs will end up. 
-     	   Note this is only useful in the initial startup transient: assuming all protected VMs actually are restarted then
-     	   this code will do nothing. *)
+     ask any questions about future host failures, since we need to know on which hosts these VMs will end up. 
+     Note this is only useful in the initial startup transient: assuming all protected VMs actually are restarted then
+     this code will do nothing. *)
 
   (* Note further that we simulate the start of offline protected VMs *using this function* (ie by the background HA 
-     	   thread). If the user makes their own poor placement decisisions via explicit VM.start/VM.start_on then the plan
-     	   may evaporate. This is no different to (eg) the user migrating a VM and breaking the plan. *)
+     thread). If the user makes their own poor placement decisisions via explicit VM.start/VM.start_on then the plan
+     may evaporate. This is no different to (eg) the user migrating a VM and breaking the plan. *)
 
   (* Note further that we consider the amount of host memory free using the current VM configurations (thanks to the
-     	   semantics of the Memory_check.host_compute_free_memory call) but *crucially* consider that VMs requiring a restart
-     	   will use their new memory_static_max: so we always use a live 'VM.get_record' and not a 'last_booted_record' *)
+     semantics of the Memory_check.host_compute_free_memory call) but *crucially* consider that VMs requiring a restart
+     will use their new memory_static_max: so we always use a live 'VM.get_record' and not a 'last_booted_record' *)
 
   (* Allow the num_failures to be overriden *)
   let (num_failures: int) = Opt.default num_failures change.num_failures in
 
   (* All the VMs to protect; these VMs may or may not be currently running anywhere: they will be offline when a host has
-     	   failed and possibly initially during the enable-ha transient. *)
+     failed and possibly initially during the enable-ha transient. *)
   let vms_to_ensure_running = all_protected_vms in
 
   (* Add in any extra VMs which aren't already protected *)
@@ -185,10 +185,10 @@ let compute_restart_plan ~__context ~all_protected_vms ?(change=no_configuration
   debug "Protected VMs: [ %s ]" (String.concat "; " (List.map (fun (vm, _) -> string_of_vm vm) vms_to_ensure_running));
 
   (* Current free memory on all hosts (does not include any for *offline* protected VMs ie those for which (vm_accounted_to_host vm) 
-     	   returns None) Also apply the supplied counterfactual-reasoning changes (if any) *)
+     returns None) Also apply the supplied counterfactual-reasoning changes (if any) *)
   let hosts_and_memory = List.map (fun host ->
       (* Ultra-conservative assumption: plan using VM static_max values for normal domains,
-         		   and dynamic_max for control domains. *)
+         and dynamic_max for control domains. *)
       let summary = Memory_check.get_host_memory_summary ~__context ~host in
       let currently_free = Memory_check.host_compute_free_memory_with_policy~__context summary Memory_check.Static_max in
       let sum = List.fold_left Int64.add 0L in
@@ -208,8 +208,8 @@ let compute_restart_plan ~__context ~all_protected_vms ?(change=no_configuration
   let vms_and_memory = List.map (fun (vm, snapshot) -> vm, total_memory_of_vm ~__context Memory_check.Static_max snapshot) vms_to_ensure_running in
 
   (* For each non-agile VM, consider it pinned it to one host (even if it /could/ run on several). Note that if it is
-     	   actually running somewhere else (very strange semi-agile situation) then it will be counted as overhead there and
-     	   plans will be made for it running on the host we choose. *)
+     actually running somewhere else (very strange semi-agile situation) then it will be counted as overhead there and
+     plans will be made for it running on the host we choose. *)
   let pinned = List.concat (List.map (host_of_non_agile_vm ~__context all_hosts_and_snapshots) not_agile_vms) in
 
   (* The restart plan for offline non-agile VMs is just the map VM -> pinned Host *)
@@ -217,7 +217,7 @@ let compute_restart_plan ~__context ~all_protected_vms ?(change=no_configuration
   debug "Restart plan for non-agile offline VMs: [ %s ]" (string_of_plan non_agile_restart_plan);
 
   (* Update the host free memory to take this plan into account. Note we don't update the VM placement because that only 
-     	   considers agile VMs. Non-agile VMs are treated as per-host overhead. *)
+     considers agile VMs. Non-agile VMs are treated as per-host overhead. *)
   let hosts_and_memory = Binpack.account hosts_and_memory vms_and_memory non_agile_restart_plan in
 
   (* Now that we've considered the overhead of the non-agile (pinned) VMs, we can perform some binpacking of the agile VMs. *)
@@ -248,11 +248,11 @@ let compute_restart_plan ~__context ~all_protected_vms ?(change=no_configuration
   then warn "Some protected VMs could not be restarted: [ %s ]" (String.concat "; " (List.map string_of_vm vms_not_restarted));
 
   (* Applying the plan means:
-     	   1. subtract from each host the memory needed to start the VMs in the plan; and
-     	   2. modifying the VM placement map to reflect the plan. *)
+     1. subtract from each host the memory needed to start the VMs in the plan; and
+     2. modifying the VM placement map to reflect the plan. *)
   let config = Binpack.apply_plan config agile_restart_plan in
   (* All agile VMs which were offline have all been 'restarted' provided vms_not_restarted <> []
-     	   If vms_not_restarted = [] then some VMs will have been left out. *)
+     If vms_not_restarted = [] then some VMs will have been left out. *)
   Binpack.check_configuration config;
   debug "Planning configuration for future failures = %s" (Binpack.string_of_configuration string_of_host string_of_vm config);
   non_agile_restart_plan @ agile_restart_plan, config, vms_not_restarted, not_agile_vms <> []
@@ -421,14 +421,14 @@ let last_start_attempt : (API.ref_VM, float) Hashtbl.t = Hashtbl.create 10
    and restarts any offline protected VMs *)
 let restart_auto_run_vms ~__context live_set n =
   (* ensure we have live=false on the host_metrics for those hosts not in the live_set; and force state to Halted for
-     	   all VMs that are "running" or "paused" with resident_on set to one of the hosts that is now dead
-     	*)
+     all VMs that are "running" or "paused" with resident_on set to one of the hosts that is now dead
+  *)
   debug "restart_auto_run_vms called";
   let hosts = Db.Host.get_all ~__context in
   (* Keep a list of all the VMs whose power-states we force to Halted to use later in the
-     	   'best-effort' restart code. Note that due to the weakly consistent database this is not
-     	   an accurate way to determine 'failed' VMs but it will suffice for our 'best-effort' 
-     	   category. *)
+     'best-effort' restart code. Note that due to the weakly consistent database this is not
+     an accurate way to determine 'failed' VMs but it will suffice for our 'best-effort' 
+     category. *)
   let reset_vms = ref [] in
   List.iter
     (fun h ->
@@ -489,14 +489,14 @@ let restart_auto_run_vms ~__context live_set n =
     try
       if Xapi_fist.simulate_planner_failure () then failwith "fist_simulate_planner_failure";
       (* CA-23981: if the pool-pre-ha-vm-restart hook exists AND if we're about to auto-start some VMs then
-         			   call the script hook first and then recompute the plan aftwards. Note that these VMs may either
-         			   be protected or best-effort. For the protected ones we assume that these are included in the VM
-         			   restart plan-- we ignore the possibility that the planner may fail here (even through there is some
-         			   last-ditch code later to perform best-effort VM.starts). This is ok since it should never happen and 
-         			   this particular hook is really a 'best-effort' integration point since it conflicts with the overcommit
-         			   protection.
-         			   For the best-effort VMs we call the script
-         			   when we have reset some VMs to halted (no guarantee there is enough resource but better safe than sorry) *)
+         call the script hook first and then recompute the plan aftwards. Note that these VMs may either
+         be protected or best-effort. For the protected ones we assume that these are included in the VM
+         restart plan-- we ignore the possibility that the planner may fail here (even through there is some
+         last-ditch code later to perform best-effort VM.starts). This is ok since it should never happen and 
+         this particular hook is really a 'best-effort' integration point since it conflicts with the overcommit
+         protection.
+         For the best-effort VMs we call the script
+         when we have reset some VMs to halted (no guarantee there is enough resource but better safe than sorry) *)
       let plan, config, vms_not_restarted, non_agile_protected_vms_exist = compute_restart_plan ~__context ~all_protected_vms n in
       let plan, config, vms_not_restarted, non_agile_protected_vms_exist = 
         if true
@@ -536,8 +536,8 @@ let restart_auto_run_vms ~__context live_set n =
     (fun rpc session_id ->
 
       (* Helper function to start a VM somewhere. If the HA overcommit protection stops us then disable it and try once more.
-         			   Returns true if the VM was restarted and false otherwise. *)
-      let restart_vm vm ?host () = 	   
+         Returns true if the VM was restarted and false otherwise. *)
+      let restart_vm vm ?host () =      
         let go () = 
 
           if Xapi_fist.simulate_restart_failure () then begin
@@ -583,7 +583,7 @@ let restart_auto_run_vms ~__context live_set n =
       let started =
         if not plan_is_complete then begin
           (* If the Pool is overcommitted the restart priority will make the difference between a VM restart or not,
-             					   while if we're undercommitted the restart priority only affects the timing slightly. *)
+             while if we're undercommitted the restart priority only affects the timing slightly. *)
           let all = List.filter (fun (_, r) -> r.API.vM_power_state = `Halted) all_protected_vms in
           let all = List.sort by_order all in
           warn "Failed to find plan to restart all protected VMs: falling back to simple VM.start in priority order";
@@ -612,9 +612,9 @@ let restart_auto_run_vms ~__context live_set n =
       gc_table restart_failed;
 
       (* Consider restarting the best-effort VMs we *think* have failed (but we might get this wrong --
-         			   ok since this is 'best-effort'). NOTE we do not use the restart_vm function above as this will mark the
-         			   pool as overcommitted if an HA_OPERATION_WOULD_BREAK_FAILOVER_PLAN is received (although this should never
-         			   happen it's better safe than sorry) *)
+         ok since this is 'best-effort'). NOTE we do not use the restart_vm function above as this will mark the
+         pool as overcommitted if an HA_OPERATION_WOULD_BREAK_FAILOVER_PLAN is received (although this should never
+         happen it's better safe than sorry) *)
       List.iter
         (fun vm ->
           try

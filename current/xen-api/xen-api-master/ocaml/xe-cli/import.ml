@@ -81,14 +81,14 @@ let stream_from_xva_dir dir oc =
     let chunk_number = ref 0 in
 
     (** Construct a new header, add any necessary zero-padding for the previous header
-       		   and send the new header if size <> 0 *)
+       and send the new header if size <> 0 *)
     let make_hdr =
       let last_hdr = ref None in
       fun size -> 
         begin match !last_hdr with
         | Some hdr -> output_string oc (Tar.Header.zero_padding hdr)
         | None -> ()
-        end;		 
+        end;     
         let hdr = Tar.Header.make 
             (Printf.sprintf "%s/%08d" vdi.Xva.vdi_name !chunk_number) 
             (Int64.to_int32 size) in
@@ -123,7 +123,7 @@ let stream_from_xva_dir dir oc =
   ) vdis;
   end_stream oc
 
-(** Upload from a single file XVA *)		       
+(** Upload from a single file XVA *)           
 let stream_from_xva_file file oc = 
   let ic = open_in_bin file in
   let bytes = Unix.copy_file ic oc in

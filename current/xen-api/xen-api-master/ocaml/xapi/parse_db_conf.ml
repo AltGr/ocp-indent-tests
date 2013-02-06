@@ -49,8 +49,8 @@ let make path = { dummy_conf with path = path }
 let generation_filename dbconn = dbconn.path ^ Generation.suffix
 
 (** Return the generation of a given database 'connection'. Note we normally
-   	expect the database file and the generation file to be present together;
-   	however after upgrade only the database file will be present. *)
+   expect the database file and the generation file to be present together;
+   however after upgrade only the database file will be present. *)
 let generation_read dbconn =
   let gencount_fname = generation_filename dbconn in
   try Generation.of_string (Unixext.string_of_file gencount_fname) with _ -> 0L
@@ -119,8 +119,8 @@ let parse_db_conf s =
       done;
 
       (* if the key_name exists then return the value; otherwise return the default.
-         	 if the key_name exists we remove the value from the association list -- this is so at the end of
-         	 populating the record what we have left are the "other_fields" *)
+         if the key_name exists we remove the value from the association list -- this is so at the end of
+         populating the record what we have left are the "other_fields" *)
       let maybe_put_in key_name default conv_fn =
         if List.mem_assoc key_name !key_values then
           begin

@@ -35,7 +35,7 @@ let port_of_proxy __context console =
       let open Xenops_interface in
       let open Xenops_client in
       let id = Xapi_xenops.id_of_vm ~__context ~self:vm in
-      let dbg = Context.string_of_task __context in		
+      let dbg = Context.string_of_task __context in    
       let _, s = Client.VM.stat dbg id in
       let proto = match Db.Console.get_protocol __context console with
         | `rfb -> Vm.Rfb
@@ -101,7 +101,7 @@ let ws_proxy __context req protocol port s =
     let upgrade_successful = Opt.map (fun sock -> 
         try 
           let result = (sock,Some (Ws_helpers.upgrade req s)) in
-          result	  
+          result    
         with _ ->
           (sock,None)) sock
     in
@@ -151,7 +151,7 @@ let console_of_request __context req =
      go for that. *)
   let db = Context.database_of __context in
   let is_vm, is_console = 
-    let module DB = (val (Db_cache.get db) : Db_interface.DB_ACCESS) in	  
+    let module DB = (val (Db_cache.get db) : Db_interface.DB_ACCESS) in    
     match DB.get_table_from_ref db _ref with
     | Some c when c = Db_names.vm -> true, false
     | Some c when c = Db_names.console -> false, true

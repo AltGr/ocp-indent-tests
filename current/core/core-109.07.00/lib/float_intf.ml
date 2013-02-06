@@ -126,11 +126,11 @@ module type S = sig
 
   module Class : sig
     type t =
-    | Infinite
-    | Nan
-    | Normal
-    | Subnormal
-    | Zero
+      | Infinite
+      | Nan
+      | Normal
+      | Subnormal
+      | Zero
     with bin_io, sexp
 
     include Stringable.S with type t := t

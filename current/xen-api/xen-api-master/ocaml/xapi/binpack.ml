@@ -32,7 +32,7 @@ let biggest_fit_decreasing (things: ('a * int64) list) (bins: ('b * int64) list)
       then (mapping, bins) (* leave it out *)
       else 
         (* Allocate the thing to this bin, subtract from bin size and resort *)
-        let bins = insert less_than (first_bin_id, remaining) rest in	 
+        let bins = insert less_than (first_bin_id, remaining) rest in   
         (thing_id, first_bin_id) :: mapping, bins in
   (* Only return the mapping: we aren't interested in the remaining free space *)
   fst(List.fold_left allocate_one initial things')
@@ -249,7 +249,7 @@ let approximate_bin_pack = {
       try
         if plan_trivially_never_possible config then raise Stop;
         (* Return the state of the world after we generate and follow a failover plan for the biggest host that
-           	    could fail. Raises 'Stop' if a plan could not be found. *)
+           could fail. Raises 'Stop' if a plan could not be found. *)
         let simulate_worst_single_failure config = 
           (* Assume the biggest host fails *)
           let biggest_host = fst (List.hd (List.sort less_than config.hosts)) in

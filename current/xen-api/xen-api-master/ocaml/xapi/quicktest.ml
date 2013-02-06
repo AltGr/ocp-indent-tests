@@ -522,8 +522,8 @@ let test_vhd_locking_hook session_id vm =
       (fun () ->
         while Unix.gettimeofday () -. start < 30. do
           (* We throw away exceptions because unplugs can fail (if the guest isn't ready) and this causes the
-             				   next plug to fail. We use asynchronous operations because we are sharing a single HTTP connection to the
-             				   master and we genuinely want the operations to (attempt to) execute in parallel *)
+             next plug to fail. We use asynchronous operations because we are sharing a single HTTP connection to the
+             master and we genuinely want the operations to (attempt to) execute in parallel *)
           let task = Client.Async.VBD.plug !rpc session_id new_vbd in
           incr total_bg_ops;
           wait_for_task_complete session_id task;
@@ -554,10 +554,10 @@ let powercycle_test session_id vm =
   finally
     (fun () ->
       (* We play with three VMs:
-         			   1. a clean install of a VM                         (vm)
-         			   2. a suspended clone of (1)                        (vm')
-         			   3. a metadata import of the metadata export of (2) (vm'')
-         			*)
+         1. a clean install of a VM                         (vm)
+         2. a suspended clone of (1)                        (vm')
+         3. a metadata import of the metadata export of (2) (vm'')
+      *)
       debug test "Starting VM";
       Client.VM.start !rpc session_id vm false false;
       (* Check that all VBDs are plugged in correctly *)
@@ -627,7 +627,7 @@ let powercycle_test session_id vm =
 
       (* Keep the imported VM and chuck away the clone *)
       (* NB cannot do this earlier because the suspend VDI would be destroyed
-         			   and prevent the other VM being resumed *)
+         and prevent the other VM being resumed *)
       Client.VM.hard_shutdown !rpc session_id vm';
       vm_uninstall test session_id vm';
 
@@ -819,7 +819,7 @@ let _ =
         maybe_run_test "event" event_next_unblocking_test;
         maybe_run_test "event" (fun () -> event_next_test s);
         maybe_run_test "event" (fun () -> event_from_test s);
-        (*				maybe_run_test "event" (fun () -> object_level_event_test s);*)
+        (*        maybe_run_test "event" (fun () -> object_level_event_test s);*)
         maybe_run_test "event" (fun () -> event_message_test s);
         maybe_run_test "vdi" (fun () -> vdi_test s);
         maybe_run_test "async" (fun () -> async_test s);

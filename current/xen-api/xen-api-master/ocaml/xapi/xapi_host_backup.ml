@@ -67,8 +67,8 @@ let host_backup_handler (req: Request.t) s _ =
     )
 
 (** Helper function to prevent double-closes of file descriptors
-   		TODO: this function was copied from util/sha1sum.ml, and should
-   					really go in a shared lib somewhere
+    TODO: this function was copied from util/sha1sum.ml, and should
+          really go in a shared lib somewhere
 *)
 let close to_close fd =
   if List.mem fd !to_close then Unix.close fd;

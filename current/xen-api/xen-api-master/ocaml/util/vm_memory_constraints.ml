@@ -16,9 +16,9 @@
 module type T = sig
 
   (** Represents a set of memory constraints for a guest. Constraints
-     	  * are in valid order if (and only if) they satisfy the following:
-     	  * static_min <= dynamic_min <= dynamic_max <= static_max
-     	  *)
+    * are in valid order if (and only if) they satisfy the following:
+    * static_min <= dynamic_min <= dynamic_max <= static_max
+  *)
   type t =
     {
       static_min  : Int64.t;
@@ -29,54 +29,54 @@ module type T = sig
     }
 
   (** Given a set of constraints [c], returns [true] if and only if
-     	    [c.dynamic_min] = [c.dynamic_max]. *)
+      [c.dynamic_min] = [c.dynamic_max]. *)
   val are_pinned : constraints:t -> bool
 
   (** Given a set of constraints [c], returns [true] if and only if
-     	    [c.dynamic_min] = [c.dynamic_max] = [c.static-max]. *)
+      [c.dynamic_min] = [c.dynamic_max] = [c.static-max]. *)
   val are_pinned_at_static_max : constraints:t -> bool
 
   (** Given a set of constraints [c], returns [true] if and only if
-     	    [c.static_min] ≤ [c.dynamic_min] ≤ [c.dynamic_max] ≤ [c.static_max]. *)
+      [c.static_min] ≤ [c.dynamic_min] ≤ [c.dynamic_max] ≤ [c.static_max]. *)
   val are_valid : constraints:t -> bool
 
   (** Given a set of constraints [c], returns [true] if and only if
-     	    [c.static_min] ≤ [c.dynamic_min] = [c.dynamic_max] = [c.static-max]. *)
+      [c.static_min] ≤ [c.dynamic_min] = [c.dynamic_max] = [c.static-max]. *)
   val are_valid_and_pinned_at_static_max : constraints:t -> bool
 
   (** Creates a set of memory constraints from the given tuple whose
-     	  * elements appear in order of increasing size.
-     	  *)
+    * elements appear in order of increasing size.
+  *)
   val create : (int64 * int64 * int64 * int64 * int64) -> t
 
   (** Transforms the given set of memory constraints into a valid set, if
-     	  * possible, or else returns None. Constraints returned by this function
-     	  * are guaranteed to be in valid order such that:
-     	  *
-     	  * static_min <= dynamic_min <= target <= dynamic_max <= static_max
-     	  *
-     	  * If the given constraints are valid, this function simply returns a copy
-     	  * of those constraints.
-     	  *
-     	  * If the given constraints are invalid, but can be made valid by adjusting
-     	  * [(dynamic_min, dynamic_max)] to be in the range defined by [static_min,
-     	  * static_max], or by adjusting [target] to be within the range defined by
-     	  * [(dynamic_min, dynamic_max)], this function returns such a modified set
-     	  * of constraints.
-     	  *
-     	  * If the given constraints are invalid and they cannot be made valid by
-     	  * modifying the dynamic constraints, this function function returns None.
-     	  *)
+    * possible, or else returns None. Constraints returned by this function
+    * are guaranteed to be in valid order such that:
+    *
+    * static_min <= dynamic_min <= target <= dynamic_max <= static_max
+    *
+    * If the given constraints are valid, this function simply returns a copy
+    * of those constraints.
+    *
+    * If the given constraints are invalid, but can be made valid by adjusting
+    * [(dynamic_min, dynamic_max)] to be in the range defined by [static_min,
+    * static_max], or by adjusting [target] to be within the range defined by
+    * [(dynamic_min, dynamic_max)], this function returns such a modified set
+    * of constraints.
+    *
+    * If the given constraints are invalid and they cannot be made valid by
+    * modifying the dynamic constraints, this function function returns None.
+  *)
   val transform : constraints:t -> t option
 
   (** Takes the given set of possibly-invalid memory constraints {i s}, and
-     	  * returns a new set of valid and unballooned constraints {i t} s.t.:
-     	  * {ol
-     	  * {- t.dynamic_max := s.static_max}
-     	  * {- t.target      := s.static_max}
-     	  * {- t.dynamic_min := s.static_max}
-     	  * {- t.static_min  := minimum (s.static_min, s.static_max)}}
-     	  *)
+    * returns a new set of valid and unballooned constraints {i t} s.t.:
+    * {ol
+    * {- t.dynamic_max := s.static_max}
+    * {- t.target      := s.static_max}
+    * {- t.dynamic_min := s.static_max}
+    * {- t.static_min  := minimum (s.static_min, s.static_max)}}
+  *)
   val reset_to_safe_defaults : constraints:t -> t
 
 end

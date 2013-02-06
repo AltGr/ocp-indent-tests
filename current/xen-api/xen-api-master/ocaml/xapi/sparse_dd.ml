@@ -91,8 +91,8 @@ let read_config_file () =
   let unknown_key k v = debug "Unknown key/value pairs: (%s, %s)" k v in
   if Sys.file_exists config_file then begin
     (* Will raise exception if config is mis-formatted. It's up to the
-       		   caller to inspect and handle the failure.
-       		*)
+       caller to inspect and handle the failure.
+    *)
     Config.read config_file config_spec unknown_key;
     debug "Read global variables successfully from %s" config_file
   end
@@ -151,11 +151,11 @@ module DD(Input : IO)(Output : IO) = struct
     Bat.fold_left (fun acc b -> partition_into_blocks b blocksize do_block acc) initial bat
 
   (** [copy progress_cb bat sparse src dst size] copies blocks of data from [src] to [dst]
-     	    where [bat] represents the allocated / dirty blocks in [src];
-         where if [erase] is true it means erase all other blocks in the file;
-         where if [write_zeroes] is true it means scan for and skip over blocks of \000
-     	    while calling [progress_cb] frequently to report the fraction complete
-     	*)
+      where [bat] represents the allocated / dirty blocks in [src];
+        where if [erase] is true it means erase all other blocks in the file;
+        where if [write_zeroes] is true it means scan for and skip over blocks of \000
+      while calling [progress_cb] frequently to report the fraction complete
+  *)
   let copy progress_cb bat erase write_zeroes src dst blocksize size =
     (* If [prezeroed] then nothing needs wiping; otherwise we wipe not(bat) *)
     let empty = Bat.of_list [] and full = Bat.of_list [0L, size] in
@@ -193,7 +193,7 @@ let blit src srcoff dst dstoff len =
 module String_reader = struct
   type t = string
   let op str stream_offset { buf = buf; offset = offset; len = len } = 
-    blit str (Int64.to_int stream_offset) buf offset len	
+    blit str (Int64.to_int stream_offset) buf offset len  
 end
 module String_writer = struct
   type t = string
@@ -222,7 +222,7 @@ module Nbd_writer = struct
   type t = Unix.file_descr
 
   (* Keep a count of the in-flight requests, check we receive exactly
-     	   this many success responses. *)
+     this many success responses. *)
   let num_inflight_requests = ref 0L
 
   module Int64Set = Set.Make(struct type t = int64 let compare = compare end)
@@ -240,7 +240,7 @@ module Nbd_writer = struct
   let c = Condition.create ()
 
   (* Consumes all replies from the NBD server. Will exit the whole process
-     	   if any of the requests fail. *)
+     if any of the requests fail. *)
   let background_receiver = Thread.create
       (fun () ->
         (* Wait until the fd is set *)
@@ -376,8 +376,8 @@ module Nbd_copy = DD(File_reader)(Nbd_writer)
 
 (** [file_dd ?progress_cb ?size ?bat prezeroed src dst]
     If [size] is not given, will assume a plain file and will use st_size from Unix.stat
-   	If [erase]: will erase other parts of the disk
-   	If [write_zeroes]: will not scan for and skip zeroes
+   If [erase]: will erase other parts of the disk
+   If [write_zeroes]: will not scan for and skip zeroes
     If [dst] has the format:
        fd:X
     then data is written directly to file descriptor X in a chunked encoding. Otherwise
@@ -409,7 +409,7 @@ let file_dd ?(progress_cb = (fun _ -> ())) ?size ?bat erase write_zeroes src dst
             debug "Writing chunked encoding to fd: %d" (Unixext.int_of_file_descr ofd);
             let stats = Network_copy.copy progress_cb bat erase write_zeroes ifd ofd !blocksize size in
             debug "Sending final chunk";
-            Network_writer.close ofd;			
+            Network_writer.close ofd;      
             debug "Waiting for connection to close";
             (try let tmp = " " in Unixext.really_read ofd tmp 0 1 with End_of_file -> ());
             debug "Connection closed";
@@ -505,7 +505,7 @@ let vhd_of_device path =
   let find_underlying_tapdisk path =
     try 
       (* If we're looking at a xen frontend device, see if the backend
-         		   is in the same domain. If so check if it looks like a .vhd *)
+         is in the same domain. If so check if it looks like a .vhd *)
       let rdev = (Unix.stat path).Unix.st_rdev in
       let major = rdev / 256 and minor = rdev mod 256 in
       let link = Unix.readlink (Printf.sprintf "/sys/dev/block/%d:%d/device" major minor) in
@@ -658,7 +658,7 @@ let _ =
   let size = Some !size in
 
   (** [chain_of_device device] returns [None] if [device] is None.
-     	    If device is [Some d] then returns [None] if no vhds were detected or [Some chain] *)
+      If device is [Some d] then returns [None] if no vhds were detected or [Some chain] *)
   let chain_of_device device = 
     let flatten = function
       | Some (Some x) -> Some x
@@ -680,7 +680,7 @@ let _ =
         (fun s ->
           let b = Opt.default [] base_chain in
           (* We need to copy blocks from: (base - src) + (src - base)
-             			   ie. everything except for blocks from the shared nodes *)
+             ie. everything except for blocks from the shared nodes *)
           let unshared = List.set_difference b s @ (List.set_difference s b) in
           debug "Scanning for changes in: [ %s ]" (String.concat "; " unshared);
           List.fold_left Bat.union empty (List.map bat unshared)

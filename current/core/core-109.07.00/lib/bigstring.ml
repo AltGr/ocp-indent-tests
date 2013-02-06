@@ -119,13 +119,13 @@ let blit_common
 ;;
 
 type ('src, 'dst) blit
-=  src : 'src
--> ?src_pos : int
--> ?src_len : int
--> dst : 'dst
--> ?dst_pos : int
--> unit
--> unit
+  =  src : 'src
+  -> ?src_pos : int
+  -> ?src_len : int
+  -> dst : 'dst
+  -> ?dst_pos : int
+  -> unit
+  -> unit
 
 let blit ~src ?src_pos ?src_len ~dst ?dst_pos () =
   blit_common

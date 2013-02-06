@@ -103,9 +103,9 @@ let make __context rpc session_id srid (vms, vdis) =
             Client.VM.destroy rpc session_id vm_ref) :: !clean_up_stack;
 
         (* Although someone could sneak in here and attempt to power on the VM, it
-           				 doesn't really matter since no VBDs have been created yet... *)
+           doesn't really matter since no VBDs have been created yet... *)
         Db.VM.add_to_current_operations ~__context ~self:vm_ref ~key:task_id ~value:`import;
-        Xapi_vm_lifecycle.update_allowed_operations ~__context ~self:vm_ref;			      
+        Xapi_vm_lifecycle.update_allowed_operations ~__context ~self:vm_ref;            
 
         (* make VBDs *)
         List.iter (fun vbd ->

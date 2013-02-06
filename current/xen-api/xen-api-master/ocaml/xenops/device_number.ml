@@ -110,7 +110,7 @@ let of_linux_device x =
       | [] -> List.rev acc, [] in
     inner f [] x in
   (* Parse a string "abc123" into x, y where x is "abc" interpreted as base-26
-     	   and y is 123 *)
+     and y is 123 *)
   let parse_b26_int x = 
     let d, p = take letter x in
     let d' = int26_of_string (String.implode d) in

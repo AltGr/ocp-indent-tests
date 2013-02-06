@@ -199,7 +199,7 @@ let list_frontends ~xs domid =
         to_list (List.map
             (fun devid ->
               (* domain [domid] believes it has a frontend for
-                 					   device [devid] *)
+                 device [devid] *)
               let frontend = { domid = domid; kind = k; devid = devid } in
               let be = try Some (xs.Xs.read (sprintf "%s/%d/backend" dir devid)) with _ -> None in
               Opt.map (fun b -> { backend = b; frontend = frontend })
@@ -224,7 +224,7 @@ let list_backends ~xs domid =
               to_list (List.map
                   (fun devid ->
                     (* domain [domid] believes it has a backend for
-                       							   [frontend_domid] of type [k] with devid [devid] *)
+                       [frontend_domid] of type [k] with devid [devid] *)
                     let backend = { domid = domid; kind = k; devid = devid } in
                     let fe = try Some (xs.Xs.read (sprintf "%s/%d/frontend" dir devid)) with _ -> None in
                     Opt.map (fun f -> { backend = backend; frontend = f })

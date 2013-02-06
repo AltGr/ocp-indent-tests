@@ -21,7 +21,7 @@ type domain_action_request =
   | Needs_poweroff
   | Needs_reboot
   | Needs_suspend
-  | Needs_crashdump	
+  | Needs_crashdump  
 with rpc
 
 type device_action_request =

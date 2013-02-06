@@ -84,7 +84,7 @@ let operations = [
   ; Suspend
   ; Resume
 (*
-	; Pool_migrate
+  ; Pool_migrate
 *)
 ]
 

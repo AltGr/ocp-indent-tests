@@ -113,7 +113,7 @@ let create  ~__context ~vM ~vDI ~userdevice ~bootable ~mode ~_type ~unpluggable 
   then raise (Api_errors.Server_error(Api_errors.vbd_not_removable_media, [ "in constructor" ]));
 
   (* Prevent VBDs being created which are of type "CD" which are
-     	   not either .iso files or CD block devices *)
+     not either .iso files or CD block devices *)
   if _type = `CD && not(empty)
   then Xapi_vdi_helpers.assert_vdi_is_valid_iso ~__context ~vdi:vDI;
   (* Prevent RW VBDs being created pointing to RO VDIs *)
@@ -150,8 +150,8 @@ let create  ~__context ~vM ~vDI ~userdevice ~bootable ~mode ~_type ~unpluggable 
           userdevice (Uuid.string_of_uuid uuid) (Ref.string_of ref);
 
         (* Check that the device is definitely unique. If the requested device is numerical
-           		    (eg 1) then we 'expand' it into other possible names (eg 'hdb' 'xvdb') to detect
-           		    all possible clashes. *)
+           (eg 1) then we 'expand' it into other possible names (eg 'hdb' 'xvdb') to detect
+           all possible clashes. *)
         let userdevices = Xapi_vm_helpers.possible_VBD_devices_of_string userdevice in
         let existing_devices = Xapi_vm_helpers.all_used_VBD_devices ~__context ~self:vM in
         if Listext.List.intersect userdevices existing_devices <> []

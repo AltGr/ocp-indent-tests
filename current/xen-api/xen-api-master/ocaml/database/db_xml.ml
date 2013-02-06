@@ -72,7 +72,7 @@ module To = struct
 
   (* Write out a full database *)
   let database (output: Xmlm.output) db : unit =
-    Xmlm.output output (`Dtd None);	
+    Xmlm.output output (`Dtd None);  
     Xmlm.output output (`El_start (make_tag "database" []));
     manifest output (Database.manifest db);
     TableSet.iter (table (Database.schema db) output) (Database.tableset db);

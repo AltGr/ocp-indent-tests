@@ -12,12 +12,12 @@
  * GNU Lesser General Public License for more details.
  *)
 (**
-   	Interface between the abstract domain memory balancing code and Xen.
+   Interface between the abstract domain memory balancing code and Xen.
 *)
 (*
-	Aims are:
-	1. make this code robust to domains being created and destroyed around it.
-	2. not depend on any other info beyond domain_getinfolist and xenstore.
+  Aims are:
+  1. make this code robust to domains being created and destroyed around it.
+  2. not depend on any other info beyond domain_getinfolist and xenstore.
 *)
 open Pervasiveext
 open Threadext
@@ -68,7 +68,7 @@ module Domain = struct
 
   let m = Mutex.create ()
   (* get_per_domain can return None if the domain is deleted by
-     	 someone else while we are processing some other event handlers *)
+     someone else while we are processing some other event handlers *)
   let get_per_domain (xc, xs) domid = 
     if Hashtbl.mem cache domid
     then Some (Hashtbl.find cache domid)
@@ -233,7 +233,7 @@ module Domain = struct
       raise Xenbus.Xb.Noent
 
   (** Write a new (key, value) pair into a domain's directory in xenstore. Don't write anything
-     	  if the domain's directory doesn't exist. Don't throw exceptions. *)
+     if the domain's directory doesn't exist. Don't throw exceptions. *)
   let write_noexn (xc, xs) domid key value = 
     match get_per_domain (xc, xs) domid with
     | None -> ()
@@ -347,34 +347,34 @@ let update_cooperative_flags cnx =
 (** Best-effort creation of a 'host' structure and a simple debug line showing its derivation *)
 let make_host ~verbose ~xc ~xs =
   (* Wait for any scrubbing so that we don't end up with no immediately usable pages --
-     	   this might cause something else to fail (eg domain builder?) *)
+     this might cause something else to fail (eg domain builder?) *)
   while Int64.div ((Xenctrl.physinfo xc).Xenctrl.Phys_info.scrub_pages |> Int64.of_nativeint) 1024L <> 0L do
     ignore(Unix.select [] [] [] 0.25)
   done;
 
   (* Some VMs are considered by us (but not by xen) to have an "initial-reservation". For VMs which have never 
-     	   run (eg which are still being built or restored) we take the difference between memory_actual_kib and the
-     	   reservation and subtract this manually from the host's free memory. Note that we don't get an atomic snapshot
-     	   of system state so there is a natural race between the hypercalls. Hopefully the memory is being consumed
-     	   fairly slowly and so the error is small. *)
+     run (eg which are still being built or restored) we take the difference between memory_actual_kib and the
+     reservation and subtract this manually from the host's free memory. Note that we don't get an atomic snapshot
+     of system state so there is a natural race between the hypercalls. Hopefully the memory is being consumed
+     fairly slowly and so the error is small. *)
 
   (* Additionally we have the concept of a 'reservation' separate from a domain which allows us to postpone
-     	   domain creates until such time as there is lots of memory available. This minimises the chance that the
-     	   remaining free memory will be too fragmented to actually use (some xen structures require contiguous frames) *)
+     domain creates until such time as there is lots of memory available. This minimises the chance that the
+     remaining free memory will be too fragmented to actually use (some xen structures require contiguous frames) *)
 
   let reserved_kib = ref 0L in
 
   (* We cannot query simultaneously the host memory info and the domain memory info. Furthermore
-     	   the call to domain_getinfolist is not atomic but comprised of many hypercall invocations. *)
+     the call to domain_getinfolist is not atomic but comprised of many hypercall invocations. *)
 
   (* We are excluding dom0, so it will never be ballooned down. *)
   let open Xenctrl.Domain_info in
   let domain_infolist = List.filter (fun di -> di.domid > 0) (Xenctrl.domain_getinfolist xc 0) in
   (*
-		For the host free memory we sum the free pages and the pages needing
-		scrubbing: we don't want to adjust targets simply because the scrubber
-		is slow.
-	*)
+    For the host free memory we sum the free pages and the pages needing
+    scrubbing: we don't want to adjust targets simply because the scrubber
+    is slow.
+  *)
   let physinfo = Xenctrl.physinfo xc in
   let free_pages_kib = Xenctrl.pages_to_kib (Int64.of_nativeint physinfo.Xenctrl.Phys_info.free_pages)
   and scrub_pages_kib = Xenctrl.pages_to_kib (Int64.of_nativeint physinfo.Xenctrl.Phys_info.scrub_pages)
@@ -401,8 +401,8 @@ let make_host ~verbose ~xc ~xs =
              let has_guest_agent = Domain.get_guest_agent cnx di.domid in
              let has_booted = can_balloon || has_guest_agent in
              (* Once the domain tells us it has booted, we assume it's not currently ballooning and
-                					   record the offset between memory_actual and target. We assume this is constant over the 
-                					   lifetime of the domain. *)
+                record the offset between memory_actual and target. We assume this is constant over the 
+                lifetime of the domain. *)
              let offset_kib : int64 = 
                if not has_booted then 0L
                else begin
@@ -410,8 +410,8 @@ let make_host ~verbose ~xc ~xs =
                    Domain.get_memory_offset cnx di.domid
                  with Xenbus.Xb.Noent ->
                    (* Our memory_actual_kib value was sampled before reading xenstore which means there is a slight race.
-                      							   The race is probably only noticable in the hypercall simulator. However we can fix it by resampling
-                      							   memory_actual *after* noticing the feature-balloon flag. *)
+                      The race is probably only noticable in the hypercall simulator. However we can fix it by resampling
+                      memory_actual *after* noticing the feature-balloon flag. *)
                    let target_kib = Domain.get_target cnx di.domid in
                    let memory_actual_kib' = Xenctrl.pages_to_kib (Int64.of_nativeint (Xenctrl.domain_getinfo xc di.domid).total_memory_pages) in
                    let offset_kib = memory_actual_kib' -* target_kib in
@@ -440,11 +440,11 @@ let make_host ~verbose ~xc ~xs =
                } in
 
              (* If the domain has never run (detected by being paused, not shutdown and clocked up no CPU time)
-                					   then we'll need to consider the domain's "initial-reservation". Note that the other fields
-                					   won't necessarily have been created yet. *)
+                then we'll need to consider the domain's "initial-reservation". Note that the other fields
+                won't necessarily have been created yet. *)
 
              (* If the domain has yet to boot properly then we assume it is using at least its
-                					   "initial-reservation". *)
+                "initial-reservation". *)
              if not has_booted then begin
                let initial_reservation_kib = Domain.get_initial_reservation cnx di.domid in
                let unaccounted_kib = max 0L
@@ -501,8 +501,8 @@ let make_host ~verbose ~xc ~xs =
   update_cooperative_flags cnx;
 
   (* It's always safe to _decrease_ a domain's maxmem towards target. This catches the case
-     	   where a toolstack creates a domain with maxmem = static_max and target < static_max (eg
-     	   CA-36316) *)
+     where a toolstack creates a domain with maxmem = static_max and target < static_max (eg
+     CA-36316) *)
   let updates = Squeeze.IntMap.fold (fun domid domain updates ->
       if domain.Squeeze.target_kib < (Domain.get_maxmem (xc, xs) domid)
       then Squeeze.IntMap.add domid domain.Squeeze.target_kib updates
@@ -521,7 +521,7 @@ let execute_action ~xc ~xs action =
     let cnx = (xc, xs) in
     let memory_max_kib = Domain.get_maxmem cnx domid in
     (* We only set the target of a domain if it has exposed feature-balloon: otherwise
-       		   we can screw up the memory-offset calculations for partially-built domains. *)
+       we can screw up the memory-offset calculations for partially-built domains. *)
     let can_balloon = Domain.get_feature_balloon cnx domid in
     if target_kib > memory_max_kib then begin
       Domain.set_maxmem_noexn cnx domid target_kib;

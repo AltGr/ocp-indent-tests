@@ -86,7 +86,7 @@ let parse_exception x =
   let msg =
     try
       (* Look through the error for the prefix "RuntimeError: " - raise an exception with a message
-         			 * containing the error from the end of this prefix onwards. *)
+       * containing the error from the end of this prefix onwards. *)
       let msg_prefix = "RuntimeError: " in
       let msg_start = (List.hd (String.find_all msg_prefix x)) + (String.length msg_prefix) in
       String.sub_to_end x msg_start

@@ -45,7 +45,7 @@ let assert_loaded () =
       debug "Xml error processing local database %s. Moving it out of the way." Xapi_globs.local_database;
       let corrupt_fname = Xapi_globs.local_database^".corrupt" in
       Unixext.unlink_safe corrupt_fname;
-      Unix.rename Xapi_globs.local_database corrupt_fname	    
+      Unix.rename Xapi_globs.local_database corrupt_fname      
   end
 
 exception Missing_key of string

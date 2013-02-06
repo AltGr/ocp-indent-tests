@@ -42,7 +42,7 @@ let ls ~xs = function
     print_debug "paths = [ %s ]" (String.concat "  " paths);
     let longest = List.fold_left max 0 (List.map String.length paths) in
     (*      let perms = List.map (fun x -> catch_invalid (Printf.sprintf "getperms %s" x) xs.Xs.getperms x)
-       	paths in *)
+       paths in *)
     List.iter (fun path ->
       let perm = catch_invalid (Printf.sprintf "getperms %s" path)
           xs.Xs.getperms path in

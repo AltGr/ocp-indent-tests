@@ -137,7 +137,7 @@ let writer_role name nroles =
 
 (*
 let get_ref name =
-	List.map (fun p->(*Ref.of_string*) (role_ref name)) permissions
+  List.map (fun p->(*Ref.of_string*) (role_ref name)) permissions
 *)
 
 (* the output of this function generates ocaml/autogen/rbac-static.ml *)
@@ -170,15 +170,15 @@ let writer_stdout static_roles_permissions static_permissions_roles =
             perms
         )
         ^Printf.sprintf "]\n\n"
-      (*			(* role's list of permission refs *)
-         			^(Printf.sprintf "(* %i elements in %s *)\n" (List.length perms) subroles_label)
-         			^(Printf.sprintf "let %s = [" subroles_label)
-         			^(List.fold_left
-         				(fun acc perm -> (Printf.sprintf "\"%s\"; " (role_ref perm))^acc)
-         				""
-         				perms
-         			)
-         			^Printf.sprintf "]\n\n"
+      (*      (* role's list of permission refs *)
+            ^(Printf.sprintf "(* %i elements in %s *)\n" (List.length perms) subroles_label)
+            ^(Printf.sprintf "let %s = [" subroles_label)
+            ^(List.fold_left
+              (fun acc perm -> (Printf.sprintf "\"%s\"; " (role_ref perm))^acc)
+              ""
+              perms
+            )
+            ^Printf.sprintf "]\n\n"
       *)
       )
       ""

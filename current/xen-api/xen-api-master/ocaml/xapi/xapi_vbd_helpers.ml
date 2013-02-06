@@ -159,7 +159,7 @@ let valid_operations ~expensive_sharing_checks ~__context record _ref' : table =
       (* Careful to not count this VBD and be careful to be robust to parallel deletions of unrelated VBDs *)
       let vbd_records = 
         let vbds = List.filter (fun vbd -> vbd <> _ref') vdi_record.Db_actions.vDI_VBDs in
-        List.concat (List.map (fun self -> try [ Db.VBD.get_record_internal ~__context ~self ] with _ -> []) vbds) in	
+        List.concat (List.map (fun self -> try [ Db.VBD.get_record_internal ~__context ~self ] with _ -> []) vbds) in  
       let pointing_to_a_suspended_VM vbd =
         Db.VM.get_power_state ~__context ~self:(vbd.Db_actions.vBD_VM) = `Suspended in
       let pointing_to_a_system_domain vbd =

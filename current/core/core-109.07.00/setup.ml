@@ -34,20 +34,20 @@ module OASISContext = struct
   open OASISGettext
 
   type level =
-  [ `Debug
-  | `Info
-  | `Warning
-  | `Error]
+    [ `Debug
+    | `Info
+    | `Warning
+    | `Error]
 
   type t =
-  {
-    quiet:                 bool;
-    info:                  bool;
-    debug:                 bool;
-    ignore_plugins:        bool;
-    ignore_unknown_fields: bool;
-    printf:                level -> string -> unit;
-  }
+    {
+      quiet:                 bool;
+      info:                  bool;
+      debug:                 bool;
+      ignore_plugins:        bool;
+      ignore_unknown_fields: bool;
+      printf:                level -> string -> unit;
+    }
 
   let printf lvl str =
     let beg =
@@ -342,7 +342,7 @@ module PropList = struct
   struct
 
     type t =
-    (name, unit -> unit) Hashtbl.t
+      (name, unit -> unit) Hashtbl.t
 
     let create () =
       Hashtbl.create 13
@@ -357,20 +357,20 @@ module PropList = struct
   struct
 
     type ('ctxt, 'extra) value =
-    {
-      get:   Data.t -> string;
-      set:   Data.t -> ?context:'ctxt -> string -> unit;
-      help:  (unit -> string) option;
-      extra: 'extra;
-    }
+      {
+        get:   Data.t -> string;
+        set:   Data.t -> ?context:'ctxt -> string -> unit;
+        help:  (unit -> string) option;
+        extra: 'extra;
+      }
 
     type ('ctxt, 'extra) t =
-    {
-      name:      name;
-      fields:    (name, ('ctxt, 'extra) value) Hashtbl.t;
-      order:     name Queue.t;
-      name_norm: string -> string;
-    }
+      {
+        name:      name;
+        fields:    (name, ('ctxt, 'extra) value) Hashtbl.t;
+        order:     name Queue.t;
+        name_norm: string -> string;
+      }
 
     let create ?(case_insensitive=false) nm =
       {
@@ -447,14 +447,14 @@ module PropList = struct
   struct
 
     type ('ctxt, 'value, 'extra) t =
-    {
-      set:    Data.t -> ?context:'ctxt -> 'value -> unit;
-      get:    Data.t -> 'value;
-      sets:   Data.t -> ?context:'ctxt -> string -> unit;
-      gets:   Data.t -> string;
-      help:   (unit -> string) option;
-      extra:  'extra;
-    }
+      {
+        set:    Data.t -> ?context:'ctxt -> 'value -> unit;
+        get:    Data.t -> 'value;
+        sets:   Data.t -> ?context:'ctxt -> string -> unit;
+        gets:   Data.t -> string;
+        help:   (unit -> string) option;
+        extra:  'extra;
+      }
 
     let new_id =
       let last_id =
@@ -641,13 +641,13 @@ module OASISVersion = struct
   type t = string 
 
   type comparator =
-  | VGreater of t
-  | VGreaterEqual of t
-  | VEqual of t
-  | VLesser of t
-  | VLesserEqual of t
-  | VOr of  comparator * comparator
-  | VAnd of comparator * comparator
+    | VGreater of t
+    | VGreaterEqual of t
+    | VEqual of t
+    | VLesser of t
+    | VLesserEqual of t
+    | VOr of  comparator * comparator
+    | VAnd of comparator * comparator
 
 
   (* Range of allowed characters *)
@@ -822,28 +822,28 @@ module OASISLicense = struct
   type license_exception = string 
 
   type license_version =
-  | Version of OASISVersion.t
-  | VersionOrLater of OASISVersion.t
-  | NoVersion
+    | Version of OASISVersion.t
+    | VersionOrLater of OASISVersion.t
+    | NoVersion
 
 
   type license_dep_5_unit =
-  {
-    license:   license;
-    excption:  license_exception option;
-    version:   license_version;
-  }
+    {
+      license:   license;
+      excption:  license_exception option;
+      version:   license_version;
+    }
 
 
   type license_dep_5 =
-  | DEP5Unit of license_dep_5_unit
-  | DEP5Or of license_dep_5 list
-  | DEP5And of license_dep_5 list
+    | DEP5Unit of license_dep_5_unit
+    | DEP5Or of license_dep_5 list
+    | DEP5And of license_dep_5 list
 
 
   type t =
-  | DEP5License of license_dep_5
-  | OtherLicense of string (* URL *)
+    | DEP5License of license_dep_5
+    | OtherLicense of string (* URL *)
 
 
 end
@@ -860,12 +860,12 @@ module OASISExpr = struct
   type flag = string 
 
   type t =
-  | EBool of bool
-  | ENot of t
-  | EAnd of t * t
-  | EOr of t * t
-  | EFlag of flag
-  | ETest of test * string
+    | EBool of bool
+    | ENot of t
+    | EAnd of t * t
+    | EOr of t * t
+    | EFlag of flag
+    | ETest of test * string
 
 
   type 'a choices = (t * 'a) list 
@@ -960,55 +960,55 @@ module OASISTypes = struct
   type findlib_full = string 
 
   type compiled_object =
-  | Byte
-  | Native
-  | Best
+    | Byte
+    | Native
+    | Best
 
 
   type dependency =
-  | FindlibPackage of findlib_full * OASISVersion.comparator option
-  | InternalLibrary of name
+    | FindlibPackage of findlib_full * OASISVersion.comparator option
+    | InternalLibrary of name
 
 
   type tool =
-  | ExternalTool of name
-  | InternalExecutable of name
+    | ExternalTool of name
+    | InternalExecutable of name
 
 
   type vcs =
-  | Darcs
-  | Git
-  | Svn
-  | Cvs
-  | Hg
-  | Bzr
-  | Arch
-  | Monotone
-  | OtherVCS of url
+    | Darcs
+    | Git
+    | Svn
+    | Cvs
+    | Hg
+    | Bzr
+    | Arch
+    | Monotone
+    | OtherVCS of url
 
 
   type plugin_kind =
-  [  `Configure
-  | `Build
-  | `Doc
-  | `Test
-  | `Install
-  | `Extra
-  ]
+    [  `Configure
+    | `Build
+    | `Doc
+    | `Test
+    | `Install
+    | `Extra
+    ]
 
   type plugin_data_purpose =
-  [  `Configure
-  | `Build
-  | `Install
-  | `Clean
-  | `Distclean
-  | `Install
-  | `Uninstall
-  | `Test
-  | `Doc
-  | `Extra
-  | `Other of string
-  ]
+    [  `Configure
+    | `Build
+    | `Install
+    | `Clean
+    | `Distclean
+    | `Install
+    | `Uninstall
+    | `Test
+    | `Doc
+    | `Extra
+    | `Other of string
+    ]
 
   type 'a plugin = 'a * name * OASISVersion.t option 
 
@@ -1021,155 +1021,155 @@ module OASISTypes = struct
   type 'a conditional = 'a OASISExpr.choices 
 
   type custom =
-  {
-    pre_command:  (command_line option) conditional;
-    post_command: (command_line option) conditional;
-  }
+    {
+      pre_command:  (command_line option) conditional;
+      post_command: (command_line option) conditional;
+    }
 
 
   type common_section =
-  {
-    cs_name: name;
-    cs_data: PropList.Data.t;
-    cs_plugin_data: plugin_data;
-  }
+    {
+      cs_name: name;
+      cs_data: PropList.Data.t;
+      cs_plugin_data: plugin_data;
+    }
 
 
   type build_section =
-  {
-    bs_build:           bool conditional;
-    bs_install:         bool conditional;
-    bs_path:            unix_dirname;
-    bs_compiled_object: compiled_object;
-    bs_build_depends:   dependency list;
-    bs_build_tools:     tool list;
-    bs_c_sources:       unix_filename list;
-    bs_data_files:      (unix_filename * unix_filename option) list;
-    bs_ccopt:           args conditional;
-    bs_cclib:           args conditional;
-    bs_dlllib:          args conditional;
-    bs_dllpath:         args conditional;
-    bs_byteopt:         args conditional;
-    bs_nativeopt:       args conditional;
-  }
+    {
+      bs_build:           bool conditional;
+      bs_install:         bool conditional;
+      bs_path:            unix_dirname;
+      bs_compiled_object: compiled_object;
+      bs_build_depends:   dependency list;
+      bs_build_tools:     tool list;
+      bs_c_sources:       unix_filename list;
+      bs_data_files:      (unix_filename * unix_filename option) list;
+      bs_ccopt:           args conditional;
+      bs_cclib:           args conditional;
+      bs_dlllib:          args conditional;
+      bs_dllpath:         args conditional;
+      bs_byteopt:         args conditional;
+      bs_nativeopt:       args conditional;
+    }
 
 
   type library =
-  {
-    lib_modules:            string list;
-    lib_pack:               bool;
-    lib_internal_modules:   string list;
-    lib_findlib_parent:     findlib_name option;
-    lib_findlib_name:       findlib_name option;
-    lib_findlib_containers: findlib_name list;
-  } 
+    {
+      lib_modules:            string list;
+      lib_pack:               bool;
+      lib_internal_modules:   string list;
+      lib_findlib_parent:     findlib_name option;
+      lib_findlib_name:       findlib_name option;
+      lib_findlib_containers: findlib_name list;
+    } 
 
   type executable =
-  {
-    exec_custom:          bool;
-    exec_main_is:         unix_filename;
-  } 
+    {
+      exec_custom:          bool;
+      exec_main_is:         unix_filename;
+    } 
 
   type flag =
-  {
-    flag_description:  string option;
-    flag_default:      bool conditional;
-  } 
+    {
+      flag_description:  string option;
+      flag_default:      bool conditional;
+    } 
 
   type source_repository =
-  {
-    src_repo_type:        vcs;
-    src_repo_location:    url;
-    src_repo_browser:     url option;
-    src_repo_module:      string option;
-    src_repo_branch:      string option;
-    src_repo_tag:         string option;
-    src_repo_subdir:      unix_filename option;
-  } 
+    {
+      src_repo_type:        vcs;
+      src_repo_location:    url;
+      src_repo_browser:     url option;
+      src_repo_module:      string option;
+      src_repo_branch:      string option;
+      src_repo_tag:         string option;
+      src_repo_subdir:      unix_filename option;
+    } 
 
   type test =
-  {
-    test_type:               [`Test] plugin;
-    test_command:            command_line conditional;
-    test_custom:             custom;
-    test_working_directory:  unix_filename option;
-    test_run:                bool conditional;
-    test_tools:              tool list;
-  } 
+    {
+      test_type:               [`Test] plugin;
+      test_command:            command_line conditional;
+      test_custom:             custom;
+      test_working_directory:  unix_filename option;
+      test_run:                bool conditional;
+      test_tools:              tool list;
+    } 
 
   type doc_format =
-  | HTML of unix_filename
-  | DocText
-  | PDF
-  | PostScript
-  | Info of unix_filename
-  | DVI
-  | OtherDoc
+    | HTML of unix_filename
+    | DocText
+    | PDF
+    | PostScript
+    | Info of unix_filename
+    | DVI
+    | OtherDoc
 
 
   type doc =
-  {
-    doc_type:        [`Doc] plugin;
-    doc_custom:      custom;
-    doc_build:       bool conditional;
-    doc_install:     bool conditional;
-    doc_install_dir: unix_filename;
-    doc_title:       string;
-    doc_authors:     string list;
-    doc_abstract:    string option;
-    doc_format:      doc_format;
-    doc_data_files:  (unix_filename * unix_filename option) list;
-    doc_build_tools: tool list;
-  } 
+    {
+      doc_type:        [`Doc] plugin;
+      doc_custom:      custom;
+      doc_build:       bool conditional;
+      doc_install:     bool conditional;
+      doc_install_dir: unix_filename;
+      doc_title:       string;
+      doc_authors:     string list;
+      doc_abstract:    string option;
+      doc_format:      doc_format;
+      doc_data_files:  (unix_filename * unix_filename option) list;
+      doc_build_tools: tool list;
+    } 
 
   type section =
-  | Library    of common_section * build_section * library
-  | Executable of common_section * build_section * executable
-  | Flag       of common_section * flag
-  | SrcRepo    of common_section * source_repository
-  | Test       of common_section * test
-  | Doc        of common_section * doc
+    | Library    of common_section * build_section * library
+    | Executable of common_section * build_section * executable
+    | Flag       of common_section * flag
+    | SrcRepo    of common_section * source_repository
+    | Test       of common_section * test
+    | Doc        of common_section * doc
 
 
   type section_kind =
-  [ `Library | `Executable | `Flag | `SrcRepo | `Test | `Doc ]
+    [ `Library | `Executable | `Flag | `SrcRepo | `Test | `Doc ]
 
   type package = 
-  {
-    oasis_version:    OASISVersion.t;
-    ocaml_version:    OASISVersion.comparator option;
-    findlib_version:  OASISVersion.comparator option;
-    name:             package_name;
-    version:          OASISVersion.t;
-    license:          OASISLicense.t;
-    license_file:     unix_filename option;
-    copyrights:       string list;
-    maintainers:      string list;
-    authors:          string list;
-    homepage:         url option;
-    synopsis:         string;
-    description:      string option;
-    categories:       url list;
+    {
+      oasis_version:    OASISVersion.t;
+      ocaml_version:    OASISVersion.comparator option;
+      findlib_version:  OASISVersion.comparator option;
+      name:             package_name;
+      version:          OASISVersion.t;
+      license:          OASISLicense.t;
+      license_file:     unix_filename option;
+      copyrights:       string list;
+      maintainers:      string list;
+      authors:          string list;
+      homepage:         url option;
+      synopsis:         string;
+      description:      string option;
+      categories:       url list;
 
-    conf_type:        [`Configure] plugin;
-    conf_custom:      custom;
+      conf_type:        [`Configure] plugin;
+      conf_custom:      custom;
 
-    build_type:       [`Build] plugin;
-    build_custom:     custom;
+      build_type:       [`Build] plugin;
+      build_custom:     custom;
 
-    install_type:     [`Install] plugin;
-    install_custom:   custom;
-    uninstall_custom: custom;
+      install_type:     [`Install] plugin;
+      install_custom:   custom;
+      uninstall_custom: custom;
 
-    clean_custom:     custom;
-    distclean_custom: custom;
+      clean_custom:     custom;
+      distclean_custom: custom;
 
-    files_ab:         unix_filename list;
-    sections:         section list;
-    plugins:          [`Extra] plugin list;
-    schema_data:      PropList.Data.t;
-    plugin_data:      plugin_data;
-  } 
+      files_ab:         unix_filename list;
+      sections:         section list;
+      plugins:          [`Extra] plugin list;
+      schema_data:      PropList.Data.t;
+      plugin_data:      plugin_data;
+    } 
 
 end
 
@@ -1421,12 +1421,12 @@ module OASISLibrary = struct
   exception FindlibPackageNotFound of findlib_name
 
   type group_t =
-  | Container of findlib_name * group_t list
-  | Package of (findlib_name *
-        common_section *
-        build_section *
-        library *
-        group_t list)
+    | Container of findlib_name * group_t list
+    | Package of (findlib_name *
+          common_section *
+          build_section *
+          library *
+          group_t list)
 
   (* Look for a module file, considering capitalization or not. *)
   let find_module source_file_exists (cs, bs, lib) modul =
@@ -1598,8 +1598,8 @@ module OASISLibrary = struct
 
   type data = common_section * build_section * library
   type tree =
-  | Node of (data option) * (tree MapString.t)
-  | Leaf of data
+    | Node of (data option) * (tree MapString.t)
+    | Leaf of data
 
   let findlib_mapping pkg =
     (* Map from library name to either full findlib name or parts + parent. *)
@@ -2137,7 +2137,7 @@ module OASISFileUtil = struct
 end
 
 
-
+# 2142 "setup.ml"
 module BaseEnvLight = struct
 (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseEnvLight.ml" *)
 
@@ -2235,7 +2235,7 @@ module BaseEnvLight = struct
 end
 
 
-
+# 2240 "setup.ml"
 module BaseContext = struct
 (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseContext.ml" *)
 
@@ -2276,26 +2276,26 @@ module BaseEnv = struct
   module MapString = BaseEnvLight.MapString
 
   type origin_t =
-  | ODefault
-  | OGetEnv
-  | OFileLoad
-  | OCommandLine
+    | ODefault
+    | OGetEnv
+    | OFileLoad
+    | OCommandLine
 
   type cli_handle_t =
-  | CLINone
-  | CLIAuto
-  | CLIWith
-  | CLIEnable
-  | CLIUser of (Arg.key * Arg.spec * Arg.doc) list
+    | CLINone
+    | CLIAuto
+    | CLIWith
+    | CLIEnable
+    | CLIUser of (Arg.key * Arg.spec * Arg.doc) list
 
   type definition_t =
-  {
-    hide:       bool;
-    dump:       bool;
-    cli:        cli_handle_t;
-    arg_help:   string option;
-    group:      string option;
-  }
+    {
+      hide:       bool;
+      dump:       bool;
+      cli:        cli_handle_t;
+      arg_help:   string option;
+      group:      string option;
+    }
 
   let schema =
     Schema.create "environment"
@@ -3536,10 +3536,10 @@ module BaseBuilt = struct
   open BaseMessage
 
   type t =
-  | BExec    (* Executable *)
-  | BExecLib (* Library coming with executable *)
-  | BLib     (* Library *)
-  | BDoc     (* Document *)
+    | BExec    (* Executable *)
+    | BExecLib (* Library coming with executable *)
+    | BLib     (* Library *)
+    | BDoc     (* Document *)
 
   let to_log_event_file t nm =
     "built_"^
@@ -3907,33 +3907,33 @@ module BaseSetup = struct
   open OASISUtils
 
   type std_args_fun =
-  package -> string array -> unit
+    package -> string array -> unit
 
   type ('a, 'b) section_args_fun =
-  name * (package -> (common_section * 'a) -> string array -> 'b)
+    name * (package -> (common_section * 'a) -> string array -> 'b)
 
   type t =
-  {
-    configure:        std_args_fun;
-    build:            std_args_fun;
-    doc:              ((doc, unit)  section_args_fun) list;
-    test:             ((test, float) section_args_fun) list;
-    install:          std_args_fun;
-    uninstall:        std_args_fun;
-    clean:            std_args_fun list;
-    clean_doc:        (doc, unit) section_args_fun list;
-    clean_test:       (test, unit) section_args_fun list;
-    distclean:        std_args_fun list;
-    distclean_doc:    (doc, unit) section_args_fun list;
-    distclean_test:   (test, unit) section_args_fun list;
-    package:          package;
-    oasis_fn:         string option;
-    oasis_version:    string;
-    oasis_digest:     Digest.t option;
-    oasis_exec:       string option;
-    oasis_setup_args: string list;
-    setup_update:     bool;
-  }
+    {
+      configure:        std_args_fun;
+      build:            std_args_fun;
+      doc:              ((doc, unit)  section_args_fun) list;
+      test:             ((test, float) section_args_fun) list;
+      install:          std_args_fun;
+      uninstall:        std_args_fun;
+      clean:            std_args_fun list;
+      clean_doc:        (doc, unit) section_args_fun list;
+      clean_test:       (test, unit) section_args_fun list;
+      distclean:        std_args_fun list;
+      distclean_doc:    (doc, unit) section_args_fun list;
+      distclean_test:   (test, unit) section_args_fun list;
+      package:          package;
+      oasis_fn:         string option;
+      oasis_version:    string;
+      oasis_digest:     Digest.t option;
+      oasis_exec:       string option;
+      oasis_setup_args: string list;
+      setup_update:     bool;
+    }
 
   (* Associate a plugin function with data from package *)
   let join_plugin_sections filter_map lst =
@@ -4475,7 +4475,7 @@ module BaseSetup = struct
 end
 
 
-
+# 4480 "setup.ml"
 module InternalConfigurePlugin = struct
 (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/internal/InternalConfigurePlugin.ml" *)
 
@@ -5228,7 +5228,7 @@ module InternalInstallPlugin = struct
 end
 
 
-
+# 5233 "setup.ml"
 module OCamlbuildCommon = struct
 (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/ocamlbuild/OCamlbuildCommon.ml" *)
 
@@ -5553,7 +5553,7 @@ module OCamlbuildDocPlugin = struct
 end
 
 
-
+# 5558 "setup.ml"
 module CustomPlugin = struct
 (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/custom/CustomPlugin.ml" *)
 
@@ -5568,11 +5568,11 @@ module CustomPlugin = struct
 
 
   type t =
-  {
-    cmd_main:      command_line conditional;
-    cmd_clean:     (command_line option) conditional;
-    cmd_distclean: (command_line option) conditional;
-  } 
+    {
+      cmd_main:      command_line conditional;
+      cmd_clean:     (command_line option) conditional;
+      cmd_distclean: (command_line option) conditional;
+    } 
 
   let run  = BaseCustom.run 
 
@@ -5689,7 +5689,7 @@ module CustomPlugin = struct
 end
 
 
-
+# 5694 "setup.ml"
 open OASISTypes;;
 
 let setup_t =
@@ -6202,6 +6202,6 @@ let setup_t =
 
 let setup () = BaseSetup.setup setup_t;;
 
-
+# 6208 "setup.ml"
 (* OASIS_STOP *)
 let () = setup ()

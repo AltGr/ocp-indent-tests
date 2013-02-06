@@ -75,10 +75,10 @@ type attached_vdi = {
 
 module VmExtra = struct
   (** Extra data we store per VM. The persistent data is preserved when
-     		the domain is suspended so it can be re-used in the following 'create'
-     		which is part of 'resume'. The non-persistent data will be regenerated.
-     		When a VM is shutdown for other reasons (eg reboot) we throw all this
-     		information away and generate fresh data on the following 'create' *)
+     the domain is suspended so it can be re-used in the following 'create'
+     which is part of 'resume'. The non-persistent data will be regenerated.
+     When a VM is shutdown for other reasons (eg reboot) we throw all this
+     information away and generate fresh data on the following 'create' *)
   type persistent_t = {
     build_info: Domain.build_info option;
     ty: Vm.builder_info option;
@@ -175,7 +175,7 @@ let di_of_uuid ~xc ~xs domain_selection uuid =
 
 let domid_of_uuid ~xc ~xs domain_selection uuid =
   (* We don't fully control the domain lifecycle because libxenguest will actually
-     	   destroy a domain on suspend. Therefore we only rely on state in xenstore *)
+     destroy a domain on suspend. Therefore we only rely on state in xenstore *)
   let dir = Printf.sprintf "/vm/%s/domains" (Uuid.string_of_uuid uuid) in
   try
     match xs.Xs.directory dir |> List.map int_of_string |> List.sort compare with
@@ -227,8 +227,8 @@ let destroy_vbd_frontend ~xc ~xs task disk =
     Xenops_task.with_subtask task "Vbd.clean_shutdown"
       (fun () ->
         (* Outstanding requests may cause a transient 'refusing to close'
-           					   but this can be safely ignored because we're controlling the
-           					   frontend and all users of it. *)
+           but this can be safely ignored because we're controlling the
+           frontend and all users of it. *)
         Device.Vbd.clean_shutdown_async ~xs device;
         Device.Vbd.clean_shutdown_wait task ~xs ~ignore_transients:true device
       )
@@ -310,13 +310,13 @@ module Storage = struct
            with
            | Storage_interface.No_storage_plugin_for_sr sr as e ->
              (* Since we have an activated disk in this SR, assume we are still
-                							   waiting for xapi to register the SR's plugin. *)
+                waiting for xapi to register the SR's plugin. *)
              debug "Caught %s - waiting for xapi to register storage plugins."
                (Printexc.to_string e);
              Thread.delay 5.0
            | e ->
              (* Backends aren't supposed to return exceptions on deactivate/detach, but they
-                							   frequently do. Log and ignore *)
+                frequently do. Log and ignore *)
              warn "DP destroy returned unexpected exception: %s" (Printexc.to_string e);
              waiting_for_plugin := false
          done
@@ -391,9 +391,9 @@ module Mem = struct
         )
 
   (** If we fail to allocate because VMs either failed to co-operate or because they are still booting
-     		and haven't written their feature-balloon flag then retry for a while before finally giving up.
-     		In particular this should help smooth over the period when VMs are booting and haven't loaded their balloon
-     		drivers yet. *)
+     and haven't written their feature-balloon flag then retry for a while before finally giving up.
+     In particular this should help smooth over the period when VMs are booting and haven't loaded their balloon
+     drivers yet. *)
   let retry f =
     let start = Unix.gettimeofday () in
     let interval = 10. in
@@ -446,7 +446,7 @@ module Mem = struct
     ()
 
   (** Reserves memory, passes the id to [f] and cleans up afterwards. If the user
-     		wants to keep the memory, then call [transfer_reservation_to_domain]. *)
+     wants to keep the memory, then call [transfer_reservation_to_domain]. *)
   let with_reservation dbg min max f =
     let amount, id = Opt.default (min, ("none", min)) (reserve_memory_range dbg min max) in
     finally
@@ -564,7 +564,7 @@ module VM = struct
     | S3Suspend -> Domain.S3Suspend
 
   (* We compute our initial target at memory reservation time, done before the domain
-     	   is created. We consume this information later when the domain is built. *)
+     is created. We consume this information later when the domain is built. *)
   let set_initial_target ~xs domid initial_target =
     xs.Xs.write (Printf.sprintf "/local/domain/%d/memory/initial-target" domid)
       (Int64.to_string initial_target)
@@ -605,7 +605,7 @@ module VM = struct
       VmExtra.build_info = Some build_info;
       ty = Some vm.ty;
       (* Earlier than the PV drivers update time, therefore
-         			   any cached PV driver information will be kept. *)
+         any cached PV driver information will be kept. *)
       last_start_time = 0.;
     } |> VmExtra.rpc_of_persistent_t |> Jsonrpc.to_string
 
@@ -613,7 +613,7 @@ module VM = struct
     let hvm = match vm.ty with HVM _ -> true | _ -> false in
     (* XXX add per-vcpu information to the platform data *)
     (* VCPU configuration *)
-    let pcpus = Xenctrlext.get_max_nr_cpus xc in							
+    let pcpus = Xenctrlext.get_max_nr_cpus xc in              
     let all_pcpus = pcpus |> Range.make 0 |> Range.to_list in
     let all_vcpus = vm.vcpu_max |> Range.make 0 |> Range.to_list in
     let masks = match vm.scheduler_params.affinity with
@@ -686,8 +686,8 @@ module VM = struct
         let overhead_bytes = compute_overhead non_persistent in
         let resuming = non_persistent.VmExtra.suspend_memory_bytes <> 0L in
         (* If we are resuming then we know exactly how much memory is needed. If we are
-           				   live migrating then we will only know an upper bound. If we are starting from
-           				   scratch then we have a free choice. *)
+           live migrating then we will only know an upper bound. If we are starting from
+           scratch then we have a free choice. *)
         let min_bytes, max_bytes = match memory_upper_bound with
           | Some x ->
             debug "VM = %s; using memory_upper_bound = %Ld" vm.Vm.id x;
@@ -819,7 +819,7 @@ module VM = struct
       let dps = List.map (fun device -> Device.Generic.get_private_key ~xs device _dp_id) vbds in
 
       (* Normally we throw-away our domain-level information. If the domain
-         		   has suspended then we preserve it. *)
+         has suspended then we preserve it. *)
       if di.shutdown && (Domain.shutdown_reason_of_int di.shutdown_code = Domain.Suspend)
       then debug "VM = %s; domid = %d; domain has suspended; preserving domain-level information" vm.Vm.id di.domid
       else begin
@@ -906,7 +906,7 @@ module VM = struct
     ) Newest task vm
 
   (* NB: the arguments which affect the qemu configuration must be saved and
-     	   restored with the VM. *)
+     restored with the VM. *)
   let create_device_model_config vbds vifs vmextra = match vmextra.VmExtra.persistent, vmextra.VmExtra.non_persistent with
     | { VmExtra.build_info = None }, _
     | { VmExtra.ty = None }, _ -> raise (Domain_not_built)
@@ -1130,7 +1130,7 @@ module VM = struct
         false)
 
   (* Create an ext2 filesystem without maximal mount count and
-     	   checking interval. *)
+     checking interval. *)
   let mke2fs device =
     run _mkfs ["-t"; "ext2"; device] |> ignore_string;
     run _tune2fs  ["-i"; "0"; "-c"; "0"; device] |> ignore_string
@@ -1225,7 +1225,7 @@ module VM = struct
                 then raise (Failed_to_shutdown(vm.Vm.id, 1200.));
               );
             (* Record the final memory usage of the domain so we know how
-               						   much to allocate for the resume *)
+               much to allocate for the resume *)
             let di = Xenctrl.domain_getinfo xc domid in
             let pages = Int64.of_nativeint di.total_memory_pages in
             debug "VM = %s; domid = %d; Final memory usage of the domain = %Ld pages" vm.Vm.id domid pages;
@@ -1347,7 +1347,7 @@ module VM = struct
 
           let memory_limit =
             (* The maximum amount of memory the domain can consume is the max of memory_actual
-               							   and max_memory_pages (with our overheads subtracted). *)
+               and max_memory_pages (with our overheads subtracted). *)
             let max_memory_bytes =
               let overhead_bytes = Memory.bytes_of_mib (if di.hvm_guest then Memory.HVM.xen_max_offset_mib else Memory.Linux.xen_max_offset_mib) in
               let raw_bytes = Memory.bytes_of_pages (Int64.of_nativeint di.max_memory_pages) in
@@ -1483,7 +1483,7 @@ module PCI = struct
   let get_device_action_request vm pci =
     let state = get_state vm pci in
     (* If it has disappeared from xenstore then we assume unplug is needed if only
-       		   to release resources/ deassign devices *)
+       to release resources/ deassign devices *)
     if not state.plugged then Some Needs_unplug else None
 
   let plug task vm pci =
@@ -1576,13 +1576,13 @@ module VBD = struct
     | VDI path ->
       let sr, vdi = Storage.get_disk_by_name task path in
       Storage.epoch_end task sr vdi
-    | _ -> ()		
+    | _ -> ()    
 
   let vdi_path_of_device ~xs device = Device_common.backend_path_of_device ~xs device ^ "/vdi"
 
   let plug task vm vbd =
     (* Dom0 doesn't have a vm_t - we don't need this currently, but when we have storage driver domains, 
-       		   we will. Also this causes the SMRT tests to fail, as they demand the loopback VBDs *)
+       we will. Also this causes the SMRT tests to fail, as they demand the loopback VBDs *)
     let vm_t = DB.read_exn vm in
     (* If the vbd isn't listed as "active" then we don't automatically plug this one in *)
     if not(get_active vm vbd)
@@ -1661,16 +1661,16 @@ module VBD = struct
       (fun xc xs ->
         try
           (* On destroying the datapath:
-             					   1. if the device has already been shutdown and deactivated (as in suspend) we
-             					      must call DP.destroy here to avoid leaks
-             					   2. if the device is successfully shutdown here then we must call DP.destroy
-             					      because no-one else will
-             					   3. if the device shutdown is rejected then we should leave the DP alone and
-             					      rely on the event thread calling us again later.
-             					*)
+             1. if the device has already been shutdown and deactivated (as in suspend) we
+                must call DP.destroy here to avoid leaks
+             2. if the device is successfully shutdown here then we must call DP.destroy
+                because no-one else will
+             3. if the device shutdown is rejected then we should leave the DP alone and
+                rely on the event thread calling us again later.
+          *)
           let domid = domid_of_uuid ~xc ~xs Oldest (Uuid.uuid_of_string vm) in
           (* If the device is gone then we don't need to shut it down but we do need
-             					   to free any storage resources. *)
+             to free any storage resources. *)
           let device =
             try
               Some (device_by_id xc xs vm Device_common.Vbd Oldest (id_of vbd))
@@ -2050,9 +2050,9 @@ module VIF = struct
           let path = Device_common.kthread_pid_path_of_device ~xs d in
           let kthread_pid = try xs.Xs.read path |> int_of_string with _ -> 0 in
           (* We say the device is present unless it has been deleted
-             					   from xenstore. The corrolary is that: only when the device
-             					   is finally deleted from xenstore, can we remove bridges or
-             					   switch configuration. *)
+             from xenstore. The corrolary is that: only when the device
+             is finally deleted from xenstore, can we remove bridges or
+             switch configuration. *)
           {
             Vif.active = true;
             plugged = true;
@@ -2187,7 +2187,7 @@ let watch_xenstore () =
 
       let cancel_domU_operations xs domid =
         (* Anyone blocked on a domain/device operation which won't happen because the domain
-           				   just shutdown should be cancelled here. *)
+           just shutdown should be cancelled here. *)
         debug "Cancelling watches for: domid %d" domid;
         Cancel_utils.on_shutdown ~xs domid in
 

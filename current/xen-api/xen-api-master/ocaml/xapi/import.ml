@@ -43,11 +43,11 @@ type metadata_options = {
   (* If true, don't create any database objects. *)
   dry_run: bool;
   (* If true, treat the import as if it is preparation for a live migration.
-     	 * This has the following consequences:
-     	 * - We must perform extra checks on the VM object - do we have enough memory? Are the CPU flags compatible? Is there an HA plan for it?
-     	 * - If the migration is a dry run we don't need to check for VDIs, since VDI.mirror will have created them during a real migration.
-     	 * - If the migration is for real, we will expect the VM export code on the source host to have mapped the VDI locations onto their
-     	 *   mirrored counterparts which are present on this host. *)
+   * This has the following consequences:
+   * - We must perform extra checks on the VM object - do we have enough memory? Are the CPU flags compatible? Is there an HA plan for it?
+   * - If the migration is a dry run we don't need to check for VDIs, since VDI.mirror will have created them during a real migration.
+   * - If the migration is for real, we will expect the VM export code on the source host to have mapped the VDI locations onto their
+   *   mirrored counterparts which are present on this host. *)
   live: bool;
 }
 
@@ -63,8 +63,8 @@ type config =
     (* Determines how to handle the import - see above. *)
     import_type: import_type;
     (* true if we want to restore as a perfect backup. Currently we preserve the
-       		   interface MAC addresses but we still regenerate UUIDs (because we lack the
-       		   internal APIs to keep them *)
+       interface MAC addresses but we still regenerate UUIDs (because we lack the
+       internal APIs to keep them *)
     full_restore: bool;
     (* true if the user has provided '--force' *)
     force: bool;
@@ -369,7 +369,7 @@ module VM : HandlerTools = struct
         (try Db.VM.remove_from_other_config ~__context ~self:vm ~key:Xapi_globs.import_task with _ -> ());
         Db.VM.add_to_other_config ~__context ~self:vm ~key:Xapi_globs.import_task ~value:(Ref.string_of t));
       (* Set the power_state and suspend_VDI if the VM is suspended.
-         			 * If anything goes wrong, still continue if forced. *)
+       * If anything goes wrong, still continue if forced. *)
       if vm_record.API.vM_power_state = `Suspended then begin
         try
           let vdi = (lookup vm_record.API.vM_suspend_VDI) state.table in
@@ -389,8 +389,8 @@ module VM : HandlerTools = struct
       Db.VM.set_affinity ~__context ~self:vm ~value:(try lookup vm_record.API.vM_affinity state.table with _ -> Ref.null);
 
       (* Update the snapshot metadata. At this points, the snapshot_of field is not relevant as
-         				 it use the export ref. However, as the corresponding VM object may have not been created
-         				 yet, this fiels contains some useful information to update it later. *)
+         it use the export ref. However, as the corresponding VM object may have not been created
+         yet, this fiels contains some useful information to update it later. *)
       Db.VM.set_is_a_snapshot ~__context ~self:vm ~value:vm_record.API.vM_is_a_snapshot;
       Db.VM.set_snapshot_info ~__context ~self:vm ~value:vm_record.API.vM_snapshot_info;
       Db.VM.set_snapshot_of ~__context ~self:vm ~value:vm_record.API.vM_snapshot_of;
@@ -414,9 +414,9 @@ module VM : HandlerTools = struct
       debug "Created VM: %s (was %s)" (Ref.string_of vm) x.id;
 
       (* Although someone could sneak in here and attempt to power on the VM, it
-         				 doesn't really matter since no VBDs have been created yet.
-         				 We don't bother doing this if --force is set otherwise on error the VM
-         				 remains locked. *)
+         doesn't really matter since no VBDs have been created yet.
+         We don't bother doing this if --force is set otherwise on error the VM
+         remains locked. *)
       if not config.force then
         Db.VM.add_to_current_operations ~__context ~self:vm ~key:task_id ~value:`import;
       Xapi_vm_lifecycle.update_allowed_operations ~__context ~self:vm;
@@ -766,7 +766,7 @@ module VBD : HandlerTools = struct
           ("Failed to find VBD's VM: " ^ (Ref.string_of vbd_record.API.vBD_VM))
           (lookup vbd_record.API.vBD_VM) state.table in
       (* If the VBD is supposed to be attached to a PV guest (which doesn't support
-         				 currently_attached empty drives) then throw a fatal error. *)
+         currently_attached empty drives) then throw a fatal error. *)
       let original_vm = API.Legacy.From.vM_t "" (find_in_export (Ref.string_of vbd_record.API.vBD_VM) state.export) in
       if vbd_record.API.vBD_currently_attached && not(exists vbd_record.API.vBD_VDI state.table) then begin
         (* It's only ok if it's a CDROM attached to an HVM guest *)
@@ -822,7 +822,7 @@ module VBD : HandlerTools = struct
             vbd_record in
         state.cleanup <- (fun __context rpc session_id -> Client.VBD.destroy rpc session_id vbd) :: state.cleanup;
         (* Now that we can import/export suspended VMs we need to preserve the
-           			   currently_attached flag *)
+           currently_attached flag *)
         Db.VBD.set_currently_attached ~__context ~self:vbd ~value:vbd_record.API.vBD_currently_attached;
         state.table <- (x.cls, x.id, Ref.string_of vbd) :: state.table
       end
@@ -864,8 +864,8 @@ module VIF : HandlerTools = struct
             ("Failed to find VIF's Network: " ^ (Ref.string_of vif_record.API.vIF_network))
             (lookup vif_record.API.vIF_network) state.table in
       (* Make sure we remove the cross-pool migration VIF mapping key from the other_config
-         			 * before creating a VIF - otherwise we'll risk sending this key on to another pool
-         			 * during a future cross-pool migration and it won't make sense. *)
+       * before creating a VIF - otherwise we'll risk sending this key on to another pool
+       * during a future cross-pool migration and it won't make sense. *)
       let other_config =
         List.filter
           (fun (k, _) -> k <> Constants.storage_migrate_vif_map_key)
@@ -877,14 +877,14 @@ module VIF : HandlerTools = struct
         else begin
           if vif_record.API.vIF_locking_mode = `locked then
             { vif_record with API.vIF_locking_mode = `network_default; 
-              API.vIF_ipv4_allowed = [];      	
+              API.vIF_ipv4_allowed = [];        
               API.vIF_ipv6_allowed = [];
             } 
-          else            	
+          else              
             { vif_record with API.vIF_ipv4_allowed = [];
               API.vIF_ipv6_allowed = [];
             }      
-        end in		
+        end in    
       let vif_record = { vif_record with
                          API.vIF_VM = vm;
                          API.vIF_network = net;
@@ -916,7 +916,7 @@ module VIF : HandlerTools = struct
             vif_record in
         state.cleanup <- (fun __context rpc session_id -> Client.VIF.destroy rpc session_id vif) :: state.cleanup;
         (* Now that we can import/export suspended VMs we need to preserve the
-           				 currently_attached flag *)
+           currently_attached flag *)
         if Db.VM.get_power_state ~__context ~self:vif_record.API.vIF_VM <> `Halted
         then Db.VIF.set_currently_attached ~__context ~self:vif ~value:vif_record.API.vIF_currently_attached;
 
@@ -1221,7 +1221,7 @@ let handler (req: Request.t) s _ =
     else None in
 
   (* Perform the SR reachability check using a fresh context/task because
-     	   we don't want to complete the task in the forwarding case *)
+     we don't want to complete the task in the forwarding case *)
 
   Server_helpers.exec_with_new_task ?subtask_of "VM.import"
     (fun __context -> Helpers.call_api_functions ~__context (fun rpc session_id ->
@@ -1333,8 +1333,8 @@ let handler (req: Request.t) s _ =
                             let checksum_table = Stream_vdi.recv_all refresh_session s __context rpc session_id header.version force vdis in
 
                             (* CA-48768: Stream_vdi.recv_all only checks for task cancellation
-                               															   every ten seconds, so we need to check again now. After this
-                               															   point, we disable cancellation for this task. *)
+                               every ten seconds, so we need to check again now. After this
+                               point, we disable cancellation for this task. *)
                             TaskHelper.exn_if_cancelling ~__context;
                             TaskHelper.set_not_cancellable ~__context;
 

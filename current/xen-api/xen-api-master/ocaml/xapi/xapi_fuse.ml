@@ -35,9 +35,9 @@ let light_fuse_and_run ?(fuse_length = !Xapi_globs.fuse_time) () =
         Thread.delay new_fuse_length;
         debug "light_fuse_and_run: calling flush and exit";
         (* CA-16368: If the database hasn't been initialised *at all* we can exit immediately.
-           		  This happens if someone calls flush_and_exit before the db conf has been parsed, the connections
-           		  initialised and the database "mode" set.
-           	       *)
+           This happens if someone calls flush_and_exit before the db conf has been parsed, the connections
+           initialised and the database "mode" set.
+        *)
         try
           let dbconn = Db_connections.preferred_write_db () in
           Db_cache_impl.flush_and_exit dbconn Xapi_globs.restart_return_code

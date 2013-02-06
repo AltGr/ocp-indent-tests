@@ -114,10 +114,10 @@ let call_extauth_hook_script_in_host_wrapper ~__context host event_name ~call_pl
       debug "Result of Extauth-hook: '%s'" result;
 
       (* extauth-hook can return three values: 
-         				"True" -> OK
-         				"ERROR_0: rewrite_etc_pamd_ssh failed"
-         				"ERROR_1: revert_etc_pamd_ssh failed"
-         			*)
+         "True" -> OK
+         "ERROR_0: rewrite_etc_pamd_ssh failed"
+         "ERROR_1: revert_etc_pamd_ssh failed"
+      *)
       begin match result with
       | "True" -> begin 
           (host,result) (* OK *)

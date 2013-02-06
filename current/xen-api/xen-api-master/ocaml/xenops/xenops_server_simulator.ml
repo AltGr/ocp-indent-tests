@@ -166,13 +166,13 @@ let do_set_xsdata_nolock vm xsdata () =
 let do_set_vcpus_nolock vm n () =
   let d = DB.read_exn vm.Vm.id in
   if not d.Domain.built || (d.Domain.hvm && not(d.Domain.qemu_created))
-  then raise (Domain_not_built)	
+  then raise (Domain_not_built)  
   else DB.write vm.Vm.id { d with Domain.vcpus = n }
 
 let do_set_shadow_multiplier_nolock vm m () =
   let d = DB.read_exn vm.Vm.id in
   if not d.Domain.built || (d.Domain.hvm && not(d.Domain.qemu_created))
-  then raise (Domain_not_built)	
+  then raise (Domain_not_built)  
   else DB.write vm.Vm.id { d with Domain.shadow_multiplier = m }
 
 let do_set_memory_dynamic_range_nolock vm min max () =

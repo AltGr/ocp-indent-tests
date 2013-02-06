@@ -4,10 +4,10 @@ val stdout : t
 val stderr : t
 
 type 'a with_create_args =
-?binary:bool (* defaults to true *)
--> ?append:bool (* defaults to false *)
--> ?perm:int
--> 'a
+  ?binary:bool (* defaults to true *)
+  -> ?append:bool (* defaults to false *)
+  -> ?perm:int
+  -> 'a
 
 val create : (string -> t) with_create_args
 val with_file : (string -> f:(t -> 'a) -> 'a) with_create_args

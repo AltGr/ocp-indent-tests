@@ -3,9 +3,9 @@ open Std_internal
 module Mutex = Mutex0
 
 type interval =
-| INone
-| INormal of Span.t
-| IRandom of Span.t * float
+  | INone
+  | INormal of Span.t
+  | IRandom of Span.t * float
 
 type status = Activated | Deactivating | Deactivated
 
@@ -16,22 +16,22 @@ type status = Activated | Deactivating | Deactivated
    this safe and easy.  The timer thread may also wake up while waiting on
    the condition variable when the timer expires. *)
 type t =
-{
-  mutable status : status;
-  events : event Heap.t;
-  mtx : Mutex.t;
-  cnd : Condition.t;
-  mutable now : Time.t;
-}
+  {
+    mutable status : status;
+    events : event Heap.t;
+    mtx : Mutex.t;
+    cnd : Condition.t;
+    mutable now : Time.t;
+  }
 
 and event =
-{
-  mutable time : Time.t;
-  mutable interval : interval;
-  handler : event -> Time.t -> unit;
-  timer : t;
-  mutable t_event_opt : event Heap.heap_el option;
-}
+  {
+    mutable time : Time.t;
+    mutable interval : interval;
+    handler : event -> Time.t -> unit;
+    timer : t;
+    mutable t_event_opt : event Heap.heap_el option;
+  }
 
 let run_timer timer =
   let mtx = timer.mtx in

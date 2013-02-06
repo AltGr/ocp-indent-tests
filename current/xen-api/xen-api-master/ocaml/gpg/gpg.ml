@@ -47,7 +47,7 @@ let parse_gpg_status status_data =
       _::_::fingerprint::_ -> Some fingerprint
     | _ -> None
   else
-    None	
+    None  
 
 let simple_checksum file = Digest.to_hex (Digest.file file)
 

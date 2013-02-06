@@ -496,7 +496,7 @@ let decon_wlb ~__context =
   in
   if Db.Pool.get_wlb_url ~__context ~self:pool = ""
   then
-    raise_not_initialized()	
+    raise_not_initialized()  
   else
     let params = pool_uuid_param ~__context in
     try Locking_helpers.Named_mutex.execute request_mutex (perform_wlb_request ~meth:"RemoveXenServer" 

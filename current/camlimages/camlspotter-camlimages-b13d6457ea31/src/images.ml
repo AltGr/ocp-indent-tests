@@ -90,7 +90,7 @@ let extension = function
   | Tiff -> "tif"
   | Png -> "png"
   | Xpm -> "xpm"
-  | Ppm -> "ppm"	
+  | Ppm -> "ppm"    
   | Ps -> "eps";;
 
 let get_extension s =
@@ -207,8 +207,8 @@ let file_format filename =
   with
   | Exit ->
     match !result with
-    |	Some r -> r
-    |	None -> assert false;;
+    |    Some r -> r
+    |    None -> assert false;;
 
 (************************************************ Generic image manupilation *)
 
@@ -232,15 +232,15 @@ let load filename load_options =
   with
   | Exit ->
     match !result with
-    |	Some r -> r
-    |	None -> assert false;;
+    |    Some r -> r
+    |    None -> assert false;;
 
 let save filename formatopt save_options t =
   try
     let format =
       match formatopt with
-      |	Some format -> format
-      |	None -> guess_format filename
+      |    Some format -> format
+      |    None -> guess_format filename
     in
     let methods = List.assoc format !methods_list in
     match methods.save with
@@ -367,15 +367,15 @@ let load_sequence filename load_options =
   with
   | Exit ->
     match !result with
-    |	Some r -> r
-    |	None -> assert false;;
+    |    Some r -> r
+    |    None -> assert false;;
 
 let save_sequence filename formatopt save_options seq =
   try
     let format =
       match formatopt with
-      |	Some format -> format
-      |	None -> guess_format filename
+      |    Some format -> format
+      |    None -> guess_format filename
     in
     let methods = List.assoc format !methods_list in
     match methods.save_sequence with
