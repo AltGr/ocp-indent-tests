@@ -238,19 +238,19 @@ let test =
               (sprintf "%c in %s = %b" c t b) @? (S.mem t c = b)
             in
             (let t = "abc" in
-            test t 'a' true;
-            test t 'b' true;
-            test t 'c' true;
-            test t 'x' false);
+             test t 'a' true;
+             test t 'b' true;
+             test t 'c' true;
+             test t 'x' false);
             (let t = "ab" in
-            test t 'a' true;
-            test t 'b' true;
-            test t 'x' false);
+             test t 'a' true;
+             test t 'b' true;
+             test t 'x' false);
             (let t = "a" in
-            test t 'a' true;
-            test t 'x' false);
+             test t 'a' true;
+             test t 'x' false);
             (let t = "" in
-            test t 'x' false);
+             test t 'x' false);
          );
          ("equals-is-always-true" >:: fun () ->
             let equal (_ : char) (_ : char) = true in
@@ -258,18 +258,18 @@ let test =
               (sprintf "%c in %s = %b" c t b) @? (S.mem ~equal t c = b)
             in
             (let t = "abc" in
-            test t 'a' true;
-            test t 'b' true;
-            test t 'c' true;
-            test t 'x' true);
+             test t 'a' true;
+             test t 'b' true;
+             test t 'c' true;
+             test t 'x' true);
             (let t = "ab" in
-            test t 'a' true;
-            test t 'x' true);
+             test t 'a' true;
+             test t 'x' true);
             (let t = "a" in
-            test t 'a' true;
-            test t 'x' true);
+             test t 'a' true;
+             test t 'x' true);
             (let t = "" in
-            test t 'x' false);
+             test t 'x' false);
          );
          ("equals-is-always-false" >:: fun () ->
             let equal (_ : char) (_ : char) = false in
@@ -277,18 +277,18 @@ let test =
               (sprintf "%c in %s = false" c t) @? (not (S.mem ~equal t c))
             in
             (let t = "abc" in
-            test t 'a';
-            test t 'b';
-            test t 'c';
-            test t 'x');
+             test t 'a';
+             test t 'b';
+             test t 'c';
+             test t 'x');
             (let t = "ab" in
-            test t 'a';
-            test t 'x');
+             test t 'a';
+             test t 'x');
             (let t = "a" in
-            test t 'a';
-            test t 'x');
+             test t 'a';
+             test t 'x');
             (let t = "" in
-            test t 'x');
+             test t 'x');
          );
          ("equals-is-strange" >:: fun () ->
             let equal c1 c2 = c1 = c2 || c1 = 'U' || c2 = 'U' in
@@ -296,26 +296,26 @@ let test =
               (sprintf "%c in %s = %b" c t b) @? (S.mem ~equal t c = b)
             in
             (let t = "abc" in
-            test t 'a' true;
-            test t 'b' true;
-            test t 'c' true;
-            test t 'x' false;
-            test t 'U' true);
+             test t 'a' true;
+             test t 'b' true;
+             test t 'c' true;
+             test t 'x' false;
+             test t 'U' true);
             (let t = "ab" in
-            test t 'a' true;
-            test t 'x' false;
-            test t 'U' true);
+             test t 'a' true;
+             test t 'x' false;
+             test t 'U' true);
             (let t = "a" in
-            test t 'a' true;
-            test t 'x' false;
-            test t 'U' true);
+             test t 'a' true;
+             test t 'x' false;
+             test t 'U' true);
             (let t = "" in
-            test t 'x' false;
-            test t 'U' false);
+             test t 'x' false;
+             test t 'U' false);
             (let t = "U" in
-            test t 'a' true;
-            test t 'x' true;
-            test t 'U' true);
+             test t 'a' true;
+             test t 'x' true;
+             test t 'U' true);
          );
        ]);
     ]

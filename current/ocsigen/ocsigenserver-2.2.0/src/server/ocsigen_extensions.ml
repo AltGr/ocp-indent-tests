@@ -945,12 +945,12 @@ let compute_result
     if awake_next_request
     then
       (let tobeawoken = ref true in
-      (* must be awoken once and only once *)
-      fun () ->
-        if !tobeawoken then begin
-          tobeawoken := false;
-          Ocsigen_http_com.wakeup_next_request conn
-        end)
+       (* must be awoken once and only once *)
+       fun () ->
+         if !tobeawoken then begin
+           tobeawoken := false;
+           Ocsigen_http_com.wakeup_next_request conn
+         end)
     else id
   in
 

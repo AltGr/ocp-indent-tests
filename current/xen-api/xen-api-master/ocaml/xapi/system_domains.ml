@@ -29,7 +29,7 @@ let bool_of_string x = try bool_of_string x with _ -> false
 let is_system_domain snapshot =
   snapshot.API.vM_is_control_domain
   || (let oc = snapshot.API.vM_other_config in
-  List.mem_assoc system_domain_key oc && (bool_of_string (List.assoc system_domain_key oc)))
+    List.mem_assoc system_domain_key oc && (bool_of_string (List.assoc system_domain_key oc)))
 
 let get_is_system_domain ~__context ~self =
   is_system_domain (Db.VM.get_record ~__context ~self)

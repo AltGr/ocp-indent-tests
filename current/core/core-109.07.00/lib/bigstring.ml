@@ -651,9 +651,9 @@ TEST = test_accessor ~buf
    of 2^62.  It is thus suitable for this test.
 *)
 TEST = let too_big = 0x4000_0000_0000_0000L in
-unsafe_set_int64_t_le buf ~pos:0 too_big;
-try
-  let _too_small = unsafe_get_int64_le_exn buf ~pos:0 in false
-with _ -> true
+  unsafe_set_int64_t_le buf ~pos:0 too_big;
+  try
+    let _too_small = unsafe_get_int64_le_exn buf ~pos:0 in false
+  with _ -> true
 end
 

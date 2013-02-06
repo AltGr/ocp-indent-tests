@@ -272,21 +272,21 @@ let rec loop socket =
 
 let _ = Lwt_unix.run
     (let socket = Lwt_unix.socket Unix.PF_UNIX Unix.SOCK_STREAM 0 in
-    (try
-      Lwt_unix.bind socket (Unix.ADDR_UNIX (directory^"/"^socketname))
-    with _ -> errlog ("Please make sure that the directory "^directory^" exists, writable for ocsidbm, and no other ocsidbm process is running on the same directory. If not, remove the file "^(directory^"/"^socketname)); the_end 1);
-    Lwt_unix.listen socket 20;
-    (* Done in ocsipersist.ml
-       let devnull = Unix.openfile "/dev/null" [Unix.O_WRONLY] 0 in
-           Unix.dup2 devnull Unix.stdout;
-           Unix.dup2 devnull Unix.stderr;
-           Unix.close devnull;
-           Unix.close Unix.stdin; *)
-    ignore (Lwt_unix.sleep 4.1 >>=
-      (fun () -> if not !b then close_all 0 (); return ()));
-    (* If nothing happened during 5 seconds, I quit *)
+     (try
+       Lwt_unix.bind socket (Unix.ADDR_UNIX (directory^"/"^socketname))
+     with _ -> errlog ("Please make sure that the directory "^directory^" exists, writable for ocsidbm, and no other ocsidbm process is running on the same directory. If not, remove the file "^(directory^"/"^socketname)); the_end 1);
+     Lwt_unix.listen socket 20;
+     (* Done in ocsipersist.ml
+        let devnull = Unix.openfile "/dev/null" [Unix.O_WRONLY] 0 in
+            Unix.dup2 devnull Unix.stdout;
+            Unix.dup2 devnull Unix.stderr;
+            Unix.close devnull;
+            Unix.close Unix.stdin; *)
+     ignore (Lwt_unix.sleep 4.1 >>=
+       (fun () -> if not !b then close_all 0 (); return ()));
+     (* If nothing happened during 5 seconds, I quit *)
 
-    loop socket)
+     loop socket)
 
 
 

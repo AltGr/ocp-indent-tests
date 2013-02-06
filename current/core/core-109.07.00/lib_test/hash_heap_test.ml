@@ -49,10 +49,10 @@ let test =
         "match" @?
           (Set.compare_direct (Set.Poly.of_list s)
              (let s = ref Set.Poly.empty in
-             Hash_heap.iter t ~f:(fun ~key ~data ->
-               s := Set.add !s key;
-               assert (key = data));
-             !s)
+              Hash_heap.iter t ~f:(fun ~key ~data ->
+                s := Set.add !s key;
+                assert (key = data));
+              !s)
            = 0));
       "remove" >:: (fun () ->
         let t = make () in

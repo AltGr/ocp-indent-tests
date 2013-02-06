@@ -68,7 +68,7 @@ let rec rpc_of_event_from e =
            (fun (key, count) ->
              (key, (Rpc.Int32 count)))
            e.valid_ref_counts
-       in Rpc.Dict dict));
+        in Rpc.Dict dict));
       ("token", (rpc_of_token e.token)) ]
 
 (** Return result of an events.from call *)

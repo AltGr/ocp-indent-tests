@@ -40,9 +40,9 @@ let _ =
             (
               (Datamodel_utils.wire_name ~sync:true obj msg),
               (let params = List.map (fun param -> (param.param_name,ty_to_js param.param_type,param.param_doc)) msg.msg_params in
-              if msg.msg_session 
-              then ("session_id","{ty:\"ref\",class:\"session\"}","The session reference")::params
-              else params),
+               if msg.msg_session 
+               then ("session_id","{ty:\"ref\",class:\"session\"}","The session reference")::params
+               else params),
               msg.msg_doc
             )) obj.messages
         in

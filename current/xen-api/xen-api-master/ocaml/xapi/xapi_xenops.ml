@@ -704,12 +704,12 @@ let add_caches id =
 
 
 let to_xenops_console_protocol = let open Vm in function
-| `rfb -> Rfb
-| `vt100 -> Vt100
-| `rdp -> Rfb (* RDP was never used in the XenAPI so this never happens *)
+  | `rfb -> Rfb
+  | `vt100 -> Vt100
+  | `rdp -> Rfb (* RDP was never used in the XenAPI so this never happens *)
 let to_xenapi_console_protocol = let open Vm in function
-| Rfb -> `rfb
-| Vt100 -> `vt100
+  | Rfb -> `rfb
+  | Vt100 -> `vt100
 
 (* Event handling:
    When we tell the xenopsd to start a VM, we wait for the task to complete.

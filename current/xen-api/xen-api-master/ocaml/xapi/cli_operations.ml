@@ -2535,12 +2535,12 @@ let vm_migrate printer rpc session_id params =
         let default_sr =
           if List.mem_assoc "destination-sr-uuid" params
           then let sr_uuid = List.assoc "destination-sr-uuid" params in
-          try Some (Client.SR.get_by_uuid remote_rpc remote_session sr_uuid)
-          with _ -> failwith (Printf.sprintf "Couldn't find destination SR: %s" sr_uuid)
+            try Some (Client.SR.get_by_uuid remote_rpc remote_session sr_uuid)
+            with _ -> failwith (Printf.sprintf "Couldn't find destination SR: %s" sr_uuid)
           else try let pools = Client.Pool.get_all remote_rpc remote_session in
-          printer (Cli_printer.PMsg "Selecting remote pool's default SR for migrating VDIs") ;
-          Some (Client.Pool.get_default_SR remote_rpc remote_session
-              (List.hd pools))
+            printer (Cli_printer.PMsg "Selecting remote pool's default SR for migrating VDIs") ;
+            Some (Client.Pool.get_default_SR remote_rpc remote_session
+                (List.hd pools))
           with _ -> None in
 
         let vdi_map = match default_sr with
@@ -3106,7 +3106,7 @@ let vm_import fd printer rpc session_id params =
                        * alert it to the failure. *)
 
                         (let l=Client.Task.get_current_operations rpc session_id importtask in
-                        if List.exists (fun (_,x) -> x=`cancel) l then raise (Api_errors.Server_error(Api_errors.task_cancelled,[])));
+                         if List.exists (fun (_,x) -> x=`cancel) l then raise (Api_errors.Server_error(Api_errors.task_cancelled,[])));
 
                         (* Cancelling will close the connection, which will be interpreted by the import handler as failure *)
 

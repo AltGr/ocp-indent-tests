@@ -671,10 +671,10 @@ TEST = (find_a_dup [(0,1);(2,2);(0,2);(4,1)]
     ~compare:(fun (_,a) (_,b) -> Pervasives.compare a b)) <> None
 TEST = let dup = find_a_dup [(0,1);(2,2);(0,2);(4,1)]
     ~compare:(fun (a,_) (b,_) -> Pervasives.compare a b)
-in
-match dup with
-| Some (0, _) -> true
-| _ -> false
+  in
+  match dup with
+  | Some (0, _) -> true
+  | _ -> false
 
 
 type sexp_thunk = unit -> Sexplib.Sexp.t

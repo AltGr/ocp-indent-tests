@@ -197,7 +197,7 @@ let more_frequent_than ~a ~b = (* is a more frequent than b? *)
   then (let rec tst xs = match xs with
     |[]->false
     |x::xs->if a=x then true else if b=x then false else tst xs
-  in tst frequency_order
+    in tst frequency_order
   )
   else false (*incomparable*)
 
@@ -666,9 +666,9 @@ let destroy ~__context ~self =
 let is_snapshot_from_vmpp ~__context =
   try
     (let session = Xapi_session.get_top ~__context ~self:(Context.get_session_id __context) in
-    let uname = Db.Session.get_auth_user_name ~__context ~self:session in
-    let is_lsu = Db.Session.get_is_local_superuser ~__context ~self:session in
-    is_lsu && (uname = vmpr_username)
+     let uname = Db.Session.get_auth_user_name ~__context ~self:session in
+     let is_lsu = Db.Session.get_is_local_superuser ~__context ~self:session in
+     is_lsu && (uname = vmpr_username)
     )
   with e ->
     debug "Error obtaining is_snapshot_from_vmpp: %s" (Printexc.to_string e);

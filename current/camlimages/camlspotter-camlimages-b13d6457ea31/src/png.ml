@@ -59,7 +59,7 @@ let load name _opts =
         buf'.(y).[x] <-
           char_of_int
             (let c = int_of_char buf.(y).[x / 2] in
-            if x mod 2 = 0 then c lsr 4 else c mod 16)
+             if x mod 2 = 0 then c lsr 4 else c mod 16)
       done
     done;
     Index8 (Index8.create_with_scanlines w h [] { max = 16; map = cmap } (-1) buf')

@@ -84,8 +84,8 @@ let rec output oz f buf pos len  =
   if len = 0 then next_cont oz f else
   if oz.avail = 0 then
     (let cont () = output oz f buf pos len in
-    Ocsigen_messages.debug2 "--Deflatemod: Flushing because output buffer is full";
-    flush oz cont)
+     Ocsigen_messages.debug2 "--Deflatemod: Flushing because output buffer is full";
+     flush oz cont)
   else (
     (catch
        (fun () ->

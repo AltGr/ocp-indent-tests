@@ -71,11 +71,11 @@ let check_for_changes ~(dev : string) ~(stat : Network_monitor.iface_stats) =
         info "New bonds status: %s nb_links %d up %d" dev stat.nb_links stat.links_up;
         if stat.links_up <> stat.nb_links then
           (let msg = Printf.sprintf "is: %d/%d up" stat.links_up stat.nb_links in
-          try
-            send_bond_change_alert dev stat.interfaces msg
-          with e ->
-            debug "Error while sending alert BONDS_STATUS_CHANGED: %s\n%s"
-              (Printexc.to_string e) (Printexc.get_backtrace ()))
+           try
+             send_bond_change_alert dev stat.interfaces msg
+           with e ->
+             debug "Error while sending alert BONDS_STATUS_CHANGED: %s\n%s"
+               (Printexc.to_string e) (Printexc.get_backtrace ()))
       )
     )
 

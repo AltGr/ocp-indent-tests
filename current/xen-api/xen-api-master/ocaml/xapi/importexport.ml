@@ -152,12 +152,12 @@ let compare_checksums a b =
   List.iter (fun (filename, csum) ->
     if List.mem_assoc filename b 
     then (let expected = List.assoc filename b in
-    if csum <> expected
-    then begin
-      error "File %s checksum mismatch (%s <> %s)" filename csum expected;
-      success := false
-    end
-    else debug "File %s checksum ok (%s = %s)" filename csum expected;
+      if csum <> expected
+      then begin
+        error "File %s checksum mismatch (%s <> %s)" filename csum expected;
+        success := false
+      end
+      else debug "File %s checksum ok (%s = %s)" filename csum expected;
     ) 
     else begin 
       error "Missing checksum for file %s (expected %s)" filename csum;

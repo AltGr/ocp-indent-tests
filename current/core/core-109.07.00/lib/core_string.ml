@@ -208,16 +208,16 @@ let is_suffix s ~suffix =
   len_s >= len_suff
   && (let rec loop i =
     i = len_suff || (suffix.[len_suff - 1 - i] = s.[len_s - 1 - i] && loop (i + 1))
-  in
-  loop 0)
+    in
+    loop 0)
 
 let is_prefix s ~prefix =
   let len_pref = String.length prefix in
   String.length s >= len_pref
   && (let rec loop i =
     i = len_pref || (prefix.[i] = s.[i] && loop (i + 1))
-  in
-  loop 0)
+    in
+    loop 0)
 ;;
 
 let wrap_sub_n t n ~name ~pos ~len ~on_error =

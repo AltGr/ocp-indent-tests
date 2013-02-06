@@ -340,8 +340,8 @@ let get_request_infos
                       Some (fun ci ->
                         match !r with
                           | None -> let res = f ci in
-                          r := Some res;
-                          res
+                              r := Some res;
+                              res
                           | Some r -> r)
               end
           | _ -> failwith "get_request_infos: HTTP method not implemented"
@@ -1199,145 +1199,145 @@ let start_server () = try
 
     Lwt_unix.run
       (let wait_end_init, wait_end_init_awakener = wait () in
-      (* Listening on all ports: *)
-      sockets := List.fold_left (fun a i -> (listen false i wait_end_init)@a) [] ports;
-      sslsockets := List.fold_left (fun a i -> (listen true i wait_end_init)@a) [] sslports;
+       (* Listening on all ports: *)
+       sockets := List.fold_left (fun a i -> (listen false i wait_end_init)@a) [] ports;
+       sslsockets := List.fold_left (fun a i -> (listen true i wait_end_init)@a) [] sslports;
 
-      begin match ports with
-        | (_, p)::_ -> Ocsigen_config.set_default_port p
-        | _ -> ()
-      end;
-      begin match sslports with
-        | (_, p)::_ -> Ocsigen_config.set_default_sslport p
-        | _ -> ()
-      end;
+       begin match ports with
+         | (_, p)::_ -> Ocsigen_config.set_default_port p
+         | _ -> ()
+       end;
+       begin match sslports with
+         | (_, p)::_ -> Ocsigen_config.set_default_sslport p
+         | _ -> ()
+       end;
 
-      let current_uid = Unix.getuid () in
+       let current_uid = Unix.getuid () in
 
-      let gid = match group with
-        | None -> Unix.getgid ()
-        | Some group -> (try
-            (Unix.getgrnam group).Unix.gr_gid
-          with Not_found as e -> errlog ("Error: Wrong group"); raise e)
-      in
+       let gid = match group with
+         | None -> Unix.getgid ()
+         | Some group -> (try
+             (Unix.getgrnam group).Unix.gr_gid
+           with Not_found as e -> errlog ("Error: Wrong group"); raise e)
+       in
 
-      let uid = match user with
-        | None -> current_uid
-        | Some user -> (try
-            (Unix.getpwnam user).Unix.pw_uid
-          with Not_found as e -> (errlog ("Error: Wrong user"); raise e))
-      in
+       let uid = match user with
+         | None -> current_uid
+         | Some user -> (try
+             (Unix.getpwnam user).Unix.pw_uid
+           with Not_found as e -> (errlog ("Error: Wrong user"); raise e))
+       in
 
-      (* A pipe to communicate with the server *)
-      let commandpipe = get_command_pipe () in
-      (try
-        ignore (Unix.stat commandpipe);
-      with Unix.Unix_error _ ->
-          (try
-            let umask = Unix.umask 0 in
-            Unix.mkfifo commandpipe 0o660;
-            Unix.chown commandpipe uid gid;
-            ignore (Unix.umask umask);
-            ignore (Ocsigen_messages.warning "Command pipe created");
-          with e ->
-              Ocsigen_messages.errlog
-                ("Cannot create the command pipe: "^(Printexc.to_string e))));
+       (* A pipe to communicate with the server *)
+       let commandpipe = get_command_pipe () in
+       (try
+         ignore (Unix.stat commandpipe);
+       with Unix.Unix_error _ ->
+           (try
+             let umask = Unix.umask 0 in
+             Unix.mkfifo commandpipe 0o660;
+             Unix.chown commandpipe uid gid;
+             ignore (Unix.umask umask);
+             ignore (Ocsigen_messages.warning "Command pipe created");
+           with e ->
+               Ocsigen_messages.errlog
+                 ("Cannot create the command pipe: "^(Printexc.to_string e))));
 
-      (* I change the user for the process *)
-      begin try
-        if current_uid = 0 then begin
-          match user with
-            | None -> ()
-            | Some user -> Unix.initgroups user gid
-        end;
-        Unix.setgid gid;
-        Unix.setuid uid;
-      with (Unix.Unix_error _ | Failure _) as e ->
-          Ocsigen_messages.errlog ("Error: Wrong user or group"); raise e
-      end;
+       (* I change the user for the process *)
+       begin try
+         if current_uid = 0 then begin
+           match user with
+             | None -> ()
+             | Some user -> Unix.initgroups user gid
+         end;
+         Unix.setgid gid;
+         Unix.setuid uid;
+       with (Unix.Unix_error _ | Failure _) as e ->
+           Ocsigen_messages.errlog ("Error: Wrong user or group"); raise e
+       end;
 
-      Ocsigen_config.set_user user;
-      Ocsigen_config.set_group group;
+       Ocsigen_config.set_user user;
+       Ocsigen_config.set_group group;
 
-      (* Je suis fou :
-         let rec f () =
-           print_endline "-";
-           Lwt_unix.yield () >>= f
-           in f (); *)
+       (* Je suis fou :
+          let rec f () =
+            print_endline "-";
+            Lwt_unix.yield () >>= f
+            in f (); *)
 
-      if maxthreads < minthreads
-      then
-        raise
-          (Config_file_error "maxthreads should be greater than minthreads");
+       if maxthreads < minthreads
+       then
+         raise
+           (Config_file_error "maxthreads should be greater than minthreads");
 
-      ignore (Ocsigen_config.init_preempt minthreads maxthreads Ocsigen_messages.errlog);
+       ignore (Ocsigen_config.init_preempt minthreads maxthreads Ocsigen_messages.errlog);
 
-      (* Now I can load the modules *)
-      Dynlink_wrapper.init ();
-      Dynlink_wrapper.allow_unsafe_modules true;
+       (* Now I can load the modules *)
+       Dynlink_wrapper.init ();
+       Dynlink_wrapper.allow_unsafe_modules true;
 
-      Ocsigen_extensions.start_initialisation ();
+       Ocsigen_extensions.start_initialisation ();
 
-      parse_server false s;
+       parse_server false s;
 
-      Dynlink_wrapper.prohibit ["Ocsigen_extensions.R"];
-      (* As libraries are reloaded each time the config file is read,
-         we do not allow to register extensions in libraries *)
-      (* seems it does not work :-/ *)
+       Dynlink_wrapper.prohibit ["Ocsigen_extensions.R"];
+       (* As libraries are reloaded each time the config file is read,
+          we do not allow to register extensions in libraries *)
+       (* seems it does not work :-/ *)
 
 
-      (* Closing stderr, stdout stdin if silent *)
-      if (Ocsigen_config.get_silent ())
-      then begin
-        (* redirect stdout and stderr to /dev/null *)
-        let devnull = Unix.openfile "/dev/null" [Unix.O_WRONLY] 0 in
-        Unix.dup2 devnull Unix.stdout;
-        Unix.dup2 devnull Unix.stderr;
-        Unix.close devnull;
-        Unix.close Unix.stdin;
-      end;
+       (* Closing stderr, stdout stdin if silent *)
+       if (Ocsigen_config.get_silent ())
+       then begin
+         (* redirect stdout and stderr to /dev/null *)
+         let devnull = Unix.openfile "/dev/null" [Unix.O_WRONLY] 0 in
+         Unix.dup2 devnull Unix.stdout;
+         Unix.dup2 devnull Unix.stderr;
+         Unix.close devnull;
+         Unix.close Unix.stdin;
+       end;
 
-      (* detach from the terminal *)
-      if (Ocsigen_config.get_daemon ())
-      then ignore (Unix.setsid ());
+       (* detach from the terminal *)
+       if (Ocsigen_config.get_daemon ())
+       then ignore (Unix.setsid ());
 
-      Ocsigen_extensions.end_initialisation ();
+       Ocsigen_extensions.end_initialisation ();
 
-      let pipe = Lwt_chan.in_channel_of_descr
-          (Lwt_unix.of_unix_file_descr
-             (Unix.openfile commandpipe
-                [Unix.O_RDWR; Unix.O_NONBLOCK; Unix.O_APPEND] 0o660)) in
+       let pipe = Lwt_chan.in_channel_of_descr
+           (Lwt_unix.of_unix_file_descr
+              (Unix.openfile commandpipe
+                 [Unix.O_RDWR; Unix.O_NONBLOCK; Unix.O_APPEND] 0o660)) in
 
-      let rec f () =
-        Lwt_chan.input_line pipe >>= fun s ->
-        Ocsigen_messages.warning ("Command received: "^s);
-        (Lwt.catch
-           (fun () ->
-             let prefix, c =
-               match String.split ~multisep:true ' ' s with
-                 | [] -> raise Ocsigen_extensions.Unknown_command
-                 | a::l ->
-                     try
-                       let aa, ab = String.sep ':' a in
-                       (Some aa, (ab::l))
-                     with Not_found -> None, (a::l)
-             in
-             Ocsigen_extensions.get_command_function () ?prefix s c)
-           (function
-             | Unknown_command -> Ocsigen_messages.warning "Unknown command";
-                 Lwt.return ()
-             | e ->
-                 Ocsigen_messages.errlog ("Uncaught Exception after command: "^
-                       Printexc.to_string e);
-                 Lwt.fail e))
-        >>= f
-      in ignore (f ());
+       let rec f () =
+         Lwt_chan.input_line pipe >>= fun s ->
+         Ocsigen_messages.warning ("Command received: "^s);
+         (Lwt.catch
+            (fun () ->
+              let prefix, c =
+                match String.split ~multisep:true ' ' s with
+                  | [] -> raise Ocsigen_extensions.Unknown_command
+                  | a::l ->
+                      try
+                        let aa, ab = String.sep ':' a in
+                        (Some aa, (ab::l))
+                      with Not_found -> None, (a::l)
+              in
+              Ocsigen_extensions.get_command_function () ?prefix s c)
+            (function
+              | Unknown_command -> Ocsigen_messages.warning "Unknown command";
+                  Lwt.return ()
+              | e ->
+                  Ocsigen_messages.errlog ("Uncaught Exception after command: "^
+                        Printexc.to_string e);
+                  Lwt.fail e))
+         >>= f
+       in ignore (f ());
 
-      Lwt.wakeup wait_end_init_awakener ();
+       Lwt.wakeup wait_end_init_awakener ();
 
-      Ocsigen_messages.warning "Ocsigen has been launched (initialisations ok)";
+       Ocsigen_messages.warning "Ocsigen has been launched (initialisations ok)";
 
-      fst (Lwt.wait ())
+       fst (Lwt.wait ())
       )
   in
 

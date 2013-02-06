@@ -44,8 +44,8 @@ let memoise f =
     if Hashtbl.mem table x
     then Hashtbl.find table x
     else let result = f lookup x in
-    Hashtbl.add table x result;
-    result in
+      Hashtbl.add table x result;
+      result in
   lookup
 
 (** Raised when an int64 addition overflows (positive numbers only) *)

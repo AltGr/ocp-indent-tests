@@ -67,32 +67,32 @@ let test =
         (fun () ->
           "size" @?
             (let predicted = List.length test_data in
-            let found = Hashtbl.length (Hashtbl.Poly.of_alist_exn test_data) in
-            predicted = found);
+             let found = Hashtbl.length (Hashtbl.Poly.of_alist_exn test_data) in
+             predicted = found);
           "right keys" @?
             (let predicted = List.map test_data ~f:(fun (k,_) -> k) in
-            let found = Hashtbl.keys (Hashtbl.Poly.of_alist_exn test_data) in
-            let sp = List.sort ~cmp:ascending predicted in
-            let sf = List.sort ~cmp:ascending found in
-            sp = sf)
+             let found = Hashtbl.keys (Hashtbl.Poly.of_alist_exn test_data) in
+             let sp = List.sort ~cmp:ascending predicted in
+             let sf = List.sort ~cmp:ascending found in
+             sp = sf)
         );
       "keys" >::
         (fun () ->
           "size and right keys" @?
             (let predicted = List.map test_data ~f:(fun (k,_) -> k) in
-            let found = Hashtbl.keys test_hash in
-            let sp = List.sort ~cmp:ascending predicted in
-            let sf = List.sort ~cmp:ascending found in
-            sp = sf)
+             let found = Hashtbl.keys test_hash in
+             let sp = List.sort ~cmp:ascending predicted in
+             let sf = List.sort ~cmp:ascending found in
+             sp = sf)
         );
       "data" >::
         (fun () ->
           "size and right data" @?
             (let predicted = List.map test_data ~f:(fun (_,v) -> v) in
-            let found = Hashtbl.data test_hash in
-            let sp = List.sort ~cmp:ascending predicted in
-            let sf = List.sort ~cmp:ascending found in
-            sp = sf)
+             let found = Hashtbl.data test_hash in
+             let sp = List.sort ~cmp:ascending predicted in
+             let sf = List.sort ~cmp:ascending found in
+             sp = sf)
         );
 
       "map" >:: (fun () ->

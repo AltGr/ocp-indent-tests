@@ -151,9 +151,9 @@ let enlarge_stream = function
               if long3 <= max
               then Lwt.return (Cont (new_s, ff))
               else let long4 = long3 - max in
-              cont (String.sub new_s 0 max)
-                (fun () ->
-                  Lwt.return (Cont (String.sub new_s max long4, ff)))
+                cont (String.sub new_s 0 max)
+                  (fun () ->
+                    Lwt.return (Cont (String.sub new_s max long4, ff)))
 
 let rec stream_want s len =
   (* returns a stream with at least len bytes read if possible *)

@@ -203,8 +203,8 @@ let parse_args =
         if !i >= String.length extra_args
            || extra_args.[!i] = ',' && extra_args.[!i-1] <> '\\' then
           (let seg = String.sub extra_args !pos (!i - !pos) in
-          l := String.filter_chars seg ((<>) '\\') :: !l;
-          incr i; pos := !i)
+           l := String.filter_chars seg ((<>) '\\') :: !l;
+           incr i; pos := !i)
         else incr i
       done;
       List.rev !l  in

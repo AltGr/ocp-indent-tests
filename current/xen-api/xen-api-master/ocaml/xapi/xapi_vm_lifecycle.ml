@@ -287,7 +287,7 @@ let check_operation_error ~__context ~vmr ~vmgmr ~ref ~clone_suspended_vm_enable
       if op = `snapshot_with_quiesce && 
          (Pervasiveext.maybe_with_default true
             (fun gm -> let other = gm.Db_actions.vM_guest_metrics_other in 
-            not (List.mem_assoc "feature-quiesce" other || List.mem_assoc "feature-snapshot" other)) 
+              not (List.mem_assoc "feature-quiesce" other || List.mem_assoc "feature-snapshot" other)) 
             vmgmr)
       then Some (Api_errors.vm_snapshot_with_quiesce_not_supported, [ ref_str ])
       else None) in
