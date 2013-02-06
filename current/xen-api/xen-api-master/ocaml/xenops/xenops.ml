@@ -858,5 +858,5 @@ let _ = try
   | s ->
     raise (usage (Some s) allcommands)
 with
-  | Arg.Help msg -> printf "%s\n" msg; exit 0
-  | Arg.Bad msg -> eprintf "%s\n" msg; exit 1
+| Arg.Help msg -> printf "%s\n" msg; exit 0
+| Arg.Bad msg -> eprintf "%s\n" msg; exit 1

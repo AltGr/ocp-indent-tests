@@ -32,10 +32,10 @@ let _db_defaults  = "DB_DEFAULTS"
 (** Filter out all the operations which don't make sense to the database *)
 let make_db_api = Dm_api.filter (fun _ -> true) (fun _ -> true)
     (fun ({ msg_tag = tag }) -> match tag with
-    | FromField(_, _) -> true
-    | Custom -> false
-    | FromObject(GetAll) -> false (* rely on the Private(GetDBAll) function for now *)  
-    | FromObject(_) -> true
+      | FromField(_, _) -> true
+      | Custom -> false
+      | FromObject(GetAll) -> false (* rely on the Private(GetDBAll) function for now *)  
+      | FromObject(_) -> true
     )
 
 (* Only these types are actually marshalled into the database: *)
@@ -137,14 +137,14 @@ let args_of_message (obj: obj) ( { msg_tag = tag } as msg) =
   let arg_of_param = function
     | {param_type=DT.Record x; param_name=name; param_doc=doc} ->
       begin match tag with
-      | FromObject(Make) ->
-        if x <> obj.DT.name then failwith "args_of_message";
-        (* Client constructor takes all object fields regardless of qualifier
-           but excluding Set(Ref _) types *)
-        let fields = DU.fields_of_obj obj in
-        let fields = List.filter field_in_this_table fields in
-        List.map Client.param_of_field fields
-      | _ -> failwith "arg_of_param: encountered a Record in an unexpected place"
+        | FromObject(Make) ->
+          if x <> obj.DT.name then failwith "args_of_message";
+          (* Client constructor takes all object fields regardless of qualifier
+             but excluding Set(Ref _) types *)
+          let fields = DU.fields_of_obj obj in
+          let fields = List.filter field_in_this_table fields in
+          List.map Client.param_of_field fields
+        | _ -> failwith "arg_of_param: encountered a Record in an unexpected place"
       end
     | p -> [ Client.of_param p ] in
   let ref = if tag = FromObject(Make) then [ O.Named("ref", OU.alias_of_ty (Ref obj.name)) ] else [ ] in
@@ -354,23 +354,23 @@ let db_action api : O.Module.t =
           (String.concat "; " kvs') 
       | FromObject(GetByUuid) ->
         begin match x.msg_params, x.msg_result with
-        | [ {param_type=ty; param_name=name} ], Some (result_ty, _) ->
-          let query = Printf.sprintf "DB.db_get_by_uuid __t \"%s\" %s"
-              (Escaping.escape_obj obj.DT.name)
-              (OU.escape name) in
-          _string_to_dm ^ "." ^ (OU.alias_of_ty result_ty) ^ " (" ^ query ^ ")"
-        | _ -> failwith "GetByUuid call should have only one parameter and a result!"
+          | [ {param_type=ty; param_name=name} ], Some (result_ty, _) ->
+            let query = Printf.sprintf "DB.db_get_by_uuid __t \"%s\" %s"
+                (Escaping.escape_obj obj.DT.name)
+                (OU.escape name) in
+            _string_to_dm ^ "." ^ (OU.alias_of_ty result_ty) ^ " (" ^ query ^ ")"
+          | _ -> failwith "GetByUuid call should have only one parameter and a result!"
         end
       | FromObject(GetByLabel) ->
         begin match x.msg_params, x.msg_result with
-        | [ {param_type=ty; param_name=name} ], Some (Set result_ty, _) ->
-          let query = Printf.sprintf "DB.db_get_by_name_label __t \"%s\" %s"
-              (Escaping.escape_obj obj.DT.name)
-              (OU.escape name) in
-          if DU.obj_has_get_by_name_label obj
-          then "List.map " ^ _string_to_dm ^ "." ^ (OU.alias_of_ty result_ty) ^ " (" ^ query ^ ")"
-          else "failwith \\\"Object has no label field\\\""
-        | _ -> failwith "GetByLabel call should have only one parameter and a result!"
+          | [ {param_type=ty; param_name=name} ], Some (Set result_ty, _) ->
+            let query = Printf.sprintf "DB.db_get_by_name_label __t \"%s\" %s"
+                (Escaping.escape_obj obj.DT.name)
+                (OU.escape name) in
+            if DU.obj_has_get_by_name_label obj
+            then "List.map " ^ _string_to_dm ^ "." ^ (OU.alias_of_ty result_ty) ^ " (" ^ query ^ ")"
+            else "failwith \\\"Object has no label field\\\""
+          | _ -> failwith "GetByLabel call should have only one parameter and a result!"
         end
       | FromObject(GetRecord) -> get_record obj "get_record'"
       | FromObject(Private(GetDBRecord)) -> get_record obj "get_record_internal'"
@@ -379,11 +379,11 @@ let db_action api : O.Module.t =
         (* Generate the same code for the internal GetDBAll as well as the public GetAll.
            Eventually we'll need to provide user filtering for the public version *)
         begin match x.msg_result with
-        | Some (Set result_ty, _) ->
-          let query = Printf.sprintf "DB.read_refs __t \"%s\""
-              (Escaping.escape_obj obj.DT.name) in
-          "List.map " ^ _string_to_dm ^ "." ^ (OU.alias_of_ty result_ty) ^ "(" ^ query ^ ")"
-        | _ -> failwith "GetAll call needs a result type"
+          | Some (Set result_ty, _) ->
+            let query = Printf.sprintf "DB.read_refs __t \"%s\""
+                (Escaping.escape_obj obj.DT.name) in
+            "List.map " ^ _string_to_dm ^ "." ^ (OU.alias_of_ty result_ty) ^ "(" ^ query ^ ")"
+          | _ -> failwith "GetAll call needs a result type"
         end
       | FromObject(GetAllRecords) ->
         String.concat "\n" 

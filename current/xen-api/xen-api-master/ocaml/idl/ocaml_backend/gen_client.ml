@@ -75,12 +75,12 @@ let args_of_message ?(expand_record=true) (obj: obj) ( { msg_tag = tag } as msg)
   let arg_of_param = function
     | {param_type=Record x; param_name=name; param_doc=doc} ->
       begin match tag with
-      | FromObject(Make) ->
-        if x <> obj.DT.name then failwith "args_of_message";
-        if expand_record
-        then List.map param_of_field (ctor_fields obj)
-        else [ custom _value (Record x) ]
-      | _ -> failwith "arg_of_param: encountered a Record in an unexpected place"
+        | FromObject(Make) ->
+          if x <> obj.DT.name then failwith "args_of_message";
+          if expand_record
+          then List.map param_of_field (ctor_fields obj)
+          else [ custom _value (Record x) ]
+        | _ -> failwith "arg_of_param: encountered a Record in an unexpected place"
       end
     | p -> [ of_param p ] in
   let session = if msg.msg_session then [ session ] else [ ] in

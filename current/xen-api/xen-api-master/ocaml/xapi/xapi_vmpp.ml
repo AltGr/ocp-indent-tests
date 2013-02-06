@@ -259,8 +259,8 @@ let assert_value ~field ~key ~attr ~value =
     let vs = Stringext.String.split ',' value in
     List.fold_right 
       (fun v acc->match (mem v range) with
-      |None->err v
-      |Some v->if acc="" then v else (v^","^acc)
+        |None->err v
+        |Some v->if acc="" then v else (v^","^acc)
       )
       vs
       ""

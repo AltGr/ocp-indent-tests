@@ -30,8 +30,8 @@ let refs_of_record cls record =
       let pairs = API.Legacy.From.map (fun x -> x) (refs_of v) xml in
       let vs = List.concat (List.map snd pairs) in 
       begin match k with
-      | Ref _ -> List.map fst pairs @ vs 
-      | _ -> vs
+        | Ref _ -> List.map fst pairs @ vs 
+        | _ -> vs
       end
     | _ -> [] in
   let pairs = XMLRPC.From.structure record in

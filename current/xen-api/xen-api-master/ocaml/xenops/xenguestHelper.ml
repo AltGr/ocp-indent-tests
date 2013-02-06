@@ -127,13 +127,13 @@ let message_of_string x =
   let i = String.index x ':' in
   let prefix = String.sub x 0 i
   and suffix = String.sub x (i + 1) (String.length x - i - 1) in match prefix with
-  | "stdout" -> Stdout suffix
-  | "stderr" -> Stderr suffix
-  | "error" -> Error suffix
-  | "suspend" -> Suspend
-  | "info" -> Info suffix
-  | "result" -> Result suffix
-  | _ -> Error "uncaught exception"
+    | "stdout" -> Stdout suffix
+    | "stderr" -> Stderr suffix
+    | "error" -> Error suffix
+    | "suspend" -> Suspend
+    | "info" -> Info suffix
+    | "result" -> Result suffix
+    | _ -> Error "uncaught exception"
 
 (** return the next output line from the control channel *)
 let receive (infd, _, _, _, _) = message_of_string (input_line infd)

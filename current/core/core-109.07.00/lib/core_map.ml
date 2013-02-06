@@ -31,12 +31,12 @@ module Tree0 = struct
     let rec loop lower upper t =
       let in_range k =
         (match lower with
-        | None -> true
-        | Some lower -> compare_key lower k < 0
+          | None -> true
+          | Some lower -> compare_key lower k < 0
         )
         && (match upper with
-        | None -> true
-        | Some upper -> compare_key k upper < 0
+          | None -> true
+          | Some upper -> compare_key k upper < 0
         )
       in
       match t with
@@ -305,8 +305,8 @@ module Tree0 = struct
       match t with
       | Empty ->
         begin match (f None) with
-        | None -> raise Change_no_op (* equivalent to returning: Empty *)
-        | Some data -> Leaf(key, data)
+          | None -> raise Change_no_op (* equivalent to returning: Empty *)
+          | Some data -> Leaf(key, data)
         end
       | Leaf(v, d) ->
         let c = compare_key key v in
@@ -322,8 +322,8 @@ module Tree0 = struct
         let c = compare_key key v in
         if c = 0 then
           begin match (f (Some d)) with
-          | None -> merge l r
-          | Some data -> Node(l, key, data, r, h)
+            | None -> merge l r
+            | Some data -> Node(l, key, data, r, h)
           end
         else
         if c < 0 then
@@ -621,8 +621,8 @@ module Tree0 = struct
       if c = 0 then min_elt r
       else if c < 0 then next_key r k ~compare_key
       else begin match next_key l k ~compare_key with
-      | None -> Some (k', v')
-      | Some answer -> Some answer
+        | None -> Some (k', v')
+        | Some answer -> Some answer
       end
   ;;
 
@@ -639,8 +639,8 @@ module Tree0 = struct
       if c = 0 then max_elt l
       else if c > 0 then prev_key l k ~compare_key
       else begin match prev_key r k ~compare_key with
-      | None -> Some (k', v')
-      | Some answer -> Some answer
+        | None -> Some (k', v')
+        | Some answer -> Some answer
       end
   ;;
 

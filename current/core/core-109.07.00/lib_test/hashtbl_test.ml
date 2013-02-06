@@ -171,8 +171,8 @@ let test =
           Hashtbl.remove t x;
           Hashtbl.invariant t;
           begin match Hashtbl.find t x with
-          | None -> ()
-          | Some _ -> failwith (sprintf "present after removal: %d" x)
+            | None -> ()
+            | Some _ -> failwith (sprintf "present after removal: %d" x)
           end;
           inserted := List.Assoc.remove !inserted x;
           verify_inserted t));

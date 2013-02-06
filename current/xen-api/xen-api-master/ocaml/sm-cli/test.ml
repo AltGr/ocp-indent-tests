@@ -196,13 +196,13 @@ let test_create_destroy sr _ =
     vdi_info'
   in
   begin match find_vdi_in_scan sr vdi_info'.vdi with
-  | None -> failwith (Printf.sprintf "SR.scan failed to find vdi: %s" (string_of_vdi_info vdi_info'))
-  | Some vdi_info'' -> vdi_info_assert_equal vdi_info' vdi_info''
+    | None -> failwith (Printf.sprintf "SR.scan failed to find vdi: %s" (string_of_vdi_info vdi_info'))
+    | Some vdi_info'' -> vdi_info_assert_equal vdi_info' vdi_info''
   end;
   SMClient.VDI.destroy ~dbg ~sr ~vdi:vdi_info'.vdi;
   begin match find_vdi_in_scan sr vdi_info'.vdi with
-  | Some vdi_info''' -> failwith (Printf.sprintf "SR.scan found a VDI that was just deleted: %s" (string_of_vdi_info vdi_info'''))
-  | None -> ()
+    | Some vdi_info''' -> failwith (Printf.sprintf "SR.scan found a VDI that was just deleted: %s" (string_of_vdi_info vdi_info'''))
+    | None -> ()
   end
 
 let test_attach_activate url sr _ =

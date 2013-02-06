@@ -46,9 +46,9 @@ let convert_file file =
     let dir = Filename.dirname file in
     let base = Filename.basename file in
     begin match dir with
-    | "." -> Buffer.add_string b dir
-    | "/" -> ()
-    | _ -> loop dir
+      | "." -> Buffer.add_string b dir
+      | "/" -> ()
+      | _ -> loop dir
     end;
     Buffer.add_char b '/';
     Buffer.add_string b (try Glib.Convert.locale_to_utf8 base with _ -> base)
@@ -408,12 +408,12 @@ let _ =
       display_current true
 *)
 
-      |    "l" -> display_current true
+        |    "l" -> display_current true
 
-      | " " | "n" | "f" -> next None
-      | "p" | "b" -> prev None
-      | "q" -> Main.quit ()
-      (*
+        | " " | "n" | "f" -> next None
+        | "p" | "b" -> prev None
+        | "q" -> Main.quit ()
+        (*
       | "v" -> 
     (* liv visual shell *)
         let rec func = fun file typ ->
@@ -439,7 +439,7 @@ let _ =
       in
       ignore (new Livsh.livsh dirname func)
 *)
-      | _ -> () 
+        | _ -> () 
       end; false
     in
     ignore (window#event#connect#key_press ~callback: callback);

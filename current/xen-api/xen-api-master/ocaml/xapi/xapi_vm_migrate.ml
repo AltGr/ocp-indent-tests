@@ -535,8 +535,8 @@ let migrate_send'  ~__context ~vm ~dest ~live ~vdi_map ~vif_map ~options =
     | None ->
       TaskHelper.exn_if_cancelling ~__context;
       begin match e with
-      | Storage_interface.Backend_error(code, params) -> raise (Api_errors.Server_error(code, params))
-      | _ -> raise e
+        | Storage_interface.Backend_error(code, params) -> raise (Api_errors.Server_error(code, params))
+        | _ -> raise e
       end
 
 let assert_can_migrate  ~__context ~vm ~dest ~live ~vdi_map ~vif_map ~options =
@@ -553,12 +553,12 @@ let assert_can_migrate  ~__context ~vm ~dest ~live ~vdi_map ~vif_map ~options =
 
   (* Check that the VM has at most one snapshot, and that that snapshot is not a checkpoint. *)
   (match Db.VM.get_snapshots ~__context ~self:vm with
-  | [] -> ()
-  | [snapshot] ->
-    if (Db.VM.get_power_state ~__context ~self:snapshot) = `Suspended then
-      raise (Api_errors.Server_error (Api_errors.vm_has_checkpoint, [Ref.string_of vm]))
-  | _ ->
-    raise (Api_errors.Server_error (Api_errors.vm_has_too_many_snapshots, [Ref.string_of vm])));
+    | [] -> ()
+    | [snapshot] ->
+      if (Db.VM.get_power_state ~__context ~self:snapshot) = `Suspended then
+        raise (Api_errors.Server_error (Api_errors.vm_has_checkpoint, [Ref.string_of vm]))
+    | _ ->
+      raise (Api_errors.Server_error (Api_errors.vm_has_too_many_snapshots, [Ref.string_of vm])));
 
   let migration_type =
     try
@@ -671,11 +671,11 @@ let handler req fd _ =
           let path = Filename.concat Fhs.vardir "xenopsd.forwarded" in
           let response = Xapi_services.hand_over_connection req fd path in
           begin match response with
-          | Some task ->
-            let open Xenops_client in
-            task |> wait_for_task dbg |> success_task dbg |> ignore
-          | None ->
-            debug "We did not get a task id to wait for!!"
+            | Some task ->
+              let open Xenops_client in
+              task |> wait_for_task dbg |> success_task dbg |> ignore
+            | None ->
+              debug "We did not get a task id to wait for!!"
           end;
           Xapi_xenops.set_resident_on ~__context ~self:vm
         )

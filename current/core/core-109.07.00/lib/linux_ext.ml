@@ -128,8 +128,8 @@ module Epoll_flags(Flag_values : sig
         <:sexp_of< string list * [ `unrecognized_bits of string ] >>
           (flag_names,
            `unrecognized_bits (match to_int leftover with
-           | None -> to_string leftover
-           | Some i -> sprintf "0x%x" i))
+             | None -> to_string leftover
+             | Some i -> sprintf "0x%x" i))
   ;;
 
 end
@@ -326,10 +326,10 @@ let cores =
       |! List.fold_left ~init:0 ~f:(fun count line ->
         count +
           (match Core_string.lsplit2 ~on:':' line with
-          | None -> 0
-          | Some (label, _) ->
-            if Core_string.(=) (Core_string.rstrip label) "processor" then 1
-            else 0))
+            | None -> 0
+            | Some (label, _) ->
+              if Core_string.(=) (Core_string.rstrip label) "processor" then 1
+              else 0))
     in
     if num_cores > 0 then num_cores
     else failwith "Linux_ext.cores: failed to parse /proc/cpuinfo")
@@ -628,22 +628,22 @@ TEST_MODULE = struct
       Epoll.set epset sock2 Flags.in_;
       let _sent = send sock2 "TEST" ~port:7070 in
       begin match Epoll.wait epset ~timeout:(`After timeout) with
-      | `Timeout -> assert false
-      | `Ok ->
-        let ready =
-          Epoll.fold_ready epset ~init:[] ~f:(fun ac fd flags ->
-            if flags = Flags.in_ then fd :: ac else ac)
-        in
-        (* Explanation of the test:
-           1) I create two udp sockets, sock1 listening on 7070 and sock2, on 7071
-           2) These two sockets are both added to epoll for read notification
-           3) I send a packet, _using_ sock2 to sock1 (who is listening on 7070)
-           4) epoll_wait should return, with [ sock1 ] ready to be read.
-        *)
-        match ready with
-        | [ sock ] when sock = sock1 -> ()
-        | [_] -> failwith  "wrong socket is ready"
-        | xs  -> failwithf "%d sockets are ready" (List.length xs) ()
+        | `Timeout -> assert false
+        | `Ok ->
+          let ready =
+            Epoll.fold_ready epset ~init:[] ~f:(fun ac fd flags ->
+              if flags = Flags.in_ then fd :: ac else ac)
+          in
+          (* Explanation of the test:
+             1) I create two udp sockets, sock1 listening on 7070 and sock2, on 7071
+             2) These two sockets are both added to epoll for read notification
+             3) I send a packet, _using_ sock2 to sock1 (who is listening on 7070)
+             4) epoll_wait should return, with [ sock1 ] ready to be read.
+          *)
+          match ready with
+          | [ sock ] when sock = sock1 -> ()
+          | [_] -> failwith  "wrong socket is ready"
+          | xs  -> failwithf "%d sockets are ready" (List.length xs) ()
       end)
   ;;
 end

@@ -125,8 +125,8 @@ let string_of_device (x: device) =
 let device_of_backend (backend: endpoint) (domu: Xenctrl.domid) = 
   let frontend = { domid = domu;
                    kind = (match backend.kind with
-                   | Vbd | Tap -> Vbd
-                   | _ -> backend.kind);
+                     | Vbd | Tap -> Vbd
+                     | _ -> backend.kind);
                    devid = backend.devid } in
   { backend = backend; frontend = frontend }
 

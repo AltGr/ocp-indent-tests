@@ -117,16 +117,16 @@ let of_xml input =
     | `El_end                   -> current_elt := ""; if Xmlm.eoi input then () else f ()
     | `Data dat                 ->
       begin match !current_elt with
-      | "name" -> message := {!message with API.message_name=dat}
-      | "priority" -> message := {!message with API.message_priority=Int64.of_string dat}
-      | "cls" -> message := {!message with API.message_cls=string_to_class dat}
-      | "obj_uuid" -> message := {!message with API.message_obj_uuid=dat}
-      | "timestamp" -> message := {!message with API.message_timestamp=Date.of_string dat}
-      | "uuid" -> message := {!message with API.message_uuid=dat}
-      | "body" -> message := {!message with API.message_body=dat}
-      | "generation" -> gen := Int64.of_string dat;
-      | "ref" -> _ref := dat
-      | _ -> failwith "Bad XML!"
+        | "name" -> message := {!message with API.message_name=dat}
+        | "priority" -> message := {!message with API.message_priority=Int64.of_string dat}
+        | "cls" -> message := {!message with API.message_cls=string_to_class dat}
+        | "obj_uuid" -> message := {!message with API.message_obj_uuid=dat}
+        | "timestamp" -> message := {!message with API.message_timestamp=Date.of_string dat}
+        | "uuid" -> message := {!message with API.message_uuid=dat}
+        | "body" -> message := {!message with API.message_body=dat}
+        | "generation" -> gen := Int64.of_string dat;
+        | "ref" -> _ref := dat
+        | _ -> failwith "Bad XML!"
       end;
       f ()
     | `Dtd _ -> f ()
@@ -214,11 +214,11 @@ let symlinks _ref gen message basefilename =
 let check_uuid ~__context ~cls ~uuid =
   try
     (match cls with
-    | `VM -> ignore(Db.VM.get_by_uuid ~__context ~uuid)
-    | `Host -> ignore(Db.Host.get_by_uuid ~__context ~uuid)
-    | `SR -> ignore(Db.SR.get_by_uuid ~__context ~uuid)
-    | `Pool -> ignore(Db.Pool.get_by_uuid ~__context ~uuid)
-    | `VMPP -> ignore(Db.VMPP.get_by_uuid ~__context ~uuid)
+      | `VM -> ignore(Db.VM.get_by_uuid ~__context ~uuid)
+      | `Host -> ignore(Db.Host.get_by_uuid ~__context ~uuid)
+      | `SR -> ignore(Db.SR.get_by_uuid ~__context ~uuid)
+      | `Pool -> ignore(Db.Pool.get_by_uuid ~__context ~uuid)
+      | `VMPP -> ignore(Db.VMPP.get_by_uuid ~__context ~uuid)
     );
     true
   with _ ->

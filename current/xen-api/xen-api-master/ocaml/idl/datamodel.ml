@@ -271,8 +271,8 @@ let call ~name ?(doc="") ?(in_oss_since=Some "3.0.3") ?in_product_since ?interna
   let call_release =
     {
       internal = (match get_published lifecycle with 
-      | Some published -> get_product_releases published
-      | None -> ["closed"]);
+        | Some published -> get_product_releases published
+        | None -> ["closed"]);
       opensource = get_oss_releases in_oss_since;
       internal_deprecated_since = get_deprecated lifecycle;
     }
@@ -281,10 +281,10 @@ let call ~name ?(doc="") ?(in_oss_since=Some "3.0.3") ?in_product_since ?interna
     msg_name = name;
     msg_params =
       (match versioned_params with
-      | None ->
-        List.map (fun (ptype, pname, pdoc) -> {param_type=ptype; param_name=pname;
-                                               param_doc=pdoc; param_release=call_release; param_default=None}) params
-      | Some ps -> ps);
+        | None ->
+          List.map (fun (ptype, pname, pdoc) -> {param_type=ptype; param_name=pname;
+                                                 param_doc=pdoc; param_release=call_release; param_default=None}) params
+        | Some ps -> ps);
     msg_result = result; msg_doc = doc;
     msg_session = List.mem `Session flags; msg_async = List.mem `Async flags;
     msg_db_only = db_only;
@@ -3014,8 +3014,8 @@ let field ?(in_oss_since = Some "3.0.3") ?in_product_since ?(internal_only = fal
   let release =
     {
       internal = (match get_published lifecycle with 
-      | Some published -> get_product_releases published
-      | None -> ["closed"]);
+        | Some published -> get_product_releases published
+        | None -> ["closed"]);
       opensource = get_oss_releases in_oss_since;
       internal_deprecated_since = get_deprecated lifecycle;
     }
@@ -3110,8 +3110,8 @@ let create_obj ?lifecycle ~in_oss_since ?in_product_since ?(internal_deprecated_
   let release =
     {
       internal = (match get_published lifecycle with 
-      | Some published -> get_product_releases published
-      | None -> ["closed"]);
+        | Some published -> get_product_releases published
+        | None -> ["closed"]);
       opensource = get_oss_releases in_oss_since;
       internal_deprecated_since = get_deprecated lifecycle;
     }

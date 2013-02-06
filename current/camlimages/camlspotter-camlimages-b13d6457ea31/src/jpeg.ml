@@ -80,27 +80,27 @@ let load_aux prog ic w h =
   in
   let img = Rgb24.create w h in
   begin match Rgb24.get_scanline_ptr img with 
-  | Some f ->
-    let load_once_at = max 1 (h / 10) in
-    let rec load_scanlines y =
-      if y >= h then ()
-      else begin
-        let (string, off), at_most = f y in
-        let lines_read = min load_once_at at_most in
-        read_scanlines ic string off lines_read;
-        prog y;
-        load_scanlines (y + lines_read)
-      end
-    in
-    load_scanlines 0
-  | None -> 
-    (* CR jfuruse: check overflow *)
-    let scanline = String.create (w * 3) in
-    for y = 0 to h - 1 do
-      read_scanline ic scanline 0;
-      Rgb24.set_scanline img y scanline;
-      prog y
-    done
+    | Some f ->
+      let load_once_at = max 1 (h / 10) in
+      let rec load_scanlines y =
+        if y >= h then ()
+        else begin
+          let (string, off), at_most = f y in
+          let lines_read = min load_once_at at_most in
+          read_scanlines ic string off lines_read;
+          prog y;
+          load_scanlines (y + lines_read)
+        end
+      in
+      load_scanlines 0
+    | None -> 
+      (* CR jfuruse: check overflow *)
+      let scanline = String.create (w * 3) in
+      for y = 0 to h - 1 do
+        read_scanline ic scanline 0;
+        Rgb24.set_scanline img y scanline;
+        prog y
+      done
   end;
   close_in ic;
   Rgb24 img;;

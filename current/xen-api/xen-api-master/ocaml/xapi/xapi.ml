@@ -353,12 +353,12 @@ let wait_for_management_ip_address ~__context =
   Xapi_host.set_emergency_mode_error Api_errors.host_still_booting [];
   (* Check whether I am my own slave. *)
   begin match Pool_role.get_role () with
-  | Pool_role.Slave masters_ip ->
-    if masters_ip = "127.0.0.1" || masters_ip = ip then begin
-      debug "Realised that I am my own slave!";
-      Xapi_host.set_emergency_mode_error Api_errors.host_its_own_slave [];
-    end
-  | Pool_role.Master | Pool_role.Broken -> ()
+    | Pool_role.Slave masters_ip ->
+      if masters_ip = "127.0.0.1" || masters_ip = ip then begin
+        debug "Realised that I am my own slave!";
+        Xapi_host.set_emergency_mode_error Api_errors.host_its_own_slave [];
+      end
+    | Pool_role.Master | Pool_role.Broken -> ()
   end;
   ip
 
@@ -752,8 +752,8 @@ let server_init() =
                         ", host_external_auth_service_name="^service_name^
                         ", error="^ (match !last_error with None -> "timeout" | Some e ->
                         (match e with 
-                        | Auth_signature.Auth_service_error (errtag,errmsg) -> errmsg (* this is the expected error msg *)
-                        | e ->  (ExnHelper.string_of_exn e) (* unknown error msg *)
+                          | Auth_signature.Auth_service_error (errtag,errmsg) -> errmsg (* this is the expected error msg *)
+                          | e ->  (ExnHelper.string_of_exn e) (* unknown error msg *)
                         ))
                     );
                   ));
@@ -830,61 +830,61 @@ let server_init() =
         "Remote requests", [Startup.OnThread], Remote_requests.handle_requests;
       ];
       begin match Pool_role.get_role () with
-      | Pool_role.Master ->
-        ()
-      | Pool_role.Broken ->
-        info "This node is broken; moving straight to emergency mode";
-        Xapi_host.set_emergency_mode_error Api_errors.host_broken [];
+        | Pool_role.Master ->
+          ()
+        | Pool_role.Broken ->
+          info "This node is broken; moving straight to emergency mode";
+          Xapi_host.set_emergency_mode_error Api_errors.host_broken [];
 
-        (* XXX: consider not restarting here *)
-        server_run_in_emergency_mode ()
-      | Pool_role.Slave _ ->
-        info "Running in 'Pool Slave' mode";
-        (* Set emergency mode until we actually talk to the master *)
-        Xapi_globs.slave_emergency_mode := true;
-        (* signal the init script that it should succeed even though we're bust *)
-        Helpers.touch_file !Xapi_globs.ready_file;
+          (* XXX: consider not restarting here *)
+          server_run_in_emergency_mode ()
+        | Pool_role.Slave _ ->
+          info "Running in 'Pool Slave' mode";
+          (* Set emergency mode until we actually talk to the master *)
+          Xapi_globs.slave_emergency_mode := true;
+          (* signal the init script that it should succeed even though we're bust *)
+          Helpers.touch_file !Xapi_globs.ready_file;
 
-        (* Keep trying to log into master *)
-        let finished = ref false in
-        while not(!finished) do
-          (* Grab the management IP address (wait forever for it if necessary) *)
-          let ip = wait_for_management_ip_address ~__context in
+          (* Keep trying to log into master *)
+          let finished = ref false in
+          while not(!finished) do
+            (* Grab the management IP address (wait forever for it if necessary) *)
+            let ip = wait_for_management_ip_address ~__context in
 
-          debug "Attempting to communicate with master";
-          (* Try to say hello to the pool *)
-          begin match attempt_pool_hello ip with
-          | None -> finished := true
-          | Some Temporary ->
-            debug "I think the error is a temporary one, retrying in 5s";
-            Thread.delay 5.;
-          | Some Permanent ->
-            error "Permanent error in Pool.hello, will retry after %.0fs just in case" !Xapi_globs.permanent_master_failure_retry_interval;
-            Thread.delay !Xapi_globs.permanent_master_failure_retry_interval
+            debug "Attempting to communicate with master";
+            (* Try to say hello to the pool *)
+            begin match attempt_pool_hello ip with
+              | None -> finished := true
+              | Some Temporary ->
+                debug "I think the error is a temporary one, retrying in 5s";
+                Thread.delay 5.;
+              | Some Permanent ->
+                error "Permanent error in Pool.hello, will retry after %.0fs just in case" !Xapi_globs.permanent_master_failure_retry_interval;
+                Thread.delay !Xapi_globs.permanent_master_failure_retry_interval
+            end;
+          done;
+          debug "Startup successful";
+          Xapi_globs.slave_emergency_mode := false;
+          Master_connection.connection_timeout := initial_connection_timeout;
+
+          begin
+            try
+              (* We can't tolerate an exception in db synchronization so fall back into emergency mode
+                 if this happens and try again later.. *)
+              Master_connection.restart_on_connection_timeout := false;
+              Master_connection.connection_timeout := 10.; (* give up retrying after 10s *)
+              Db_cache_impl.initialise ();
+              Sm.register ();
+              Dbsync.setup ()
+            with e ->
+              begin
+                debug "Failure in slave dbsync; slave will pause and then restart to try again. Entering emergency mode.";
+                server_run_in_emergency_mode()
+              end
           end;
-        done;
-        debug "Startup successful";
-        Xapi_globs.slave_emergency_mode := false;
-        Master_connection.connection_timeout := initial_connection_timeout;
-
-        begin
-          try
-            (* We can't tolerate an exception in db synchronization so fall back into emergency mode
-               if this happens and try again later.. *)
-            Master_connection.restart_on_connection_timeout := false;
-            Master_connection.connection_timeout := 10.; (* give up retrying after 10s *)
-            Db_cache_impl.initialise ();
-            Sm.register ();
-            Dbsync.setup ()
-          with e ->
-            begin
-              debug "Failure in slave dbsync; slave will pause and then restart to try again. Entering emergency mode.";
-              server_run_in_emergency_mode()
-            end
-        end;
-        Master_connection.connection_timeout := !Xapi_globs.master_connection_retry_timeout;
-        Master_connection.restart_on_connection_timeout := true;
-        Master_connection.on_database_connection_established := (fun () -> on_master_restart ~__context);
+          Master_connection.connection_timeout := !Xapi_globs.master_connection_retry_timeout;
+          Master_connection.restart_on_connection_timeout := true;
+          Master_connection.on_database_connection_established := (fun () -> on_master_restart ~__context);
       end;
 
       Startup.run ~__context [

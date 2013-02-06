@@ -32,9 +32,9 @@ let make (x: spec) : t =
     if partition < 0 || partition > partition_limit 
     then failwith (Printf.sprintf "%s partition number out of range 0 <= %d <= %d" description partition partition_limit) in
   begin match x with
-  | Xen, disk, partition -> assert_in_range "xen" max_xen (disk, partition)
-  | Scsi, disk, partition -> assert_in_range "scsi" max_scsi (disk, partition)
-  | Ide, disk, partition -> assert_in_range "ide" max_ide (disk, partition)
+    | Xen, disk, partition -> assert_in_range "xen" max_xen (disk, partition)
+    | Scsi, disk, partition -> assert_in_range "scsi" max_scsi (disk, partition)
+    | Ide, disk, partition -> assert_in_range "ide" max_ide (disk, partition)
   end;
   x
 
@@ -60,13 +60,13 @@ let of_xenstore_int x =
   if (x && (1 <| 28)) <> 0
   then Xen, (x >| 8) && ((1 <| 20) - 1), x && ((1 <| 8) - 1)
   else match x >| 8 with
-  | 202 -> Xen, (x >| 4) && ((1 <| 4) - 1), x && ((1 <| 4) - 1)
-  | 8   -> Scsi, (x >| 4) && ((1 <| 4) - 1), x && ((1 <| 4) - 1)
-  | n   ->
-    let idx = snd(List.fold_left (fun (i, res) e -> i+1, if e = n then i else res) (0, -1) deprecated_ide_table) in
-    if idx < 0
-    then failwith (Printf.sprintf "Unknown device number: %d" x);
-    Ide, ((x >| 6) && ((1 <| 2) - 1)) + idx * 2,  x && ((1 <| 6) - 1)
+    | 202 -> Xen, (x >| 4) && ((1 <| 4) - 1), x && ((1 <| 4) - 1)
+    | 8   -> Scsi, (x >| 4) && ((1 <| 4) - 1), x && ((1 <| 4) - 1)
+    | n   ->
+      let idx = snd(List.fold_left (fun (i, res) e -> i+1, if e = n then i else res) (0, -1) deprecated_ide_table) in
+      if idx < 0
+      then failwith (Printf.sprintf "Unknown device number: %d" x);
+      Ide, ((x >| 6) && ((1 <| 2) - 1)) + idx * 2,  x && ((1 <| 6) - 1)
 
 type xenstore_key = int
 

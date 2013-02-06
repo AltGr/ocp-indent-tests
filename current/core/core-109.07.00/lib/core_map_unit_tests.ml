@@ -169,15 +169,15 @@ module Unit_tests
           | 1 -> add_or_remove ~prefer:`Remove
           | 2 ->
             begin match caml_choose caml_map with
-            | None ->
-              assert (Map.is_empty core_map);
-              assert (Map.length core_map = 0)
-            | Some (key, data) ->
-              assert (Caml_map.find key caml_map = data);
-              assert (not (Map.is_empty core_map));
-              assert (Map.length core_map = Caml_map.cardinal caml_map);
-              assert (Map.mem core_map key);
-              assert (Map.find core_map key = Some data)
+              | None ->
+                assert (Map.is_empty core_map);
+                assert (Map.length core_map = 0)
+              | Some (key, data) ->
+                assert (Caml_map.find key caml_map = data);
+                assert (not (Map.is_empty core_map));
+                assert (Map.length core_map = Caml_map.cardinal caml_map);
+                assert (Map.mem core_map key);
+                assert (Map.find core_map key = Some data)
             end;
             old_values
           | 3 ->

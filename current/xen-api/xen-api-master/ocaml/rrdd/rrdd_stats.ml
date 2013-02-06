@@ -82,13 +82,13 @@ let meminfo () =
   and swap_total = ref (-1)
   and swap_free = ref (-1) in
   List.iter (fun line -> match split_colon line with
-  | ["MemTotal:"; x; "kB"] -> total := int_of_string x
-  | ["MemFree:"; x; "kB"] -> free := int_of_string x
-  | ["Buffers:"; x; "kB"] -> buffered := int_of_string x
-  | ["Cached:"; x; "kB"] -> cached := int_of_string x
-  | ["SwapTotal:"; x; "kB"] -> swap_total := int_of_string x
-  | ["SwapFree:"; x; "kB"] -> swap_free := int_of_string x
-  | _ -> ()
+    | ["MemTotal:"; x; "kB"] -> total := int_of_string x
+    | ["MemFree:"; x; "kB"] -> free := int_of_string x
+    | ["Buffers:"; x; "kB"] -> buffered := int_of_string x
+    | ["Cached:"; x; "kB"] -> cached := int_of_string x
+    | ["SwapTotal:"; x; "kB"] -> swap_total := int_of_string x
+    | ["SwapFree:"; x; "kB"] -> swap_free := int_of_string x
+    | _ -> ()
   ) (String.split '\n' all);
   {total = !total; free = !free; buffered = !buffered;
    cached = !cached; swap_total = !swap_total; swap_free = !swap_free}
@@ -110,16 +110,16 @@ let process_memory_info_of_pid (pid : int) : process_memory_info =
   and exe = ref (-1)
   and lib = ref (-1) in
   List.iter (fun line -> match split_colon line with
-  | ["VmPeak:"; x; "kB"] -> peak := int_of_string x
-  | ["VmSize:"; x; "kB"] -> size := int_of_string x
-  | ["VmLck:"; x; "kB"] -> locked := int_of_string x
-  | ["VmHWM:"; x; "kB"] -> hwm := int_of_string x
-  | ["VmRSS:"; x; "kB"] -> rss := int_of_string x
-  | ["VmData:"; x; "kB"] -> data := int_of_string x
-  | ["VmStk:"; x; "kB"] -> stack := int_of_string x
-  | ["VmExe:"; x; "kB"] -> exe := int_of_string x
-  | ["VmLib:"; x; "kB"] -> lib := int_of_string x
-  | _ -> ()
+    | ["VmPeak:"; x; "kB"] -> peak := int_of_string x
+    | ["VmSize:"; x; "kB"] -> size := int_of_string x
+    | ["VmLck:"; x; "kB"] -> locked := int_of_string x
+    | ["VmHWM:"; x; "kB"] -> hwm := int_of_string x
+    | ["VmRSS:"; x; "kB"] -> rss := int_of_string x
+    | ["VmData:"; x; "kB"] -> data := int_of_string x
+    | ["VmStk:"; x; "kB"] -> stack := int_of_string x
+    | ["VmExe:"; x; "kB"] -> exe := int_of_string x
+    | ["VmLib:"; x; "kB"] -> lib := int_of_string x
+    | _ -> ()
   ) (String.split '\n' all);
   {peak = !peak; size = !size; locked = !locked; hwm = !hwm;
    rss = !rss; data = !data; stack = !stack; exe = !exe; lib = !lib}

@@ -115,22 +115,22 @@ let to_rgb24 ?failsafe t =
   let rgb24 = Rgb24.create t.width t.height in
   let cmapsize = Array.length t.colormap.map in
   begin match failsafe with
-  | Some failsafecolor ->
-    for y = 0 to t.height - 1 do
-      for x = 0 to t.width - 1 do
-        let idx = unsafe_get t x y in
-        let rgb =
-          if idx < 0 || idx >= cmapsize then failsafecolor
-          else t.colormap.map.(idx) in
-        Rgb24.unsafe_set rgb24 x y rgb
+    | Some failsafecolor ->
+      for y = 0 to t.height - 1 do
+        for x = 0 to t.width - 1 do
+          let idx = unsafe_get t x y in
+          let rgb =
+            if idx < 0 || idx >= cmapsize then failsafecolor
+            else t.colormap.map.(idx) in
+          Rgb24.unsafe_set rgb24 x y rgb
+        done
       done
-    done
-  | None ->
-    for y = 0 to t.height - 1 do
-      for x = 0 to t.width - 1 do
-        Rgb24.unsafe_set rgb24 x y (unsafe_get_color t x y)
+    | None ->
+      for y = 0 to t.height - 1 do
+        for x = 0 to t.width - 1 do
+          Rgb24.unsafe_set rgb24 x y (unsafe_get_color t x y)
+        done
       done
-    done
   end;
   rgb24;;
 
@@ -139,26 +139,26 @@ let to_rgba32 ?failsafe t =
   let cmapsize = Array.length t.colormap.map in
 
   begin match failsafe with
-  | Some failsafecolor ->
-    for y = 0 to t.height - 1 do
-      for x = 0 to t.width - 1 do
-        let rgba =
+    | Some failsafecolor ->
+      for y = 0 to t.height - 1 do
+        for x = 0 to t.width - 1 do
+          let rgba =
+            let index = unsafe_get t x y in
+            if index < 0 || index >= cmapsize then failsafecolor
+            else
+              { color = t.colormap.map.(index);
+                alpha = if index = t.transparent then 0 else 255; } in
+          Rgba32.unsafe_set rgba32 x y rgba
+        done
+      done
+    | None ->
+      for y = 0 to t.height - 1 do
+        for x = 0 to t.width - 1 do
           let index = unsafe_get t x y in
-          if index < 0 || index >= cmapsize then failsafecolor
-          else
+          Rgba32.unsafe_set rgba32 x y
             { color = t.colormap.map.(index);
-              alpha = if index = t.transparent then 0 else 255; } in
-        Rgba32.unsafe_set rgba32 x y rgba
+              alpha = if index = t.transparent then 0 else 255 }
+        done
       done
-    done
-  | None ->
-    for y = 0 to t.height - 1 do
-      for x = 0 to t.width - 1 do
-        let index = unsafe_get t x y in
-        Rgba32.unsafe_set rgba32 x y
-          { color = t.colormap.map.(index);
-            alpha = if index = t.transparent then 0 else 255 }
-      done
-    done
   end;
   rgba32;;

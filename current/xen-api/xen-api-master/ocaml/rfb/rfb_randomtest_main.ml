@@ -20,8 +20,8 @@ let _ =
   Unix.handle_unix_error (Unix.setsockopt s Unix.SO_REUSEADDR) true;
   Unix.handle_unix_error (Unix.bind s) (Unix.ADDR_INET (Unix.inet_addr_any, port));
   let port = begin match Unix.getsockname s with
-  | Unix.ADDR_INET(_, port) -> port
-  | _ -> failwith "Failed to discover local port"
+    | Unix.ADDR_INET(_, port) -> port
+    | _ -> failwith "Failed to discover local port"
   end in
   Printf.printf "Listening on local port %d\n" port; flush stdout;
   Unix.handle_unix_error (Unix.listen s) 5;

@@ -16,9 +16,9 @@ let () =
       let (pid, status) = Std_unix.wait () in
       printf "worker died! %s\n"
         (match status with
-        | Std_unix.WEXITED s -> (string_of_int pid) ^ ": " ^ (string_of_int s)
-        | Std_unix.WSIGNALED s -> (string_of_int pid) ^ ": " ^ (string_of_int s)
-        | _ -> ""))
+          | Std_unix.WEXITED s -> (string_of_int pid) ^ ": " ^ (string_of_int s)
+          | Std_unix.WSIGNALED s -> (string_of_int pid) ^ ": " ^ (string_of_int s)
+          | _ -> ""))
   in
   Stream.iter out ~f:(fun x ->
     printf "the time is: %s\n" (Time.to_string x));

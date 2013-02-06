@@ -541,29 +541,29 @@ let change_host_free_memory ?fistpoints io required_mem_kib success_condition =
     IntMap.iter io.domain_setmaxmem maxmems;
 
     begin match result with
-    | Success ->
-      if io.verbose
-      then debug "Success: Host free memory = %Ld KiB" required_mem_kib;
-      finished := true
-    | Failed [] ->
-      if io.verbose
-      then debug "Failed to free %Ld KiB of memory: operation impossible within current dynamic_min limits of balloonable domains" required_mem_kib;
-      raise (Cannot_free_this_much_memory (required_mem_kib, host.free_mem_kib));
-    | Failed [ 0 ] ->
-      (* CA-75568: dom0 is changing its memory allocation without being asked *)
-      if io.verbose
-      then error "Failed to free %Ld KiB of memory: domain 0 has failed to meet its memory target" required_mem_kib;
-      raise (Cannot_free_this_much_memory (required_mem_kib, host.free_mem_kib));
-    | Failed domids ->
-      let s = String.concat ", " (List.map string_of_int domids) in
-      if io.verbose 
-      then debug "Failed to free %Ld KiB of memory: the following domains have failed to meet their targets: [ %s ]"
-          required_mem_kib s;
-      raise (Domains_refused_to_cooperate domids)
-    | AdjustTargets actions ->
-      (* Set all the balloon targets *)
-      List.iter io.execute_action actions;
-      io.wait 1.
+      | Success ->
+        if io.verbose
+        then debug "Success: Host free memory = %Ld KiB" required_mem_kib;
+        finished := true
+      | Failed [] ->
+        if io.verbose
+        then debug "Failed to free %Ld KiB of memory: operation impossible within current dynamic_min limits of balloonable domains" required_mem_kib;
+        raise (Cannot_free_this_much_memory (required_mem_kib, host.free_mem_kib));
+      | Failed [ 0 ] ->
+        (* CA-75568: dom0 is changing its memory allocation without being asked *)
+        if io.verbose
+        then error "Failed to free %Ld KiB of memory: domain 0 has failed to meet its memory target" required_mem_kib;
+        raise (Cannot_free_this_much_memory (required_mem_kib, host.free_mem_kib));
+      | Failed domids ->
+        let s = String.concat ", " (List.map string_of_int domids) in
+        if io.verbose 
+        then debug "Failed to free %Ld KiB of memory: the following domains have failed to meet their targets: [ %s ]"
+            required_mem_kib s;
+        raise (Domains_refused_to_cooperate domids)
+      | AdjustTargets actions ->
+        (* Set all the balloon targets *)
+        List.iter io.execute_action actions;
+        io.wait 1.
     end
   done
 

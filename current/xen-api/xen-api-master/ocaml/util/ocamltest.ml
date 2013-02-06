@@ -35,11 +35,11 @@ let assert_equal ?to_string x y =
   if not (x = y) then raise
       (Fail
          (match to_string with
-         | None ->
-           "found different values where equal values were expected."
-         | Some to_string -> sprintf
-                               "found different values where equal values were expected: %s != %s."
-                               (to_string x) (to_string y)
+           | None ->
+             "found different values where equal values were expected."
+           | Some to_string -> sprintf
+                                 "found different values where equal values were expected: %s != %s."
+                                 (to_string x) (to_string y)
          )
       )
 
@@ -308,8 +308,8 @@ let make_command_line_interface test =
     begin
       let {passed = passed; failed = failed; skipped = skipped} = run
           (match !name with
-          | Some name -> (List.assoc name index)
-          | None -> test)
+            | Some name -> (List.assoc name index)
+            | None -> test)
       in
       flush stdout;
       exit (if failed = 0 then 0 else 1)

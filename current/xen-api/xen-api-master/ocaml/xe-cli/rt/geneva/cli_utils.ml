@@ -68,8 +68,8 @@ let cli_with_pwspec is_offhost cmd params pwspec =
         " -h "^(!host)
         ^" "
         ^(match pwspec with
-          Password s -> "-u "^user^" -pw "^s
-        | PasswordFile s -> "-pwf "^s)
+            Password s -> "-u "^user^" -pw "^s
+          | PasswordFile s -> "-pwf "^s)
       else " -u "^user)
     ^" "^param_str in
   print_line ("Executing: "^cli_base_string);

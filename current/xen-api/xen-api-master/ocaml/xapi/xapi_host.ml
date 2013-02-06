@@ -84,15 +84,15 @@ let bugreport_upload ~__context ~host ~url ~options =
     debug "%s failed with stdout=[%s] stderr=[%s]" cmd stdout stderr;
     (* Attempt to interpret curl's exit code (from curl(1)) *)
     begin match status with
-    | Unix.WEXITED (1 | 3 | 4) ->
-      failwith "URL not recognised"
-    | Unix.WEXITED (5 | 6) ->
-      failwith "Failed to resolve proxy or host"
-    | Unix.WEXITED 7 ->
-      failwith "Failed to connect to host"
-    | Unix.WEXITED 9 ->
-      failwith "FTP access denied"
-    | _ -> raise e
+      | Unix.WEXITED (1 | 3 | 4) ->
+        failwith "URL not recognised"
+      | Unix.WEXITED (5 | 6) ->
+        failwith "Failed to resolve proxy or host"
+      | Unix.WEXITED 7 ->
+        failwith "Failed to connect to host"
+      | Unix.WEXITED 9 ->
+        failwith "FTP access denied"
+      | _ -> raise e
     end
 
 (** Check that a) there are no running VMs present on the host, b) there are no VBDs currently
@@ -112,10 +112,10 @@ let assert_bacon_mode ~__context ~host =
         Eq (Field "power_state", Literal "Running"))) in
   (* We always expect a control domain to be resident on a host *)
   (match List.filter (fun vm -> not (Db.VM.get_is_control_domain ~__context ~self:vm)) vms with
-  | [] -> ()
-  | guest_vms ->
-    let vm_data = [selfref; "vm"; Ref.string_of (List.hd guest_vms)] in
-    raise (Api_errors.Server_error (Api_errors.host_in_use, vm_data)));
+    | [] -> ()
+    | guest_vms ->
+      let vm_data = [selfref; "vm"; Ref.string_of (List.hd guest_vms)] in
+      raise (Api_errors.Server_error (Api_errors.host_in_use, vm_data)));
   debug "Bacon test: VMs OK - %d running VMs" (List.length vms);
   let controldomain = List.find (fun vm -> Db.VM.get_resident_on ~__context ~self:vm = host &&
                                            Db.VM.get_is_control_domain ~__context ~self:vm) (Db.VM.get_all ~__context) in
@@ -765,17 +765,17 @@ let management_reconfigure ~__context ~pif =
   let primary_address_type = Db.PIF.get_primary_address_type ~__context ~self:pif in
   let mgmt_pif_option = try Some (get_management_interface ~__context ~host:(Helpers.get_localhost ~__context)) with _ -> None in
   (match mgmt_pif_option with
-  | Some mgmt_pif -> (
-      let mgmt_address_type = Db.PIF.get_primary_address_type ~__context ~self:mgmt_pif in
-      if (primary_address_type <> mgmt_address_type) then
-        raise (Api_errors.Server_error(Api_errors.pif_incompatible_primary_address_type, [ ]));
+    | Some mgmt_pif -> (
+        let mgmt_address_type = Db.PIF.get_primary_address_type ~__context ~self:mgmt_pif in
+        if (primary_address_type <> mgmt_address_type) then
+          raise (Api_errors.Server_error(Api_errors.pif_incompatible_primary_address_type, [ ]));
 
-      if primary_address_type==`IPv4 && Db.PIF.get_ip_configuration_mode ~__context ~self:pif = `None then
-        raise (Api_errors.Server_error(Api_errors.pif_has_no_network_configuration, []))
-      else if primary_address_type==`IPv6 && Db.PIF.get_ipv6_configuration_mode ~__context ~self:pif = `None then
-        raise (Api_errors.Server_error(Api_errors.pif_has_no_v6_network_configuration, []))
-    )
-  | None -> ());
+        if primary_address_type==`IPv4 && Db.PIF.get_ip_configuration_mode ~__context ~self:pif = `None then
+          raise (Api_errors.Server_error(Api_errors.pif_has_no_network_configuration, []))
+        else if primary_address_type==`IPv6 && Db.PIF.get_ipv6_configuration_mode ~__context ~self:pif = `None then
+          raise (Api_errors.Server_error(Api_errors.pif_has_no_v6_network_configuration, []))
+      )
+    | None -> ());
 
   if Db.PIF.get_management ~__context ~self:pif
   then debug "PIF %s is already marked as a management PIF; taking no action" (Ref.string_of pif)

@@ -141,15 +141,15 @@ let parse_args =
   let set_keyword (k,v) =
     try
       (match k with
-      | "server" -> xapiserver := v
-      | "port" -> xapiport := Some (parse_port v)
-      | "username" -> xapiuname := v
-      | "password" -> xapipword := v
-      | "passwordfile" -> xapipasswordfile := v
-      | "nossl"   -> xeusessl := not(bool_of_string v)
-      | "debug" -> xedebug := (try bool_of_string v with _ -> false)
-      | "debugonfail" -> xedebugonfail := (try bool_of_string v with _ -> false)
-      | _ -> raise Not_found);
+        | "server" -> xapiserver := v
+        | "port" -> xapiport := Some (parse_port v)
+        | "username" -> xapiuname := v
+        | "password" -> xapipword := v
+        | "passwordfile" -> xapipasswordfile := v
+        | "nossl"   -> xeusessl := not(bool_of_string v)
+        | "debug" -> xedebug := (try bool_of_string v with _ -> false)
+        | "debugonfail" -> xedebugonfail := (try bool_of_string v with _ -> false)
+        | _ -> raise Not_found);
       true
     with Not_found -> false in
 
@@ -315,20 +315,20 @@ let main_loop ifd ofd =
        of Stunnel every now and then, for better debug/dignosis.
     *)
     while (match Unix.select [ifd] [] [] 5.0 with
-    | _ :: _, _, _ -> false
-    | _ ->
-      match !stunnel_process with
-      | Some { Stunnel.pid = Stunnel.FEFork pid } -> begin
-          match Forkhelpers.waitpid_nohang pid with
-          | 0, _ -> true
-          | i, e -> raise (Stunnel_exit (i, e))
-        end
-      | Some {Stunnel.pid = Stunnel.StdFork pid} -> begin
-          match Unix.waitpid [Unix.WNOHANG] pid with
-          | 0, _ -> true
-          | i, e -> raise (Stunnel_exit (i, e))
-        end
-      | _ -> true) do ()
+      | _ :: _, _, _ -> false
+      | _ ->
+        match !stunnel_process with
+        | Some { Stunnel.pid = Stunnel.FEFork pid } -> begin
+            match Forkhelpers.waitpid_nohang pid with
+            | 0, _ -> true
+            | i, e -> raise (Stunnel_exit (i, e))
+          end
+        | Some {Stunnel.pid = Stunnel.StdFork pid} -> begin
+            match Unix.waitpid [Unix.WNOHANG] pid with
+            | 0, _ -> true
+            | i, e -> raise (Stunnel_exit (i, e))
+          end
+        | _ -> true) do ()
     done;
     let cmd =
       try unmarshal ifd
@@ -379,84 +379,84 @@ let main_loop ifd ofd =
         let _ = read_rest_of_headers ic in
         (* Get the result header immediately *)
         begin match http_response_code resultline with
-        | 200 ->
-          if !tc_save = None then begin
-            (* Remember the current terminal state so we can restore it *)
-            let tc = Unix.tcgetattr Unix.stdin in
-            (* Switch into a raw mode, passing through stuff like Control + C *)
-            let tc' = {
-              tc with
-              Unix.c_ignbrk = false;
-              Unix.c_brkint = false;
-              Unix.c_parmrk = false;
-              Unix.c_istrip = false;
-              Unix.c_inlcr = false;
-              Unix.c_igncr = false;
-              Unix.c_icrnl = false;
-              Unix.c_ixon = false;
-              Unix.c_opost = false;
-              Unix.c_echo = false;
-              Unix.c_echonl = false;
-              Unix.c_icanon = false;
-              Unix.c_isig = false;
-              (* IEXTEN? *)
-              Unix.c_csize = 8;
-              Unix.c_parenb = false;
-              Unix.c_vmin = 0;
-              Unix.c_vtime = 0;
-            } in
-            Unix.tcsetattr Unix.stdin Unix.TCSANOW tc';
-            tc_save := Some tc
-          end;
-          let finished = ref false in
-          let last_heartbeat = ref (Unix.time ()) in
-          while not !finished do
-            if !buf_local_start <> !buf_local_end then begin
-              let b = Unix.write Unix.stdout buf_local
-                  !buf_local_start (!buf_local_end - !buf_local_start)
-              in
-              buf_local_start := !buf_local_start + b;
-              if !buf_local_start = !buf_local_end then
-                (buf_local_start := 0; buf_local_end := 0)
-            end
-            else if !buf_remote_start <> !buf_remote_end then begin
-              let b = Unix.write fd buf_remote !buf_remote_start
-                  (!buf_remote_end - !buf_remote_start) in
-              buf_remote_start := !buf_remote_start + b;
-              if !buf_remote_start = !buf_remote_end then
-                (buf_remote_start := 0; buf_remote_end := 0)
-            end
-            else if !final then finished := true
-            else begin
-              let r, _, _ =
-                Unix.select [Unix.stdin; fd] [] [] heartbeat_interval in
-              let now = Unix.time () in
-              if now  -. !last_heartbeat >= heartbeat_interval then begin
-                heartbeat_fun ();
-                last_heartbeat := now
-              end;
-              if List.mem Unix.stdin r then begin
-                let b = Unix.read Unix.stdin buf_remote
-                    !buf_remote_end (block - !buf_remote_end) in
-                let i = ref !buf_remote_end in
-                while !i < !buf_remote_end + b && Char.code buf_remote.[!i] <> 0x1d do incr i; done;
-                if !i < !buf_remote_end + b then final := true;
-                buf_remote_end := !i
-              end;
-              if List.mem fd r then begin
-                let b = Unix.read fd buf_local
-                    !buf_local_end (block - !buf_local_end) in
-                buf_local_end := !buf_local_end + b
+          | 200 ->
+            if !tc_save = None then begin
+              (* Remember the current terminal state so we can restore it *)
+              let tc = Unix.tcgetattr Unix.stdin in
+              (* Switch into a raw mode, passing through stuff like Control + C *)
+              let tc' = {
+                tc with
+                Unix.c_ignbrk = false;
+                Unix.c_brkint = false;
+                Unix.c_parmrk = false;
+                Unix.c_istrip = false;
+                Unix.c_inlcr = false;
+                Unix.c_igncr = false;
+                Unix.c_icrnl = false;
+                Unix.c_ixon = false;
+                Unix.c_opost = false;
+                Unix.c_echo = false;
+                Unix.c_echonl = false;
+                Unix.c_icanon = false;
+                Unix.c_isig = false;
+                (* IEXTEN? *)
+                Unix.c_csize = 8;
+                Unix.c_parenb = false;
+                Unix.c_vmin = 0;
+                Unix.c_vtime = 0;
+              } in
+              Unix.tcsetattr Unix.stdin Unix.TCSANOW tc';
+              tc_save := Some tc
+            end;
+            let finished = ref false in
+            let last_heartbeat = ref (Unix.time ()) in
+            while not !finished do
+              if !buf_local_start <> !buf_local_end then begin
+                let b = Unix.write Unix.stdout buf_local
+                    !buf_local_start (!buf_local_end - !buf_local_start)
+                in
+                buf_local_start := !buf_local_start + b;
+                if !buf_local_start = !buf_local_end then
+                  (buf_local_start := 0; buf_local_end := 0)
               end
-            end
-          done;
-          marshal ofd (Response OK)
-        | 404 ->
-          Printf.fprintf stderr "Server replied with HTTP 404: the console is not available\n";
-          marshal ofd (Response Failed)
-        | x ->
-          Printf.fprintf stderr "Server said: %s" resultline;
-          marshal ofd (Response Failed)
+              else if !buf_remote_start <> !buf_remote_end then begin
+                let b = Unix.write fd buf_remote !buf_remote_start
+                    (!buf_remote_end - !buf_remote_start) in
+                buf_remote_start := !buf_remote_start + b;
+                if !buf_remote_start = !buf_remote_end then
+                  (buf_remote_start := 0; buf_remote_end := 0)
+              end
+              else if !final then finished := true
+              else begin
+                let r, _, _ =
+                  Unix.select [Unix.stdin; fd] [] [] heartbeat_interval in
+                let now = Unix.time () in
+                if now  -. !last_heartbeat >= heartbeat_interval then begin
+                  heartbeat_fun ();
+                  last_heartbeat := now
+                end;
+                if List.mem Unix.stdin r then begin
+                  let b = Unix.read Unix.stdin buf_remote
+                      !buf_remote_end (block - !buf_remote_end) in
+                  let i = ref !buf_remote_end in
+                  while !i < !buf_remote_end + b && Char.code buf_remote.[!i] <> 0x1d do incr i; done;
+                  if !i < !buf_remote_end + b then final := true;
+                  buf_remote_end := !i
+                end;
+                if List.mem fd r then begin
+                  let b = Unix.read fd buf_local
+                      !buf_local_end (block - !buf_local_end) in
+                  buf_local_end := !buf_local_end + b
+                end
+              end
+            done;
+            marshal ofd (Response OK)
+          | 404 ->
+            Printf.fprintf stderr "Server replied with HTTP 404: the console is not available\n";
+            marshal ofd (Response Failed)
+          | x ->
+            Printf.fprintf stderr "Server said: %s" resultline;
+            marshal ofd (Response Failed)
         end in
       let delay = ref 0.1 in
       let rec keep_connection () =
@@ -477,10 +477,10 @@ let main_loop ifd ofd =
           marshal ofd (Response Failed) in
       keep_connection ();
       (match !tc_save with
-      | Some tc ->
-        Unix.tcsetattr Unix.stdin Unix.TCSANOW tc;
-        print_endline "\r"
-      | None -> ())
+        | Some tc ->
+          Unix.tcsetattr Unix.stdin Unix.TCSANOW tc;
+          print_endline "\r"
+        | None -> ())
     | Command (HttpPut(filename, url)) ->
       begin
         try
@@ -617,62 +617,62 @@ let main () =
         exit_status := main_loop in_fd out_fd
       end
   with
-    | Usage ->
-      exit_status := 0;
-      usage ();
-    | Not_a_cli_server ->
-      error "Failed to contact a running XenServer management agent.\n";
-      error "Try specifying a server name and port.\n";
-      usage();
-    | Protocol_version_mismatch x ->
-      error "Protocol version mismatch: %s.\n" x;
-      error "Try specifying a server name and port on the command-line.\n";
-      usage();
-    | Not_found ->
-      error "Host '%s' not found.\n" !xapiserver;
-    | Unix.Unix_error(err,fn,arg) ->
-      error "Error: %s (calling %s %s)\n" (Unix.error_message err) fn arg
-    | Connect_failure ->
-      error "Unable to contact server. Please check server and port settings.\n"
-    | Stunnel.Stunnel_binary_missing ->
-      error "Please install the stunnel package or define the XE_STUNNEL environment variable to point to the binary.\n"
-    | End_of_file ->
-      error "Lost connection to the server.\n"
-    | Unexpected_msg m ->
-      error "Unexpected message from server: %s" (string_of_message m)
-    | Server_internal_error ->
-      error "Server internal error.\n"
-    | Stunnel_exit (i, e) ->
-      error "Stunnel process %d %s.\n" i
-        (match e with
+  | Usage ->
+    exit_status := 0;
+    usage ();
+  | Not_a_cli_server ->
+    error "Failed to contact a running XenServer management agent.\n";
+    error "Try specifying a server name and port.\n";
+    usage();
+  | Protocol_version_mismatch x ->
+    error "Protocol version mismatch: %s.\n" x;
+    error "Try specifying a server name and port on the command-line.\n";
+    usage();
+  | Not_found ->
+    error "Host '%s' not found.\n" !xapiserver;
+  | Unix.Unix_error(err,fn,arg) ->
+    error "Error: %s (calling %s %s)\n" (Unix.error_message err) fn arg
+  | Connect_failure ->
+    error "Unable to contact server. Please check server and port settings.\n"
+  | Stunnel.Stunnel_binary_missing ->
+    error "Please install the stunnel package or define the XE_STUNNEL environment variable to point to the binary.\n"
+  | End_of_file ->
+    error "Lost connection to the server.\n"
+  | Unexpected_msg m ->
+    error "Unexpected message from server: %s" (string_of_message m)
+  | Server_internal_error ->
+    error "Server internal error.\n"
+  | Stunnel_exit (i, e) ->
+    error "Stunnel process %d %s.\n" i
+      (match e with
         | Unix.WEXITED c -> "existed with exit code " ^ string_of_int c
         | Unix.WSIGNALED c -> "killed by signal " ^ (Unixext.string_of_signal c)
         | Unix.WSTOPPED c -> "stopped by signal " ^ string_of_int c)
-    | e ->
-      error "Unhandled exception\n%s\n" (Printexc.to_string e) in
+  | e ->
+    error "Unhandled exception\n%s\n" (Printexc.to_string e) in
   begin match !stunnel_process with
-  | Some p ->
-    if Sys.file_exists p.Stunnel.logfile then
-      begin
-        if !exit_status <> 0 then
-          (debug "\nStunnel diagnosis:\n\n";
-           try Stunnel.diagnose_failure p
-           with e -> debug "%s\n" (Printexc.to_string e));
-        try Unix.unlink p.Stunnel.logfile with _ -> ()
-      end;
-    Stunnel.disconnect ~wait:false ~force:true p
-  | None -> ()
+    | Some p ->
+      if Sys.file_exists p.Stunnel.logfile then
+        begin
+          if !exit_status <> 0 then
+            (debug "\nStunnel diagnosis:\n\n";
+             try Stunnel.diagnose_failure p
+             with e -> debug "%s\n" (Printexc.to_string e));
+          try Unix.unlink p.Stunnel.logfile with _ -> ()
+        end;
+      Stunnel.disconnect ~wait:false ~force:true p
+    | None -> ()
   end;
   begin match !debug_file, !debug_channel with
-  | Some f, Some ch -> begin
-      close_out ch;
-      if !exit_status <> 0 then begin
-        output_string stderr "\nDebug info:\n\n";
-        output_string stderr (Unixext.string_of_file f)
-      end;
-      try Unix.unlink f with _ -> ()
-    end
-  | _ -> ()
+    | Some f, Some ch -> begin
+        close_out ch;
+        if !exit_status <> 0 then begin
+          output_string stderr "\nDebug info:\n\n";
+          output_string stderr (Unixext.string_of_file f)
+        end;
+        try Unix.unlink f with _ -> ()
+      end
+    | _ -> ()
   end;
   exit !exit_status
 

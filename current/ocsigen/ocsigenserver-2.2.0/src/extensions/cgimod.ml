@@ -90,10 +90,10 @@ let environment= ["CONTENT_LENGTH=%d";
 let string_conform s = match String.length s with
   | 0 -> "/"
   | n -> match  s.[0], s.[n - 1] with
-      | '/' ,'/' -> s
-      | _, '/' -> "/"^s
-      | '/', _ -> s^"/"
-      | _, _ -> "/"^s^"/"
+    | '/' ,'/' -> s
+    | _, '/' -> "/"^s
+    | '/', _ -> s^"/"
+    | _, _ -> "/"^s^"/"
 
 let string_conform0 s =
   try
@@ -113,10 +113,10 @@ let string_conform2 s =
   match String.length s with
     | 0 | 1 when s = "/" -> ""
     | n -> match s.[0], s.[n - 1] with
-        | '/', '/' -> String.sub s 1 (n-1)
-        | _, '/' -> s
-        | '/', _ -> (String.sub s 1 (n-1))^"/"
-        | _, _ -> s^"/"
+      | '/', '/' -> String.sub s 1 (n-1)
+      | _, '/' -> s
+      | '/', _ -> (String.sub s 1 (n-1))^"/"
+      | _, _ -> s^"/"
 
 (* split a string in two parts, according to a regexp *)
 let split_regexp r s =

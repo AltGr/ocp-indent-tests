@@ -1335,12 +1335,12 @@ module OASISSection = struct
       section_id sct
     in
     (match k with
-    | `Library    -> "library" 
-    | `Executable -> "executable"
-    | `Flag       -> "flag"
-    | `SrcRepo    -> "src repository"
-    | `Test       -> "test"
-    | `Doc        -> "doc")
+      | `Library    -> "library" 
+      | `Executable -> "executable"
+      | `Flag       -> "flag"
+      | `SrcRepo    -> "src repository"
+      | `Test       -> "test"
+      | `Doc        -> "doc")
     ^" "^nm
 
   let section_find id scts =
@@ -2049,15 +2049,15 @@ module OASISFileUtil = struct
     else
       OASISExec.run ~ctxt
         (match Sys.os_type with
-        | "Win32" -> "copy"
-        | _ -> "cp")
+          | "Win32" -> "copy"
+          | _ -> "cp")
         [q src; q tgt]
 
   let mkdir ~ctxt tgt =
     OASISExec.run ~ctxt
       (match Sys.os_type with
-      | "Win32" -> "md"
-      | _ -> "mkdir")
+        | "Win32" -> "md"
+        | _ -> "mkdir")
       [q tgt]
 
   let rec mkdir_parent ~ctxt f tgt =
@@ -3544,10 +3544,10 @@ module BaseBuilt = struct
   let to_log_event_file t nm =
     "built_"^
       (match t with
-      | BExec -> "exec"
-      | BExecLib -> "exec_lib"
-      | BLib -> "lib"
-      | BDoc -> "doc")^
+        | BExec -> "exec"
+        | BExecLib -> "exec_lib"
+        | BLib -> "lib"
+        | BDoc -> "doc")^
       "_"^nm
 
   let to_log_event_done t nm =
@@ -3606,12 +3606,12 @@ module BaseBuilt = struct
               fn
               (Printf.sprintf
                  (match t with
-                 | BExec | BExecLib ->
-                   (f_ "executable %s")
-                 | BLib ->
-                   (f_ "library %s")
-                 | BDoc ->
-                   (f_ "documentation %s"))
+                   | BExec | BExecLib ->
+                     (f_ "executable %s")
+                   | BLib ->
+                     (f_ "library %s")
+                   | BDoc ->
+                     (f_ "documentation %s"))
                  nm);
             acc
           end)
@@ -3644,10 +3644,10 @@ module BaseBuilt = struct
       (BExec, cs.cs_name, [[ffn unix_exec_is]])
       ::
         (match unix_dll_opt with
-        | Some fn ->
-          [BExecLib, cs.cs_name, [[ffn fn]]]
-        | None ->
-          [])
+          | Some fn ->
+            [BExecLib, cs.cs_name, [[ffn fn]]]
+          | None ->
+            [])
     in
     evs,
     unix_exec_is,
@@ -3710,8 +3710,8 @@ module BaseCustom = struct
               (f_ "Command '%s' fail with error: %s")
               (String.concat " " (cmd :: args))
               (match e with
-              | Failure msg -> msg
-              | e -> Printexc.to_string e)
+                | Failure msg -> msg
+                | e -> Printexc.to_string e)
         end
       | None ->
         ()
@@ -4111,8 +4111,8 @@ module BaseSetup = struct
         warning
           (f_ "Action fail with error: %s")
           (match e with
-          | Failure msg -> msg
-          | e -> Printexc.to_string e)
+            | Failure msg -> msg
+            | e -> Printexc.to_string e)
     in
 
     let generic_clean t cstm mains docs tests args =
@@ -4839,10 +4839,10 @@ module InternalInstallPlugin = struct
         Filename.concat
           tgt_dir
           (match tgt_fn with
-          | Some fn ->
-            fn
-          | None ->
-            Filename.basename src_file)
+            | Some fn ->
+              fn
+            | None ->
+              Filename.basename src_file)
       in
       (* Create target directory if needed *)
       OASISFileUtil.mkdir_parent

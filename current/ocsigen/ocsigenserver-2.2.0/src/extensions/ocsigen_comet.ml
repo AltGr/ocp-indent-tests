@@ -48,8 +48,8 @@ let map_rev_accu_split func lst accu1 accu2 =
   let rec aux accu1 accu2 = function
     | [] -> (accu1, accu2)
     | x :: xs -> match func x with
-        | Left y -> aux (y :: accu1) accu2 xs
-        | Right y -> aux accu1 (y :: accu2) xs
+      | Left y -> aux (y :: accu1) accu2 xs
+      | Right y -> aux accu1 (y :: accu2) xs
   in
   aux accu1 accu2 lst
 

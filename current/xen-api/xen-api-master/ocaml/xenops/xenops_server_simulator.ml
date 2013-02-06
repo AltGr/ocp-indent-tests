@@ -57,13 +57,13 @@ let next_domid =
   let next = ref None in (* unknown *)
   let get_next =
     fun () -> match !next with
-    | None ->
-      let domains = List.filter_map DB.read (DB.list []) in
-      let domids = List.map (fun x -> x.Domain.domid) domains in
-      let highest = List.fold_left max 0 domids in
-      next := Some (highest + 1);
-      highest + 1
-    | Some x -> x in
+      | None ->
+        let domains = List.filter_map DB.read (DB.list []) in
+        let domids = List.map (fun x -> x.Domain.domid) domains in
+        let highest = List.fold_left max 0 domids in
+        next := Some (highest + 1);
+        highest + 1
+      | Some x -> x in
   let incr_next () = next := Opt.map (fun x -> x + 1) !next in
   fun () ->
     let result = get_next () in
@@ -140,9 +140,9 @@ let destroy_device_model_nolock vm () =
 let request_shutdown_nolock vm reason () =
   DB.write vm.Vm.id { DB.read_exn vm.Vm.id with Domain.domain_action_request =
                                                   Some (match reason with
-                                                  | Halt | PowerOff -> Needs_poweroff
-                                                  | Reboot -> Needs_reboot
-                                                  | Suspend | S3Suspend -> Needs_suspend)
+                                                    | Halt | PowerOff -> Needs_poweroff
+                                                    | Reboot -> Needs_reboot
+                                                    | Suspend | S3Suspend -> Needs_suspend)
                     };
   Updates.add (Dynamic.Vm vm.Vm.id) updates;
   true

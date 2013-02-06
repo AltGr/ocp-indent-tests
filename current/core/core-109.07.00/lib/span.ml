@@ -202,22 +202,22 @@ module Stable = struct
     let of_string (s:string) =
       try
         begin match s with
-        | "" -> failwith "empty string"
-        | _  ->
-          let float n =
-            match (String.drop_suffix s n) with
-            | "" -> failwith "no number given"
-            | s  -> Float.of_string s
-          in
-          let len = String.length s in
-          match s.[Int.(-) len 1] with
-          | 's' ->
-            if Int.(>=) len 2 && Char.(=) s.[Int.(-) len 2] 'm' then of_ms (float 2)
-            else T.of_float (float 1)
-          | 'm' -> of_min (float 1)
-          | 'h' -> of_hr (float 1)
-          | 'd' -> of_day (float 1)
-          | _ -> failwith "Time spans must end in ms, s, m, h, or d."
+          | "" -> failwith "empty string"
+          | _  ->
+            let float n =
+              match (String.drop_suffix s n) with
+              | "" -> failwith "no number given"
+              | s  -> Float.of_string s
+            in
+            let len = String.length s in
+            match s.[Int.(-) len 1] with
+            | 's' ->
+              if Int.(>=) len 2 && Char.(=) s.[Int.(-) len 2] 'm' then of_ms (float 2)
+              else T.of_float (float 1)
+            | 'm' -> of_min (float 1)
+            | 'h' -> of_hr (float 1)
+            | 'd' -> of_day (float 1)
+            | _ -> failwith "Time spans must end in ms, s, m, h, or d."
         end
       with exn ->
         invalid_argf "Span.of_string could not parse '%s': %s" s (Exn.to_string exn) ()

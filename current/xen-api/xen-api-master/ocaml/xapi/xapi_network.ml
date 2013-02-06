@@ -231,12 +231,12 @@ let detach_for_vm ~__context ~host ~vm =
 
 let with_networks_attached_for_vm ~__context ?host ~vm f =
   begin match host with
-  | None -> (* use local host *)
-    attach_for_vm ~__context ~host:(Helpers.get_localhost ~__context) ~vm
-  | Some host ->
-    Helpers.call_api_functions ~__context (fun rpc session_id ->
-        Client.Network.attach_for_vm ~rpc ~session_id ~host ~vm
-      )
+    | None -> (* use local host *)
+      attach_for_vm ~__context ~host:(Helpers.get_localhost ~__context) ~vm
+    | Some host ->
+      Helpers.call_api_functions ~__context (fun rpc session_id ->
+          Client.Network.attach_for_vm ~rpc ~session_id ~host ~vm
+        )
   end;
   try
     f ()

@@ -913,17 +913,17 @@ let suspend (task: Xenops_task.t) ~xc ~xs ~hvm xenguest_path domid fd flags ?(pr
       in
 
       (match XenguestHelper.non_debug_receive ~debug_callback:callback cnx with
-      | XenguestHelper.Suspend ->
-        debug "VM = %s; domid = %d; suspend callback called" (Uuid.to_string uuid) domid;
-      | XenguestHelper.Error x ->
-        error "VM = %s; domid = %d; xenguesthelper failed: \"%s\"" (Uuid.to_string uuid) domid x;
-        raise (Xenguest_failure (Printf.sprintf "Error while waiting for suspend notification: %s" x))
-      | msg ->
-        let err = Printf.sprintf "expected %s got %s"
-            (XenguestHelper.string_of_message XenguestHelper.Suspend)
-            (XenguestHelper.string_of_message msg) in
-        error "VM = %s; domid = %d; xenguesthelper protocol failure %s" (Uuid.to_string uuid) domid err;
-        raise (Xenguest_protocol_failure err));
+        | XenguestHelper.Suspend ->
+          debug "VM = %s; domid = %d; suspend callback called" (Uuid.to_string uuid) domid;
+        | XenguestHelper.Error x ->
+          error "VM = %s; domid = %d; xenguesthelper failed: \"%s\"" (Uuid.to_string uuid) domid x;
+          raise (Xenguest_failure (Printf.sprintf "Error while waiting for suspend notification: %s" x))
+        | msg ->
+          let err = Printf.sprintf "expected %s got %s"
+              (XenguestHelper.string_of_message XenguestHelper.Suspend)
+              (XenguestHelper.string_of_message msg) in
+          error "VM = %s; domid = %d; xenguesthelper protocol failure %s" (Uuid.to_string uuid) domid err;
+          raise (Xenguest_protocol_failure err));
       do_suspend_callback ();
       if hvm then (
         debug "VM = %s; domid = %d; suspending qemu-dm" (Uuid.to_string uuid) domid;

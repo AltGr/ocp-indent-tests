@@ -318,8 +318,8 @@ module Stable = struct
           | [date; ofday]     -> (date, ofday, None)
           | [s]              ->
             begin match String.rsplit2 ~on:'T' s with
-            | Some (date, ofday) -> (date, ofday, None)
-            | None -> failwith "no spaces or T found"
+              | Some (date, ofday) -> (date, ofday, None)
+              | None -> failwith "no spaces or T found"
             end
           | _ -> failwith "too many spaces"
         in

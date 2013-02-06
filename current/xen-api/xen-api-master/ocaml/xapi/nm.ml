@@ -369,10 +369,10 @@ let bring_pif_up ~__context ?(management_interface=false) (pif: API.ref_PIF) =
     (* If the PIF is a bond master, the bond slaves will now go down *)
     (* Interface-reconfigure in bridge mode requires us to set currently_attached to false here *)
     begin match rc.API.pIF_bond_master_of with
-    | [] -> ()
-    | bond :: _ ->
-      let slaves = Db.Bond.get_slaves ~__context ~self:bond in
-      List.iter (fun self -> Db.PIF.set_currently_attached ~__context ~self ~value:false) slaves
+      | [] -> ()
+      | bond :: _ ->
+        let slaves = Db.Bond.get_slaves ~__context ~self:bond in
+        List.iter (fun self -> Db.PIF.set_currently_attached ~__context ~self ~value:false) slaves
     end;
 
     Network.transform_networkd_exn pif (fun () ->
@@ -479,10 +479,10 @@ let bring_pif_up ~__context ?(management_interface=false) (pif: API.ref_PIF) =
 
       (* If the PIF is a bond slave, the bond master will now be down *)
       begin match rc.API.pIF_bond_slave_of with
-      | bond when bond = Ref.null -> ()
-      | bond ->
-        let master = Db.Bond.get_master ~__context ~self:bond in
-        Db.PIF.set_currently_attached ~__context ~self:master ~value:false
+        | bond when bond = Ref.null -> ()
+        | bond ->
+          let master = Db.Bond.get_master ~__context ~self:bond in
+          Db.PIF.set_currently_attached ~__context ~self:master ~value:false
       end;
 
       (* sync MTU *)

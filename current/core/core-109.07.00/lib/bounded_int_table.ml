@@ -214,20 +214,20 @@ let add_exn t ~key ~data =
 
 let remove t key =
   begin match entry_opt t key with
-  | None -> ()
-  | Some entry ->
-    t.length <- t.length - 1;
-    t.entries_by_key.(t.key_to_int key) <- None;
-    let hole = entry.defined_entries_index in
-    let last = t.length in
-    if hole < last then begin
-      match t.defined_entries.(last) with
-      | None -> assert false
-      | Some entry_to_put_in_hole as entry_to_put_in_hole_opt ->
-        t.defined_entries.(hole) <- entry_to_put_in_hole_opt;
-        entry_to_put_in_hole.defined_entries_index <- hole;
-    end;
-    t.defined_entries.(last) <- None;
+    | None -> ()
+    | Some entry ->
+      t.length <- t.length - 1;
+      t.entries_by_key.(t.key_to_int key) <- None;
+      let hole = entry.defined_entries_index in
+      let last = t.length in
+      if hole < last then begin
+        match t.defined_entries.(last) with
+        | None -> assert false
+        | Some entry_to_put_in_hole as entry_to_put_in_hole_opt ->
+          t.defined_entries.(hole) <- entry_to_put_in_hole_opt;
+          entry_to_put_in_hole.defined_entries_index <- hole;
+      end;
+      t.defined_entries.(last) <- None;
   end;
   check_invariant t;
 ;;

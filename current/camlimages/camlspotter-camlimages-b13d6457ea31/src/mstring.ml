@@ -147,9 +147,9 @@ let norm_crlf lastwascr buf offs len =
     | c -> dest.[!wpos] <- c; incr rpos; incr wpos
   done;
   begin match buf.[offs+len-1] with
-  | '\n' -> dest.[!wpos] <- '\n'; incr wpos
-  | '\r' -> lastiscr := true
-  | c -> dest.[!wpos] <- c; incr wpos
+    | '\n' -> dest.[!wpos] <- '\n'; incr wpos
+    | '\r' -> lastiscr := true
+    | c -> dest.[!wpos] <- c; incr wpos
   end;
   String.sub dest 0 !wpos, !lastiscr;;
 

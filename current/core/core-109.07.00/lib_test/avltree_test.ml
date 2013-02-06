@@ -6,8 +6,8 @@ let test_f t s test_data f =
   let is_present i =
     assert (Avltree.mem !t ~compare i);
     begin match Avltree.find !t ~compare i with
-    | None -> assert false
-    | Some j -> assert (i = j)
+      | None -> assert false
+      | Some j -> assert (i = j)
     end;
   in
   Avltree.invariant !t ~compare;

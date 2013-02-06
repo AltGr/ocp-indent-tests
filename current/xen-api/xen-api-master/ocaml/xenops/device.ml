@@ -757,10 +757,10 @@ module Vif = struct
     let extra_private_keys = extra_private_keys @
         (match mtu with | Some mtu when mtu > 0 -> [ "MTU", string_of_int mtu ] | _ -> []) @
         (match netty with
-        | Netman.Bridge b -> [ "bridge", b; "bridge-MAC", if(Xenctrl.is_fake ()) then "fe:fe:fe:fe:fe:fe" else "fe:ff:ff:ff:ff:ff"; ]
-        | Netman.Vswitch b -> [ "bridge", b; "bridge-MAC", if(Xenctrl.is_fake ()) then "fe:fe:fe:fe:fe:fe" else "fe:ff:ff:ff:ff:ff"; ]
-        | Netman.DriverDomain -> []
-        | Netman.Nat -> []) @
+          | Netman.Bridge b -> [ "bridge", b; "bridge-MAC", if(Xenctrl.is_fake ()) then "fe:fe:fe:fe:fe:fe" else "fe:ff:ff:ff:ff:ff"; ]
+          | Netman.Vswitch b -> [ "bridge", b; "bridge-MAC", if(Xenctrl.is_fake ()) then "fe:fe:fe:fe:fe:fe" else "fe:ff:ff:ff:ff:ff"; ]
+          | Netman.DriverDomain -> []
+          | Netman.Nat -> []) @
         (match rate with | None -> [] | Some(rate, timeslice) -> [ "rate", Int64.to_string rate; "timeslice", Int64.to_string timeslice ]) in
 
     Generic.add_device ~xs device back front extra_private_keys;
@@ -805,9 +805,9 @@ module Vcpu = struct
   let status ~xs ~devid domid =
     let path = sprintf "/local/domain/%d/cpu/%d/availability" domid devid in
     try match xs.Xs.read path with
-    | "online"  -> true
-    | "offline" -> false
-    | _         -> (* garbage, assuming false *) false
+      | "online"  -> true
+      | "offline" -> false
+      | _         -> (* garbage, assuming false *) false
     with Xenbus.Xb.Noent -> false
 
 end
@@ -1213,16 +1213,16 @@ module PCI = struct
         try Some (Filename.basename (Unix.readlink (s ^ "/driver")))
         with _ -> None in
       begin match driver with
-      | None           ->
-        bind_to_pciback devstr
-      | Some "pciback" ->
-        debug "pci: device %s already bounded to pciback" devstr;
-        do_flr devstr        
-      | Some d         ->
-        debug "pci: unbounding device %s from driver %s" devstr d;
-        let f = s ^ "/driver/unbind" in
-        write_string_to_file f devstr;
-        bind_to_pciback devstr
+        | None           ->
+          bind_to_pciback devstr
+        | Some "pciback" ->
+          debug "pci: device %s already bounded to pciback" devstr;
+          do_flr devstr        
+        | Some d         ->
+          debug "pci: unbounding device %s from driver %s" devstr d;
+          let f = s ^ "/driver/unbind" in
+          write_string_to_file f devstr;
+          bind_to_pciback devstr
       end;
     ) pcidevs;
     ()
@@ -1381,14 +1381,14 @@ module PCI = struct
       signal_device_model ~xc ~xs domid "pci-rem" pci;
 
       begin match wait_device_model task ~xc ~xs domid with
-      | Some "pci-removed" -> 
-        (* success *)
-        xs.Xs.rm (device_model_pci_device_path xs 0 domid ^ "/dev-" ^ (string_of_int idx))
-      | None ->
-        (* qemu has shutdown *)
-        ()
-      | Some x ->
-        failwith (Printf.sprintf "Waiting for state=pci-removed; got state=%s" x)
+        | Some "pci-removed" -> 
+          (* success *)
+          xs.Xs.rm (device_model_pci_device_path xs 0 domid ^ "/dev-" ^ (string_of_int idx))
+        | None ->
+          (* qemu has shutdown *)
+          ()
+        | Some x ->
+          failwith (Printf.sprintf "Waiting for state=pci-removed; got state=%s" x)
       end;
       xs.Xs.rm (device_model_pci_device_path xs 0 domid ^ "/dev-" ^ (string_of_int idx));
       (* CA-62028: tell the device to stop whatever it's doing *)
@@ -1596,21 +1596,21 @@ module Dm = struct
 
   let xenclient_specific ~xs info ~qemu_domid domid =
     (match info.power_mgmt with 
-    | Some i -> begin
-        try 
-          if (Unix.stat "/proc/acpi/battery").Unix.st_kind == Unix.S_DIR then
-            xs.Xs.write (power_mgmt_path ~qemu_domid domid) (string_of_int i);
-        with _ -> ()
-      end
-    | None -> ());
+      | Some i -> begin
+          try 
+            if (Unix.stat "/proc/acpi/battery").Unix.st_kind == Unix.S_DIR then
+              xs.Xs.write (power_mgmt_path ~qemu_domid domid) (string_of_int i);
+          with _ -> ()
+        end
+      | None -> ());
 
     (match info.oem_features with 
-    | Some i -> xs.Xs.write (oem_features_path ~qemu_domid domid) (string_of_int i);
-    | None -> ());
+      | Some i -> xs.Xs.write (oem_features_path ~qemu_domid domid) (string_of_int i);
+      | None -> ());
 
     (match info.inject_sci with 
-    | Some i -> xs.Xs.write (inject_sci_path ~qemu_domid domid) (string_of_int i)
-    | None -> ());
+      | Some i -> xs.Xs.write (inject_sci_path ~qemu_domid domid) (string_of_int i)
+      | None -> ());
 
     let sound_options =
       match info.sound with
@@ -1785,13 +1785,13 @@ module Dm = struct
           else raise (Ioemu_failed (Printf.sprintf "qemu-dm state not running (%s)" state))
         with Watch.Timeout _ ->
           begin match Forkhelpers.waitpid_nohang pid with
-          | 0, Unix.WEXITED 0 -> () (* still running *)
-          | _, Unix.WEXITED n ->
-            error "qemu-dm: unexpected exit with code: %d" n;
-            raise (Ioemu_failed "qemu-dm exited unexpectedly")
-          | _, (Unix.WSIGNALED n | Unix.WSTOPPED n) ->
-            error "qemu-dm: unexpected signal: %s" (Unixext.string_of_signal n);
-            raise (Ioemu_failed "qemu-dm exited unexpectedly")
+            | 0, Unix.WEXITED 0 -> () (* still running *)
+            | _, Unix.WEXITED n ->
+              error "qemu-dm: unexpected exit with code: %d" n;
+              raise (Ioemu_failed "qemu-dm exited unexpectedly")
+            | _, (Unix.WSIGNALED n | Unix.WSTOPPED n) ->
+              error "qemu-dm: unexpected signal: %s" (Unixext.string_of_signal n);
+              raise (Ioemu_failed "qemu-dm exited unexpectedly")
           end
       done
     end;

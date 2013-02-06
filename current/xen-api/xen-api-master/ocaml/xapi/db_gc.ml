@@ -51,8 +51,8 @@ let gc_connector ~__context get_all get_record valid_ref1 valid_ref2 delete_reco
       begin
         let table,reference,valid1,valid2 = 
           (match DB.get_table_from_ref db (Ref.string_of ref) with
-            None -> "UNKNOWN CLASS"
-          | Some c -> c),
+              None -> "UNKNOWN CLASS"
+            | Some c -> c),
           (Ref.string_of ref),
           (print_valid ref_1_valid),
           (print_valid ref_2_valid) in

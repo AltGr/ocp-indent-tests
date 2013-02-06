@@ -564,10 +564,10 @@ module Worker = struct
             Redirector.finished tag queue;
             (* The task must have succeeded or failed. *)
             begin match item.Xenops_task.state with
-            | Task.Pending _ ->
-              error "Task %s has been left in a Pending state" item.Xenops_task.id;
-              item.Xenops_task.state <- Task.Failed (Internal_error "Task left in Pending state" |> exnty_of_exn |> Exception.rpc_of_exnty)
-            | _ -> ()
+              | Task.Pending _ ->
+                error "Task %s has been left in a Pending state" item.Xenops_task.id;
+                item.Xenops_task.state <- Task.Failed (Internal_error "Task left in Pending state" |> exnty_of_exn |> Exception.rpc_of_exnty)
+              | _ -> ()
             end;
             TASK.signal item.Xenops_task.id
           done
@@ -692,10 +692,10 @@ let export_metadata vdi_map vif_map id =
                            | Vm.PV pv_info ->
                              Vm.PV {pv_info with
                                     Vm.boot = match pv_info.Vm.boot with
-                                    | Vm.Direct x -> pv_info.Vm.boot
-                                    | Vm.Indirect pv_indirect_boot ->
-                                      Vm.Indirect { pv_indirect_boot with Vm.devices = 
-                                                                            List.map (remap_vdi vdi_map) pv_indirect_boot.Vm.devices } } } in
+                                      | Vm.Direct x -> pv_info.Vm.boot
+                                      | Vm.Indirect pv_indirect_boot ->
+                                        Vm.Indirect { pv_indirect_boot with Vm.devices = 
+                                                                              List.map (remap_vdi vdi_map) pv_indirect_boot.Vm.devices } } } in
 
   let vbds = VBD_DB.vbds id in
   let vifs = List.map (fun vif -> remap_vif vif_map vif) (VIF_DB.vifs id) in
@@ -945,10 +945,10 @@ let perform_atomic ~progress_callback ?subtask (op: atomic) (t: Xenops_task.t) :
     let vbd_t = VBD_DB.read_exn id in
     let power = (B.VM.get_state (VM_DB.read_exn (fst id))).Vm.power_state in
     begin match power with
-    | Running _ | Paused ->
-      B.VBD.insert t (VBD_DB.vm_of id) vbd_t disk;
-      VBD_DB.signal id
-    | _ -> raise (Bad_power_state(power, Running))
+      | Running _ | Paused ->
+        B.VBD.insert t (VBD_DB.vm_of id) vbd_t disk;
+        VBD_DB.signal id
+      | _ -> raise (Bad_power_state(power, Running))
     end
   | VBD_eject id ->
     debug "VBD.eject %s" (VBD_DB.string_of_id id);
@@ -956,22 +956,22 @@ let perform_atomic ~progress_callback ?subtask (op: atomic) (t: Xenops_task.t) :
     if vbd_t.Vbd.ty = Vbd.Disk then raise (Media_not_ejectable);
     let power = (B.VM.get_state (VM_DB.read_exn (fst id))).Vm.power_state in
     begin match power with
-    | Running _ | Paused ->
-      B.VBD.eject t (VBD_DB.vm_of id) vbd_t;
-      VBD_DB.signal id
-    | _ -> raise (Bad_power_state(power, Running))
+      | Running _ | Paused ->
+        B.VBD.eject t (VBD_DB.vm_of id) vbd_t;
+        VBD_DB.signal id
+      | _ -> raise (Bad_power_state(power, Running))
     end
   | VM_remove id ->
     debug "VM.remove %s" id;
     let power = (B.VM.get_state (VM_DB.read_exn id)).Vm.power_state in
     begin match power with
-    | Running _ | Paused -> raise (Bad_power_state(power, Halted))
-    | Halted | Suspended ->
-      B.VM.remove (VM_DB.read_exn id);
-      List.iter (fun vbd -> VBD_DB.remove vbd.Vbd.id) (VBD_DB.vbds id);
-      List.iter (fun vif -> VIF_DB.remove vif.Vif.id) (VIF_DB.vifs id);
-      List.iter (fun pci -> PCI_DB.remove pci.Pci.id) (PCI_DB.pcis id);
-      VM_DB.remove id
+      | Running _ | Paused -> raise (Bad_power_state(power, Halted))
+      | Halted | Suspended ->
+        B.VM.remove (VM_DB.read_exn id);
+        List.iter (fun vbd -> VBD_DB.remove vbd.Vbd.id) (VBD_DB.vbds id);
+        List.iter (fun vif -> VIF_DB.remove vif.Vif.id) (VIF_DB.vifs id);
+        List.iter (fun pci -> PCI_DB.remove pci.Pci.id) (PCI_DB.pcis id);
+        VM_DB.remove id
     end
   | PCI_plug id ->
     debug "PCI.plug %s" (PCI_DB.string_of_id id);
@@ -1128,49 +1128,49 @@ and trigger_cleanup_after_failure op t = match op with
     immediate_operation t.Xenops_task.dbg (fst id) (VIF_check_state id)
 
   | Atomic op -> begin match op with
-    | VBD_eject id
-    | VBD_plug id
-    | VBD_set_active (id, _)
-    | VBD_epoch_begin (id, _)
-    | VBD_epoch_end (id, _)
-    | VBD_set_qos id
-    | VBD_unplug (id, _)
-    | VBD_insert (id, _) ->
-      immediate_operation t.Xenops_task.dbg (fst id) (VBD_check_state id)
+      | VBD_eject id
+      | VBD_plug id
+      | VBD_set_active (id, _)
+      | VBD_epoch_begin (id, _)
+      | VBD_epoch_end (id, _)
+      | VBD_set_qos id
+      | VBD_unplug (id, _)
+      | VBD_insert (id, _) ->
+        immediate_operation t.Xenops_task.dbg (fst id) (VBD_check_state id)
 
-    | VIF_plug id
-    | VIF_set_active (id, _)
-    | VIF_unplug (id, _)
-    | VIF_move (id, _)
-    | VIF_set_carrier (id, _)
-    | VIF_set_locking_mode (id, _) ->
-      immediate_operation t.Xenops_task.dbg (fst id) (VIF_check_state id)
+      | VIF_plug id
+      | VIF_set_active (id, _)
+      | VIF_unplug (id, _)
+      | VIF_move (id, _)
+      | VIF_set_carrier (id, _)
+      | VIF_set_locking_mode (id, _) ->
+        immediate_operation t.Xenops_task.dbg (fst id) (VIF_check_state id)
 
-    | PCI_plug id
-    | PCI_unplug id ->
-      immediate_operation t.Xenops_task.dbg (fst id) (PCI_check_state id)
+      | PCI_plug id
+      | PCI_unplug id ->
+        immediate_operation t.Xenops_task.dbg (fst id) (PCI_check_state id)
 
-    | VM_hook_script (id, _, _)
-    | VM_remove id
-    | VM_set_xsdata (id, _)
-    | VM_set_vcpus (id, _)
-    | VM_set_shadow_multiplier (id, _)
-    | VM_set_memory_dynamic_range (id, _, _)
-    | VM_pause id
-    | VM_unpause id
-    | VM_set_domain_action_request (id, _)
-    | VM_create_device_model (id, _)
-    | VM_destroy_device_model id
-    | VM_destroy id
-    | VM_create (id, _)
-    | VM_build id
-    | VM_shutdown_domain (id, _, _)
-    | VM_s3suspend id
-    | VM_s3resume id
-    | VM_save (id, _, _)
-    | VM_restore (id, _)
-    | VM_delay (id, _) ->
-      immediate_operation t.Xenops_task.dbg id (VM_check_state id)
+      | VM_hook_script (id, _, _)
+      | VM_remove id
+      | VM_set_xsdata (id, _)
+      | VM_set_vcpus (id, _)
+      | VM_set_shadow_multiplier (id, _)
+      | VM_set_memory_dynamic_range (id, _, _)
+      | VM_pause id
+      | VM_unpause id
+      | VM_set_domain_action_request (id, _)
+      | VM_create_device_model (id, _)
+      | VM_destroy_device_model id
+      | VM_destroy id
+      | VM_create (id, _)
+      | VM_build id
+      | VM_shutdown_domain (id, _, _)
+      | VM_s3suspend id
+      | VM_s3resume id
+      | VM_save (id, _, _)
+      | VM_restore (id, _)
+      | VM_delay (id, _) ->
+        immediate_operation t.Xenops_task.dbg id (VM_check_state id)
     end
 
 and perform ?subtask (op: operation) (t: Xenops_task.t) : unit =
@@ -1259,9 +1259,9 @@ and perform ?subtask (op: operation) (t: Xenops_task.t) : unit =
           request |> Http.Request.to_wire_string |> Unixext.really_write_string mfd;
 
           begin match Handshake.recv mfd with
-          | Handshake.Success -> ()
-          | Handshake.Error msg ->
-            error "cannot transmit vm to host: %s" msg;
+            | Handshake.Success -> ()
+            | Handshake.Error msg ->
+              error "cannot transmit vm to host: %s" msg;
           end;
           debug "Synchronisation point 1";
 
@@ -1887,8 +1887,8 @@ module Diagnostics = struct
       updates = Updates.Dump.make updates;
       tasks = List.map WorkerPool.Dump.of_task (Xenops_task.list tasks);
       vm_actions = List.filter_map (fun id -> match VM_DB.read id with
-        | Some vm -> Some (id, B.VM.get_domain_action_request vm)
-        | None -> None
+          | Some vm -> Some (id, B.VM.get_domain_action_request vm)
+          | None -> None
         ) (VM_DB.ids ())
     }
 end

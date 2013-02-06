@@ -125,74 +125,74 @@ let prepare ({ session_id = session_id; vm = vm } as env) op rpc =
   let one () =
     let power_state = Client.VM.get_power_state ~rpc ~session_id ~self:vm in
     begin match op, power_state with
-    | Start, `Halted -> ()
-    | Start, `Running ->
-      wait_for_guest_agent ~rpc ~session_id ~vm;
-      debug "prepare: VM.clean_shutdown %s" (Ref.string_of vm);
-      Client.VM.clean_shutdown ~rpc ~session_id ~vm
-    | Start, `Paused ->
-      debug "prepare: VM.unpause %s" (Ref.string_of vm);
-      Client.VM.unpause ~rpc ~session_id ~vm;
-      wait_for_guest_agent ~rpc ~session_id ~vm;
-      debug "prepare: VM.clean_shutdown %s" (Ref.string_of vm);
-      Client.VM.clean_shutdown ~rpc ~session_id ~vm
-    | Start, `Suspended ->
-      debug "prepare: VM.resume %s" (Ref.string_of vm);
-      Client.VM.resume ~rpc ~session_id ~vm ~start_paused:false ~force:false;
-      debug "prepare: VM.clean_shutdown %s" (Ref.string_of vm);
-      Client.VM.clean_shutdown ~rpc ~session_id ~vm
-    | Resume, `Halted ->
-      debug "prepare: VM.start %s" (Ref.string_of vm);
-      Client.VM.start ~rpc ~session_id ~vm ~start_paused:false ~force:false;
-      wait_for_guest_agent ~rpc ~session_id ~vm;
-      debug "prepare: VM.suspend %s" (Ref.string_of vm);
-      Client.VM.suspend ~rpc ~session_id ~vm
-    | Resume, `Running ->
-      debug "prepare: VM.suspend %s" (Ref.string_of vm);
-      Client.VM.suspend ~rpc ~session_id ~vm
-    | Resume, `Paused ->
-      debug "prepare: VM.unpause %s" (Ref.string_of vm);
-      Client.VM.unpause ~rpc ~session_id ~vm;
-      wait_for_guest_agent ~rpc ~session_id ~vm;
-      debug "prepare: VM.suspend %s" (Ref.string_of vm);
-      Client.VM.suspend ~rpc ~session_id ~vm
-    | Resume, `Suspended -> ()
-    | _, `Running ->
-      wait_for_guest_agent ~rpc ~session_id ~vm
-    | _, `Halted ->
-      debug "prepare: VM.start %s" (Ref.string_of vm);
-      Client.VM.start ~rpc ~session_id ~vm ~start_paused:false ~force:false;
-      wait_for_guest_agent ~rpc ~session_id ~vm;
-    | _, `Paused ->
-      debug "prepare: VM.unpause %s" (Ref.string_of vm);
-      Client.VM.unpause ~rpc ~session_id ~vm;
-      wait_for_guest_agent ~rpc ~session_id ~vm;
-    | _, `Suspended ->
-      debug "prepare: VM.resume %s" (Ref.string_of vm);
-      Client.VM.resume ~rpc ~session_id ~vm ~start_paused:false ~force:false;
+      | Start, `Halted -> ()
+      | Start, `Running ->
+        wait_for_guest_agent ~rpc ~session_id ~vm;
+        debug "prepare: VM.clean_shutdown %s" (Ref.string_of vm);
+        Client.VM.clean_shutdown ~rpc ~session_id ~vm
+      | Start, `Paused ->
+        debug "prepare: VM.unpause %s" (Ref.string_of vm);
+        Client.VM.unpause ~rpc ~session_id ~vm;
+        wait_for_guest_agent ~rpc ~session_id ~vm;
+        debug "prepare: VM.clean_shutdown %s" (Ref.string_of vm);
+        Client.VM.clean_shutdown ~rpc ~session_id ~vm
+      | Start, `Suspended ->
+        debug "prepare: VM.resume %s" (Ref.string_of vm);
+        Client.VM.resume ~rpc ~session_id ~vm ~start_paused:false ~force:false;
+        debug "prepare: VM.clean_shutdown %s" (Ref.string_of vm);
+        Client.VM.clean_shutdown ~rpc ~session_id ~vm
+      | Resume, `Halted ->
+        debug "prepare: VM.start %s" (Ref.string_of vm);
+        Client.VM.start ~rpc ~session_id ~vm ~start_paused:false ~force:false;
+        wait_for_guest_agent ~rpc ~session_id ~vm;
+        debug "prepare: VM.suspend %s" (Ref.string_of vm);
+        Client.VM.suspend ~rpc ~session_id ~vm
+      | Resume, `Running ->
+        debug "prepare: VM.suspend %s" (Ref.string_of vm);
+        Client.VM.suspend ~rpc ~session_id ~vm
+      | Resume, `Paused ->
+        debug "prepare: VM.unpause %s" (Ref.string_of vm);
+        Client.VM.unpause ~rpc ~session_id ~vm;
+        wait_for_guest_agent ~rpc ~session_id ~vm;
+        debug "prepare: VM.suspend %s" (Ref.string_of vm);
+        Client.VM.suspend ~rpc ~session_id ~vm
+      | Resume, `Suspended -> ()
+      | _, `Running ->
+        wait_for_guest_agent ~rpc ~session_id ~vm
+      | _, `Halted ->
+        debug "prepare: VM.start %s" (Ref.string_of vm);
+        Client.VM.start ~rpc ~session_id ~vm ~start_paused:false ~force:false;
+        wait_for_guest_agent ~rpc ~session_id ~vm;
+      | _, `Paused ->
+        debug "prepare: VM.unpause %s" (Ref.string_of vm);
+        Client.VM.unpause ~rpc ~session_id ~vm;
+        wait_for_guest_agent ~rpc ~session_id ~vm;
+      | _, `Suspended ->
+        debug "prepare: VM.resume %s" (Ref.string_of vm);
+        Client.VM.resume ~rpc ~session_id ~vm ~start_paused:false ~force:false;
     end;
     begin match op with
-    | VIF_unplug ->
-      let vif = find_or_create_vif env in
-      if Client.VIF.get_currently_attached ~rpc ~session_id ~self:vif
-      then Client.VIF.unplug ~rpc ~session_id ~self:vif;
-      Client.VIF.plug ~rpc ~session_id ~self:vif
-    | VIF_plug ->
-      let vif = find_or_create_vif env in
-      if not(Client.VIF.get_currently_attached ~rpc ~session_id ~self:vif)
-      then Client.VIF.plug ~rpc ~session_id ~self:vif;
-      Client.VIF.unplug ~rpc ~session_id ~self:vif
-    | VBD_unplug ->
-      let vbd = find_or_create_vbd env in
-      if Client.VBD.get_currently_attached ~rpc ~session_id ~self:vbd
-      then Client.VBD.unplug ~rpc ~session_id ~self:vbd;
-      Client.VBD.plug ~rpc ~session_id ~self:vbd
-    | VBD_plug ->
-      let vbd = find_or_create_vbd env in
-      if not(Client.VBD.get_currently_attached ~rpc ~session_id ~self:vbd)
-      then Client.VBD.plug ~rpc ~session_id ~self:vbd;
-      Client.VBD.unplug ~rpc ~session_id ~self:vbd
-    | _ -> ()
+      | VIF_unplug ->
+        let vif = find_or_create_vif env in
+        if Client.VIF.get_currently_attached ~rpc ~session_id ~self:vif
+        then Client.VIF.unplug ~rpc ~session_id ~self:vif;
+        Client.VIF.plug ~rpc ~session_id ~self:vif
+      | VIF_plug ->
+        let vif = find_or_create_vif env in
+        if not(Client.VIF.get_currently_attached ~rpc ~session_id ~self:vif)
+        then Client.VIF.plug ~rpc ~session_id ~self:vif;
+        Client.VIF.unplug ~rpc ~session_id ~self:vif
+      | VBD_unplug ->
+        let vbd = find_or_create_vbd env in
+        if Client.VBD.get_currently_attached ~rpc ~session_id ~self:vbd
+        then Client.VBD.unplug ~rpc ~session_id ~self:vbd;
+        Client.VBD.plug ~rpc ~session_id ~self:vbd
+      | VBD_plug ->
+        let vbd = find_or_create_vbd env in
+        if not(Client.VBD.get_currently_attached ~rpc ~session_id ~self:vbd)
+        then Client.VBD.plug ~rpc ~session_id ~self:vbd;
+        Client.VBD.unplug ~rpc ~session_id ~self:vbd
+      | _ -> ()
     end
   in
   try
@@ -247,11 +247,11 @@ let test ({ session_id = session_id; vm = vm; id = id } as env) (op, n) =
   let rpc = make_rpc () in
   Tasks.wait_for_all ~rpc ~session_id ~tasks:[task];
   begin match Client.Task.get_status ~rpc ~session_id ~self:task with
-  | `pending -> failwith "task is pending (not cancelled)"
-  | `success -> failwith "task succeed (not cancelled)"
-  | `failure -> failwith "task failed (not cancelled)"
-  | `cancelling -> failwith "task cancelling (not cancelled)"
-  | `cancelled -> ()
+    | `pending -> failwith "task is pending (not cancelled)"
+    | `success -> failwith "task succeed (not cancelled)"
+    | `failure -> failwith "task failed (not cancelled)"
+    | `cancelling -> failwith "task cancelling (not cancelled)"
+    | `cancelled -> ()
   end;
   Client.Task.destroy ~rpc ~session_id ~self:task;
   (* Wait for the states to stabilise *)

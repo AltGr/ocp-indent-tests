@@ -58,15 +58,15 @@ struct
           (* getent passwd returns several lines *)
           let rec get_next_line lines =
             (match lines with
-            | [] -> raise Not_found
-            | line::lines ->
-              let recs = Stringext.String.split ':' line in 
-              let username = List.nth recs 0 in
-              let uid = List.nth recs 2 in
-              (match fn username uid recs with
-              | None -> get_next_line lines
-              | Some x -> x
-              )
+              | [] -> raise Not_found
+              | line::lines ->
+                let recs = Stringext.String.split ':' line in 
+                let username = List.nth recs 0 in
+                let uid = List.nth recs 2 in
+                (match fn username uid recs with
+                  | None -> get_next_line lines
+                  | Some x -> x
+                )
             )
           in
           get_next_line lines

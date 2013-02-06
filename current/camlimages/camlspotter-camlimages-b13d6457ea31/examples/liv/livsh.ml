@@ -59,13 +59,13 @@ class virtual icon_creator = object (self)
 
   method make_icon () =
     begin match icons with
-    | [] -> self#deactivate (); sync ()
-    | f :: fs ->
-      icons <- fs;
-      f ();
-      self#activate ();
-      sync ();
-      ignore (GMain.Timeout.add ~ms: 1 ~callback: self#make_icon)
+      | [] -> self#deactivate (); sync ()
+      | f :: fs ->
+        icons <- fs;
+        f ();
+        self#activate ();
+        sync ();
+        ignore (GMain.Timeout.add ~ms: 1 ~callback: self#make_icon)
     end;
     false
 
@@ -154,11 +154,11 @@ and icon ~dir ~name (req : icon_creator) =
         (* we create vbox button pix and label if they are not available *)
         ignore !!vbox; ignore !!button; ignore !!pix; ignore !!label;
         begin match !info_icon with
-        | Mylazy.Delayed _ ->
-          req#add (fun () ->
-              if !!button#misc#visible then
-                (try ignore (self#icon) with _ -> ()))
-        | _ -> ()
+          | Mylazy.Delayed _ ->
+            req#add (fun () ->
+                if !!button#misc#visible then
+                  (try ignore (self#icon) with _ -> ()))
+          | _ -> ()
         end;
         v) in
       (*

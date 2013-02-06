@@ -191,10 +191,10 @@ let do_cfs rra start_pdp_offset pdps =
     end else
       let cdpv=cdp.cdp_value in
       cdp.cdp_value <- match rra.rra_cf with
-      | CF_Average -> cdpv +. pdps.(i) *. (float_of_int start_pdp_offset) /. (float_of_int rra.rra_pdp_cnt )
-      | CF_Min -> min cdpv pdps.(i)
-      | CF_Max -> max cdpv pdps.(i)
-      | CF_Last -> pdps.(i)
+        | CF_Average -> cdpv +. pdps.(i) *. (float_of_int start_pdp_offset) /. (float_of_int rra.rra_pdp_cnt )
+        | CF_Min -> min cdpv pdps.(i)
+        | CF_Max -> max cdpv pdps.(i)
+        | CF_Last -> pdps.(i)
   done
 
 (** Update the RRAs with a number of PDPs. *)

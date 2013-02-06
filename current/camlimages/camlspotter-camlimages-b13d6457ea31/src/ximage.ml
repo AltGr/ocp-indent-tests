@@ -170,16 +170,16 @@ let mask_of_image win img = (* It is really inefficient *)
   (* BUG ? of gtk or lablgtk? Using None for mask does not work *)
   let width, height = Images.size img in
   begin match img with
-  | Index8 t ->
-    if t.Index8.transparent >= 0
-    then draw_mask t t.Index8.transparent Index8.unsafe_get
-    else Some (plain_mask win width height)
-  | Index16 t ->
-    if t.Index16.transparent >= 0
-    then draw_mask t t.Index16.transparent Index16.unsafe_get
-    else Some (plain_mask win width height)
-  | _ ->
-    Some (plain_mask win width height)
+    | Index8 t ->
+      if t.Index8.transparent >= 0
+      then draw_mask t t.Index8.transparent Index8.unsafe_get
+      else Some (plain_mask win width height)
+    | Index16 t ->
+      if t.Index16.transparent >= 0
+      then draw_mask t t.Index16.transparent Index16.unsafe_get
+      else Some (plain_mask win width height)
+    | _ ->
+      Some (plain_mask win width height)
   end;;
 
 let pixmap_of win ximage =

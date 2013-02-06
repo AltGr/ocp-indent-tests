@@ -174,8 +174,8 @@ module MemFS = struct
             let deletable =
               if StringMap.mem (filename p) !dir
               then match StringMap.find (filename p) !dir with
-              | Dir child -> StringMap.is_empty !child
-              | Leaf _ -> true
+                | Dir child -> StringMap.is_empty !child
+                | Leaf _ -> true
               else false in
             if deletable then dir := StringMap.remove (filename p) !dir
           ) (prefixes_of path)

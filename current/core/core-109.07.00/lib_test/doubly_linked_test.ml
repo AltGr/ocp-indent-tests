@@ -478,28 +478,28 @@ module Make_test (X : S) = struct
               in
               loop (first_elt t) elts;
               begin match elts with
-              | [] -> ()
-              | elt :: elts ->
-                assert (prev t elt = None);
-                assert (is_first t elt);
-                assert (Option.equal Elt.equal (first_elt t) (Some elt));
-                List.iter elts ~f:(fun elt -> assert (not (is_first t elt)));
-                ignore
-                  (List.fold elts ~init:elt ~f:(fun prev elt ->
-                     assert (Option.equal Elt.equal (X.prev t elt)
-                         (Some prev));
-                     elt));
+                | [] -> ()
+                | elt :: elts ->
+                  assert (prev t elt = None);
+                  assert (is_first t elt);
+                  assert (Option.equal Elt.equal (first_elt t) (Some elt));
+                  List.iter elts ~f:(fun elt -> assert (not (is_first t elt)));
+                  ignore
+                    (List.fold elts ~init:elt ~f:(fun prev elt ->
+                       assert (Option.equal Elt.equal (X.prev t elt)
+                           (Some prev));
+                       elt));
               end;
               begin match List.rev elts with
-              | [] -> ()
-              | elt :: elts ->
-                assert (next t elt = None);
-                assert (is_last t elt);
-                assert (Option.equal Elt.equal (last_elt t) (Some elt));
-                List.iter elts ~f:(fun elt -> assert (not (is_last t elt)));
-                ignore (List.fold elts ~init:elt ~f:(fun next elt ->
-                    assert (Option.equal Elt.equal (X.next t elt) (Some next));
-                    elt))
+                | [] -> ()
+                | elt :: elts ->
+                  assert (next t elt = None);
+                  assert (is_last t elt);
+                  assert (Option.equal Elt.equal (last_elt t) (Some elt));
+                  List.iter elts ~f:(fun elt -> assert (not (is_last t elt)));
+                  ignore (List.fold elts ~init:elt ~f:(fun next elt ->
+                      assert (Option.equal Elt.equal (X.next t elt) (Some next));
+                      elt))
               end
             in
             let elt1 = insert_first t () in

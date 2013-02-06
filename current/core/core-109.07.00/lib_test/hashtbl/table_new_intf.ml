@@ -163,8 +163,8 @@ module Make (Basic : Basic) : S with type ('k, 'v) t = ('k, 'v) Basic.t = struct
   let filter_mapi t ~f =
     let bindings =
       fold t ~init:[] ~f:(fun ~key ~data bindings -> match f ~key ~data with
-      | Some new_data -> (key,new_data) :: bindings
-      | None -> bindings)
+        | Some new_data -> (key,new_data) :: bindings
+        | None -> bindings)
     in
     let new_t = create ~params:(get_params t) (hashable t) in
     List.iter bindings ~f:(fun (key,data) -> add new_t ~key ~data);

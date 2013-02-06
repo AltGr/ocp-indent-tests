@@ -129,8 +129,8 @@ let check_for_foreign_database ~__context =
   match __context.session_id with
   | Some sid ->
     (match Db_backend.get_registered_database sid with
-    | Some database -> {__context with database = database}
-    | None -> __context)
+      | Some database -> {__context with database = database}
+      | None -> __context)
   | None ->
     __context
 
@@ -201,8 +201,8 @@ let make ?(__context=initial) ?(http_other_config=[]) ?(quiet=false) ?subtask_of
       task_uuid
       (trackid_of_session ~with_brackets:true ~prefix:" " session_id) (* CP-982: link each task to original session created during login *)
       (match subtask_of with
-      | None -> ""
-      | Some subtask_of -> " by task " ^ (make_dbg [] "" subtask_of))
+        | None -> ""
+        | Some subtask_of -> " by task " ^ (make_dbg [] "" subtask_of))
 ;
   { session_id = session_id;
     database = database;

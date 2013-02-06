@@ -153,10 +153,10 @@ let filter_opt t =
   let first_some = ref None in
   for i = 0 to n - 1 do
     begin match t.(i) with
-    | None -> ()
-    | Some _ as s ->
-      if !res_size = 0 then first_some := s;
-      incr res_size;
+      | None -> ()
+      | Some _ as s ->
+        if !res_size = 0 then first_some := s;
+        incr res_size;
     end;
   done;
   match !first_some with
@@ -166,10 +166,10 @@ let filter_opt t =
     let pos = ref 0 in
     for i = 0 to n - 1 do
       begin match t.(i) with
-      | None -> ()
-      | Some x ->
-        result.(!pos) <- x;
-        incr pos;
+        | None -> ()
+        | Some x ->
+          result.(!pos) <- x;
+          incr pos;
       end;
     done;
     result

@@ -180,18 +180,18 @@ let check api emergency_calls =
         let other_obj, other_fld = List.assoc (objname, x.field_name) relations in
         let other_f = get_field_by_name api ~objname:other_obj ~fieldname:other_fld in
         begin match other_f.ty with
-        | Set(Ref _) ->
-          if q <> DynamicRO && q <> RW
-          then failwith (Printf.sprintf "many-to-many Set(Ref _) is not RW or DynamicRO: %s.%s" objname x.field_name);
-          if not x.field_persist
-          then failwith (Printf.sprintf "many-to-many Set(Ref _) is not persistent: %s.%s" objname x.field_name);
-          if not other_f.field_persist
-          then failwith (Printf.sprintf "many-to-many Set(Ref _) is not persistent: %s.%s" other_obj other_fld);
-        | Ref _ ->
-          if q <> DynamicRO
-          then failwith (Printf.sprintf "many-to-many Set(Ref _) is not DynamicRO: %s.%s" objname x.field_name)
-        | ty ->
-          failwith (Printf.sprintf "field in relationship has bad type (Ref or Set(Ref) only): %s.%s" other_obj other_fld)
+          | Set(Ref _) ->
+            if q <> DynamicRO && q <> RW
+            then failwith (Printf.sprintf "many-to-many Set(Ref _) is not RW or DynamicRO: %s.%s" objname x.field_name);
+            if not x.field_persist
+            then failwith (Printf.sprintf "many-to-many Set(Ref _) is not persistent: %s.%s" objname x.field_name);
+            if not other_f.field_persist
+            then failwith (Printf.sprintf "many-to-many Set(Ref _) is not persistent: %s.%s" other_obj other_fld);
+          | Ref _ ->
+            if q <> DynamicRO
+            then failwith (Printf.sprintf "many-to-many Set(Ref _) is not DynamicRO: %s.%s" objname x.field_name)
+          | ty ->
+            failwith (Printf.sprintf "field in relationship has bad type (Ref or Set(Ref) only): %s.%s" other_obj other_fld)
         end
       | _ -> () in
     let obj o = List.iter (field o.name) (flatten_fields o.contents []) in

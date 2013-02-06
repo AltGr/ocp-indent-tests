@@ -152,18 +152,18 @@ let on_dom0_networking_change ~__context =
   if Db.Host.get_name_label ~__context ~self:localhost = "localhost.localdomain" then
     Db.Host.set_name_label ~__context ~self:localhost ~value:new_hostname;
   begin match Helpers.get_management_ip_addr ~__context with
-  | Some ip ->
-    if Db.Host.get_address ~__context ~self:localhost <> ip then begin
-      debug "Changing Host.address in database to: %s" ip;
-      Db.Host.set_address ~__context ~self:localhost ~value:ip;
-      debug "Refreshing console URIs";
-      Dbsync_master.refresh_console_urls ~__context
-    end
-  | None ->
-    if Db.Host.get_address ~__context ~self:localhost <> "" then begin
-      debug "Changing Host.address in database to: '' (host has no management IP address)";
-      Db.Host.set_address ~__context ~self:localhost ~value:""
-    end
+    | Some ip ->
+      if Db.Host.get_address ~__context ~self:localhost <> ip then begin
+        debug "Changing Host.address in database to: %s" ip;
+        Db.Host.set_address ~__context ~self:localhost ~value:ip;
+        debug "Refreshing console URIs";
+        Dbsync_master.refresh_console_urls ~__context
+      end
+    | None ->
+      if Db.Host.get_address ~__context ~self:localhost <> "" then begin
+        debug "Changing Host.address in database to: '' (host has no management IP address)";
+        Db.Host.set_address ~__context ~self:localhost ~value:""
+      end
   end;
   debug "Signalling anyone waiting for the management IP address to change";
   Mutex.execute management_ip_mutex

@@ -413,66 +413,66 @@ module Bridge = struct
   let create _ dbg ?vlan ?mac ?(other_config=[]) ~name () =
     Debug.with_thread_associated dbg (fun () ->
       debug "Creating bridge %s%s" name (match vlan with
-      | None -> ""
-      | Some (parent, vlan) -> Printf.sprintf " (VLAN %d on bridge %s)" vlan parent
+        | None -> ""
+        | Some (parent, vlan) -> Printf.sprintf " (VLAN %d on bridge %s)" vlan parent
       );
       update_config name {get_config name with vlan; bridge_mac=mac; other_config};
       begin match !kind with
-      | Openvswitch ->
-        let fail_mode =
-          if not (List.mem_assoc "vswitch-controller-fail-mode" other_config) then
-            "standalone"
-          else
-            let mode = List.assoc "vswitch-controller-fail-mode" other_config in
-            if mode = "secure" || mode = "standalone" then begin
-              (try if mode = "secure" && Ovs.get_fail_mode name <> "secure" then
-                  add_default := name :: !add_default
-              with _ -> ());
-              mode
-            end else begin
-              debug "%s isn't a valid setting for other_config:vswitch-controller-fail-mode; \
-                     defaulting to 'standalone'" mode;
+        | Openvswitch ->
+          let fail_mode =
+            if not (List.mem_assoc "vswitch-controller-fail-mode" other_config) then
               "standalone"
-            end
-        in
-        let vlan_bug_workaround =
-          if List.mem_assoc "vlan-bug-workaround" other_config then
-            Some (List.assoc "vlan-bug-workaround" other_config = "true")
-          else
-            None
-        in
-        let external_id =
-          if List.mem_assoc "network-uuids" other_config then
-            Some ("xs-network-uuids", List.assoc "network-uuids" other_config)
-          else
-            None
-        in
-        let disable_in_band =
-          if not (List.mem_assoc "vswitch-disable-in-band" other_config) then
-            Some None
-          else
-            let dib = List.assoc "vswitch-disable-in-band" other_config in
-            if dib = "true" || dib = "false" then
-              Some (Some dib)
             else
-              (debug "%s isn't a valid setting for other_config:vswitch-disable-in-band" dib;
-               None)
-        in
-        ignore (Ovs.create_bridge ?mac ~fail_mode ?external_id ?disable_in_band
-            vlan vlan_bug_workaround name)
-      | Bridge ->
-        ignore (Brctl.create_bridge name);
-        Opt.iter (Ip.set_mac name) mac;
-        match vlan with
-        | None -> ()
-        | Some (parent, vlan) ->
-          let interface = List.hd (List.filter (fun n ->
-                String.startswith "eth" n || String.startswith "bond" n
-              ) (Sysfs.bridge_to_interfaces parent)) in
-          Ip.create_vlan interface vlan;
-          let vlan_name = Ip.vlan_name interface vlan in
-          Interface.bring_up () dbg ~name:vlan_name;
-          Brctl.create_port name vlan_name
+              let mode = List.assoc "vswitch-controller-fail-mode" other_config in
+              if mode = "secure" || mode = "standalone" then begin
+                (try if mode = "secure" && Ovs.get_fail_mode name <> "secure" then
+                    add_default := name :: !add_default
+                with _ -> ());
+                mode
+              end else begin
+                debug "%s isn't a valid setting for other_config:vswitch-controller-fail-mode; \
+                       defaulting to 'standalone'" mode;
+                "standalone"
+              end
+          in
+          let vlan_bug_workaround =
+            if List.mem_assoc "vlan-bug-workaround" other_config then
+              Some (List.assoc "vlan-bug-workaround" other_config = "true")
+            else
+              None
+          in
+          let external_id =
+            if List.mem_assoc "network-uuids" other_config then
+              Some ("xs-network-uuids", List.assoc "network-uuids" other_config)
+            else
+              None
+          in
+          let disable_in_band =
+            if not (List.mem_assoc "vswitch-disable-in-band" other_config) then
+              Some None
+            else
+              let dib = List.assoc "vswitch-disable-in-band" other_config in
+              if dib = "true" || dib = "false" then
+                Some (Some dib)
+              else
+                (debug "%s isn't a valid setting for other_config:vswitch-disable-in-band" dib;
+                 None)
+          in
+          ignore (Ovs.create_bridge ?mac ~fail_mode ?external_id ?disable_in_band
+              vlan vlan_bug_workaround name)
+        | Bridge ->
+          ignore (Brctl.create_bridge name);
+          Opt.iter (Ip.set_mac name) mac;
+          match vlan with
+          | None -> ()
+          | Some (parent, vlan) ->
+            let interface = List.hd (List.filter (fun n ->
+                  String.startswith "eth" n || String.startswith "bond" n
+                ) (Sysfs.bridge_to_interfaces parent)) in
+            Ip.create_vlan interface vlan;
+            let vlan_name = Ip.vlan_name interface vlan in
+            Interface.bring_up () dbg ~name:vlan_name;
+            Brctl.create_port name vlan_name
       end;
       Interface.bring_up () dbg ~name
     ) ()
@@ -623,8 +623,8 @@ module Bridge = struct
           if not (List.mem name (Sysfs.bridge_to_interfaces bridge)) then begin
             Linux_bonding.add_bond_master name;
             begin match bond_mac with
-            | Some mac -> Ip.set_mac name mac
-            | None -> warn "No MAC address specified for the bond"
+              | Some mac -> Ip.set_mac name mac
+              | None -> warn "No MAC address specified for the bond"
             end;
             List.iter (fun name -> Interface.bring_down () dbg ~name) interfaces;
             List.iter (Linux_bonding.add_bond_slave name) interfaces;
@@ -669,9 +669,9 @@ module Bridge = struct
       match !kind with
       | Openvswitch ->
         begin match Ovs.get_fail_mode name with
-        | "standalone" -> Some Standalone
-        | "secure" -> Some Secure
-        | _ -> None
+          | "standalone" -> Some Standalone
+          | "secure" -> Some Secure
+          | _ -> None
         end
       | Bridge -> raise Not_implemented
     ) ()

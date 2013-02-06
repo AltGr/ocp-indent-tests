@@ -50,8 +50,8 @@ let wait_for_subtask ?progress_minmax ~__context task =
       | `cancelled -> raise (Api_errors.Server_error (Api_errors.task_cancelled,[]))
       | `failure -> 
         begin match task_rec.API.task_error_info with
-        | code :: params -> raise (Api_errors.Server_error(code, params))
-        | _ -> failwith "xapi_vm_clone: task_info has no error_info"
+          | code :: params -> raise (Api_errors.Server_error(code, params))
+          | _ -> failwith "xapi_vm_clone: task_info has no error_info"
         end
       | _ -> ()
     in
@@ -276,8 +276,8 @@ let copy_vm_record ?(snapshot_info_record) ~__context ~vm ~disk_op ~new_name ~ne
     ~snapshot_of:(if is_a_snapshot then vm else Ref.null)
     ~snapshot_time:(if is_a_snapshot then Date.of_float (Unix.gettimeofday ()) else Date.never)
     ~snapshot_info:(match snapshot_info_record with
-      None -> (snapshot_info ~power_state ~is_a_snapshot)
-    | Some s -> s)
+        None -> (snapshot_info ~power_state ~is_a_snapshot)
+      | Some s -> s)
     ~snapshot_metadata:(snapshot_metadata ~__context ~vm ~is_a_snapshot)
     ~transportable_snapshot_id:""
     ~parent
@@ -336,8 +336,8 @@ let copy_vm_record ?(snapshot_info_record) ~__context ~vm ~disk_op ~new_name ~ne
   (* update the VM's parent field in case of snapshot. Note this must be done after "ref"
      has been created, so that its "children" field can be updated by the database layer *)
   begin match disk_op with
-  | Disk_op_clone | Disk_op_copy _-> ()
-  | Disk_op_snapshot | Disk_op_checkpoint -> Db.VM.set_parent ~__context ~self:vm ~value:ref
+    | Disk_op_clone | Disk_op_copy _-> ()
+    | Disk_op_snapshot | Disk_op_checkpoint -> Db.VM.set_parent ~__context ~self:vm ~value:ref
   end;
 
   ref, uuid

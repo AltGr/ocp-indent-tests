@@ -484,10 +484,10 @@ let receive_start ~dbg ~sr ~vdi_info ~id ~similar =
 
     let nearest = List.fold_left
         (fun acc content_id -> match acc with
-        | Some x -> acc
-        | None ->
-          try Some (List.find (fun vdi -> vdi.content_id = content_id) vdis)
-          with Not_found -> None) None similar in
+          | Some x -> acc
+          | None ->
+            try Some (List.find (fun vdi -> vdi.content_id = content_id) vdis)
+            with Not_found -> None) None similar in
 
     debug "Nearest VDI: content_id=%s vdi=%s" 
       (Opt.default "None" (Opt.map (fun x -> x.content_id) nearest)) 
@@ -613,10 +613,10 @@ let copy ~task ~dbg ~sr ~vdi ~dp ~url ~dest =
       let remote_vdis = Remote.SR.scan ~dbg ~sr:dest in
       let nearest = List.fold_left
           (fun acc content_id -> match acc with
-          | Some x -> acc
-          | None ->
-            try Some (List.find (fun vdi -> vdi.content_id = content_id) remote_vdis)
-            with Not_found -> None) None similars in
+            | Some x -> acc
+            | None ->
+              try Some (List.find (fun vdi -> vdi.content_id = content_id) remote_vdis)
+              with Not_found -> None) None similars in
 
       debug "Nearest VDI: content_id=%s vdi=%s"
         (Opt.default "None" (Opt.map (fun x -> x.content_id) nearest))

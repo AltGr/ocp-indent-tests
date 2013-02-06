@@ -14,12 +14,12 @@ let check_threads () =
       "Daemon.check_threads: may not be called \
        if any threads have ever been created";
   begin match Thread.num_threads () with
-  | None -> ()  (* This is pretty bad, but more likely to be a problem with num_threads *)
-  | Some (1 | 2) -> () (* main thread, or main + ticker - both ok *)
-  | Some _ ->
-    failwith
-      "Daemon.check_threads: may not be called if more than 2 threads \
-       (hopefully the main thread + ticker thread) are running"
+    | None -> ()  (* This is pretty bad, but more likely to be a problem with num_threads *)
+    | Some (1 | 2) -> () (* main thread, or main + ticker - both ok *)
+    | Some _ ->
+      failwith
+        "Daemon.check_threads: may not be called if more than 2 threads \
+         (hopefully the main thread + ticker thread) are running"
   end;
 ;;
 
@@ -99,45 +99,45 @@ let daemonize_wait ?(redirect_stdout=`Dev_null) ?(redirect_stderr=`Dev_null)
     let buf = "done" in
     let len = String.length buf in
     begin match Unix.handle_unix_error Unix.fork with
-    | `In_the_child ->
-      (* The process that will become the actual daemon. *)
-      Unix.close read_end;
-      Unix.chdir cd;
-      ignore (Unix.umask umask_value);
-      Staged.stage (fun () ->
-        redirect_stdio_fds ~skip_regular_files:true
-          ~stdout:redirect_stdout ~stderr:redirect_stderr;
-        let old_sigpipe_behavior = Signal.signal Signal.pipe `Ignore in
-        (try ignore (Unix.write write_end ~buf ~pos:0 ~len : int) with _ -> ());
-        Signal.set Signal.pipe old_sigpipe_behavior;
-        Unix.close write_end
-      )
-    | `In_the_parent pid ->
-      let pid = Pid.to_int pid in
-      (* The middle process, after it has forked its child. *)
-      Unix.close write_end;
-      let rec loop () =
-        let wait_result, process_status =
-          Caml.UnixLabels.waitpid ~mode:[Caml.UnixLabels.WNOHANG] pid in
-        if wait_result = 0 then begin
-          match Caml.Unix.select [read_end] [] [] 0.1 with
-          | [read_end], [], [] ->
-            (* If the child process exits before detaching and the middle process
-               happens to be in this call to select, the pipe will be closed and select
-               will return a ready file descriptor, but with zero bytes to read.
-               In this case, we want to loop back again and call waitpid to obtain
-               the correct exit status to propagate on to the outermost parent
-               (otherwise we might incorrectly return a success). *)
-            if Unix.read read_end ~buf:(String.create len) ~pos:0 ~len > 0 then
-              exit 0
-            else
-              loop ()
-          | _, _, _ -> loop ()
-        end else
-          match process_status with
-          | Caml.Unix.WEXITED i | Caml.Unix.WSIGNALED i -> exit i
-          | Caml.Unix.WSTOPPED i -> fail_wstopped ~pid ~i
-      in loop ()
+      | `In_the_child ->
+        (* The process that will become the actual daemon. *)
+        Unix.close read_end;
+        Unix.chdir cd;
+        ignore (Unix.umask umask_value);
+        Staged.stage (fun () ->
+          redirect_stdio_fds ~skip_regular_files:true
+            ~stdout:redirect_stdout ~stderr:redirect_stderr;
+          let old_sigpipe_behavior = Signal.signal Signal.pipe `Ignore in
+          (try ignore (Unix.write write_end ~buf ~pos:0 ~len : int) with _ -> ());
+          Signal.set Signal.pipe old_sigpipe_behavior;
+          Unix.close write_end
+        )
+      | `In_the_parent pid ->
+        let pid = Pid.to_int pid in
+        (* The middle process, after it has forked its child. *)
+        Unix.close write_end;
+        let rec loop () =
+          let wait_result, process_status =
+            Caml.UnixLabels.waitpid ~mode:[Caml.UnixLabels.WNOHANG] pid in
+          if wait_result = 0 then begin
+            match Caml.Unix.select [read_end] [] [] 0.1 with
+            | [read_end], [], [] ->
+              (* If the child process exits before detaching and the middle process
+                 happens to be in this call to select, the pipe will be closed and select
+                 will return a ready file descriptor, but with zero bytes to read.
+                 In this case, we want to loop back again and call waitpid to obtain
+                 the correct exit status to propagate on to the outermost parent
+                 (otherwise we might incorrectly return a success). *)
+              if Unix.read read_end ~buf:(String.create len) ~pos:0 ~len > 0 then
+                exit 0
+              else
+                loop ()
+            | _, _, _ -> loop ()
+          end else
+            match process_status with
+            | Caml.Unix.WEXITED i | Caml.Unix.WSIGNALED i -> exit i
+            | Caml.Unix.WSTOPPED i -> fail_wstopped ~pid ~i
+        in loop ()
     end
   | `In_the_parent pid ->
     let pid = Pid.to_int pid in

@@ -761,8 +761,8 @@ module Escaping = struct
                 let dst_pos = dst_pos - 1 in
                 dst.[dst_pos] <-
                   ( match escapeworthy.(Char.to_int src.[idx + 1]) with
-                  | -1 -> src.[idx + 1]
-                  | n -> Char.unsafe_of_int n);
+                    | -1 -> src.[idx + 1]
+                    | n -> Char.unsafe_of_int n);
                 (* update [last_dst_pos] and [last_idx] *)
                 loop idx dst_pos to_unescape
             in

@@ -61,10 +61,10 @@ type subscription =
   | All                       (** subscribe to everything *)
 
 let subscription_of_string x = if x = "*" then All else match String.split ~limit:2 '/' x with
-  | [ cls ] -> Class (String.lowercase cls)
-  | [ cls; id ] -> Object(String.lowercase cls, id)
-  | _ ->
-    raise (Api_errors.Server_error(Api_errors.event_subscription_parse_failure, [ x ]))
+    | [ cls ] -> Class (String.lowercase cls)
+    | [ cls; id ] -> Object(String.lowercase cls, id)
+    | _ ->
+      raise (Api_errors.Server_error(Api_errors.event_subscription_parse_failure, [ x ]))
 
 let any = List.fold_left (fun acc x -> acc || x) false
 

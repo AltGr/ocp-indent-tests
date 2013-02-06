@@ -81,8 +81,8 @@ let post_install_script rpc session_id __context install_vm vm (script, vbds) =
                 if newpid <> 0 
                 then 
                   (match status with 
-                  | Unix.WEXITED 0 -> (newpid,status) 
-                  | (Unix.WEXITED n|Unix.WSIGNALED n|Unix.WSTOPPED n) -> raise (Subprocess_failed n))
+                    | Unix.WEXITED 0 -> (newpid,status) 
+                    | (Unix.WEXITED n|Unix.WSIGNALED n|Unix.WSTOPPED n) -> raise (Subprocess_failed n))
                 else     
                   begin
                     Thread.delay 1.0;

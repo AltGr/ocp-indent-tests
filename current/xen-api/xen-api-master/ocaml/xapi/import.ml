@@ -561,8 +561,8 @@ module VDI : HandlerTools = struct
           match (
             if exists vdi_record.API.vDI_SR state.table
             then match find_by_sr_and_location () with
-            | Some x -> Some x
-            | None -> mapto
+              | Some x -> Some x
+              | None -> mapto
             else mapto
           ) with
           | Some vdi -> Found_disk vdi

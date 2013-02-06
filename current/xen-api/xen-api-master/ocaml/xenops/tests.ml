@@ -314,26 +314,26 @@ let _ =
     let allcfg f = List.iter (fun (n, cfg) -> f cfg) configs in
     begin try
       begin match fct_test with
-      | NO f -> f ()
-      | XC f ->
-        let xc = Xenctrl.interface_open () in
-        finally (fun () -> f xc)
-          (fun () -> Xenctrl.interface_close xc)
-      | XCS f ->
-        let xc = Xenctrl.interface_open () in
-        finally (fun () ->
-          let xs = Xs.daemon_open () in
+        | NO f -> f ()
+        | XC f ->
+          let xc = Xenctrl.interface_open () in
+          finally (fun () -> f xc)
+            (fun () -> Xenctrl.interface_close xc)
+        | XCS f ->
+          let xc = Xenctrl.interface_open () in
           finally (fun () ->
-            allcfg (fun cfg -> f cfg xc xs);
-          ) (fun () -> Xs.close xs)
-        ) (fun () -> Xenctrl.interface_close xc)
-      | XCSA f ->
-        let ctx = Xal.init () in
-        finally (fun () ->
-          allcfg (fun cfg ->
-            f cfg ctx (Xal.xc_of_ctx ctx)
-              (Xal.xs_of_ctx ctx))
-        ) (fun () -> Xal.close ctx)
+            let xs = Xs.daemon_open () in
+            finally (fun () ->
+              allcfg (fun cfg -> f cfg xc xs);
+            ) (fun () -> Xs.close xs)
+          ) (fun () -> Xenctrl.interface_close xc)
+        | XCSA f ->
+          let ctx = Xal.init () in
+          finally (fun () ->
+            allcfg (fun cfg ->
+              f cfg ctx (Xal.xc_of_ctx ctx)
+                (Xal.xs_of_ctx ctx))
+          ) (fun () -> Xal.close ctx)
       end;
       test_succeed !testnb name
     with exn ->

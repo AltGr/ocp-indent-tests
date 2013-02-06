@@ -17,8 +17,8 @@ let finally fct clean_f =
   let result = try
     fct ();
   with
-      exn ->
-      clean_f (); raise exn in
+    exn ->
+    clean_f (); raise exn in
   clean_f ();
   result
 

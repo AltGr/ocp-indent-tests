@@ -560,8 +560,8 @@ let select_files dir ext =
 
 let setup_standard_build_flags () =
   begin match getconf "LFS64_CFLAGS" with
-  | None -> ()
-  | Some flags -> flag ["compile"; "c"] (S[A"-ccopt"; A flags])
+    | None -> ()
+    | Some flags -> flag ["compile"; "c"] (S[A"-ccopt"; A flags])
   end;
   let cflags =
     let flags =

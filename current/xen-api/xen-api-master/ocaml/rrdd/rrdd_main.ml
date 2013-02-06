@@ -469,8 +469,8 @@ let read_cache_stats timestamp =
       List.filter_map (fun line ->
         try
           ( match String.split '=' line with
-          | hd :: tl -> Some (hd, String.concat "=" tl)
-          | _ -> None
+            | hd :: tl -> Some (hd, String.concat "=" tl)
+            | _ -> None
           )
         with _ -> None
       ) (String.split '\n' cache_stats_out)

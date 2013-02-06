@@ -86,9 +86,9 @@ let cli_with_pwspec ?(dolog=true) is_offhost cmd params pwspec =
         " -h "^(!host) else "")
     ^" "
     ^(match pwspec with
-    | NoPassword -> ""
-    | Password s -> "-u "^user^" -pw "^s
-    | PasswordFile s -> "-pwf "^s)
+      | NoPassword -> ""
+      | Password s -> "-u "^user^" -pw "^s
+      | PasswordFile s -> "-pwf "^s)
     ^" "^param_str in
   run_command ~dolog cli_base_string
 

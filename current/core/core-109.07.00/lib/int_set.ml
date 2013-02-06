@@ -58,9 +58,9 @@ let add_range t x y =
     | r :: rest ->
       (* the following keeps the invariant: discrete + sorted *)
       begin match Range.merge to_add r with
-      | `Lt_and_not_adjacent -> r :: loop rest to_add
-      | `Gt_and_not_adjacent -> to_add :: r :: rest
-      | `Ok merged -> loop rest merged
+        | `Lt_and_not_adjacent -> r :: loop rest to_add
+        | `Gt_and_not_adjacent -> to_add :: r :: rest
+        | `Ok merged -> loop rest merged
       end
     | [] -> [to_add]
   in

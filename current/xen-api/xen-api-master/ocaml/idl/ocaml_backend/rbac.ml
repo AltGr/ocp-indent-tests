@@ -185,8 +185,8 @@ let is_permission_in_session ~session_id ~permission ~session =
               ~rbac_permissions:session.API.session_rbac_permissions
           end
       in match permission_tree with
-      | Some(permission_tree) -> find_log permission permission_tree
-      | None -> find_linear permission session.API.session_rbac_permissions
+        | Some(permission_tree) -> find_log permission permission_tree
+        | None -> find_linear permission session.API.session_rbac_permissions
     end
   else (* use linear look-up of permissions *)
     find_linear permission session.API.session_rbac_permissions

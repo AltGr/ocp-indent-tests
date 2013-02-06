@@ -28,17 +28,17 @@ module Stable = struct
         if year < 0 || year > 9999 then invalid "year outside of [0..9999]";
         if day <= 0 then invalid "day <= 0";
         begin match month with
-        | Month.Apr | Month.Jun | Month.Sep | Month.Nov ->
-          if day > 30 then invalid "30 day month violation"
-        | Month.Feb ->
-          if is_leap_year year then begin
-            if day > 29 then invalid "29 day month violation" else ()
-          end else if day > 28 then begin
-            invalid "28 day month violation"
-          end else ()
-        | Month.Jan | Month.Mar | Month.May | Month.Jul | Month.Aug | Month.Oct
-        | Month.Dec ->
-          if day > 31 then invalid "31 day month violation"
+          | Month.Apr | Month.Jun | Month.Sep | Month.Nov ->
+            if day > 30 then invalid "30 day month violation"
+          | Month.Feb ->
+            if is_leap_year year then begin
+              if day > 29 then invalid "29 day month violation" else ()
+            end else if day > 28 then begin
+              invalid "28 day month violation"
+            end else ()
+          | Month.Jan | Month.Mar | Month.May | Month.Jul | Month.Aug | Month.Oct
+          | Month.Dec ->
+            if day > 31 then invalid "31 day month violation"
         end;
         { y = year; m = month; d = day; }
     end

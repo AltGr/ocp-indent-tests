@@ -70,11 +70,11 @@ let serverType_of_string = function
 let serverType_of_rpc x =
   match x with
   | Rpc.Int n -> (match (Int64.to_int n) with
-    | 0 -> XenServer
-    | 1 -> ESXServer
-    | 2 -> VirtualCenter
-    | 3 -> HyperVServer
-    | _ -> rpc_type_error x "ServerType" "Int(int64)")
+      | 0 -> XenServer
+      | 1 -> ESXServer
+      | 2 -> VirtualCenter
+      | 3 -> HyperVServer
+      | _ -> rpc_type_error x "ServerType" "Int(int64)")
   | y -> rpc_type_error y "ServerType" "Int(int64)"
 
 let rpc_of_serverType = function
@@ -95,13 +95,13 @@ let jobState_of_rpc x =
   match x with
   | Rpc.Int n ->
     (match (Int64.to_int n) with
-    | 0 -> Created
-    | 1 -> Queued
-    | 2 -> Running
-    | 3 -> Completed
-    | 4 -> Aborted
-    | 5 -> UserAborted
-    | _ -> rpc_type_error x "JobState" "Int(int64)")
+      | 0 -> Created
+      | 1 -> Queued
+      | 2 -> Running
+      | 3 -> Completed
+      | 4 -> Aborted
+      | 5 -> UserAborted
+      | _ -> rpc_type_error x "JobState" "Int(int64)")
   | e -> rpc_type_error e "JobState" "Int(int64)"
 
 let rpc_of_jobState = function

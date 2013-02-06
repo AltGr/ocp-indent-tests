@@ -90,8 +90,8 @@ module Hist = struct
   (** Given a monotonically increasing histogram find the 'x' value given a 'y' *)
   let find_x (x: t) (y: float) = 
     match fold x (fun bin_start bin_end height acc -> match acc with
-      | Some x -> acc (* got it already *)
-      | None -> if height > y then Some ((bin_start +. bin_end) /. 2.) (* no interpolation *) else None
+        | Some x -> acc (* got it already *)
+        | None -> if height > y then Some ((bin_start +. bin_end) /. 2.) (* no interpolation *) else None
       ) None with
     | Some x -> x
     | None -> raise Not_found

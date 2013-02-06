@@ -346,16 +346,16 @@ let string_of_vm ~__context vm =
 (** Export a VM's metadata only *)
 let export_metadata ~__context ~with_snapshot_metadata ~preserve_power_state ~include_vhd_parents ~vms s =
   begin match vms with
-  | [] -> failwith "need to specify at least one VM"
-  | [vm] -> info "VM.export_metadata: VM = %s; with_snapshot_metadata = '%b'; include_vhd_parents = '%b'; preserve_power_state = '%s" 
-              (string_of_vm ~__context vm)
-              with_snapshot_metadata
-              include_vhd_parents
-              (string_of_bool preserve_power_state)
-  | vms -> info "VM.export_metadata: VM = %s; with_snapshot_metadata = '%b'; preserve_power_state = '%s"
-             (String.concat ", " (List.map (string_of_vm ~__context) vms)) 
-             with_snapshot_metadata
-             (string_of_bool preserve_power_state) end;
+    | [] -> failwith "need to specify at least one VM"
+    | [vm] -> info "VM.export_metadata: VM = %s; with_snapshot_metadata = '%b'; include_vhd_parents = '%b'; preserve_power_state = '%s" 
+                (string_of_vm ~__context vm)
+                with_snapshot_metadata
+                include_vhd_parents
+                (string_of_bool preserve_power_state)
+    | vms -> info "VM.export_metadata: VM = %s; with_snapshot_metadata = '%b'; preserve_power_state = '%s"
+               (String.concat ", " (List.map (string_of_vm ~__context) vms)) 
+               with_snapshot_metadata
+               (string_of_bool preserve_power_state) end;
 
   let _, ova_xml = vm_metadata ~with_snapshot_metadata ~preserve_power_state ~include_vhd_parents ~__context ~vms in
   let hdr = Tar.Header.make Xva.xml_filename (Bigbuffer.length ova_xml) in
@@ -528,8 +528,8 @@ let handler (req: Request.t) s _ =
               then Some (Ref.of_string (List.assoc "task_id" all))
               else None in
             begin match task_id with 
-            | None -> Server_helpers.exec_with_new_task "export" ~task_in_database:true (fun __context -> TaskHelper.failed ~__context (a,b))
-            | Some task_id -> Server_helpers.exec_with_forwarded_task task_id (fun __context -> TaskHelper.failed ~__context (a,b))
+              | None -> Server_helpers.exec_with_new_task "export" ~task_in_database:true (fun __context -> TaskHelper.failed ~__context (a,b))
+              | Some task_id -> Server_helpers.exec_with_forwarded_task task_id (fun __context -> TaskHelper.failed ~__context (a,b))
             end
           | e ->
             error "Caught exception in export handler: %s" (Printexc.to_string e);

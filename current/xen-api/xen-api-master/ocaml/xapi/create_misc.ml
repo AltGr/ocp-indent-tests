@@ -360,8 +360,8 @@ let make_packs_info () =
           let param_name = originator ^ ":" ^ name in
           let value = description ^ ", version " ^ version ^
               (match build with
-              | Some build -> ", build " ^ build
-              | None -> "") ^
+                | Some build -> ", build " ^ build
+                | None -> "") ^
               (if homogeneous then ", homogeneous"
                else "")
           in

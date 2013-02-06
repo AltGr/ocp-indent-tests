@@ -31,8 +31,8 @@ let do_cmd s cmd args =
   | Success(log, status) ->
     debug "log: %s" log;
     begin match status with
-    | Unix.WEXITED 0 -> ignore(log)
-    | _ -> raise (Spawn_internal_error(log, "", status))
+      | Unix.WEXITED 0 -> ignore(log)
+      | _ -> raise (Spawn_internal_error(log, "", status))
     end
   | Failure(log, exn) ->
     raise exn

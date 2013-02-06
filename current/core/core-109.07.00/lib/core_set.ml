@@ -59,12 +59,12 @@ module Tree0 = struct
     let rec loop lower upper t =
       let in_range v =
         (match lower with
-        | None -> true
-        | Some lower -> compare_elt lower v < 0
+          | None -> true
+          | Some lower -> compare_elt lower v < 0
         )
         && (match upper with
-        | None -> true
-        | Some upper -> compare_elt v upper < 0
+          | None -> true
+          | Some upper -> compare_elt v upper < 0
         )
       in
       match t with
@@ -529,11 +529,11 @@ module Tree0 = struct
       | Leaf v1, t2 -> mem t2 v1 ~compare_elt
       | Node (l1, v1, r1, _, _), Leaf v2 ->
         begin match l1, r1 with
-        | Empty, Empty ->
-          (* This case shouldn't occur in practice because we should have constructed
-             a Leaf rather than a Node with two Empty subtrees *)
-          compare_elt v1 v2 = 0
-        | _, _ -> false
+          | Empty, Empty ->
+            (* This case shouldn't occur in practice because we should have constructed
+               a Leaf rather than a Node with two Empty subtrees *)
+            compare_elt v1 v2 = 0
+          | _, _ -> false
         end
       | Node (l1, v1, r1, _, _), (Node (l2, v2, r2, _, _) as t2) ->
         let c = compare_elt v1 v2 in
@@ -600,12 +600,12 @@ module Tree0 = struct
       | Empty -> accu
       | Leaf v ->
         (match p v with
-        | None -> accu
-        | Some v -> add accu v ~compare_elt)
+          | None -> accu
+          | Some v -> add accu v ~compare_elt)
       | Node(l, v, r, _, _) ->
         filt (filt (match p v with
-            | None -> accu
-            | Some v -> add accu v ~compare_elt) l) r
+              | None -> accu
+              | Some v -> add accu v ~compare_elt) l) r
     in
     filt Empty s
   ;;
@@ -768,9 +768,9 @@ module Tree0 = struct
       else
         let compare (_, e) (_, e') = compare_elt e e' in
         begin match List.find_a_dup (List.zip_exn lst elt_lst) ~compare with
-        | None -> assert false
-        | Some (el_sexp, _) ->
-          Conv.of_sexp_error "Set.t_of_sexp: duplicate element in set" el_sexp
+          | None -> assert false
+          | Some (el_sexp, _) ->
+            Conv.of_sexp_error "Set.t_of_sexp: duplicate element in set" el_sexp
         end
     | sexp -> Conv.of_sexp_error "Set.t_of_sexp: list needed" sexp
   ;;

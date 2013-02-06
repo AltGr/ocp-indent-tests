@@ -142,29 +142,29 @@ let one s vm test =
 
         let domid = Client.VM.get_domid !rpc s vm in
         begin match test with
-        | { api = None; parallel_op = Some x } ->
-          let reason = match x with
-            | Internal_reboot -> Xenctrl.Reboot
-            | Internal_halt -> Xenctrl.Halt
-            | Internal_crash -> Xenctrl.Crash
-            | Internal_suspend -> Xenctrl.Suspend in
-          begin 
-            try
-              Xenctrl.with_intf (fun xc -> Xenctrl.domain_shutdown xc (Int64.to_int domid) reason)
-            with e ->
-              debug t (Printf.sprintf "Ignoring exception: %s" (Printexc.to_string e))
-          end
-        | { api = Some x; parallel_op = Some y } ->
-          let reason = match y with
-            | Internal_reboot -> "reboot"
-            | Internal_halt -> "halt"
-            | Internal_crash -> "crash"
-            | Internal_suspend -> "suspend" in
-          Unixext.write_string_to_file simulate reason;
-          call_api x
-        | { api = Some x; parallel_op = None } ->
-          call_api x
-        | t -> failwith (Printf.sprintf "Invalid test: %s" (string_of_test t))
+          | { api = None; parallel_op = Some x } ->
+            let reason = match x with
+              | Internal_reboot -> Xenctrl.Reboot
+              | Internal_halt -> Xenctrl.Halt
+              | Internal_crash -> Xenctrl.Crash
+              | Internal_suspend -> Xenctrl.Suspend in
+            begin 
+              try
+                Xenctrl.with_intf (fun xc -> Xenctrl.domain_shutdown xc (Int64.to_int domid) reason)
+              with e ->
+                debug t (Printf.sprintf "Ignoring exception: %s" (Printexc.to_string e))
+            end
+          | { api = Some x; parallel_op = Some y } ->
+            let reason = match y with
+              | Internal_reboot -> "reboot"
+              | Internal_halt -> "halt"
+              | Internal_crash -> "crash"
+              | Internal_suspend -> "suspend" in
+            Unixext.write_string_to_file simulate reason;
+            call_api x
+          | { api = Some x; parallel_op = None } ->
+            call_api x
+          | t -> failwith (Printf.sprintf "Invalid test: %s" (string_of_test t))
         end;
 
         let wait_for_domid p =
@@ -178,11 +178,11 @@ let one s vm test =
         in
 
         begin match expected_result test with
-        | None -> failwith (Printf.sprintf "Invalid test: %s" (string_of_test test))
-        | Some Rebooted ->
-          wait_for_domid (fun domid' -> domid <> domid')
-        | Some Halted ->
-          wait_for_domid (fun domid' -> domid' = -1L)
+          | None -> failwith (Printf.sprintf "Invalid test: %s" (string_of_test test))
+          | Some Rebooted ->
+            wait_for_domid (fun domid' -> domid <> domid')
+          | Some Halted ->
+            wait_for_domid (fun domid' -> domid' = -1L)
         end
       with e -> failed t (Printexc.to_string e)
     )

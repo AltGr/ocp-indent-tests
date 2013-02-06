@@ -76,8 +76,8 @@ let http_proxy_to req from addr =
           Unix.connect s addr;
         with e ->
           error "Failed to proxy HTTP request to: %s" (match addr with
-            | Unix.ADDR_UNIX path -> "UNIX:" ^ path
-            | Unix.ADDR_INET(ip, port) -> "IP:" ^ (Unix.string_of_inet_addr ip) ^ ":" ^ (string_of_int port)
+              | Unix.ADDR_UNIX path -> "UNIX:" ^ path
+              | Unix.ADDR_INET(ip, port) -> "IP:" ^ (Unix.string_of_inet_addr ip) ^ ":" ^ (string_of_int port)
             );
           Http_svr.headers from (Http.http_404_missing ~version:"1.0" ());
           raise e in

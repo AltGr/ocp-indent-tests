@@ -763,12 +763,12 @@ module Base = struct
             loop env anons args
           | Flag.Arg (f, comp) ->
             begin match args with
-            | Nil -> die "missing argument for flag %s" flag ()
-            | Cons (arg, rest) ->
-              let env = f arg env in
-              loop env anons rest
-            | Complete part ->
-              never_returns (Completer.run_and_exit comp env ~part)
+              | Nil -> die "missing argument for flag %s" flag ()
+              | Cons (arg, rest) ->
+                let env = f arg env in
+                loop env anons rest
+              | Complete part ->
+                never_returns (Completer.run_and_exit comp env ~part)
             end
           | Flag.Rest f ->
             if args_ends_in_complete args then exit 0;

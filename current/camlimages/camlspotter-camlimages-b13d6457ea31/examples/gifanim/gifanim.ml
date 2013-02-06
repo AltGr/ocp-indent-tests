@@ -55,12 +55,12 @@ let pos = ref 0 in
 let rec disp_frame () =
   let frame, image, mask = frames.(!pos) in
   begin match mask with
-  | Some bmp ->
-    Gdk.GC.set_clip_origin gc ~x: frame.frame_left ~y: frame.frame_top;
-    Gdk.GC.set_clip_mask gc bmp
-  | None ->
-    Gdk.GC.set_clip_origin gc ~x: 0 ~y: 0;
-    Gdk.GC.set_clip_rectangle gc rect
+    | Some bmp ->
+      Gdk.GC.set_clip_origin gc ~x: frame.frame_left ~y: frame.frame_top;
+      Gdk.GC.set_clip_mask gc bmp
+    | None ->
+      Gdk.GC.set_clip_origin gc ~x: 0 ~y: 0;
+      Gdk.GC.set_clip_rectangle gc rect
   end;
   Gdk.Draw.image drawing gc image.data ~xsrc: 0 ~ysrc:0
     ~xdest: frame.frame_left ~ydest: frame.frame_top
@@ -80,8 +80,8 @@ prerr_endline "first call";
 let id = ref None in
 id := Some (window#event#connect#configure ~callback: (fun _ev ->
       begin match !id with
-      | Some id -> window#misc#disconnect id
-      | None -> ()
+        | Some id -> window#misc#disconnect id
+        | None -> ()
       end;
       disp_frame ()));
 

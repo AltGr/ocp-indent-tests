@@ -65,8 +65,8 @@ let count_mandatory_message_parameters (msg: message) =
     match params with
     | [] -> 0
     | head::tail -> ((match head.param_default with
-      | None -> 1
-      | Some x -> 0) + 
+        | None -> 1
+        | Some x -> 0) + 
           (count_mandatory_parameters tail))
   in count_mandatory_parameters msg.msg_params
 

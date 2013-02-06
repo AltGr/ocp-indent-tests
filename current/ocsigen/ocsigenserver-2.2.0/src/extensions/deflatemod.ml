@@ -198,8 +198,8 @@ let enc_compare e e' = match e,e' with
 let rec filtermap f = function
   |[] -> []
   |t::q -> match f t with
-      |Some s -> s::(filtermap f q)
-      |None -> filtermap f q
+    |Some s -> s::(filtermap f q)
+    |None -> filtermap f q
 
 let convert = function
   |(Some "deflate",v) -> Some (Deflate, qvalue v)

@@ -144,8 +144,8 @@ module DD(Input : IO)(Output : IO) = struct
     let do_block acc (offset, this_chunk) =
       input_op offset { buf = buf; offset = 0; len = Int64.to_int this_chunk };
       begin match sparse with
-      | Some zero -> fold_over_nonzeros buf (Int64.to_int this_chunk) rounddown roundup (f offset) acc
-      | None -> f offset acc { buf = buf; offset = 0; len = Int64.to_int this_chunk }
+        | Some zero -> fold_over_nonzeros buf (Int64.to_int this_chunk) rounddown roundup (f offset) acc
+        | None -> f offset acc { buf = buf; offset = 0; len = Int64.to_int this_chunk }
       end in
     (* For each entry from the BAT, copy it as a sequence of sub-blocks *)
     Bat.fold_left (fun acc b -> partition_into_blocks b blocksize do_block acc) initial bat
@@ -295,10 +295,10 @@ module Nbd_writer = struct
       (fun () ->
         (* On first request, signal the background thread *)
         begin match !fd with
-        | None ->
-          fd := Some fd';
-          Condition.signal c
-        | Some other -> assert (other = fd') (* One server only please *)
+          | None ->
+            fd := Some fd';
+            Condition.signal c
+          | Some other -> assert (other = fd') (* One server only please *)
         end;
         (* If we've sent more than our limit, wait for replies *)
         while !num_inflight_requests >= !max_inflight_requests do

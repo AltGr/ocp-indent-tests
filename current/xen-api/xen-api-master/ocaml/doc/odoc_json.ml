@@ -214,10 +214,10 @@ let rec print_one_t = function
   | Node (tag, atts, subs) ->
     "<" ^ tag ^
       (match atts with
-      | [] -> ""
-      | _ -> " " ^
-          String.concat " " (List.map
-              (fun (a,v) -> (Printf.sprintf "%s=\"%s\" " a (escape_entities (escape_quotes v)))) atts)
+        | [] -> ""
+        | _ -> " " ^
+            String.concat " " (List.map
+                (fun (a,v) -> (Printf.sprintf "%s=\"%s\" " a (escape_entities (escape_quotes v)))) atts)
       ) ^ ">" ^
       (print_t_list subs) ^
       (Printf.sprintf "</%s>" tag)
@@ -316,12 +316,12 @@ class gen () =
       let loc = "location", self#json_of_loc mt.Module.mt_loc in
       let info = "info", self#json_of_info_opt mt.Module.mt_info in
       let mte = "type", match mt.Module.mt_type with
-        | None -> Empty
-        | Some t -> String (Odoc_info.string_of_module_type t) (* self#json_of_module_type_expr t *)
+          | None -> Empty
+          | Some t -> String (Odoc_info.string_of_module_type t) (* self#json_of_module_type_expr t *)
       in
       let mk = "kind", match mt.Module.mt_kind with
-        | None -> Empty
-        | Some t -> Empty (* self#json_of_module_type_kind t *)
+          | None -> Empty
+          | Some t -> Empty (* self#json_of_module_type_kind t *)
       in
       let file = "file", String mt.Module.mt_file in
       Object (name :: file :: loc :: info :: mte :: mk :: [])
@@ -342,8 +342,8 @@ class gen () =
         Object (["name", String sn.Parameter.sn_name;
                  "type", self#json_of_type_expr sn.Parameter.sn_type] @
               (match sn.Parameter.sn_text with
-              | None -> []
-              | Some t -> ["comment", self#json_of_comment t])
+                | None -> []
+                | Some t -> ["comment", self#json_of_comment t])
           )
       | Parameter.Tuple (l,texpr) ->
         Object ["tuple", Object

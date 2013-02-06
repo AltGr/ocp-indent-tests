@@ -111,8 +111,8 @@ let is_himn_req req =
   match req.Http.Request.host with
   | Some h ->
     (match !Xapi_mgmt_iface.himn_addr with
-    | Some himn -> himn = h
-    | None -> false)
+      | Some himn -> himn = h
+      | None -> false)
   | None -> false
 
 (* This bit is called directly by the fake_rpc callback *)

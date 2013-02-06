@@ -297,16 +297,16 @@ let update_vdis ~__context ~sr db_vdis vdi_infos =
   let scan_vdi_map = List.fold_left
       (fun m v -> StringMap.add v.vdi v m) StringMap.empty vdi_infos in
   let to_delete = StringMap.merge (fun loc db scan -> match loc, db, scan with
-    | loc, Some (r, v), None -> Some r
-    | _, _, _ -> None
+      | loc, Some (r, v), None -> Some r
+      | _, _, _ -> None
     ) db_vdi_map scan_vdi_map in
   let to_create = StringMap.merge (fun loc db scan -> match loc, db, scan with
-    | loc, None, Some v -> Some v
-    | _, _, _ -> None
+      | loc, None, Some v -> Some v
+      | _, _, _ -> None
     ) db_vdi_map scan_vdi_map in
   let to_update = StringMap.merge (fun loc db scan -> match loc, db, scan with
-    | loc, Some (r, v), Some vi -> Some (r, v, vi)
-    | _, _, _ -> None
+      | loc, Some (r, v), Some vi -> Some (r, v, vi)
+      | _, _, _ -> None
     ) db_vdi_map scan_vdi_map in
 
   let find_vdi db_vdi_map loc =

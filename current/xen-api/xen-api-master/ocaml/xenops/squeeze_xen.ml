@@ -155,19 +155,19 @@ module Domain = struct
           if path = _introduceDomain || path = _releaseDomain
           then look_for_different_domains ()
           else match List.filter (fun x -> x <> "") (String.split '/' path) with
-          | "local" :: "domain" :: domid :: rest when List.mem rest interesting_paths ->
-            let value = try Some (xs.Xs.read path) with _ -> None in
-            let domid = int_of_string domid in
-            Mutex.execute m
-              (fun () ->
-                match get_per_domain (xc, xs) domid with
-                | None -> ()
-                | Some per_domain ->
-                  let key = "/" ^ (String.concat "/" rest) in
-                  debug "watch %s <- %s" key (Opt.default "None" value);
-                  Hashtbl.replace per_domain.keys key value
-              )
-          | _  -> debug "Ignoring unexpected watch: %s" path
+            | "local" :: "domain" :: domid :: rest when List.mem rest interesting_paths ->
+              let value = try Some (xs.Xs.read path) with _ -> None in
+              let domid = int_of_string domid in
+              Mutex.execute m
+                (fun () ->
+                  match get_per_domain (xc, xs) domid with
+                  | None -> ()
+                  | Some per_domain ->
+                    let key = "/" ^ (String.concat "/" rest) in
+                    debug "watch %s <- %s" key (Opt.default "None" value);
+                    Hashtbl.replace per_domain.keys key value
+                )
+            | _  -> debug "Ignoring unexpected watch: %s" path
         done
       )
 
@@ -417,10 +417,10 @@ let make_host ~verbose ~xc ~xs =
                    let offset_kib = memory_actual_kib' -* target_kib in
                    debug "domid %d just %s; calibrating memory-offset = %Ld KiB" di.domid
                      (match can_balloon, has_guest_agent with
-                     | true, false -> "advertised a balloon driver"
-                     | true, true -> "started a guest agent and advertised a balloon driver"
-                     | false, true -> "started a guest agent (but has no balloon driver)"
-                     | false, false -> "N/A" (*impossible: see if has_booted above *)
+                       | true, false -> "advertised a balloon driver"
+                       | true, true -> "started a guest agent and advertised a balloon driver"
+                       | false, true -> "started a guest agent (but has no balloon driver)"
+                       | false, false -> "N/A" (*impossible: see if has_booted above *)
                      ) offset_kib;
                    Domain.set_memory_offset_noexn cnx di.domid offset_kib;
                    offset_kib

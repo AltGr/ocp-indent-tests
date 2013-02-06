@@ -56,8 +56,8 @@ let rbac_assert_permission_fn = ref None (* required to break dep-cycle with rba
 let assert_can_destroy ?(ok_if_no_session_in_context=false) ~__context task_id =
   let assert_permission_task_destroy_any () =
     (match !rbac_assert_permission_fn with
-    | None -> failwith "no taskhelper.rbac_assert_permission_fn" (* shouldn't ever happen *) 
-    | Some fn -> fn ~__context ~permission:Rbac_static.permission_task_destroy_any
+      | None -> failwith "no taskhelper.rbac_assert_permission_fn" (* shouldn't ever happen *) 
+      | Some fn -> fn ~__context ~permission:Rbac_static.permission_task_destroy_any
     )
   in
   let context_session = try Some (Context.get_session_id __context) with Failure _ -> None in

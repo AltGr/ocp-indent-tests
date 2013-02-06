@@ -574,12 +574,12 @@ let get_opt_recommendations ~__context =
       | Xml.Element (_, _, kvalues) :: tl ->
         List.map (
             fun elem -> match elem with 
-            | (Xml.Element (key, _, _)) as leaf -> 
-              (key, data_from_leaf leaf)
-            | Xml.PCData _ ->
-              unexpected_data "GetOptimizationRecommendations"
-                "PoolOptimizationRecommendation"
-                inner_xml
+              | (Xml.Element (key, _, _)) as leaf -> 
+                (key, data_from_leaf leaf)
+              | Xml.PCData _ ->
+                unexpected_data "GetOptimizationRecommendations"
+                  "PoolOptimizationRecommendation"
+                  inner_xml
           ) kvalues :: gen_map tl
       | Xml.PCData _ :: tl ->
         unexpected_data "GetOptimizationRecommendations"
@@ -649,12 +649,12 @@ let get_evacuation_recoms ~__context ~uuid =
       | Xml.Element (_, _, kvalues) :: tl ->
         List.map (
             fun elem -> match elem with 
-            | (Xml.Element (key, _, _)) as leaf -> 
-              (key, data_from_leaf leaf)
-            | Xml.PCData _ ->
-              unexpected_data "HostGetRecommendations"
-                "HostEvacuationRecommendation"
-                inner_xml
+              | (Xml.Element (key, _, _)) as leaf -> 
+                (key, data_from_leaf leaf)
+              | Xml.PCData _ ->
+                unexpected_data "HostGetRecommendations"
+                  "HostEvacuationRecommendation"
+                  inner_xml
           ) kvalues :: gen_map tl
       | Xml.PCData _ :: tl ->
         unexpected_data "HostGetRecommendations"

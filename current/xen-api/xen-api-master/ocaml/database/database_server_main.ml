@@ -51,35 +51,35 @@ let _ =
   | None -> failwith "Requires either --slave-of or --master arguments"
   | Some mode ->
     begin match mode with
-    | Slave _ -> failwith "unimplemented"
-    | Master db_filename ->
-      Printf.printf "Database path: %s\n%!" db_filename;
-      let db = Parse_db_conf.make db_filename in
-      Db_conn_store.initialise_db_connections [ db ];
-      let t = Db_backend.make () in          
-      Db_cache_impl.make t [ db ] schema;
-      Db_cache_impl.sync [ db ] (Db_ref.get_database t);
+      | Slave _ -> failwith "unimplemented"
+      | Master db_filename ->
+        Printf.printf "Database path: %s\n%!" db_filename;
+        let db = Parse_db_conf.make db_filename in
+        Db_conn_store.initialise_db_connections [ db ];
+        let t = Db_backend.make () in          
+        Db_cache_impl.make t [ db ] schema;
+        Db_cache_impl.sync [ db ] (Db_ref.get_database t);
 
-      Unixext.unlink_safe !listen_path;
-      let sockaddr = Unix.ADDR_UNIX !listen_path in
-      let socket = Http_svr.bind sockaddr "unix_rpc" in
-      let server = Http_svr.Server.empty in
-      Http_svr.add_handler server Http.Post "/post_remote_db_access" (Http_svr.BufIO remote_database_access_handler_v1);
-      Http_svr.add_handler server Http.Post "/post_remote_db_access_v2" (Http_svr.BufIO remote_database_access_handler_v2);
-      Http_svr.start server socket;
-      Printf.printf "server listening\n%!";
-      if !self_test then begin
-        Printf.printf "Running unit-tests\n%!";
-        Local_tests.main true;
-        Printf.printf "All tests passed\n%!";
-      end;
-      (* Wait for either completion *)
-      Mutex.execute m
-        (fun () ->
-          while not (!finished) do
-            Condition.wait c m
-          done
-        );
-      Http_svr.stop socket
+        Unixext.unlink_safe !listen_path;
+        let sockaddr = Unix.ADDR_UNIX !listen_path in
+        let socket = Http_svr.bind sockaddr "unix_rpc" in
+        let server = Http_svr.Server.empty in
+        Http_svr.add_handler server Http.Post "/post_remote_db_access" (Http_svr.BufIO remote_database_access_handler_v1);
+        Http_svr.add_handler server Http.Post "/post_remote_db_access_v2" (Http_svr.BufIO remote_database_access_handler_v2);
+        Http_svr.start server socket;
+        Printf.printf "server listening\n%!";
+        if !self_test then begin
+          Printf.printf "Running unit-tests\n%!";
+          Local_tests.main true;
+          Printf.printf "All tests passed\n%!";
+        end;
+        (* Wait for either completion *)
+        Mutex.execute m
+          (fun () ->
+            while not (!finished) do
+              Condition.wait c m
+            done
+          );
+        Http_svr.stop socket
     end
 

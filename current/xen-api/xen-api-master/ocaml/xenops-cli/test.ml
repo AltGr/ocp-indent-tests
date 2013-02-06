@@ -111,8 +111,8 @@ let fail_not_built_task id =
   | Task.Failed x -> 
     let exn = exn_of_exnty (Exception.exnty_of_rpc x) in
     begin match exn with 
-    | Domain_not_built -> () 
-    | _ -> raise exn
+      | Domain_not_built -> () 
+      | _ -> raise exn
     end
   | Task.Pending _ -> failwith "task pending"
 
@@ -124,8 +124,8 @@ let fail_invalid_vcpus_task id =
   | Task.Failed x ->
     let exn = exn_of_exnty (Exception.exnty_of_rpc x) in
     begin match exn with 
-    | Invalid_vcpus _ -> ()
-    | _ -> raise exn
+      | Invalid_vcpus _ -> ()
+      | _ -> raise exn
     end
   | Task.Pending _ -> failwith "task pending"
 
@@ -246,18 +246,18 @@ let vm_assert_equal vm vm' =
     assert_equal ~msg:"vncterm" ~printer:string_of_bool p.vncterm p'.vncterm;
     assert_equal ~msg:"vncterm_ip" ~printer:(Opt.default "None") p.vncterm_ip p'.vncterm_ip;
     begin match p.boot, p'.boot with
-    | Direct _, Indirect _
-    | Indirect _, Direct _ -> failwith "pv-boot-ness"
-    | Direct x, Direct x' ->
-      assert_equal ~msg:"kernel" ~printer:(fun x -> x) x.kernel x'.kernel;
-      assert_equal ~msg:"cmdline" ~printer:(fun x -> x) x.cmdline x'.cmdline;
-      assert_equal ~msg:"ramdisk" ~printer:(function None -> "None" | Some x -> x) x.ramdisk x'.ramdisk    
-    | Indirect x, Indirect x' ->
-      assert_equal ~msg:"bootloader" ~printer:(fun x -> x) x.bootloader x'.bootloader;
-      assert_equal ~msg:"extra_args" ~printer:(fun x -> x) x.extra_args x'.extra_args;
-      assert_equal ~msg:"legacy_args" ~printer:(fun x -> x) x.legacy_args x'.legacy_args;
-      assert_equal ~msg:"bootloader_args" ~printer:(fun x -> x) x.bootloader_args x'.bootloader_args;
-      assert_equal ~msg:"devices" ~printer:(fun x -> x |> rpc_of_disk_list |> Jsonrpc.to_string) x.devices x'.devices;
+      | Direct _, Indirect _
+      | Indirect _, Direct _ -> failwith "pv-boot-ness"
+      | Direct x, Direct x' ->
+        assert_equal ~msg:"kernel" ~printer:(fun x -> x) x.kernel x'.kernel;
+        assert_equal ~msg:"cmdline" ~printer:(fun x -> x) x.cmdline x'.cmdline;
+        assert_equal ~msg:"ramdisk" ~printer:(function None -> "None" | Some x -> x) x.ramdisk x'.ramdisk    
+      | Indirect x, Indirect x' ->
+        assert_equal ~msg:"bootloader" ~printer:(fun x -> x) x.bootloader x'.bootloader;
+        assert_equal ~msg:"extra_args" ~printer:(fun x -> x) x.extra_args x'.extra_args;
+        assert_equal ~msg:"legacy_args" ~printer:(fun x -> x) x.legacy_args x'.legacy_args;
+        assert_equal ~msg:"bootloader_args" ~printer:(fun x -> x) x.bootloader_args x'.bootloader_args;
+        assert_equal ~msg:"devices" ~printer:(fun x -> x |> rpc_of_disk_list |> Jsonrpc.to_string) x.devices x'.devices;
     end
 
 let with_vm id f =
@@ -267,16 +267,16 @@ let with_vm id f =
     (fun () ->
       let _, state = Client.VM.stat dbg id in
       begin match state.Vm.power_state with
-      | Running
-      | Paused ->
-        Printf.fprintf stderr "VM is running or paused; shutting down";
-        begin try
-          Client.VM.shutdown dbg id None |> wait_for_task |> success_task
-        with e ->
-          Printf.fprintf stderr "Caught failure during with_vm cleanup: %s" (Printexc.to_string e);
-          raise e
-        end
-      | _ -> ()
+        | Running
+        | Paused ->
+          Printf.fprintf stderr "VM is running or paused; shutting down";
+          begin try
+            Client.VM.shutdown dbg id None |> wait_for_task |> success_task
+          with e ->
+            Printf.fprintf stderr "Caught failure during with_vm cleanup: %s" (Printexc.to_string e);
+            raise e
+          end
+        | _ -> ()
       end;
       try
         Client.VM.remove dbg id
@@ -423,9 +423,9 @@ let vm_test_reboot _ =
         (function
         | Dynamic.Vm id' ->
           id = id' && (match try Some (Client.VM.stat dbg id) with _ -> None with
-          | Some (_, vm_state) ->
-            vm_state.Vm.domids <> state.Vm.domids
-          | _ -> false
+            | Some (_, vm_state) ->
+              vm_state.Vm.domids <> state.Vm.domids
+            | _ -> false
           )
         | _ -> false);
       Client.VM.shutdown dbg id None |> wait_for_task |> success_task;
@@ -444,9 +444,9 @@ let vm_test_halt _ =
         (function
         | Dynamic.Vm id' ->
           id = id' && (match try Some (Client.VM.stat dbg id) with _ -> None with
-          | Some (_, vm_state) ->
-            vm_state.Vm.domids = []
-          | _ -> false
+            | Some (_, vm_state) ->
+              vm_state.Vm.domids = []
+            | _ -> false
           )
         | _ -> false);
     )

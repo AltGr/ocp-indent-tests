@@ -395,9 +395,9 @@ module Wrapper = functor(Impl: Server_impl) -> struct
         | None -> []
         | Some sr_t ->
           begin match Sr.find vdi sr_t with
-          | Some vdi_t ->
-            List.filter (which vdi_t) (Vdi.dps vdi_t)
-          | None -> []
+            | Some vdi_t ->
+              List.filter (which vdi_t) (Vdi.dps vdi_t)
+            | None -> []
           end in
       let failures = List.fold_left (fun acc dp ->
           info "Attempting to destroy datapath dp:%s sr:%s vdi:%s" dp sr vdi;

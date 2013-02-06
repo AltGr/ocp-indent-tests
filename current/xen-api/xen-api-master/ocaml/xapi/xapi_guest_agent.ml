@@ -122,8 +122,8 @@ let mutex = Mutex.create ()
 let all (lookup: string -> string option) (list: string -> string list) ~__context ~domid ~uuid =
   let all_control = list "control" in
   let to_map kvpairs = List.concat (List.map (fun (xskey, mapkey) -> match lookup xskey with
-      | Some xsval -> [ mapkey, xsval ]
-      | None -> []) kvpairs) in
+        | Some xsval -> [ mapkey, xsval ]
+        | None -> []) kvpairs) in
 
   let pv_drivers_version = to_map pv_drivers_version
   and os_version = to_map os_version

@@ -712,15 +712,15 @@ module VM = struct
             let domid = Domain.make ~xc ~xs non_persistent.VmExtra.create_info (uuid_of_vm vm) in
             Mem.transfer_reservation_to_domain task.Xenops_task.dbg domid reservation_id;
             begin match vm.Vm.ty with
-            | Vm.HVM { Vm.qemu_stubdom = true } ->
-              Mem.with_reservation task.Xenops_task.dbg Stubdom.memory_kib Stubdom.memory_kib
-                (fun _ reservation_id ->
-                  let stubdom_domid = Stubdom.create ~xc ~xs domid in
-                  Mem.transfer_reservation_to_domain task.Xenops_task.dbg stubdom_domid reservation_id;
-                  set_stubdom ~xs domid stubdom_domid;
-                )
-            | _ ->
-              ()
+              | Vm.HVM { Vm.qemu_stubdom = true } ->
+                Mem.with_reservation task.Xenops_task.dbg Stubdom.memory_kib Stubdom.memory_kib
+                  (fun _ reservation_id ->
+                    let stubdom_domid = Stubdom.create ~xc ~xs domid in
+                    Mem.transfer_reservation_to_domain task.Xenops_task.dbg stubdom_domid reservation_id;
+                    set_stubdom ~xs domid stubdom_domid;
+                  )
+              | _ ->
+                ()
             end;
             let initial_target =
               let target_plus_overhead_bytes = bytes_of_kib target_plus_overhead_kib in
@@ -1325,12 +1325,12 @@ module VM = struct
         | None ->
           (* XXX: we need to store (eg) guest agent info *)
           begin match vme with
-          | Some vmextra when vmextra.VmExtra.non_persistent.VmExtra.suspend_memory_bytes = 0L ->
-            halted_vm
-          | Some _ ->
-            { halted_vm with Vm.power_state = Suspended }
-          | None ->
-            halted_vm
+            | Some vmextra when vmextra.VmExtra.non_persistent.VmExtra.suspend_memory_bytes = 0L ->
+              halted_vm
+            | Some _ ->
+              { halted_vm with Vm.power_state = Suspended }
+            | None ->
+              halted_vm
           end
         | Some di ->
           let vnc = Opt.map (fun port -> { Vm.protocol = Vm.Rfb; port = port })
@@ -1381,16 +1381,16 @@ module VM = struct
             guest_agent = guest_agent;
             xsdata_state = xsdata_state;
             vcpu_target = begin match vme with
-            | Some x -> x.VmExtra.non_persistent.VmExtra.vcpus
-            | None -> 0
+              | Some x -> x.VmExtra.non_persistent.VmExtra.vcpus
+              | None -> 0
             end;
             memory_target = memory_target;
             memory_actual = memory_actual;
             memory_limit = memory_limit;
             rtc_timeoffset = rtc;
             last_start_time = begin match vme with
-            | Some x -> x.VmExtra.persistent.VmExtra.last_start_time
-            | None -> 0.
+              | Some x -> x.VmExtra.persistent.VmExtra.last_start_time
+              | None -> 0.
             end;
             shadow_multiplier_target = shadow_multiplier_target;
             hvm = di.Xenctrl.Domain_info.hvm_guest;
@@ -1405,12 +1405,12 @@ module VM = struct
         | None -> raise (Does_not_exist("domain", vm.Vm.id))
         | Some di ->
           Domain.set_action_request ~xs di.domid (match request with
-            | None -> None
-            | Some Needs_poweroff -> Some "poweroff"
-            | Some Needs_reboot -> Some "reboot"
-            | _ ->
-              error "VM = %s; Unknown domain action requested. Will set to poweroff" vm.Vm.id;
-              Some "poweroff"
+              | None -> None
+              | Some Needs_poweroff -> Some "poweroff"
+              | Some Needs_reboot -> Some "reboot"
+              | _ ->
+                error "VM = %s; Unknown domain action requested. Will set to poweroff" vm.Vm.id;
+                Some "poweroff"
             )
       )
 
@@ -1423,18 +1423,18 @@ module VM = struct
         | Some d ->
           if d.shutdown
           then Some (match d.shutdown_code with
-            | 0 -> Needs_poweroff
-            | 1 -> Needs_reboot
-            | 2 -> Needs_suspend
-            | 3 -> Needs_crashdump
-            | _ -> Needs_poweroff) (* unexpected *)
+              | 0 -> Needs_poweroff
+              | 1 -> Needs_reboot
+              | 2 -> Needs_suspend
+              | 3 -> Needs_crashdump
+              | _ -> Needs_poweroff) (* unexpected *)
           else begin match Domain.get_action_request ~xs d.domid with
-          | Some "poweroff" -> Some Needs_poweroff
-          | Some "reboot" -> Some Needs_reboot
-          | Some x ->
-            error "VM = %s; Unknown domain action requested (%s). Will poweroff" vm.Vm.id x;
-            Some Needs_poweroff
-          | None -> None
+            | Some "poweroff" -> Some Needs_poweroff
+            | Some "reboot" -> Some Needs_reboot
+            | Some x ->
+              error "VM = %s; Unknown domain action requested (%s). Will poweroff" vm.Vm.id x;
+              Some Needs_poweroff
+            | None -> None
           end
       )
 
@@ -1605,15 +1605,15 @@ module VBD = struct
             let dp_id = _dp_id, Storage.id_of frontend_domid vbd.Vbd.id in
             let x = {
               Device.Vbd.mode = (match vbd.mode with
-              | ReadOnly -> Device.Vbd.ReadOnly 
-              | ReadWrite -> Device.Vbd.ReadWrite
+                | ReadOnly -> Device.Vbd.ReadOnly 
+                | ReadWrite -> Device.Vbd.ReadWrite
               );
               device_number = vbd.position;
               phystype = Device.Vbd.Phys;
               params = vdi.attach_info.Storage_interface.params;
               dev_type = (match vbd.ty with
-              | CDROM -> Device.Vbd.CDROM
-              | Disk -> Device.Vbd.Disk
+                | CDROM -> Device.Vbd.CDROM
+                | Disk -> Device.Vbd.Disk
               );
               unpluggable = vbd.unpluggable;
               protocol = None;
@@ -1637,11 +1637,11 @@ module VBD = struct
             let qemu_frontend = match Device_number.spec device_number with
               | Device_number.Ide, n, _ when n < 4 ->
                 begin match vbd.Vbd.backend with
-                | None -> None
-                | Some _ -> 
-                  let bd = create_vbd_frontend ~xc ~xs task qemu_domid vdi in
-                  let index = Device_number.to_disk_number device_number in
-                  Some (index, bd)
+                  | None -> None
+                  | Some _ -> 
+                    let bd = create_vbd_frontend ~xc ~xs task qemu_domid vdi in
+                    let index = Device_number.to_disk_number device_number in
+                    Some (index, bd)
                 end
               | _, _, _ -> None in
             (* Remember what we've just done *)
@@ -1848,8 +1848,8 @@ module VIF = struct
     | Network.Local _ -> this_domid ~xs
     | Network.Remote (vm, _) ->
       begin match vm |> Uuid.uuid_of_string |> domid_of_uuid ~xc ~xs Expect_only_one with
-      | None -> raise (Does_not_exist ("domain", vm))
-      | Some x -> x
+        | None -> raise (Does_not_exist ("domain", vm))
+        | Some x -> x
       end
 
   let _locking_mode = "locking-mode"
@@ -1911,8 +1911,8 @@ module VIF = struct
               let create frontend_domid =
                 Device.Vif.add ~xs ~devid:vif.position
                   ~netty:(match vif.backend with
-                  | Network.Local x -> Netman.Vswitch x
-                  | Network.Remote (_, _) -> raise (Unimplemented "network driver domains"))
+                    | Network.Local x -> Netman.Vswitch x
+                    | Network.Remote (_, _) -> raise (Unimplemented "network driver domains"))
                   ~mac:vif.mac ~carrier:(vif.carrier && (vif.locking_mode <> Xenops_interface.Vif.Disabled))
                   ~mtu:vif.mtu ~rate:vif.rate ~backend_domid
                   ~other_config:vif.other_config
@@ -2292,23 +2292,23 @@ let watch_xenstore () =
         if path = _introduceDomain || path = _releaseDomain
         then look_for_different_domains ()
         else match List.filter (fun x -> x <> "") (String.split '/' path) with
-        | "local" :: "domain" :: domid :: "backend" :: kind :: frontend :: devid :: _ ->
-          debug "Watch on backend domid: %s kind: %s -> frontend domid: %s devid: %s" domid kind frontend devid;
-          fire_event_on_device frontend kind devid
-        | "local" :: "domain" :: frontend :: "device" :: _ ->
-          look_for_different_devices (int_of_string frontend)
-        | "local" :: "domain" :: domid :: _ ->
-          fire_event_on_vm domid
-        | "vm" :: uuid :: "rtc" :: "timeoffset" :: [] ->
-          let timeoffset = try Some (xs.Xs.read path) with _ -> None in
-          Opt.iter
-            (fun timeoffset ->
-              (* Store the rtc/timeoffset for migrate *)
-              store_rtc_timeoffset uuid timeoffset;
-              (* Tell the higher-level toolstack about this too *)
-              Updates.add (Dynamic.Vm uuid) updates
-            ) timeoffset
-        | _  -> debug "Ignoring unexpected watch: %s" path
+          | "local" :: "domain" :: domid :: "backend" :: kind :: frontend :: devid :: _ ->
+            debug "Watch on backend domid: %s kind: %s -> frontend domid: %s devid: %s" domid kind frontend devid;
+            fire_event_on_device frontend kind devid
+          | "local" :: "domain" :: frontend :: "device" :: _ ->
+            look_for_different_devices (int_of_string frontend)
+          | "local" :: "domain" :: domid :: _ ->
+            fire_event_on_vm domid
+          | "vm" :: uuid :: "rtc" :: "timeoffset" :: [] ->
+            let timeoffset = try Some (xs.Xs.read path) with _ -> None in
+            Opt.iter
+              (fun timeoffset ->
+                (* Store the rtc/timeoffset for migrate *)
+                store_rtc_timeoffset uuid timeoffset;
+                (* Tell the higher-level toolstack about this too *)
+                Updates.add (Dynamic.Vm uuid) updates
+              ) timeoffset
+          | _  -> debug "Ignoring unexpected watch: %s" path
       done
     )
 

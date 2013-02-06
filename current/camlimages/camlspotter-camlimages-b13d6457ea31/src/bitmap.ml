@@ -81,8 +81,8 @@ module Make(B:Bitdepth) = struct
       match blk.swap with
       | Some fname ->
         begin match blk.block_data with
-        | Swapped -> Sys.remove fname; blk.block_data <- Destroyed
-        | InMemory _ | Destroyed -> () 
+          | Swapped -> Sys.remove fname; blk.block_data <- Destroyed
+          | InMemory _ | Destroyed -> () 
         end
       | None -> ()
     end;
@@ -141,8 +141,8 @@ module Make(B:Bitdepth) = struct
     in
     let bufs = Array.map (fun (buf, _, _) -> buf) buf_size_heights in
     begin match init with
-    | Some v -> Array.iter (fun s -> fill_string s v) bufs;
-    | None -> ()
+      | Some v -> Array.iter (fun s -> fill_string s v) bufs;
+      | None -> ()
     end;
     { width = width;
       height = height;
@@ -233,8 +233,8 @@ module Make(B:Bitdepth) = struct
     require size;
     let s = string_create size in
     begin match init with
-    | Some v -> fill_string s v
-    | None -> ()
+      | Some v -> fill_string s v
+      | None -> ()
     end;
     let blk =
       { block_width = width;

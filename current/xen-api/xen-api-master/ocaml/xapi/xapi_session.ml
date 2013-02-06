@@ -386,182 +386,182 @@ let login_with_password ~__context ~uname ~pwd ~version = wipe_params_after_fn [
       in
       (  match (Db.Host.get_external_auth_type ~__context ~self:(Helpers.get_localhost ~__context)) with
 
-      | "" as auth_type -> (* no external authentication *)
-        begin
-          (*debug "External authentication is disabled";*)
-          (* only attempts to authenticate against the local superuser credentials *)
-          try
-            login_as_local_superuser auth_type
-          with (Failure msg) -> 
-            begin
-              info "Failed to locally authenticate user %s from %s: %s" uname (Context.get_origin __context) msg;
-              thread_delay_and_raise_error uname msg
-            end
-        end
+        | "" as auth_type -> (* no external authentication *)
+          begin
+            (*debug "External authentication is disabled";*)
+            (* only attempts to authenticate against the local superuser credentials *)
+            try
+              login_as_local_superuser auth_type
+            with (Failure msg) -> 
+              begin
+                info "Failed to locally authenticate user %s from %s: %s" uname (Context.get_origin __context) msg;
+                thread_delay_and_raise_error uname msg
+              end
+          end
 
-      | _ as auth_type -> (* external authentication required *)
-        begin
-          debug "External authentication %s is enabled" auth_type;
-          (* 1. first attempts to authenticate against the local superuser *)
-          try
-            login_as_local_superuser auth_type
-          with (Failure msg) ->
-            begin
-              try
-                debug "Failed to locally authenticate user %s from %s: %s" uname (Context.get_origin __context) msg;
+        | _ as auth_type -> (* external authentication required *)
+          begin
+            debug "External authentication %s is enabled" auth_type;
+            (* 1. first attempts to authenticate against the local superuser *)
+            try
+              login_as_local_superuser auth_type
+            with (Failure msg) ->
+              begin
+                try
+                  debug "Failed to locally authenticate user %s from %s: %s" uname (Context.get_origin __context) msg;
 
-                (* 2. then against the external auth service *)
+                  (* 2. then against the external auth service *)
 
-                (* 2.1. we first authenticate the user using the external authentication plugin *)
-                (* so that we know that he/she exists there *)
-                let subject_identifier = (try
-                  begin
-                    let _subject_identifier = do_external_auth uname pwd in
-                    debug "Successful external authentication user %s (subject_identifier, %s from %s)" uname _subject_identifier (Context.get_origin __context);
-                    _subject_identifier
-                  end
-                with (Auth_signature.Auth_failure msg) ->
-                  begin
-                    info "Failed to externally authenticate user %s from %s: %s" uname (Context.get_origin __context) msg;
-                    thread_delay_and_raise_error uname msg
-                  end
-                ) in  
-
-                (* as per tests in CP-827, there should be no need to call is_subject_suspended function here, *)
-                (* because the authentication server in 2.1 will already reflect if account/password expired, *)
-                (* disabled, locked-out etc, but since likewise doesn't timely reflect this information *)
-                (* at the same time for both authentication and subject info queries (modification in the AD *)
-                (* reflects immediately for AD authentication, but can take 1 hour to reflect on subject info), *)
-                (* we need to call it here in order to be consistent with the session revalidation function. *)
-                (* Otherwise, there might be cases where the initial authentication/login succeeds, but *)
-                (* then a few minutes later the revalidation finds that the user is 'suspended' (due to *)
-                (* subject info caching problems in likewise) and closes the user's session *)
-                let (subject_suspended,subject_name) = (try
-                  is_subject_suspended subject_identifier
-                with (Auth_signature.Auth_service_error (errtag,msg)) ->
-                  begin
-                    debug "Failed to find if user %s (subject_id %s, from %s) is suspended: %s" uname subject_identifier (Context.get_origin __context) msg;
-                    thread_delay_and_raise_error uname msg
-                  end
-                ) in
-                if subject_suspended
-                then begin 
-                  let msg = (Printf.sprintf "User %s (subject_id %s, from %s) suspended in external directory" uname subject_identifier (Context.get_origin __context)) in
-                  debug "%s" msg;
-                  thread_delay_and_raise_error uname msg
-                end
-                else
-
-                  (* 2.2. then, we verify if any elements of the the membership closure of the externally *)
-                  (* authenticated subject_id is inside our local allowed-to-login subjects list *)
-                  (* finds all the groups a user belongs to (non-reflexive closure of member-of relation) *)
-                  let group_membership_closure =
-                    (try
-                      (Ext_auth.d()).query_group_membership subject_identifier;
-                    with
-                    | Not_found | Auth_signature.Subject_cannot_be_resolved -> 
-                      begin
-                        let msg = (Printf.sprintf "Failed to obtain the group membership closure for user %s (subject_id %s, from %s): user not found in external directory" uname (Context.get_origin __context) subject_identifier) in
-                        debug "%s" msg;
-                        thread_delay_and_raise_error uname msg
-                      end
-                    | Auth_signature.Auth_service_error (errtag,msg) ->
-                      begin
-                        debug "Failed to obtain the group membership closure for user %s (subject_id %s, from %s): %s" uname subject_identifier (Context.get_origin __context) msg;
-                        thread_delay_and_raise_error uname msg
-                      end
-                    ) in
-                  (* finds the intersection between group_membership_closure and pool's table of subject_ids *)
-                  let subjects_in_db = Db.Subject.get_all ~__context in
-                  let subject_ids_in_db = List.map (fun subj -> (subj,(Db.Subject.get_subject_identifier ~__context ~self:subj))) subjects_in_db in
-                  let reflexive_membership_closure = subject_identifier::group_membership_closure in
-                  (* returns all elements of reflexive_membership_closure that are inside subject_ids_in_db *)
-                  let intersect ext_sids db_sids = List.filter (fun (subj,db_sid) -> List.mem db_sid ext_sids) db_sids in
-                  let intersection = intersect reflexive_membership_closure subject_ids_in_db in
-
-                  (* 2.3. finally, we create the session for the authenticated subject if any membership intersection was found *)
-                  let in_intersection = (List.length intersection > 0) in
-                  if not in_intersection then
-                    begin (* empty intersection: externally-authenticated subject has no login rights in the pool *)
-                      let msg = (Printf.sprintf "Subject %s (identifier %s, from %s) has no access rights in this pool" uname subject_identifier (Context.get_origin __context)) in 
-                      info "%s" msg; 
+                  (* 2.1. we first authenticate the user using the external authentication plugin *)
+                  (* so that we know that he/she exists there *)
+                  let subject_identifier = (try
+                    begin
+                      let _subject_identifier = do_external_auth uname pwd in
+                      debug "Successful external authentication user %s (subject_identifier, %s from %s)" uname _subject_identifier (Context.get_origin __context);
+                      _subject_identifier
+                    end
+                  with (Auth_signature.Auth_failure msg) ->
+                    begin
+                      info "Failed to externally authenticate user %s from %s: %s" uname (Context.get_origin __context) msg;
                       thread_delay_and_raise_error uname msg
                     end
+                  ) in  
+
+                  (* as per tests in CP-827, there should be no need to call is_subject_suspended function here, *)
+                  (* because the authentication server in 2.1 will already reflect if account/password expired, *)
+                  (* disabled, locked-out etc, but since likewise doesn't timely reflect this information *)
+                  (* at the same time for both authentication and subject info queries (modification in the AD *)
+                  (* reflects immediately for AD authentication, but can take 1 hour to reflect on subject info), *)
+                  (* we need to call it here in order to be consistent with the session revalidation function. *)
+                  (* Otherwise, there might be cases where the initial authentication/login succeeds, but *)
+                  (* then a few minutes later the revalidation finds that the user is 'suspended' (due to *)
+                  (* subject info caching problems in likewise) and closes the user's session *)
+                  let (subject_suspended,subject_name) = (try
+                    is_subject_suspended subject_identifier
+                  with (Auth_signature.Auth_service_error (errtag,msg)) ->
+                    begin
+                      debug "Failed to find if user %s (subject_id %s, from %s) is suspended: %s" uname subject_identifier (Context.get_origin __context) msg;
+                      thread_delay_and_raise_error uname msg
+                    end
+                  ) in
+                  if subject_suspended
+                  then begin 
+                    let msg = (Printf.sprintf "User %s (subject_id %s, from %s) suspended in external directory" uname subject_identifier (Context.get_origin __context)) in
+                    debug "%s" msg;
+                    thread_delay_and_raise_error uname msg
+                  end
                   else
 
-                    (* compute RBAC structures for the session *)
-                    let subject_membership = (List.map (fun (subj_ref,sid) -> subj_ref) intersection) in
-                    debug "subject membership intersection with subject-list=[%s]"
-                      (List.fold_left 
-                         (fun i (subj_ref,sid)-> 
-                           let subj_ref= 
-                             try (* attempt to resolve subject_ref -> subject_name *)
-                               List.assoc
-                                 Auth_signature.subject_information_field_subject_name
-                                 (Db.Subject.get_other_config ~__context ~self:subj_ref)
-                             with _ -> Ref.string_of subj_ref
-                           in if i="" then subj_ref^" ("^sid^")"
-                           else i^","^subj_ref^" ("^sid^")"
-                         )
-                         ""
-                         intersection
-                      );
-                    let rbac_permissions = get_permissions ~__context ~subject_membership in
-                    (* CP-1260: If a subject has no roles assigned, then authentication will fail with an error such as PERMISSION_DENIED.*)
-                    if List.length rbac_permissions < 1 then
-                      let msg = (Printf.sprintf "Subject %s (identifier %s) has no roles in this pool" uname subject_identifier) in 
-                      info "%s" msg; 
-                      thread_delay_and_raise_error uname msg ~error:Api_errors.rbac_permission_denied
+                    (* 2.2. then, we verify if any elements of the the membership closure of the externally *)
+                    (* authenticated subject_id is inside our local allowed-to-login subjects list *)
+                    (* finds all the groups a user belongs to (non-reflexive closure of member-of relation) *)
+                    let group_membership_closure =
+                      (try
+                        (Ext_auth.d()).query_group_membership subject_identifier;
+                      with
+                      | Not_found | Auth_signature.Subject_cannot_be_resolved -> 
+                        begin
+                          let msg = (Printf.sprintf "Failed to obtain the group membership closure for user %s (subject_id %s, from %s): user not found in external directory" uname (Context.get_origin __context) subject_identifier) in
+                          debug "%s" msg;
+                          thread_delay_and_raise_error uname msg
+                        end
+                      | Auth_signature.Auth_service_error (errtag,msg) ->
+                        begin
+                          debug "Failed to obtain the group membership closure for user %s (subject_id %s, from %s): %s" uname subject_identifier (Context.get_origin __context) msg;
+                          thread_delay_and_raise_error uname msg
+                        end
+                      ) in
+                    (* finds the intersection between group_membership_closure and pool's table of subject_ids *)
+                    let subjects_in_db = Db.Subject.get_all ~__context in
+                    let subject_ids_in_db = List.map (fun subj -> (subj,(Db.Subject.get_subject_identifier ~__context ~self:subj))) subjects_in_db in
+                    let reflexive_membership_closure = subject_identifier::group_membership_closure in
+                    (* returns all elements of reflexive_membership_closure that are inside subject_ids_in_db *)
+                    let intersect ext_sids db_sids = List.filter (fun (subj,db_sid) -> List.mem db_sid ext_sids) db_sids in
+                    let intersection = intersect reflexive_membership_closure subject_ids_in_db in
+
+                    (* 2.3. finally, we create the session for the authenticated subject if any membership intersection was found *)
+                    let in_intersection = (List.length intersection > 0) in
+                    if not in_intersection then
+                      begin (* empty intersection: externally-authenticated subject has no login rights in the pool *)
+                        let msg = (Printf.sprintf "Subject %s (identifier %s, from %s) has no access rights in this pool" uname subject_identifier (Context.get_origin __context)) in 
+                        info "%s" msg; 
+                        thread_delay_and_raise_error uname msg
+                      end
                     else
 
-                      begin (* non-empty intersection: externally-authenticated subject has login rights in the pool *)
-                        let subject = (* return reference for the subject obj in the db *)
-                          (* obs: this obj ref can point to either a user or a group contained in the local subject db list *) 
-                          (try 
-                            List.find (fun subj -> (* is this the subject ref that returned the non-empty intersection?*)
-                              (List.hd intersection) = (subj,(Db.Subject.get_subject_identifier ~__context ~self:subj)) 
-                            ) subjects_in_db (* goes through exactly the same subject list that we went when computing the intersection, *)
-                          (* so that no one is able to undetectably remove/add another subject with the same subject_identifier *)
-                          (* between that time 2.2 and now 2.3 *)
-                          with Not_found -> (* this should never happen, it shows an inconsistency in the db between 2.2 and 2.3 *)
-                            begin
-                              let msg = (Printf.sprintf "Subject %s (identifier %s, from %s) is not present in this pool" uname subject_identifier (Context.get_origin __context)) in 
-                              debug "%s" msg; 
-                              thread_delay_and_raise_error uname msg
-                            end
-                          ) in 
-                        login_no_password ~__context ~uname:(Some uname) ~host:(Helpers.get_localhost ~__context) 
-                          ~pool:false ~is_local_superuser:false ~subject:subject ~auth_user_sid:subject_identifier ~auth_user_name:subject_name
-                          ~rbac_permissions
-                      end
-              (* we only reach this point if for some reason a function above forgot to catch a possible exception in the Auth_signature module*)
-              with
-              | Not_found 
-              | Auth_signature.Subject_cannot_be_resolved -> 
-                begin
-                  let msg = (Printf.sprintf "user %s from %s not found in external directory" uname (Context.get_origin __context)) in
-                  debug "A function failed to catch this exception for user %s during external authentication: %s" uname msg;
-                  thread_delay_and_raise_error uname msg
-                end
-              | Auth_signature.Auth_failure msg 
-              | Auth_signature.Auth_service_error (_,msg) ->
-                begin
-                  debug "A function failed to catch this exception for user %s from %s during external authentication: %s" uname (Context.get_origin __context) msg;
-                  thread_delay_and_raise_error uname msg
-                end
-              | Api_errors.Server_error _ as e -> (* bubble up any api_error already generated *) 
-                begin
-                  raise e
-                end
-              | e -> (* generic catch-all for unexpected exceptions during external authentication *)
-                begin
-                  let msg = (ExnHelper.string_of_exn e) in
-                  debug "(generic) A function failed to catch this exception for user %s from %s during external authentication: %s" uname (Context.get_origin __context) msg;
-                  thread_delay_and_raise_error uname msg
-                end
-            end
+                      (* compute RBAC structures for the session *)
+                      let subject_membership = (List.map (fun (subj_ref,sid) -> subj_ref) intersection) in
+                      debug "subject membership intersection with subject-list=[%s]"
+                        (List.fold_left 
+                           (fun i (subj_ref,sid)-> 
+                             let subj_ref= 
+                               try (* attempt to resolve subject_ref -> subject_name *)
+                                 List.assoc
+                                   Auth_signature.subject_information_field_subject_name
+                                   (Db.Subject.get_other_config ~__context ~self:subj_ref)
+                               with _ -> Ref.string_of subj_ref
+                             in if i="" then subj_ref^" ("^sid^")"
+                             else i^","^subj_ref^" ("^sid^")"
+                           )
+                           ""
+                           intersection
+                        );
+                      let rbac_permissions = get_permissions ~__context ~subject_membership in
+                      (* CP-1260: If a subject has no roles assigned, then authentication will fail with an error such as PERMISSION_DENIED.*)
+                      if List.length rbac_permissions < 1 then
+                        let msg = (Printf.sprintf "Subject %s (identifier %s) has no roles in this pool" uname subject_identifier) in 
+                        info "%s" msg; 
+                        thread_delay_and_raise_error uname msg ~error:Api_errors.rbac_permission_denied
+                      else
 
-        end
+                        begin (* non-empty intersection: externally-authenticated subject has login rights in the pool *)
+                          let subject = (* return reference for the subject obj in the db *)
+                            (* obs: this obj ref can point to either a user or a group contained in the local subject db list *) 
+                            (try 
+                              List.find (fun subj -> (* is this the subject ref that returned the non-empty intersection?*)
+                                (List.hd intersection) = (subj,(Db.Subject.get_subject_identifier ~__context ~self:subj)) 
+                              ) subjects_in_db (* goes through exactly the same subject list that we went when computing the intersection, *)
+                            (* so that no one is able to undetectably remove/add another subject with the same subject_identifier *)
+                            (* between that time 2.2 and now 2.3 *)
+                            with Not_found -> (* this should never happen, it shows an inconsistency in the db between 2.2 and 2.3 *)
+                              begin
+                                let msg = (Printf.sprintf "Subject %s (identifier %s, from %s) is not present in this pool" uname subject_identifier (Context.get_origin __context)) in 
+                                debug "%s" msg; 
+                                thread_delay_and_raise_error uname msg
+                              end
+                            ) in 
+                          login_no_password ~__context ~uname:(Some uname) ~host:(Helpers.get_localhost ~__context) 
+                            ~pool:false ~is_local_superuser:false ~subject:subject ~auth_user_sid:subject_identifier ~auth_user_name:subject_name
+                            ~rbac_permissions
+                        end
+                (* we only reach this point if for some reason a function above forgot to catch a possible exception in the Auth_signature module*)
+                with
+                | Not_found 
+                | Auth_signature.Subject_cannot_be_resolved -> 
+                  begin
+                    let msg = (Printf.sprintf "user %s from %s not found in external directory" uname (Context.get_origin __context)) in
+                    debug "A function failed to catch this exception for user %s during external authentication: %s" uname msg;
+                    thread_delay_and_raise_error uname msg
+                  end
+                | Auth_signature.Auth_failure msg 
+                | Auth_signature.Auth_service_error (_,msg) ->
+                  begin
+                    debug "A function failed to catch this exception for user %s from %s during external authentication: %s" uname (Context.get_origin __context) msg;
+                    thread_delay_and_raise_error uname msg
+                  end
+                | Api_errors.Server_error _ as e -> (* bubble up any api_error already generated *) 
+                  begin
+                    raise e
+                  end
+                | e -> (* generic catch-all for unexpected exceptions during external authentication *)
+                  begin
+                    let msg = (ExnHelper.string_of_exn e) in
+                    debug "(generic) A function failed to catch this exception for user %s from %s during external authentication: %s" uname (Context.get_origin __context) msg;
+                    thread_delay_and_raise_error uname msg
+                  end
+              end
+
+          end
       )
   )
 

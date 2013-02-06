@@ -488,26 +488,26 @@ module Monitor = struct
 
         (* NB raw_status_on_local_host not available if in 'Starting' state *)
         begin match liveset.Xha_interface.LiveSetInformation.raw_status_on_local_host with
-        | None ->
-          debug "No raw_status_on_local_host to process"
-        | Some local ->
-          let host_raw_table = List.map
-              (fun host ->
-                host, Hashtbl.find local.Xha_interface.LiveSetInformation.RawStatus.host_raw_data
-                  (Uuid.uuid_of_string (Db.Host.get_uuid ~__context ~self:host))) all_hosts in
-          List.iter (fun (host, raw) ->
-            (* Use the list of network peers given by the host recent update: statefile or network *)
-            let peers =
-              if raw.Xha_interface.LiveSetInformation.HostRawData.time_since_last_update_on_statefile <
-                  raw.Xha_interface.LiveSetInformation.HostRawData.time_since_last_heartbeat
-              then raw.Xha_interface.LiveSetInformation.HostRawData.heartbeat_active_list_on_statefile
-              else raw.Xha_interface.LiveSetInformation.HostRawData.heartbeat_active_list_on_heartbeat in
-            let peer_strings = List.map Uuid.string_of_uuid peers in
-            debug "Network peers = [%s]" (String.concat ";" peer_strings);
-            let existing_strings = Db.Host.get_ha_network_peers ~__context ~self:host in
-            if not(set_equals peer_strings existing_strings)
-            then Db.Host.set_ha_network_peers ~__context ~self:host ~value:peer_strings)
-            host_raw_table;
+          | None ->
+            debug "No raw_status_on_local_host to process"
+          | Some local ->
+            let host_raw_table = List.map
+                (fun host ->
+                  host, Hashtbl.find local.Xha_interface.LiveSetInformation.RawStatus.host_raw_data
+                    (Uuid.uuid_of_string (Db.Host.get_uuid ~__context ~self:host))) all_hosts in
+            List.iter (fun (host, raw) ->
+              (* Use the list of network peers given by the host recent update: statefile or network *)
+              let peers =
+                if raw.Xha_interface.LiveSetInformation.HostRawData.time_since_last_update_on_statefile <
+                    raw.Xha_interface.LiveSetInformation.HostRawData.time_since_last_heartbeat
+                then raw.Xha_interface.LiveSetInformation.HostRawData.heartbeat_active_list_on_statefile
+                else raw.Xha_interface.LiveSetInformation.HostRawData.heartbeat_active_list_on_heartbeat in
+              let peer_strings = List.map Uuid.string_of_uuid peers in
+              debug "Network peers = [%s]" (String.concat ";" peer_strings);
+              let existing_strings = Db.Host.get_ha_network_peers ~__context ~self:host in
+              if not(set_equals peer_strings existing_strings)
+              then Db.Host.set_ha_network_peers ~__context ~self:host ~value:peer_strings)
+              host_raw_table;
 
         end;
 
@@ -1152,15 +1152,15 @@ let propose_new_master ~__context ~address ~manual =
 (* Second phase of a two-phase commit of a new master *)
 let commit_new_master ~__context ~address =
   begin match !proposed_master with
-  | Some x when x <> address ->
-    let msg = Printf.sprintf "Received commit_new_master(%s) but previously received proposal for %s" address x in
-    error "%s" msg;
-    raise (Api_errors.Server_error(Api_errors.ha_abort_new_master, [ msg ]))
-  | None ->
-    let msg = Printf.sprintf "Received commit_new_master(%s) but never received a proposal" address in
-    error "%s" msg;
-    raise (Api_errors.Server_error(Api_errors.ha_abort_new_master, [ msg ]))
-  | Some _ -> debug "Setting new master address to: %s" address;
+    | Some x when x <> address ->
+      let msg = Printf.sprintf "Received commit_new_master(%s) but previously received proposal for %s" address x in
+      error "%s" msg;
+      raise (Api_errors.Server_error(Api_errors.ha_abort_new_master, [ msg ]))
+    | None ->
+      let msg = Printf.sprintf "Received commit_new_master(%s) but never received a proposal" address in
+      error "%s" msg;
+      raise (Api_errors.Server_error(Api_errors.ha_abort_new_master, [ msg ]))
+    | Some _ -> debug "Setting new master address to: %s" address;
   end;
 
   Mutex.execute proposed_master_m

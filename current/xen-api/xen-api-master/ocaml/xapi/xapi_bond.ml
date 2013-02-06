@@ -200,17 +200,17 @@ let fix_bond ~__context ~bond =
   List.iter (Xapi_vif.move ~__context ~network) local_vifs;
 
   begin match List.filter (fun p -> Db.PIF.get_management ~__context ~self:p) members with
-  | management_pif :: _ -> 
-    (* The bond contains the management interface: move management to the master.
-     * This interface will be plugged automatically. *)
-    debug "Moving management from slave to master";
-    move_management ~__context management_pif master;
-    (* Set the primary slave to the former management PIF. *)
-    Db.Bond.set_primary_slave ~__context ~self:bond ~value:management_pif;
-  | [] ->
-    (* Set the primary slave, if not set (just pick the first slave) *)
-    if Db.Bond.get_primary_slave ~__context ~self:bond = Ref.null then
-      Db.Bond.set_primary_slave ~__context ~self:bond ~value:(List.hd members);
+    | management_pif :: _ -> 
+      (* The bond contains the management interface: move management to the master.
+       * This interface will be plugged automatically. *)
+      debug "Moving management from slave to master";
+      move_management ~__context management_pif master;
+      (* Set the primary slave to the former management PIF. *)
+      Db.Bond.set_primary_slave ~__context ~self:bond ~value:management_pif;
+    | [] ->
+      (* Set the primary slave, if not set (just pick the first slave) *)
+      if Db.Bond.get_primary_slave ~__context ~self:bond = Ref.null then
+        Db.Bond.set_primary_slave ~__context ~self:bond ~value:(List.hd members);
   end
 
 (* Protect a bunch of local operations with a mutex *)
@@ -369,14 +369,14 @@ let create ~__context ~network ~members ~mAC ~mode ~properties =
     copy_configuration ~__context primary_slave master;
 
     begin match management_pif with
-    | Some management_pif ->
-      (* The bond contains the management interface: move management to the master.
-       * This interface will be plugged automatically. *)
-      debug "Moving management from slave to master";
-      move_management ~__context management_pif master
-    | None ->
-      debug "Plugging the bond";
-      Nm.bring_pif_up ~__context master
+      | Some management_pif ->
+        (* The bond contains the management interface: move management to the master.
+         * This interface will be plugged automatically. *)
+        debug "Moving management from slave to master";
+        move_management ~__context management_pif master
+      | None ->
+        debug "Plugging the bond";
+        Nm.bring_pif_up ~__context master
     end;
     TaskHelper.set_progress ~__context 0.2;
 

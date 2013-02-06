@@ -39,7 +39,7 @@ let get_host_rrd_handler (req : Http.Request.t) (s : Unix.file_descr) _ =
   let rrd = Mutex.execute mutex (fun _ ->
       debug "Received request for Host RRD.";
       Rrd.copy_rrd (match !host_rrd with
-        Some rrdi -> rrdi.rrd | None -> failwith "No host RRD available!")
+          Some rrdi -> rrdi.rrd | None -> failwith "No host RRD available!")
     ) in
   Http_svr.headers s
     (Http.http_200_ok ~version:"1.0" ~keep_alive:false () @

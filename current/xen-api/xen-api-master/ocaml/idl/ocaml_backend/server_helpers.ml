@@ -70,16 +70,16 @@ let exec ?marshaller ?f_forward ~__context f =
       if not(Pool_role.is_master ()) 
       then f ~__context (* slaves process everything locally *)
       else match f_forward with
-      | None ->
-        (* this operation cannot be forwarded (eg database lookup); do it now *)
-        f ~__context
-      | Some forward ->
-        (* use the forwarding layer (NB this might make a local call ultimately) *)
-        forward ~local_fn:f ~__context
+        | None ->
+          (* this operation cannot be forwarded (eg database lookup); do it now *)
+          f ~__context
+        | Some forward ->
+          (* use the forwarding layer (NB this might make a local call ultimately) *)
+          forward ~local_fn:f ~__context
     in 
     begin match marshaller with
-    | None    -> TaskHelper.complete ~__context None
-    | Some fn -> TaskHelper.complete ~__context (Some (fn result))
+      | None    -> TaskHelper.complete ~__context None
+      | Some fn -> TaskHelper.complete ~__context (Some (fn result))
     end;
     result 
   with 

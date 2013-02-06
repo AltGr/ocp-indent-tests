@@ -49,16 +49,16 @@ module Avltree = struct
       | Empty | Leaf _ -> ()
       | Node (left, key, _value, _height, right) ->
         begin match left with
-        | Empty -> ()
-        | Leaf (left_key, _)
-        | Node (_, left_key, _, _, _) ->
-          assert (compare left_key key < 0)
+          | Empty -> ()
+          | Leaf (left_key, _)
+          | Node (_, left_key, _, _, _) ->
+            assert (compare left_key key < 0)
         end;
         begin match right with
-        | Empty -> ()
-        | Leaf (right_key, _)
-        | Node (_, right_key, _, _, _) ->
-          assert (compare right_key key > 0)
+          | Empty -> ()
+          | Leaf (right_key, _)
+          | Node (_, right_key, _, _, _) ->
+            assert (compare right_key key > 0)
         end;
         assert (compare key key = 0);
         binary_tree left;
@@ -182,8 +182,8 @@ module Avltree = struct
   let balance_root tree =
     let tree = balance tree in
     begin match tree with
-    | Empty | Leaf _ -> ()
-    | Node _ as node -> update_height node
+      | Empty | Leaf _ -> ()
+      | Node _ as node -> update_height node
     end;
     tree
 

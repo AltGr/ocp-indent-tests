@@ -138,8 +138,8 @@ struct
               let msg = 
                 (Printf.sprintf "Likewise returned success/failure in STDERR for cmd %s: %s" debug_cmd
                    (match err_result with 
-                   | Parse_likewise.Success ls-> "SUCCESS"^(List.fold_left (fun a b -> " "^a^" "^b) "" (List.map (fun (k,v)->k^"="^v) ls))
-                   | Parse_likewise.Failure (code,err)-> Printf.sprintf "FAILURE %i: %s" code err
+                     | Parse_likewise.Success ls-> "SUCCESS"^(List.fold_left (fun a b -> " "^a^" "^b) "" (List.map (fun (k,v)->k^"="^v) ls))
+                     | Parse_likewise.Failure (code,err)-> Printf.sprintf "FAILURE %i: %s" code err
                    )
                 )
               in

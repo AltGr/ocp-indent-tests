@@ -703,11 +703,11 @@ let async_test session_id =
   let status = Client.Task.get_status !rpc session_id task in
   debug test (Printf.sprintf "Status: %s  result: %s%!"
       (match status with
-      | `pending -> "pending"
-      | `success -> "success"
-      | `failure -> "failure"
-      | `cancelling -> "cancelling"
-      | `cancelled -> "cancelled")
+        | `pending -> "pending"
+        | `success -> "success"
+        | `failure -> "failure"
+        | `cancelling -> "cancelling"
+        | `cancelled -> "cancelled")
       (Client.Task.get_result !rpc session_id task));
   if status=`failure then 
     begin 
@@ -750,12 +750,12 @@ let vm_powercycle_test s vm =
   debug test (Printf.sprintf "Adding VIF to guest installer network (%s)" (Client.Network.get_uuid !rpc s guest_installer_network));
   let (_: API.ref_VIF) = make_vif ~session_id:s ~vM:vm ~network:guest_installer_network ~device:"0" ~locking_mode:`network_default ~ipv4_allowed:[] ~ipv6_allowed:[] in
   begin match Client.PIF.get_all !rpc s with
-  | pif :: _ ->
-    let net = Client.PIF.get_network !rpc s pif in
-    debug test (Printf.sprintf "Adding VIF to physical network (%s)" (Client.Network.get_uuid !rpc s net));
-    let (_: API.ref_VIF) = make_vif ~session_id:s ~vM:vm ~network:net ~device:"1" ~locking_mode:`network_default ~ipv4_allowed:[] ~ipv6_allowed:[] in
-    ()
-  | _ -> ()
+    | pif :: _ ->
+      let net = Client.PIF.get_network !rpc s pif in
+      debug test (Printf.sprintf "Adding VIF to physical network (%s)" (Client.Network.get_uuid !rpc s net));
+      let (_: API.ref_VIF) = make_vif ~session_id:s ~vM:vm ~network:net ~device:"1" ~locking_mode:`network_default ~ipv4_allowed:[] ~ipv6_allowed:[] in
+      ()
+    | _ -> ()
   end;
   powercycle_test s vm;
   success test
@@ -794,10 +794,10 @@ let _ =
     "-all", Arg.Unit (fun () -> tests_to_run := all_tests), Printf.sprintf "Run all tests (%s)" (String.concat ", " all_tests);
     "-nocolour", Arg.Clear Quicktest_common.use_colour, "Don't use colour in the output" ]
     (fun x -> match !host, !username, !password with
-    | "", _, _ -> host := x; rpc := rpc_remote; using_unix_domain_socket := false;
-    | _, "", _ -> username := x
-    | _, _, "" -> password := x
-    | _, _, _ -> Printf.fprintf stderr "Skipping unrecognised argument: %s" x)
+      | "", _, _ -> host := x; rpc := rpc_remote; using_unix_domain_socket := false;
+      | _, "", _ -> username := x
+      | _, _, "" -> password := x
+      | _, _, _ -> Printf.fprintf stderr "Skipping unrecognised argument: %s" x)
     "Perform some quick functional tests. The default is to test localhost over a Unix socket. For remote server supply <hostname> <username> and <password> arguments.";
   if !host = "" then host := "localhost";
   if !username = "" then username := "root";

@@ -40,8 +40,8 @@ module WINDOW = struct
 
   let set_pixmap pix =
     begin match !pixmap with
-    | None -> ()
-    | Some pix -> Gdk.Pixmap.destroy pix
+      | None -> ()
+      | Some pix -> Gdk.Pixmap.destroy pix
     end;
     pixmap := Some pix
 

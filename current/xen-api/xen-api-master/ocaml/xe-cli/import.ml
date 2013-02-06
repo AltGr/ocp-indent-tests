@@ -86,8 +86,8 @@ let stream_from_xva_dir dir oc =
       let last_hdr = ref None in
       fun size -> 
         begin match !last_hdr with
-        | Some hdr -> output_string oc (Tar.Header.zero_padding hdr)
-        | None -> ()
+          | Some hdr -> output_string oc (Tar.Header.zero_padding hdr)
+          | None -> ()
         end;     
         let hdr = Tar.Header.make 
             (Printf.sprintf "%s/%08d" vdi.Xva.vdi_name !chunk_number) 

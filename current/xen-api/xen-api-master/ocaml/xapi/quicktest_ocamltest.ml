@@ -55,12 +55,12 @@ let run_from_within_quicktest (test : test) =
       ) (0, 0) tests in
     debug test (sprintf "Finished testing '%s'" name);
     begin match result with
-    | (_, 0) ->
-      success test
-    | (_, failure_count) ->
-      let failure_description = sprintf "Detected %i failure%s"
-          failure_count (if failure_count = 1 then "" else "s") in
-      failed test failure_description
+      | (_, 0) ->
+        success test
+      | (_, failure_count) ->
+        let failure_description = sprintf "Detected %i failure%s"
+            failure_count (if failure_count = 1 then "" else "s") in
+        failed test failure_description
     end;
     result
 

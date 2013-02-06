@@ -57,8 +57,8 @@ let usage_and_exit () =
 
 let kvpairs = List.filter_map
     (fun x -> match String.split ~limit:2 '=' x with
-    | [k; v] -> Some (k, v)
-    | _ -> None)
+      | [k; v] -> Some (k, v)
+      | _ -> None)
 
 let _ =
   if Array.length Sys.argv < 2 then usage_and_exit ();

@@ -73,15 +73,15 @@ module Key_value_store = struct
       P.Rep_succ ("New pair stored: "^k^" -> "^v)
     | R.Req_find k     ->
       begin match Hashtbl.find t.store k with
-      | None   -> P.Rep_fail ("No value found for: "^k)
-      | Some v -> P.Rep_succ v
+        | None   -> P.Rep_fail ("No value found for: "^k)
+        | Some v -> P.Rep_succ v
       end
     | R.Req_remove k   ->
       begin match Hashtbl.find t.store k with
-      | None   -> P.Rep_fail ("No value found for: "^k)
-      | Some _ ->
-        Hashtbl.remove t.store k;
-        P.Rep_succ ("Key removed: "^k)
+        | None   -> P.Rep_fail ("No value found for: "^k)
+        | Some _ ->
+          Hashtbl.remove t.store k;
+          P.Rep_succ ("Key removed: "^k)
       end
 end
 

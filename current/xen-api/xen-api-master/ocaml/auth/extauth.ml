@@ -119,18 +119,18 @@ let call_extauth_hook_script_in_host_wrapper ~__context host event_name ~call_pl
          "ERROR_1: revert_etc_pamd_ssh failed"
       *)
       begin match result with
-      | "True" -> begin 
-          (host,result) (* OK *)
-        end
-      | "ERROR_0: rewrite_etc_pamd_ssh failed" as errmsg -> begin
-          failwith errmsg
-        end
-      | "ERROR_1: revert_etc_pamd_ssh failed" as errmsg -> begin
-          failwith errmsg
-        end
-      | _ as errmsg -> begin (* unexpected result *)
-          failwith errmsg
-        end
+        | "True" -> begin 
+            (host,result) (* OK *)
+          end
+        | "ERROR_0: rewrite_etc_pamd_ssh failed" as errmsg -> begin
+            failwith errmsg
+          end
+        | "ERROR_1: revert_etc_pamd_ssh failed" as errmsg -> begin
+            failwith errmsg
+          end
+        | _ as errmsg -> begin (* unexpected result *)
+            failwith errmsg
+          end
       end
     with e ->
       let msg = (ExnHelper.string_of_exn e) in

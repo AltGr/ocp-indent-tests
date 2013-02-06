@@ -76,8 +76,8 @@ module Message = struct
       List ( Atom tag
           :: sexp
           :: (match here with
-          | None -> []
-          | Some here -> [ Source_code_position0.to_sexp_hum here ]))
+            | None -> []
+            | Some here -> [ Source_code_position0.to_sexp_hum here ]))
       :: ac
     | Tag_t (tag, t) -> List (Atom tag :: to_sexps_hum t []) :: ac
     | Tag_arg (tag, sexp, t) -> List (Atom tag :: sexp :: to_sexps_hum t []) :: ac

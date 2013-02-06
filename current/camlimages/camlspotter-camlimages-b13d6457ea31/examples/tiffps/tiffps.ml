@@ -379,11 +379,11 @@ let main () =
       p (sprintf "%f %f translate" paper_x1 paper_y1);
       p (sprintf "%d rotate"
           begin match conf.rot with
-          | Rot0 -> 0
-          | Rot90 -> -90
-          | Rot180 -> -180
-          | Rot270 -> -270
-          | _ -> assert false
+            | Rot0 -> 0
+            | Rot90 -> -90
+            | Rot180 -> -180
+            | Rot270 -> -270
+            | _ -> assert false
           end);
       p (sprintf "%f -%f scale" rw rh);
       if !comments then p "% Variable to keep one line of raster data";

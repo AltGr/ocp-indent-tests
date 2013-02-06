@@ -598,8 +598,8 @@ let restart_auto_run_vms ~__context live_set n =
         end in
       (* Perform one final restart attempt of any that weren't started. *)
       let started = List.map (fun (vm, started) -> match started with
-        | true -> vm, true
-        | false -> vm, restart_vm vm ()) started in
+          | true -> vm, true
+          | false -> vm, restart_vm vm ()) started in
       (* Send an alert for any failed VMs *)
       List.iter (fun (vm, started) -> if not started then consider_sending_failed_alert_for vm) started;
 

@@ -290,9 +290,9 @@ let pre_join_checks ~__context ~rpc ~session_id ~force =
     debug "Master CPUs:";
     print_cpu master_cpu_info;
     begin match mask with
-    | Some mask ->
-      debug "User-defined feature mask on pool: %s" (Cpuid.features_to_string mask)
-    | None -> ()
+      | Some mask ->
+        debug "User-defined feature mask on pool: %s" (Cpuid.features_to_string mask)
+      | None -> ()
     end;
 
     if my_cpus_compare <> master_cpus_compare then

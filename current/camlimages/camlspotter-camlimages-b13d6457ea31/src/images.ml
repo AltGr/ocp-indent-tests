@@ -330,14 +330,14 @@ let unoptimize_sequence seq =
           let newimage = copy previmage in
           let src = coe frame.frame_image in
           begin match src, newimage with
-          | Rgb24 _, _ | Cmyk32 _, _ -> (* non transparent *)
-            blit src 0 0 newimage frame.frame_left frame.frame_top
-              (width src) (height src)
-          | Rgba32 src32, Rgba32 dst32 -> (* transparent *)
-            Rgba32.map Color.Rgba.merge
-              src32 0 0 dst32 frame.frame_left frame.frame_top
-              (width src) (height src)
-          | _ -> assert false
+            | Rgb24 _, _ | Cmyk32 _, _ -> (* non transparent *)
+              blit src 0 0 newimage frame.frame_left frame.frame_top
+                (width src) (height src)
+            | Rgba32 src32, Rgba32 dst32 -> (* transparent *)
+              Rgba32.map Color.Rgba.merge
+                src32 0 0 dst32 frame.frame_left frame.frame_top
+                (width src) (height src)
+            | _ -> assert false
           end;
           (newimage, { frame_left = 0;
                        frame_top = 0;

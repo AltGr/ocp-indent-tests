@@ -107,34 +107,34 @@ module From = struct
       | `El_start (tag: Xmlm.tag) ->
         Stack.push tag tags;
         begin match tag with
-        | (_, ("database" | "manifest")), _ -> f acc
-        | (_, "table"), [ (_, "name"), _ ] ->
-          f (tableset, Table.empty, manifest)
-        | (_, "row"), ((_, "ref"), rf) :: rest ->
-          (* Remove any other duplicate "ref"s which might have sneaked in there *)
-          let rest = List.filter (fun ((_,k), _) -> k <> "ref") rest in
-          let (ctime_l,rest) = List.partition (fun ((_, k), _) -> k="__ctime") rest in
-          let (mtime_l,rest) = List.partition (fun ((_, k), _) -> k="__mtime") rest in
-          let ctime = match ctime_l with | [(_,ctime_s)] -> Int64.of_string ctime_s | _ -> 0L in
-          let mtime = match mtime_l with | [(_,mtime_s)] -> Int64.of_string mtime_s | _ -> 0L in
-          let row = List.fold_left (fun row ((_, k), v) -> 
-              Row.update mtime k "" (fun _ -> (Xml_spaces.unprotect v)) (Row.add ctime k (Xml_spaces.unprotect v) row)
-            ) Row.empty rest in
-          f (tableset, (Table.update mtime rf Row.empty (fun _ -> row) (Table.add ctime rf row table)), manifest)
-        | (_, "pair"), [ (_, "key"), k; (_, "value"), v ] ->
-          f (tableset, table, (k, v) :: manifest)
-        | (_, name), _ -> 
-          raise (Unmarshall_error (Printf.sprintf "Unexpected tag: %s" name))
+          | (_, ("database" | "manifest")), _ -> f acc
+          | (_, "table"), [ (_, "name"), _ ] ->
+            f (tableset, Table.empty, manifest)
+          | (_, "row"), ((_, "ref"), rf) :: rest ->
+            (* Remove any other duplicate "ref"s which might have sneaked in there *)
+            let rest = List.filter (fun ((_,k), _) -> k <> "ref") rest in
+            let (ctime_l,rest) = List.partition (fun ((_, k), _) -> k="__ctime") rest in
+            let (mtime_l,rest) = List.partition (fun ((_, k), _) -> k="__mtime") rest in
+            let ctime = match ctime_l with | [(_,ctime_s)] -> Int64.of_string ctime_s | _ -> 0L in
+            let mtime = match mtime_l with | [(_,mtime_s)] -> Int64.of_string mtime_s | _ -> 0L in
+            let row = List.fold_left (fun row ((_, k), v) -> 
+                Row.update mtime k "" (fun _ -> (Xml_spaces.unprotect v)) (Row.add ctime k (Xml_spaces.unprotect v) row)
+              ) Row.empty rest in
+            f (tableset, (Table.update mtime rf Row.empty (fun _ -> row) (Table.add ctime rf row table)), manifest)
+          | (_, "pair"), [ (_, "key"), k; (_, "value"), v ] ->
+            f (tableset, table, (k, v) :: manifest)
+          | (_, name), _ -> 
+            raise (Unmarshall_error (Printf.sprintf "Unexpected tag: %s" name))
         end
       (* On reading an end tag... *)
       | `El_end ->
         let tag = Stack.pop tags in
         begin match tag with
-        | (_, ("database" | "manifest" | "row" | "pair")), _ -> maybe_return f acc
-        | (_, "table"), [ (_, "name"), name ] ->
-          maybe_return f (TableSet.add 0L name table tableset, Table.empty, manifest)
-        | (_, name), _ -> 
-          raise (Unmarshall_error (Printf.sprintf "Unexpected tag: %s" name))
+          | (_, ("database" | "manifest" | "row" | "pair")), _ -> maybe_return f acc
+          | (_, "table"), [ (_, "name"), name ] ->
+            maybe_return f (TableSet.add 0L name table tableset, Table.empty, manifest)
+          | (_, name), _ -> 
+            raise (Unmarshall_error (Printf.sprintf "Unexpected tag: %s" name))
         end
       | _ -> f acc
     in

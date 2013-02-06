@@ -419,9 +419,9 @@ module Tests = functor(Client: Db_interface.DB_ACCESS) -> struct
     then failwith "is_valid_ref <valid_ref> = false, after create_row";
     Printf.printf "get_table_from_ref <valid ref>\n";
     begin match Client.get_table_from_ref t valid_ref with
-    | Some "VM" -> ()
-    | Some t -> failwith "get_table_from_ref <valid ref> : invalid table"
-    | None -> failwith "get_table_from_ref <valid ref> : None"
+      | Some "VM" -> ()
+      | Some t -> failwith "get_table_from_ref <valid ref> : invalid table"
+      | None -> failwith "get_table_from_ref <valid ref> : None"
     end;
     Printf.printf "read_refs includes <valid ref>\n";
     if not (List.mem valid_ref (Client.read_refs t "VM"))

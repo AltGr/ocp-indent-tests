@@ -63,24 +63,24 @@ let extract_patch path =
         Gpg.with_signed_cleartext path
           (fun fingerprint fd' -> 
             (match fingerprint with 
-            | Some f ->
-              let enc = Base64.encode f in
-              let acceptable_keys = 
-                if Xapi_fist.allow_test_patches () then
-                  [ xensource_patch_key; test_patch_key ] else [ xensource_patch_key ]
-              in
-              if not (List.mem enc acceptable_keys)
-              then 
-                (
-                  debug "Got fingerprint: %s" f;
-                  (*debug "Encoded: %s" (Base64.encode f); -- don't advertise the fact that we've got an encoded string in here! *)
-                  raise Gpg.InvalidSignature
-                )
-              else
-                debug "Fingerprint verified."
-            | None ->
-              debug "No fingerprint!";
-              raise Gpg.InvalidSignature);
+              | Some f ->
+                let enc = Base64.encode f in
+                let acceptable_keys = 
+                  if Xapi_fist.allow_test_patches () then
+                    [ xensource_patch_key; test_patch_key ] else [ xensource_patch_key ]
+                in
+                if not (List.mem enc acceptable_keys)
+                then 
+                  (
+                    debug "Got fingerprint: %s" f;
+                    (*debug "Encoded: %s" (Base64.encode f); -- don't advertise the fact that we've got an encoded string in here! *)
+                    raise Gpg.InvalidSignature
+                  )
+                else
+                  debug "Fingerprint verified."
+              | None ->
+                debug "No fingerprint!";
+                raise Gpg.InvalidSignature);
             let (_: int64) = Unixext.copy_file fd' fd in
             ()
           )
@@ -361,20 +361,20 @@ let oem_patch_stream_handler (req: Request.t) s _ =
                 Gpg.with_detached_signature secondary_partition signature_file bytes_written
                   (fun fingerprint _ -> 
                     (match fingerprint with 
-                    | Some f ->
-                      (* base64 encoded fingerprint of our public patch signing key *)
-                      if not (List.mem (Base64.encode f) oem_patch_keys)                  
-                      then 
-                        (
-                          debug "Got fingerprint: %s" f;
-                          (*debug "Encoded: %s" (Base64.encode f); -- don't advertise the fact that we've got an encoded string in here! *)
-                          raise Gpg.InvalidSignature
-                        )
-                      else
-                        debug "Fingerprint verified."
-                    | None ->
-                      debug "No fingerprint!";
-                      raise Gpg.InvalidSignature);
+                      | Some f ->
+                        (* base64 encoded fingerprint of our public patch signing key *)
+                        if not (List.mem (Base64.encode f) oem_patch_keys)                  
+                        then 
+                          (
+                            debug "Got fingerprint: %s" f;
+                            (*debug "Encoded: %s" (Base64.encode f); -- don't advertise the fact that we've got an encoded string in here! *)
+                            raise Gpg.InvalidSignature
+                          )
+                        else
+                          debug "Fingerprint verified."
+                      | None ->
+                        debug "No fingerprint!";
+                        raise Gpg.InvalidSignature);
                   )
               end
               else begin 

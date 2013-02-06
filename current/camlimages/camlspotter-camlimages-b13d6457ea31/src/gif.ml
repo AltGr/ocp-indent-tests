@@ -140,8 +140,8 @@ let load filename opts =
         let desc = dGifGetImageDesc ic in
         (* reset progress bar *)
         begin match prog with
-        | Some p -> p 0.0
-        | None -> ()
+          | Some p -> p 0.0
+          | None -> ()
         end;
 
         if debug then
@@ -203,8 +203,8 @@ let load filename opts =
               Index8.set_scanline img dest line;
               incr lines;
               begin match prog with
-              | Some p -> p (float !lines /. float desc.desc_height)
-              | None -> ()
+                | Some p -> p (float !lines /. float desc.desc_height)
+                | None -> ()
               end;
               loop (src + 1) (dest + dest_step) dest_step
             end in
@@ -218,8 +218,8 @@ let load filename opts =
             let line = dGifGetLine ic in
             Index8.set_scanline img y line;
             begin match prog with
-            | Some p -> p (float (y + 1) /. float desc.desc_height)
-            | None -> ()
+              | Some p -> p (float (y + 1) /. float desc.desc_height)
+              | None -> ()
             end;
           done in
 
@@ -248,22 +248,22 @@ let load filename opts =
         let func, exts = dGifGetExtension ic in
         let ext = gif_parse_extension func exts in
         begin match ext with
-        | GifGraphics (str :: _ as exts) ->
-          if debug then begin
-            prerr_string "GRP: ";
-            for i = 0 to String.length str - 1 do
-              prerr_string (Printf.sprintf "%02x " (int_of_char str.[i]))
-            done
-          end;
-          List.iter debug_endline exts;
-          if String.length str < 4 then raise Exit;
-          if int_of_char str.[0] land 0x1 <> 0 then begin
-            debug_endline
-              (Printf.sprintf "TRANSPARENT %d" (int_of_char str.[3]));
-            transparent := int_of_char str.[3]
-          end;
-          delay := int_of_char str.[1] + int_of_char str.[2] * 256;
-        | _ -> ()
+          | GifGraphics (str :: _ as exts) ->
+            if debug then begin
+              prerr_string "GRP: ";
+              for i = 0 to String.length str - 1 do
+                prerr_string (Printf.sprintf "%02x " (int_of_char str.[i]))
+              done
+            end;
+            List.iter debug_endline exts;
+            if String.length str < 4 then raise Exit;
+            if int_of_char str.[0] land 0x1 <> 0 then begin
+              debug_endline
+                (Printf.sprintf "TRANSPARENT %d" (int_of_char str.[3]));
+              transparent := int_of_char str.[3]
+            end;
+            delay := int_of_char str.[1] + int_of_char str.[2] * 256;
+          | _ -> ()
         end;
         current_extensions := ext :: !current_extensions
       | Undefined | Screen_desc -> raise (Failure "Gif.load")
@@ -361,13 +361,13 @@ let save filename opts sequence =
           debug_endline "SEXT";
           try
             begin match ext with
-            | GifApplication ["NETSCAPE2.0"; _] ->
-              (* Overridden and written already *)
-              if !loop_written then raise Exit
-            | GifGraphics [str] ->
-              (* delayed *)
-              graphics_ext := Some str; raise Exit
-            | _ -> ()
+              | GifApplication ["NETSCAPE2.0"; _] ->
+                (* Overridden and written already *)
+                if !loop_written then raise Exit
+              | GifGraphics [str] ->
+                (* delayed *)
+                graphics_ext := Some str; raise Exit
+              | _ -> ()
             end;
             eGifPutExtension oc (gif_make_extension ext)
           with

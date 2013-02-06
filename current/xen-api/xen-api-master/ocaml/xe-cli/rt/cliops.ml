@@ -389,16 +389,16 @@ type vmop = Start | Shutdown | Reboot | Resume | Suspend
 let change_vm_state_fail cli vmid st =
   let params = [("vm",vmid)] in
   ignore (match st with
-    Start ->
-    expect_failure (fun () -> cli "vm-start" params)
-  | Shutdown ->
-    expect_failure (fun () -> cli "vm-shutdown" params)
-  | Suspend ->
-    expect_failure (fun () -> cli "vm-suspend" params)
-  | Reboot ->
-    expect_failure (fun () -> cli "vm-reboot" params)
-  | Resume -> 
-    expect_failure (fun () -> cli "vm-resume" params))
+      Start ->
+      expect_failure (fun () -> cli "vm-start" params)
+    | Shutdown ->
+      expect_failure (fun () -> cli "vm-shutdown" params)
+    | Suspend ->
+      expect_failure (fun () -> cli "vm-suspend" params)
+    | Reboot ->
+      expect_failure (fun () -> cli "vm-reboot" params)
+    | Resume -> 
+      expect_failure (fun () -> cli "vm-resume" params))
 
 let get_pic cli vmid =
   let domid = get_client_domid vmid in

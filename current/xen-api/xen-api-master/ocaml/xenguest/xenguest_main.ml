@@ -22,8 +22,8 @@ let finally fct clean_f =
   let result = try
     fct ();
   with
-      exn ->
-      clean_f (); raise exn in
+    exn ->
+    clean_f (); raise exn in
   clean_f ();
   result
 
@@ -99,12 +99,12 @@ let require xs = List.iter (fun param ->
       error "%s" msg;
       failwith msg
     end else match Hashtbl.find params param with
-    | None ->
-      let msg = sprintf "This option requires parameters [ %s ]. You missed %s"
-          (String.concat ", " xs) param in
-      error "%s" msg;
-      failwith msg
-    | Some v -> ()) xs
+      | None ->
+        let msg = sprintf "This option requires parameters [ %s ]. You missed %s"
+            (String.concat ", " xs) param in
+        error "%s" msg;
+        failwith msg
+      | Some v -> ()) xs
 
 let get_param param = match Hashtbl.find params param with
   | None ->
@@ -197,10 +197,10 @@ let fork_capture_stdout_stderr callback f x =
     finished := !active_fds = []
   done;
   begin match snd (Unix.waitpid [] pid) with
-  | Unix.WEXITED 0    -> ()
-  | Unix.WEXITED rc   -> failwith (sprintf "child failure, return code %d" rc)
-  | Unix.WSIGNALED si -> failwith (sprintf "child killed by signal %s" (Unixext.string_of_signal si))
-  | _                 -> failwith (sprintf "child stopped")
+    | Unix.WEXITED 0    -> ()
+    | Unix.WEXITED rc   -> failwith (sprintf "child failure, return code %d" rc)
+    | Unix.WSIGNALED si -> failwith (sprintf "child killed by signal %s" (Unixext.string_of_signal si))
+    | _                 -> failwith (sprintf "child stopped")
   end;
   (* Success/failure is encoded in the first character *)
   if String.length !result = 0 then

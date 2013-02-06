@@ -141,21 +141,21 @@ let size_gen face loadf string =
     and down = metrics.gm_hori.bearingy -. metrics.gm_height
     in
     begin match !leftmost with
-    | None -> leftmost := Some left
-    | Some x when x > left -> leftmost := Some left 
-    | _ -> () end;
+      | None -> leftmost := Some left
+      | Some x when x > left -> leftmost := Some left 
+      | _ -> () end;
     begin match !rightmost with
-    | None -> rightmost := Some right 
-    | Some x when x < right -> rightmost := Some right 
-    | _ -> () end;
+      | None -> rightmost := Some right 
+      | Some x when x < right -> rightmost := Some right 
+      | _ -> () end;
     begin match !upmost with
-    | None   -> upmost := Some up 
-    | Some x when x < up -> upmost := Some up 
-    | _ -> () end;
+      | None   -> upmost := Some up 
+      | Some x when x < up -> upmost := Some up 
+      | _ -> () end;
     begin match !downmost with
-    | None   -> downmost := Some down 
-    | Some x when x > down -> downmost := Some down 
-    | _ -> () end;
+      | None   -> downmost := Some down 
+      | Some x when x > down -> downmost := Some down 
+      | _ -> () end;
     curx := !curx +. metrics.gm_hori.advance
   done;
   match !leftmost, !downmost, !rightmost, !upmost with

@@ -49,11 +49,11 @@ let ty_to_xmlrpc api ty =
     | Int -> "fun n -> To.string(Int64.to_string n)"
     | Map(key, value) ->
       let kf = begin match key with
-      | Ref x -> "tostring_reference"
-      | Enum (name, cs) ->
-        let aux (c, _) = Printf.sprintf "%s -> \"%s\"" (constructor_of c) (String.lowercase c) in
-        "   function " ^ (String.concat ("\n" ^ indent ^ "| ") (List.map aux cs))
-      | key -> "ToString." ^ (alias_of_ty key)
+        | Ref x -> "tostring_reference"
+        | Enum (name, cs) ->
+          let aux (c, _) = Printf.sprintf "%s -> \"%s\"" (constructor_of c) (String.lowercase c) in
+          "   function " ^ (String.concat ("\n" ^ indent ^ "| ") (List.map aux cs))
+        | key -> "ToString." ^ (alias_of_ty key)
       end in
       let vf = alias_of_ty value in
       "fun m -> map ("^kf^") ("^vf^") m"
@@ -116,14 +116,14 @@ let ty_of_xmlrpc api ty =
     | Int -> wrap "xml" "Int64.of_string(From.string xml)"
     | Map(key, value) ->
       let kf = begin match key with
-      | Ref x -> "fromstring_reference"
-      | Enum (name, cs) ->
-        let aux (c, _) = "\""^(String.lowercase c)^"\" -> "^constructor_of c in
-        wrap "txt"
-          ("\n    match String.lowercase txt with\n      "^
-             String.concat "\n    | " (List.map aux cs)^
-             "\n    | _ -> raise (RunTimeTypeError(\""^name^"\", Xml.parse_string txt))")
-      | key -> "FromString." ^ (alias_of_ty key)
+        | Ref x -> "fromstring_reference"
+        | Enum (name, cs) ->
+          let aux (c, _) = "\""^(String.lowercase c)^"\" -> "^constructor_of c in
+          wrap "txt"
+            ("\n    match String.lowercase txt with\n      "^
+               String.concat "\n    | " (List.map aux cs)^
+               "\n    | _ -> raise (RunTimeTypeError(\""^name^"\", Xml.parse_string txt))")
+        | key -> "FromString." ^ (alias_of_ty key)
       end in
       let vf = alias_of_ty_param value in
       wrap "xml" ("map ("^kf^") ("^vf^") xml")

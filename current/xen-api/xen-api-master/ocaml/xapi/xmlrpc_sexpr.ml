@@ -63,10 +63,10 @@ let xmlrpc_to_sexpr (root:xml) =
       let (mysiblings:SExpr.t list) = visit (h) siblings in
       if (List.length mychildren) = 2 then (*name & value?*)
         begin match (List.nth mychildren 0) with
-        |(SExpr.String name) -> (*is name a string?*) 
-          anode::mysiblings (*then add member anode*)
-        |_ -> 
-          mysiblings (*ignore incorrect member*)
+          |(SExpr.String name) -> (*is name a string?*) 
+            anode::mysiblings (*then add member anode*)
+          |_ -> 
+            mysiblings (*ignore incorrect member*)
         end
       else mysiblings (*ignore incorrect member*)
 
@@ -112,13 +112,13 @@ let sexpr_to_xmlrpc (root:SExpr.t) =
     (* sexpr representing a struct with member tags *)
     | h, (SExpr.Node (SExpr.String "struct"::_)), (SExpr.Node (SExpr.String name:: avalue ::_))->
       begin match (avalue) with
-      |SExpr.String ""  ->
-        (Element ("member",[],Element ("name",[],PCData name::[])::Element ("value",[],[])::[])) 
-      |SExpr.String value  ->
-        (Element ("member",[],Element ("name",[],PCData name::[])::Element ("value",[],PCData value::[])::[])) 
-      |SExpr.Node _ as somenode -> 
-        (Element ("member",[],Element ("name",[],PCData name::[])::Element ("value",[],(visit (h+1) (SExpr.String "member") (somenode))::[])::[])) 
-      |_ -> (Element ("WRONG_SEXPR_MEMBER",[],[]))     
+        |SExpr.String ""  ->
+          (Element ("member",[],Element ("name",[],PCData name::[])::Element ("value",[],[])::[])) 
+        |SExpr.String value  ->
+          (Element ("member",[],Element ("name",[],PCData name::[])::Element ("value",[],PCData value::[])::[])) 
+        |SExpr.Node _ as somenode -> 
+          (Element ("member",[],Element ("name",[],PCData name::[])::Element ("value",[],(visit (h+1) (SExpr.String "member") (somenode))::[])::[])) 
+        |_ -> (Element ("WRONG_SEXPR_MEMBER",[],[]))     
       end
 
     (* member tag without values - wrong format - defaults to empty value *)

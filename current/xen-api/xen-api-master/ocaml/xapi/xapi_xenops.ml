@@ -57,10 +57,10 @@ let vdi_of_disk ~__context x = match String.split ~limit:2 '/' x with
     let open Db_filter_types in
     let sr = Db.SR.get_by_uuid ~__context ~uuid:sr_uuid in
     begin match Db.VDI.get_records_where ~__context ~expr:(And((Eq (Field "location", Literal location)),Eq (Field "SR", Literal (Ref.string_of sr)))) with
-    | x :: _ -> Some x
-    | _ ->
-      error "Failed to find VDI: %s" x;
-      None
+      | x :: _ -> Some x
+      | _ ->
+        error "Failed to find VDI: %s" x;
+        None
     end
   | _ ->
     error "Failed to parse VDI name: %s" x;
@@ -139,11 +139,11 @@ let builder_of_vm ~__context ~vm timeoffset pci_passthrough =
                                                   timeoffset = timeoffset;
                                                   video_mib = int vm.API.vM_platform 4 "videoram";
                                                   video = begin match string vm.API.vM_platform "cirrus" "vga" with
-                                                  | "std" -> Standard_VGA
-                                                  | "cirrus" -> Cirrus
-                                                  | x ->
-                                                    error "Unknown platform/vga option: %s (expected 'std' or 'cirrus')" x;
-                                                    Cirrus
+                                                    | "std" -> Standard_VGA
+                                                    | "cirrus" -> Cirrus
+                                                    | x ->
+                                                      error "Unknown platform/vga option: %s (expected 'std' or 'cirrus')" x;
+                                                      Cirrus
                                                   end;
                                                   acpi = bool vm.API.vM_platform true "acpi";
                                                   serial = Some (string vm.API.vM_other_config "pty" "hvm_serial");
@@ -675,22 +675,22 @@ module Xenopsd_metadata = struct
         then
           let txt = create_metadata ~__context ~upgrade:false ~self |> Metadata.rpc_of_t |> Jsonrpc.to_string in
           begin match Xapi_cache.find_nolock id with
-          | Some old ->
-            if old <> txt then begin
-              Unixext.write_string_to_file (Printf.sprintf "/tmp/metadata.old.%d" !counter) old;
-              Unixext.write_string_to_file (Printf.sprintf "/tmp/metadata.new.%d" !counter) txt;
-              incr counter
-            end
-          | None -> ()
+            | Some old ->
+              if old <> txt then begin
+                Unixext.write_string_to_file (Printf.sprintf "/tmp/metadata.old.%d" !counter) old;
+                Unixext.write_string_to_file (Printf.sprintf "/tmp/metadata.new.%d" !counter) txt;
+                incr counter
+              end
+            | None -> ()
           end;
           begin match Xapi_cache.find_nolock id with
-          | Some old when old = txt -> ()
-          | _ ->
-            debug "VM %s metadata has changed: updating xenopsd" id;
-            info "xenops: VM.import_metadata %s" txt;
-            Xapi_cache.update_nolock id (Some txt);
-            let (_: Vm.id) = Client.VM.import_metadata dbg txt in
-            ()
+            | Some old when old = txt -> ()
+            | _ ->
+              debug "VM %s metadata has changed: updating xenopsd" id;
+              info "xenops: VM.import_metadata %s" txt;
+              Xapi_cache.update_nolock id (Some txt);
+              let (_: Vm.id) = Client.VM.import_metadata dbg txt in
+              ()
           end
       )
 end
@@ -1509,11 +1509,11 @@ let success_task f dbg id =
       | Task.Failed x -> 
         let exn = exn_of_exnty (Exception.exnty_of_rpc x) in
         begin match exn with 
-        | Failed_to_contact_remote_service x ->
-          failwith (Printf.sprintf "Failed to contact remote service on: %s\n" x)
-        | e -> 
-          debug "%s: caught xenops exception: %s" dbg (Jsonrpc.to_string x);
-          raise e
+          | Failed_to_contact_remote_service x ->
+            failwith (Printf.sprintf "Failed to contact remote service on: %s\n" x)
+          | e -> 
+            debug "%s: caught xenops exception: %s" dbg (Jsonrpc.to_string x);
+            raise e
         end
       | Task.Pending _ -> failwith "task pending"
     ) (fun () -> Client.TASK.destroy dbg id)

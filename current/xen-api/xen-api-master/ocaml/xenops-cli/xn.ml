@@ -61,11 +61,11 @@ let success_task f id =
       | Task.Failed x ->
         let exn = exn_of_exnty (Exception.exnty_of_rpc x) in
         begin match exn with
-        | Failed_to_contact_remote_service x ->
-          Printf.printf "Failed to contact remote service on: %s\n" x;
-          Printf.printf "Check the address and credentials.\n";
-          exit 1;
-        | _ -> raise exn
+          | Failed_to_contact_remote_service x ->
+            Printf.printf "Failed to contact remote service on: %s\n" x;
+            Printf.printf "Check the address and credentials.\n";
+            exit 1;
+          | _ -> raise exn
         end
       | Task.Pending _ -> failwith "task pending"
     ) (fun () ->
@@ -120,10 +120,10 @@ let parse_pci vm_id (x, idx) = match String.split ',' x with
         Printf.fprintf stderr "Failed to parse BDF: %s. It should be '[DDDD:]BB:VV.F'\n" bdf;
         exit 2 in
     let options = List.map (fun x -> match String.split ~limit:2 '=' x with
-      | [k; v] -> k, v
-      | _ ->
-        Printf.fprintf stderr "Failed to parse PCI option: %s. It should be key=value.\n" x;
-        exit 2
+        | [k; v] -> k, v
+        | _ ->
+          Printf.fprintf stderr "Failed to parse PCI option: %s. It should be key=value.\n" x;
+          exit 2
       ) options in
     let bool_opt k opts =
       if List.mem_assoc k opts then Some (List.assoc k opts = "1") else None in
@@ -210,10 +210,10 @@ let parse_vif vm_id (x, idx) =
   let open Xn_cfg_types in
   let xs = List.filter (fun x -> x <> "") (List.map (String.strip String.isspace) (String.split ',' x)) in
   let kvpairs = List.map (fun x -> match String.split ~limit:2 '=' x with
-    | [ k; v ] -> k, v
-    | _ ->
-      Printf.fprintf stderr "I don't understand '%s'. Please use 'mac=xx:xx:xx:xx:xx:xx,bridge=xenbrX'.\n" x;
-      exit 2
+      | [ k; v ] -> k, v
+      | _ ->
+        Printf.fprintf stderr "I don't understand '%s'. Please use 'mac=xx:xx:xx:xx:xx:xx,bridge=xenbrX'.\n" x;
+        exit 2
     ) xs in {
     Vif.id = vm_id, string_of_int idx;
     position = idx;
@@ -235,15 +235,15 @@ let print_vm id =
   let boot = match vm_t.ty with
     | PV { boot = boot } ->
       begin match boot with
-      | Direct { kernel = k; cmdline = c; ramdisk = i } -> [
-        _builder, quote "linux";
-        _kernel, quote k;
-        _root, quote c
-      ] @ (Opt.default [] (Opt.map (fun x -> [ _ramdisk, x ]) i))
-      | Indirect { bootloader = b } -> [
-        _builder, quote "linux";
-        _bootloader, quote b;
-      ]
+        | Direct { kernel = k; cmdline = c; ramdisk = i } -> [
+          _builder, quote "linux";
+          _kernel, quote k;
+          _root, quote c
+        ] @ (Opt.default [] (Opt.map (fun x -> [ _ramdisk, x ]) i))
+        | Indirect { bootloader = b } -> [
+          _builder, quote "linux";
+          _bootloader, quote b;
+        ]
       end
     | HVM { boot_order = b } -> [
       _builder, quote "hvmloader";

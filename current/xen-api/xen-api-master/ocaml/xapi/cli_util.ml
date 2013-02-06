@@ -70,10 +70,10 @@ let result_from_task rpc session_id remote_task =
   | `failure ->
     let error_info = Client.Task.get_error_info rpc session_id remote_task in
     begin match error_info with
-    | code :: params ->
-      raise (Api_errors.Server_error(code, params))
-    | [] ->
-      failwith (Printf.sprintf "Task failed but no error recorded: %s" (Ref.string_of remote_task))
+      | code :: params ->
+        raise (Api_errors.Server_error(code, params))
+      | [] ->
+        failwith (Printf.sprintf "Task failed but no error recorded: %s" (Ref.string_of remote_task))
     end
 
 (** Use the event system to wait for a specific task to complete (succeed, failed or be cancelled) *)
@@ -193,11 +193,11 @@ let get_server_error code params =
 
 let server_error (code: string) (params: string list) sock = 
   begin match get_server_error code params with
-  | None ->
-    marshal sock (Command (Error(code, List.map ref_convert params)));
-  | Some (e, l) ->
-    marshal sock (Command (PrintStderr (e ^ "\n")));
-    List.iter (fun pv -> marshal sock (Command (PrintStderr (pv ^ "\n")))) l;
+    | None ->
+      marshal sock (Command (Error(code, List.map ref_convert params)));
+    | Some (e, l) ->
+      marshal sock (Command (PrintStderr (e ^ "\n")));
+      List.iter (fun pv -> marshal sock (Command (PrintStderr (pv ^ "\n")))) l;
   end;
   marshal sock (Command (Exit 1))
 
@@ -211,8 +211,8 @@ let user_says_yes fd =
     | _ -> failwith "Protocol error"
   in
   begin match unmarshal fd with
-  | Blob End -> ()
-  | _ -> failwith "Protocol error"
+    | Blob End -> ()
+    | _ -> failwith "Protocol error"
   end;
   let result = String.lowercase (String.strip String.isspace response)="yes" in
   if not(result)

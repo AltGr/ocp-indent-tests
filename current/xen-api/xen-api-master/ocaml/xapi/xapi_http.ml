@@ -99,11 +99,11 @@ let assert_credentials_ok realm ?(http_action=realm) ?(fn=Rbac.nofn) (req: Reque
   in
   let rbac_raise permission msg exc =
     (match task_id with
-    | None -> ()
-    | Some task_id ->
-      TaskHelper.failed
-        ~__context:(Context.from_forwarded_task task_id)
-        (Api_errors.rbac_permission_denied,[permission;msg])
+      | None -> ()
+      | Some task_id ->
+        TaskHelper.failed
+          ~__context:(Context.from_forwarded_task task_id)
+          (Api_errors.rbac_permission_denied,[permission;msg])
     );
     raise exc
   in
@@ -198,8 +198,8 @@ let with_context ?(dummy=false) label (req: Request.t) (s: Unix.file_descr) f =
           f __context
         in
         begin match task_id with
-        | None -> Server_helpers.exec_with_new_task ?subtask_of ~session_id ~task_in_database:(not dummy) ~origin:(Context.Http(req,s)) label login_perform_logout 
-        | Some task_id -> Server_helpers.exec_with_forwarded_task ~session_id ~origin:(Context.Http(req,s)) task_id login_perform_logout
+          | None -> Server_helpers.exec_with_new_task ?subtask_of ~session_id ~task_in_database:(not dummy) ~origin:(Context.Http(req,s)) label login_perform_logout 
+          | Some task_id -> Server_helpers.exec_with_forwarded_task ~session_id ~origin:(Context.Http(req,s)) task_id login_perform_logout
         end
       )
       (fun () -> 
@@ -214,8 +214,8 @@ let with_context ?(dummy=false) label (req: Request.t) (s: Unix.file_descr) f =
     debug "No authentication provided to http handler: returning 401 unauthorised";
     (* Fail the task *)
     begin match task_id with
-    | None -> Server_helpers.exec_with_new_task ~task_in_database:(not dummy) label fail
-    | Some task_id -> Server_helpers.exec_with_forwarded_task task_id fail
+      | None -> Server_helpers.exec_with_new_task ~task_in_database:(not dummy) label fail
+      | Some task_id -> Server_helpers.exec_with_forwarded_task task_id fail
     end;
     req.Request.close <- true;
     raise e

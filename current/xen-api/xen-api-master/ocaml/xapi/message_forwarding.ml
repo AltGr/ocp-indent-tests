@@ -844,12 +844,12 @@ module Forward = functor(Local: Custom_actions.CUSTOM_ACTIONS) -> struct
     (* Reserves the resources for a VM by setting it as 'scheduled_to_be_resident_on' a host *)
     let allocate_vm_to_host ~__context ~vm ~host ~snapshot ?host_op () =
       begin match host_op with
-      | Some x ->
-        let task_id = Ref.string_of (Context.get_task_id __context) in
-        Xapi_host_helpers.assert_operation_valid ~__context ~self:host ~op:x;
-        Db.Host.add_to_current_operations ~__context ~self:host ~key:task_id ~value:x;
-        Xapi_host_helpers.update_allowed_operations ~__context ~self:host
-      | None -> ()
+        | Some x ->
+          let task_id = Ref.string_of (Context.get_task_id __context) in
+          Xapi_host_helpers.assert_operation_valid ~__context ~self:host ~op:x;
+          Db.Host.add_to_current_operations ~__context ~self:host ~key:task_id ~value:x;
+          Xapi_host_helpers.update_allowed_operations ~__context ~self:host
+        | None -> ()
       end;
       (* Make sure the last_booted record has useful values for later use in memory checking
          code. *)
@@ -971,14 +971,14 @@ module Forward = functor(Local: Custom_actions.CUSTOM_ACTIONS) -> struct
     let forward_to_access_srs_and ~local_fn ~__context ?vm ?extra_sr op =
       let choose_fn ~host =
         begin match vm with
-        | Some vm ->
-          Xapi_vm_helpers.assert_can_see_SRs ~__context ~self:vm ~host
-        | _ -> () end;
+          | Some vm ->
+            Xapi_vm_helpers.assert_can_see_SRs ~__context ~self:vm ~host
+          | _ -> () end;
         begin match extra_sr with
-        | Some extra_sr ->
-          Xapi_vm_helpers.assert_can_see_specified_SRs ~__context
-            ~reqd_srs:[extra_sr] ~host
-        | _ -> () end in
+          | Some extra_sr ->
+            Xapi_vm_helpers.assert_can_see_specified_SRs ~__context
+              ~reqd_srs:[extra_sr] ~host
+          | _ -> () end in
       let suitable_host = Xapi_vm_helpers.choose_host ~__context ?vm ~choose_fn () in
       do_op_on ~local_fn ~__context ~host:suitable_host op
 

@@ -60,16 +60,16 @@ let run_timer timer =
         end else begin
           (* Update event on the heap as necessary *)
           begin match ev.interval with
-          | INone -> Heap.remove event
-          | INormal span ->
-            ev.time <- Time.add now span;
-            Heap.update event ev
-          | IRandom (span, max_ratio) ->
-            let p2 = Random.float 2.0 in
-            let p = p2 -. 1. in
-            let confusion = Span.scale span (max_ratio *. p) in
-            ev.time <- Time.add (Time.add now span) confusion;
-            Heap.update event ev
+            | INone -> Heap.remove event
+            | INormal span ->
+              ev.time <- Time.add now span;
+              Heap.update event ev
+            | IRandom (span, max_ratio) ->
+              let p2 = Random.float 2.0 in
+              let p = p2 -. 1. in
+              let confusion = Span.scale span (max_ratio *. p) in
+              ev.time <- Time.add (Time.add now span) confusion;
+              Heap.update event ev
           end;
           Mutex.unlock mtx;
           begin

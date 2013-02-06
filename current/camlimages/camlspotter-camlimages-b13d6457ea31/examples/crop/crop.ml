@@ -123,19 +123,19 @@ let edge edgename img24 =
   done;
 
   begin match edgename, edgeimg with
-  | Some _name, Some img ->
-    for x = 0 to img24#width - 1 do
-      for y = 0 to img24#height - 1 do
-        if edge2.(x).(y) > 0 then begin
-          let rgb = img#get x y in
-          rgb.r <- (rgb.r + 255 * 9) / 10;
-          rgb.g <- rgb.g / 10;
-          rgb.b <- rgb.b / 10;
-          img#set x y rgb
-        end
-      done
-    done;
-  | _ -> () end;
+    | Some _name, Some img ->
+      for x = 0 to img24#width - 1 do
+        for y = 0 to img24#height - 1 do
+          if edge2.(x).(y) > 0 then begin
+            let rgb = img#get x y in
+            rgb.r <- (rgb.r + 255 * 9) / 10;
+            rgb.g <- rgb.g / 10;
+            rgb.b <- rgb.b / 10;
+            img#set x y rgb
+          end
+        done
+      done;
+    | _ -> () end;
   edge2, edgeimg;;
 
 let save def name img format =
@@ -256,23 +256,23 @@ List.iter (fun file ->
           borderdetect img#height img#width
             (fun x y -> edge.(y).(img#height-x-1)) in
         begin match !edgeimg with
-        | Some img ->
-          for x = x1 to img#width - 1 - x2 do
-            let f y =
-              if edge.(x).(y) > 0 then img#set x y {r=0;g=255;b=0} in
-            f y1;
-            f (img#height - 1 - y2)
-          done;
-          for y = y1 to img#height - 1 - y2 do
-            let f x =
-              if edge.(x).(y) > 0 then img#set x y {r=0;g=255;b=0} in
-            f x1;
-            f (img#width - 1 - x2)
-          done;
+          | Some img ->
+            for x = x1 to img#width - 1 - x2 do
+              let f y =
+                if edge.(x).(y) > 0 then img#set x y {r=0;g=255;b=0} in
+              f y1;
+              f (img#height - 1 - y2)
+            done;
+            for y = y1 to img#height - 1 - y2 do
+              let f x =
+                if edge.(x).(y) > 0 then img#set x y {r=0;g=255;b=0} in
+              f x1;
+              f (img#width - 1 - x2)
+            done;
 
-          img#save edgefile (Some Jpeg) [Save_Quality 75];
-          img#destroy
-        | None -> ()
+            img#save edgefile (Some Jpeg) [Save_Quality 75];
+            img#destroy
+          | None -> ()
         end;
 
         x1, x2, y1, y2

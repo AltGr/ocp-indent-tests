@@ -69,13 +69,13 @@ let get_latest_tools_vsn () =
         match String.split '.' mid with
         | [ maj; min; mic_plus_build ] ->
           begin match String.split '-' mic_plus_build with
-          | [ mic; build ] ->
-            (* Build numbers often have a non-digit suffix: remove this *)
-            let isdigit c = Char.code c >= (Char.code '0') && (Char.code c <= (Char.code '9')) in
-            let build = String.strip (fun c -> not (isdigit c)) build in
-            int_of_string maj, int_of_string min, int_of_string mic, int_of_string build
-          | [ mic ] -> int_of_string maj, int_of_string min, int_of_string mic, -1
-          | _ -> none (* never happens *)
+            | [ mic; build ] ->
+              (* Build numbers often have a non-digit suffix: remove this *)
+              let isdigit c = Char.code c >= (Char.code '0') && (Char.code c <= (Char.code '9')) in
+              let build = String.strip (fun c -> not (isdigit c)) build in
+              int_of_string maj, int_of_string min, int_of_string mic, int_of_string build
+            | [ mic ] -> int_of_string maj, int_of_string min, int_of_string mic, -1
+            | _ -> none (* never happens *)
           end
         | _ -> none (* should never happen either *)
       end
@@ -147,16 +147,16 @@ let is_up_to_date pv_driver_vsn =
     true
   | Some p ->
     begin match pv_driver_vsn with
-    (* XXX: linux guest agent doesn't report build number (-1) while all windows ones do *)
-    | Linux (maj, min, mic, bd)   ->
-      compare_vsn_with_product_vsn ~relaxed:true (maj, min, mic) p >= 0
-      && (bd = -1 || compare_vsn_with_tools_iso ~relaxed:true (maj, min, mic, bd) >= 0)
-    | Windows (maj, min, mic, bd) ->
-      compare_vsn_with_product_vsn (maj, min, mic) p >= 0
-      && compare_vsn_with_tools_iso (maj, min, mic, bd) >= 0
-    | Unknown ->
-      (* Avoid catch all '_', it's bad practice except for false assertion *)
-      false
+      (* XXX: linux guest agent doesn't report build number (-1) while all windows ones do *)
+      | Linux (maj, min, mic, bd)   ->
+        compare_vsn_with_product_vsn ~relaxed:true (maj, min, mic) p >= 0
+        && (bd = -1 || compare_vsn_with_tools_iso ~relaxed:true (maj, min, mic, bd) >= 0)
+      | Windows (maj, min, mic, bd) ->
+        compare_vsn_with_product_vsn (maj, min, mic) p >= 0
+        && compare_vsn_with_tools_iso (maj, min, mic, bd) >= 0
+      | Unknown ->
+        (* Avoid catch all '_', it's bad practice except for false assertion *)
+        false
     end
 
 (** We can migrate as long as PV drivers are present. *)

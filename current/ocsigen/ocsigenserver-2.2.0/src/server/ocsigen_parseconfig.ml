@@ -590,14 +590,14 @@ let parse_port =
     match do_match all_ipv6 with
       | Some r -> IPv6 (Unix.inet6_addr_any), int_of_string "port" (get r 1)
       | None -> match do_match all_ipv4 with
-          | Some r -> IPv4 (Unix.inet_addr_any), int_of_string "port" (get r 1)
-          | None -> match do_match single_ipv6 with
-              | Some r -> IPv6 (Unix.inet_addr_of_string (get r 1)),
-                  int_of_string "port" (get r 2)
-              | None -> match do_match single_ipv4 with
-                  | Some r -> IPv4 (Unix.inet_addr_of_string (get r 1)),
-                      int_of_string "port" (get r 2)
-                  | None -> All, int_of_string "port" s
+        | Some r -> IPv4 (Unix.inet_addr_any), int_of_string "port" (get r 1)
+        | None -> match do_match single_ipv6 with
+          | Some r -> IPv6 (Unix.inet_addr_of_string (get r 1)),
+              int_of_string "port" (get r 2)
+          | None -> match do_match single_ipv4 with
+            | Some r -> IPv4 (Unix.inet_addr_of_string (get r 1)),
+                int_of_string "port" (get r 2)
+            | None -> All, int_of_string "port" s
 
 
 (* First parsing of config file *)

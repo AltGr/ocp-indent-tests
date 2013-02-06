@@ -91,11 +91,11 @@ let database_callback event db =
     let snapshot = find_get_record tblname ~__context:context ~self:objref in
     let record = snapshot() in
     begin match record with
-    | None ->
-      error "Failed to send MOD event for %s %s" tblname objref;
-      Printf.printf "Failed to send MOD event for %s %s\n%!" tblname objref;
-    | Some record ->
-      events_notify ~snapshot:record tblname "mod" objref;
+      | None ->
+        error "Failed to send MOD event for %s %s" tblname objref;
+        Printf.printf "Failed to send MOD event for %s %s\n%!" tblname objref;
+      | Some record ->
+        events_notify ~snapshot:record tblname "mod" objref;
     end
   | WriteField (tblname, objref, fldname, oldval, newval) ->
     let events_old_val = 
@@ -122,11 +122,11 @@ let database_callback event db =
       events_notify ~snapshot:s tbl "mod" ref
     ) events_old_val;
     begin match record with
-    | None ->
-      error "Failed to send MOD event for %s %s" tblname objref;
-      Printf.printf "Failed to send MOD event for %s %s\n%!" tblname objref;
-    | Some record ->
-      events_notify ~snapshot:record tblname "mod" objref;
+      | None ->
+        error "Failed to send MOD event for %s %s" tblname objref;
+        Printf.printf "Failed to send MOD event for %s %s\n%!" tblname objref;
+      | Some record ->
+        events_notify ~snapshot:record tblname "mod" objref;
     end;
     List.iter (function 
     | tbl, ref, None ->
@@ -137,11 +137,11 @@ let database_callback event db =
     ) events_new_val;
   | PreDelete(tblname, objref) ->
     begin match find_get_record tblname ~__context:context ~self:objref () with
-    | None ->
-      error "Failed to generate DEL event for %s %s" tblname objref;
-    (*        Printf.printf "Failed to generate DEL event for %s %s\n%!" tblname objref; *)
-    | Some snapshot ->
-      events_notify ~snapshot tblname "del" objref
+      | None ->
+        error "Failed to generate DEL event for %s %s" tblname objref;
+      (*        Printf.printf "Failed to generate DEL event for %s %s\n%!" tblname objref; *)
+      | Some snapshot ->
+        events_notify ~snapshot tblname "del" objref
     end
   | Delete(tblname, objref, kv) ->
     let other_tbl_refs = follow_references tblname in
@@ -173,11 +173,11 @@ let database_callback event db =
         [] other_tbl_refs in
     let other_tbl_events = events_of_other_tbl_refs other_tbl_refs in
     begin match snapshot() with
-    | None ->
-      error "Failed to generate ADD event for %s %s" tblname new_objref;
-    (*        Printf.printf "Failed to generate ADD event for %s %s\n%!" tblname new_objref; *)
-    | Some snapshot ->
-      events_notify ~snapshot tblname "add" new_objref;
+      | None ->
+        error "Failed to generate ADD event for %s %s" tblname new_objref;
+      (*        Printf.printf "Failed to generate ADD event for %s %s\n%!" tblname new_objref; *)
+      | Some snapshot ->
+        events_notify ~snapshot tblname "add" new_objref;
     end;
     List.iter (function
     | tbl, ref, None ->

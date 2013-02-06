@@ -308,8 +308,8 @@ let register_test name test_type class_name description xapi_log pic =
   let picurl = testpicurl name vm in
   let pic = 
     (match pic with 
-      None -> None
-    | Some x -> let (_: int) = Sys.command (Printf.sprintf "mv %s %s" x picurl) in Some picurl) in
+        None -> None
+      | Some x -> let (_: int) = Sys.command (Printf.sprintf "mv %s %s" x picurl) in Some picurl) in
   let test_info = {
     test_result= !test_status_flag;
     test_ts=timestamp;

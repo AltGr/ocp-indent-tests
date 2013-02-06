@@ -73,7 +73,7 @@ let add t key data at_remove =
       try find_empty_or_eldest t with Not_found -> 0 
   in
   begin match t.(slot) with
-  | Some elt -> elt.at_remove elt.data
-  | None -> ()
+    | Some elt -> elt.at_remove elt.data
+    | None -> ()
   end;
   t.(slot) <- Some {key = key; data = data; at_remove= at_remove; time = Unix.time ()};;
