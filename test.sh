@@ -73,12 +73,16 @@ if [[ "${TASKS[*]}" =~ "ocp-update" ]]; then
 fi
 
 if [ -x "$OCP_INDENT" ]; then
-    ocp_indent_version="$(ocp-indent --version | grep version)\
-@$(cd ocp-indent && git log -n1 --date=short --format="%h (%cd)")"
+    VERSION=$($OCP_INDENT --version | awk '{ print $NF; exit }')
+    COMMITS_SINCE=$(cd ocp-indent && git log --oneline $VERSION.. 2>/dev/null)
+    if [ -n "$COMMITS_SINCE" ]; then
+        VERSION="$VERSION+$((1+$(wc -l <<<"$COMMITS_SINCE")))"
+    fi
+    ocp_indent_version="$VERSION ($(cd ocp-indent && git log -n1 --date=short --format="%h (%cd)"))"
     echo "=> using local checkout of ocp-indent: $ocp_indent_version"
 elif [ ! -x "$OCP_INDENT" ]; then
     OCP_INDENT=$(which ocp-indent)
-    ocp_indent_version="$($OCP_INDENT --version | grep version)"
+    ocp_indent_version="$($OCP_INDENT --version | awk '{ print $NF; exit }')"
     echo "=> no local checkout of ocp-indent, using $ocp_indent_version from the system"
 fi
 
@@ -214,7 +218,7 @@ diffcount() {
 if [[ "${TASKS[*]}" =~ "html" ]]; then
     cat <<EOF >status.html
 <html><head><title>
-Status of $ocp_indent_version
+Status of ocp-indent version $ocp_indent_version
 </title>
 <style>
 body { background-color: white; color: grey; font-family: monospace; text-align: center}
@@ -225,7 +229,7 @@ td { padding: 12px 8px; text-align: center; }
 .bar { border-bottom: 1px solid grey; }
 .bold { font-weight: bold; }
 </style></head><body>
-<h2>Status of $ocp_indent_version</h2>
+<h2>Status of ocp-indent version $ocp_indent_version</h2>
 
 <p>Ratio of correctly indented lines (compared to the line above)</p>
 <br>
