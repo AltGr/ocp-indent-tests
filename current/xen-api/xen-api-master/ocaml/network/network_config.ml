@@ -63,8 +63,8 @@ let read_management_conf () =
     let phy_interface = {default_interface with persistent_i = true} in
     let bridge_interface = {default_interface with ipv4_conf; ipv4_gateway; persistent_i = true} in
     let bridge = {default_bridge with
-                    ports = [device, {default_port with interfaces = [device]}];
-                    persistent_b = true
+                  ports = [device, {default_port with interfaces = [device]}];
+                  persistent_b = true
                  } in
     {interface_config = [device, phy_interface; bridge_name, bridge_interface];
      bridge_config = [bridge_name, bridge];

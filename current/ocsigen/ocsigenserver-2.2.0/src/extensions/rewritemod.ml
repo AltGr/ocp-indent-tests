@@ -93,9 +93,9 @@ let gen regexp = function
           return
             (Ext_retry_with
                ({ ri with request_info =
-                                          Ocsigen_extensions.ri_of_url
-                                            ~full_rewrite:fullrewrite
-                                            redir ri.request_info },
+                            Ocsigen_extensions.ri_of_url
+                              ~full_rewrite:fullrewrite
+                              redir ri.request_info },
                 Ocsigen_cookies.Cookies.empty)
             )
         )

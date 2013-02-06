@@ -186,7 +186,7 @@ let put_rrd_forwarder (req : Http.Request.t) (s : Unix.file_descr) _ =
           let is_host_key_val = "is_host", string_of_bool is_host in
           let domid_key_val = "domid", string_of_int domid in
           let req = {req with
-                       Http.Request.query = is_host_key_val::domid_key_val::query
+                     Http.Request.query = is_host_key_val::domid_key_val::query
                     } in
           ignore (Xapi_services.hand_over_connection req s Rrdd_interface.http_fwd_path)
       )

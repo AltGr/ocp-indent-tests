@@ -506,7 +506,7 @@ let gen reg = function
                     if loc <> "" && loc.[0] = '/' then
                       Lwt.return
                         (Ext_retry_with ({ ri with request_info =
-                                                                                            ri_of_url loc ri.request_info },
+                                                     ri_of_url loc ri.request_info },
                            Ocsigen_cookies.Cookies.empty))
                     else
                       let default_result = Ocsigen_http_frame.default_result () in

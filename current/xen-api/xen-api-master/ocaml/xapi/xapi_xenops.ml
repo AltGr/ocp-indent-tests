@@ -445,7 +445,7 @@ let generate_xenops_state ~__context ~self ~vm ~vbds ~pcis =
   try
     let vm_to_resume = {
       (Helpers.parse_boot_record vm.API.vM_last_booted_record) with
-        API.vM_VBDs = vm.API.vM_VBDs
+      API.vM_VBDs = vm.API.vM_VBDs
     } in
     debug "Successfully parsed old last_booted_record format - translating to new format so that xenopsd can resume the VM.";
     let vm = MD.of_vm ~__context (self, vm_to_resume) vbds (pcis <> []) in

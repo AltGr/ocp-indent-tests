@@ -264,9 +264,9 @@ let scenario_e = {
 
 let scenario_f = {
   scenario_e with
-    name = "f";
-    should_succeed = false;
-    fistpoints = [ Squeeze.DisableTwoPhaseTargetSets ];
+  name = "f";
+  should_succeed = false;
+  fistpoints = [ Squeeze.DisableTwoPhaseTargetSets ];
 (* Since one domain is trying to allocate and the other free (but is stuck), the allocating
    domain will try to allocate more memory than is free on the host IF we disable our two-phase
    setting of the domain targets. In real life, xen allocates memory from the top down, keeping
@@ -277,9 +277,9 @@ let scenario_f = {
 
 let scenario_g = {
   scenario_a with
-    name = "g";
-    should_succeed = false;
-    fistpoints = [ Squeeze.DisableInaccuracyCompensation ];
+  name = "g";
+  should_succeed = false;
+  fistpoints = [ Squeeze.DisableInaccuracyCompensation ];
 (* The two domains are programmed to have an inaccuracy of 4KiB. We will conclude that the 
    domains are both stuck if we don't take this into account. *)
 }

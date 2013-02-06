@@ -39,7 +39,7 @@ let make_rpc ?dbg () xml =
   let open Xmlrpc_client in
   let http = {
     (xmlrpc ~version:"1.0" "/") with
-      Http.Request.additional_headers = Opt.default [] (Opt.map (fun dbg -> [ "X-Http-other-config-dbg", dbg ]) dbg)
+    Http.Request.additional_headers = Opt.default [] (Opt.map (fun dbg -> [ "X-Http-other-config-dbg", dbg ]) dbg)
   } in
   XMLRPC_protocol.rpc ~srcstr:"graph" ~dststr:"xapi" ~transport:(TCP(!host, !port)) ~http xml
 

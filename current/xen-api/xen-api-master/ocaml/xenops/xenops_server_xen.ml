@@ -1036,8 +1036,8 @@ module VM = struct
       let k = vm.Vm.id in
       let d = DB.read_exn vm.Vm.id in
       let persistent = { d.VmExtra.persistent with
-                           VmExtra.build_info = Some build_info;
-                           ty = Some vm.ty;
+                         VmExtra.build_info = Some build_info;
+                         ty = Some vm.ty;
                        } in
       DB.write k {
         VmExtra.persistent = persistent;
@@ -1251,10 +1251,10 @@ module VM = struct
             ) vbds;
             debug "VM = %s; domid = %d; Storing final memory usage" vm.Vm.id domid;
             let non_persistent = { d.VmExtra.non_persistent with
-                                     VmExtra.suspend_memory_bytes = Memory.bytes_of_pages pages;
+                                   VmExtra.suspend_memory_bytes = Memory.bytes_of_pages pages;
                                  } in
             DB.write k { d with
-                           VmExtra.non_persistent = non_persistent;
+                         VmExtra.non_persistent = non_persistent;
                        }
           )
       ) Oldest task vm
@@ -1647,7 +1647,7 @@ module VBD = struct
             (* Remember what we've just done *)
             Opt.iter (fun q ->
               let non_persistent = { vm_t.VmExtra.non_persistent with
-                                       VmExtra.qemu_vbds = (vbd.Vbd.id, q) :: vm_t.VmExtra.non_persistent.VmExtra.qemu_vbds} in
+                                     VmExtra.qemu_vbds = (vbd.Vbd.id, q) :: vm_t.VmExtra.non_persistent.VmExtra.qemu_vbds} in
               DB.write vm { vm_t with VmExtra.non_persistent = non_persistent }
             ) qemu_frontend
           end
@@ -1705,7 +1705,7 @@ module VBD = struct
                   (* destroy_vbd_frontend ignores 'refusing to close' transients' *)
                   destroy_vbd_frontend ~xc ~xs task qemu_vbd;
                   let non_persistent = { non_persistent with
-                                           VmExtra.qemu_vbds = List.remove_assoc vbd.Vbd.id non_persistent.VmExtra.qemu_vbds } in
+                                         VmExtra.qemu_vbds = List.remove_assoc vbd.Vbd.id non_persistent.VmExtra.qemu_vbds } in
                   DB.write vm { vm_t with VmExtra.non_persistent = non_persistent }
                 end) vm_t
             )
@@ -1812,7 +1812,7 @@ module VBD = struct
         | (Does_not_exist(_, _))
         | Device_not_connected ->
           { unplugged_vbd with
-              Vbd.active = get_active vm vbd
+            Vbd.active = get_active vm vbd
           }
       )
 
@@ -1928,7 +1928,7 @@ module VIF = struct
                     let device = create task stubdom_domid in
                     let q = vif.position, Device device in
                     let non_persistent = { vm_t.VmExtra.non_persistent with
-                                             VmExtra.qemu_vifs = (vif.Vif.id, q) :: vm_t.VmExtra.non_persistent.VmExtra.qemu_vifs } in
+                                           VmExtra.qemu_vifs = (vif.Vif.id, q) :: vm_t.VmExtra.non_persistent.VmExtra.qemu_vifs } in
                     DB.write vm { vm_t with VmExtra.non_persistent = non_persistent}
                   end
                 ) (get_stubdom ~xs frontend_domid)
@@ -1959,7 +1959,7 @@ module VIF = struct
               | _, Device device ->
                 destroy device;
                 let non_persistent = { vm_t.VmExtra.non_persistent with
-                                         VmExtra.qemu_vifs = List.remove_assoc vif.Vif.id vm_t.VmExtra.non_persistent.VmExtra.qemu_vifs } in
+                                       VmExtra.qemu_vifs = List.remove_assoc vif.Vif.id vm_t.VmExtra.non_persistent.VmExtra.qemu_vifs } in
                 DB.write vm { vm_t with VmExtra.non_persistent = non_persistent }
               | _, _ -> ()
             end;
@@ -1992,7 +1992,7 @@ module VIF = struct
             | _, Device device ->
               Device.Vif.move ~xs device bridge;
               let non_persistent = { non_persistent with
-                                       VmExtra.qemu_vifs = List.remove_assoc vif.Vif.id non_persistent.VmExtra.qemu_vifs } in
+                                     VmExtra.qemu_vifs = List.remove_assoc vif.Vif.id non_persistent.VmExtra.qemu_vifs } in
               DB.write vm { vm_t with VmExtra.non_persistent = non_persistent }
             | _, _ -> ()
           end
@@ -2063,7 +2063,7 @@ module VIF = struct
         | (Does_not_exist(_,_))
         | Device_not_connected ->
           { unplugged_vif with
-              Vif.active = get_active vm vif
+            Vif.active = get_active vm vif
           }
       )
 

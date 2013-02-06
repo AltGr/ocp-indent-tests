@@ -275,8 +275,8 @@ and update_domain_zero_record ~__context ~domain_zero_ref (host_info: host_info)
 and update_domain_zero_memory_constraints (host_info: host_info) (constraints: Vm_memory_constraints.t) : Vm_memory_constraints.t =
   let static_min, static_max = calculate_domain_zero_memory_static_range host_info in
   let constraints = {constraints with
-                       static_min = static_min;
-                       static_max = static_max;} in
+                     static_min = static_min;
+                     static_max = static_max;} in
   match Vm_memory_constraints.transform constraints with
   | None ->
     (* The existing constraints are invalid, and cannot be transformed  *)

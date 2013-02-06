@@ -522,9 +522,9 @@ let rec default_parse_config
                 | None -> oldri
                 | Some charset ->
                     { oldri with request_config =
-                                                     { oldri.request_config with charset_assoc =
-                                                                                                                                      Ocsigen_charset_mime.set_default_charset
-                                                                                                                                        oldri.request_config.charset_assoc charset } }
+                                   { oldri.request_config with charset_assoc =
+                                                                 Ocsigen_charset_mime.set_default_charset
+                                                                   oldri.request_config.charset_assoc charset } }
               in
               match site_match oldri path oldri.request_info.ri_full_path with
                 | None ->

@@ -106,10 +106,10 @@ let get_state_nolock vm () =
   if DB.exists vm.Vm.id then begin
     let d = DB.read_exn vm.Vm.id in
     { halted_vm with
-        Vm.power_state = Running;
-        domids = [ d.Domain.domid ];
-        vcpu_target = d.Domain.vcpus;
-        last_start_time = d.Domain.last_create_time;
+      Vm.power_state = Running;
+      domids = [ d.Domain.domid ];
+      vcpu_target = d.Domain.vcpus;
+      last_start_time = d.Domain.last_create_time;
     }
   end else halted_vm
 
@@ -139,10 +139,10 @@ let destroy_device_model_nolock vm () =
 
 let request_shutdown_nolock vm reason () =
   DB.write vm.Vm.id { DB.read_exn vm.Vm.id with Domain.domain_action_request =
-                                                                    Some (match reason with
-                                                                    | Halt | PowerOff -> Needs_poweroff
-                                                                    | Reboot -> Needs_reboot
-                                                                    | Suspend | S3Suspend -> Needs_suspend)
+                                                  Some (match reason with
+                                                  | Halt | PowerOff -> Needs_poweroff
+                                                  | Reboot -> Needs_reboot
+                                                  | Suspend | S3Suspend -> Needs_suspend)
                     };
   Updates.add (Dynamic.Vm vm.Vm.id) updates;
   true
@@ -248,8 +248,8 @@ let vbd_state vm vbd () =
     | [ vbd ] ->
       {
         unplugged_vbd with
-          Vbd.plugged = true;
-          backend_present = vbd.Vbd.backend
+        Vbd.plugged = true;
+        backend_present = vbd.Vbd.backend
       }
     | [] -> unplugged_vbd
     | _ -> assert false (* at most one *)
@@ -265,7 +265,7 @@ let vif_state vm vif () =
     | [ domain ] ->
       {
         unplugged_vif with
-          Vif.plugged = true;
+        Vif.plugged = true;
       }
     | [] -> unplugged_vif
     | _ -> assert false (* at most one *)

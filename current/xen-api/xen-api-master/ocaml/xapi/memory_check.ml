@@ -211,10 +211,10 @@ let host_compute_free_memory_with_maximum_compression
     reserved resources twice.
   *)
   let summary = { summary with scheduled = 
-                                               match ignore_scheduled_vm with
-                                               | None -> summary.scheduled (* no change *)
-                                               | Some ignore_me ->
-                                                 List.filter (fun x -> x <> ignore_me) summary.scheduled
+                                 match ignore_scheduled_vm with
+                                 | None -> summary.scheduled (* no change *)
+                                 | Some ignore_me ->
+                                   List.filter (fun x -> x <> ignore_me) summary.scheduled
                 } in
   let host_mem_available = host_compute_free_memory_with_policy
       ~__context summary Dynamic_min (* consider ballooning *) in

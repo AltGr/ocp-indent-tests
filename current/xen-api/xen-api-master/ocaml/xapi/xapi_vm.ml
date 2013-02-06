@@ -122,8 +122,8 @@ let set_memory_static_range ~__context ~self ~min ~max =
   (* Check the range constraints *)
   let constraints = Vm_memory_constraints.get ~__context ~vm_ref:self in
   let constraints = {constraints with Vm_memory_constraints.
-                                                          static_min = min;
-                                                        static_max = max;
+                                        static_min = min;
+                                      static_max = max;
                     } in
   Vm_memory_constraints.assert_valid_for_current_context
     ~__context ~vm:self ~constraints;
@@ -674,9 +674,9 @@ let set_memory_dynamic_range ~__context ~self ~min ~max =
     then Vm_memory_constraints.get_live ~__context ~vm_ref:self 
     else Vm_memory_constraints.get ~__context ~vm_ref:self in
   let constraints = { constraints with Vm_memory_constraints.
-                                                           dynamic_min = min;
-                                                         target = min;
-                                                         dynamic_max = max } in
+                                         dynamic_min = min;
+                                       target = min;
+                                       dynamic_max = max } in
   Vm_memory_constraints.assert_valid_for_current_context
     ~__context ~vm:self ~constraints;
 

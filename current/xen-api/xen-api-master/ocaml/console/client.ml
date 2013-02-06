@@ -15,17 +15,17 @@ let init_term () =
   let attr = Unix.tcgetattr Unix.stdin in
 
   let nattr = { attr with
-                  Unix.c_ignbrk = false; Unix.c_brkint = false;
-                  Unix.c_parmrk = false; Unix.c_inlcr = false;
-                  Unix.c_igncr = false; Unix.c_icrnl = false;
-                  Unix.c_ixon = false;
+                Unix.c_ignbrk = false; Unix.c_brkint = false;
+                Unix.c_parmrk = false; Unix.c_inlcr = false;
+                Unix.c_igncr = false; Unix.c_icrnl = false;
+                Unix.c_ixon = false;
 
-                  Unix.c_opost = false;
+                Unix.c_opost = false;
 
-                  Unix.c_echo = false; Unix.c_echonl = false;
-                  Unix.c_icanon = false; Unix.c_isig = false;
-                  (* Unix.c_iexten = false; *)
-                  Unix.c_csize = 8; Unix.c_parenb = true; (* Unix.c_cs = false *) } in
+                Unix.c_echo = false; Unix.c_echonl = false;
+                Unix.c_icanon = false; Unix.c_isig = false;
+                (* Unix.c_iexten = false; *)
+                Unix.c_csize = 8; Unix.c_parenb = true; (* Unix.c_cs = false *) } in
   Unix.tcsetattr Unix.stdin Unix.TCSAFLUSH nattr;
   attr
 

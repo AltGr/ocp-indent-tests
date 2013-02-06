@@ -105,7 +105,7 @@ let many_to_many =
       (Schema.StringMap.add "bar" [ "foos", "foo", "bars" ]
          Schema.StringMap.empty) in
   let schema = { Schema.empty with
-                   Schema.database = database;
-                   many_to_many = many_to_many 
+                 Schema.database = database;
+                 many_to_many = many_to_many 
                } in
   schema

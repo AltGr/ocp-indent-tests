@@ -324,10 +324,10 @@ let parse_config parse_fun = function
                       if equal_ip or (not need_equal_ip)
                       then
                         { request with request_info =
-                                                               { request.request_info with
-                                                                   ri_remote_ip = original_ip;
-                                                                   ri_remote_ip_parsed = lazy (fst (Ip_address.parse original_ip));
-                                                                   ri_forward_ip = proxies; } }
+                                         { request.request_info with
+                                             ri_remote_ip = original_ip;
+                                             ri_remote_ip_parsed = lazy (fst (Ip_address.parse original_ip));
+                                             ri_forward_ip = proxies; } }
                       else (* the announced ip of the proxy is not its real ip *)
                         ( Ocsigen_messages.warning (Printf.sprintf "--Access control: X-Forwarded-For: host ip ( %s ) does not match the header ( %s )" request.request_info.ri_remote_ip header );
                           request )
@@ -352,12 +352,12 @@ let parse_config parse_fun = function
                 match String.lowercase header with
                   | "http" ->
                       { request with request_info =
-                                                           { request.request_info with
-                                                               ri_ssl = false; } }
+                                       { request.request_info with
+                                           ri_ssl = false; } }
                   | "https" ->
                       { request with request_info =
-                                                           { request.request_info with
-                                                               ri_ssl = true; } }
+                                       { request.request_info with
+                                           ri_ssl = true; } }
                   | _ ->
                       Ocsigen_messages.debug2 ("--Access control: malformed X-Forwarded-Proto field: "^header);
                       request

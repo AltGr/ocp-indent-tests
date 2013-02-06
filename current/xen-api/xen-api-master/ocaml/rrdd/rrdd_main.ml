@@ -416,8 +416,8 @@ let read_mem_metrics xc =
       ) else (
         incr previous_oldness;
         {(Gc.quick_stat ()) with
-           Gc.free_words = !previous_free_words;
-           Gc.live_words = !previous_live_words;}
+         Gc.free_words = !previous_free_words;
+         Gc.live_words = !previous_live_words;}
       )
     ) else Gc.quick_stat ()
   in

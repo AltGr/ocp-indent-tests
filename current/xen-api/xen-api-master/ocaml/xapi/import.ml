@@ -324,16 +324,16 @@ module VM : HandlerTools = struct
           debug "VM %s was exported pre-DMC; dynamic_{min,max},target <- %Ld"
             vm_record.API.vM_name_label safe_constraints.static_max;
           {vm_record with API.
-                                    vM_memory_static_min  = safe_constraints.static_min;
-                                  vM_memory_dynamic_min = safe_constraints.dynamic_min;
-                                  vM_memory_target      = safe_constraints.target;
-                                  vM_memory_dynamic_max = safe_constraints.dynamic_max;
-                                  vM_memory_static_max  = safe_constraints.static_max;
+                            vM_memory_static_min  = safe_constraints.static_min;
+                          vM_memory_dynamic_min = safe_constraints.dynamic_min;
+                          vM_memory_target      = safe_constraints.target;
+                          vM_memory_dynamic_max = safe_constraints.dynamic_max;
+                          vM_memory_static_max  = safe_constraints.static_max;
           }
         end else vm_record
       in
       let vm_record = {vm_record with API.
-                                                            vM_memory_overhead = Memory_check.vm_compute_memory_overhead vm_record
+                                        vM_memory_overhead = Memory_check.vm_compute_memory_overhead vm_record
                       } in
       let vm_record = {vm_record with API.vM_protection_policy = Ref.null} in
       (* Full restore preserves UUIDs, so if we are replacing an existing VM the version number should be incremented *)
@@ -848,7 +848,7 @@ module VIF : HandlerTools = struct
     end else
       (* If not restoring a full backup then blank the MAC so it is regenerated *)
       let vif_record = { vif_record with API.vIF_MAC =
-                                                                if config.full_restore then vif_record.API.vIF_MAC else "" } in
+                                           if config.full_restore then vif_record.API.vIF_MAC else "" } in
       (* Determine the VM to which we're going to attach this VIF. *)
       let vm = log_reraise
           ("Failed to find VIF's VM: " ^ (Ref.string_of vif_record.API.vIF_VM))
@@ -877,18 +877,18 @@ module VIF : HandlerTools = struct
         else begin
           if vif_record.API.vIF_locking_mode = `locked then
             { vif_record with API.vIF_locking_mode = `network_default; 
-                                        API.vIF_ipv4_allowed = [];        
-                                        API.vIF_ipv6_allowed = [];
+                              API.vIF_ipv4_allowed = [];        
+                              API.vIF_ipv6_allowed = [];
             } 
           else              
             { vif_record with API.vIF_ipv4_allowed = [];
-                                        API.vIF_ipv6_allowed = [];
+                              API.vIF_ipv6_allowed = [];
             }      
         end in    
       let vif_record = { vif_record with
-                           API.vIF_VM = vm;
-                           API.vIF_network = net;
-                           API.vIF_other_config = other_config } in
+                         API.vIF_VM = vm;
+                         API.vIF_network = net;
+                         API.vIF_other_config = other_config } in
       Create vif_record
 
   let handle_dry_run __context config rpc session_id state x precheck_result =
@@ -948,8 +948,8 @@ module VGPU : HandlerTools = struct
           ("Failed to find VGPU's GPU group: " ^ (Ref.string_of vgpu_record.API.vGPU_GPU_group))
           (lookup vgpu_record.API.vGPU_GPU_group) state.table in
       let vgpu_record = { vgpu_record with
-                            API.vGPU_VM = vm;
-                            API.vGPU_GPU_group = group
+                          API.vGPU_VM = vm;
+                          API.vGPU_GPU_group = group
                         } in
       Create vgpu_record
 

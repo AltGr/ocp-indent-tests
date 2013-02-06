@@ -159,11 +159,11 @@ let parse_attributes config = function
       { config with max_age = Some (int_of_string i) }
   | ("exposed_headers",h) ->
       { config with exposed_headers =
-                          Netstring_pcre.split comma_space_regexp h }
+                      Netstring_pcre.split comma_space_regexp h }
   | ("methods",m) ->
       let l = Netstring_pcre.split comma_space_regexp m in
       { config with allowed_method =
-                          Some (List.map Framepp.method_of_string l) }
+                      Some (List.map Framepp.method_of_string l) }
   | (a,_) ->
       OX.badconfig "Unexpected attribute %s for tag cors" a
 
