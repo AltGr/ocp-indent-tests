@@ -111,8 +111,8 @@ let vbd_create_helper ~session_id ~vM ~vDI ?(userdevice="autodetect") () : API.r
 (** If VDI_CREATE and VDI_DELETE are present then make sure VDIs appear and disappear correctly *)
 let vdi_create_destroy caps session_id sr = 
   if true 
-     && (List.mem vdi_create caps) 
-     && (List.mem vdi_delete caps)
+  && (List.mem vdi_create caps) 
+  && (List.mem vdi_delete caps)
   then begin
     let test = make_test "VDI_CREATE should make a fresh disk; VDI_DELETE should remove it" 2 in
     start test;
@@ -163,9 +163,9 @@ let size_of_dom0_vbd session_id vbd =
     the correct size in dom0 *)
 let vdi_create_destroy_plug_checksize caps session_id sr = 
   if true 
-     && (List.mem vdi_create caps) 
-     && (List.mem vdi_delete caps)
-     && (List.mem vdi_attach caps) (* DummySR can't even do this *)
+  && (List.mem vdi_create caps) 
+  && (List.mem vdi_delete caps)
+  && (List.mem vdi_attach caps) (* DummySR can't even do this *)
   (*
     && (List.mem `vdi_create allowed_ops)  (* The Tools SR is where these two concepts diverge *)
     && (List.mem `vdi_destroy allowed_ops)

@@ -169,7 +169,7 @@ let set_pif_metrics ~__context ~self ~vendor ~device ~carrier ~speed ~duplex
     ~pcibuspath ~io_write ~io_read pmr =
   (* don't update & and reread pciids if db already contains same value *)
   if pmr.API.pIF_metrics_vendor_id <> vendor
-     || pmr.API.pIF_metrics_device_id <> device then (
+  || pmr.API.pIF_metrics_device_id <> device then (
     let vendor_str, device_str = get_pciids vendor device in
     Db.PIF_metrics.set_vendor_id ~__context ~self ~value:vendor;
     Db.PIF_metrics.set_device_id ~__context ~self ~value:device;

@@ -638,9 +638,9 @@ module Unit_tests
       List.fold Key.samples ~init:(max_key, min_key)
         ~f:(fun (near_min, near_max) key ->
           ((if Key.compare key min_key  > 0
-               && Key.compare key near_min < 0 then key else near_min),
+            && Key.compare key near_min < 0 then key else near_min),
            (if Key.compare key max_key  < 0
-               && Key.compare key near_max > 0 then key else near_max)))
+            && Key.compare key near_max > 0 then key else near_max)))
     in
     let keys_between ~min ~max =
       Map.fold_range_inclusive map ~min ~max ~f:(fun ~key:_ ~data:_ n -> n + 1) ~init:0

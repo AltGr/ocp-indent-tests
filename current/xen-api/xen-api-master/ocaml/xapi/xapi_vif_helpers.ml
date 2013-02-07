@@ -182,10 +182,10 @@ let create ~__context ~device ~network ~vM
   (* Make people aware that non-shared networks being added to VMs makes them not agile *)
   let pool = Helpers.get_pool ~__context in
   if true
-     && Db.Pool.get_ha_enabled ~__context ~self:pool
-     && not(Db.Pool.get_ha_allow_overcommit ~__context ~self:pool)
-     && Helpers.is_xha_protected ~__context ~self:vM
-     && not(Helpers.is_network_properly_shared ~__context ~self:network) then begin
+  && Db.Pool.get_ha_enabled ~__context ~self:pool
+  && not(Db.Pool.get_ha_allow_overcommit ~__context ~self:pool)
+  && Helpers.is_xha_protected ~__context ~self:vM
+  && not(Helpers.is_network_properly_shared ~__context ~self:network) then begin
     warn "Creating VIF %s makes VM %s not agile" (Ref.string_of ref) (Ref.string_of vM);
     raise (Api_errors.Server_error(Api_errors.ha_operation_would_break_failover_plan, []))
   end;
@@ -221,7 +221,7 @@ let destroy  ~__context ~self =
   let vm = Db.VIF.get_VM ~__context ~self in
 
   if Helpers.is_running ~__context ~self:vm 
-     && (Db.VIF.get_currently_attached ~__context ~self)
+  && (Db.VIF.get_currently_attached ~__context ~self)
   then raise (Api_errors.Server_error(Api_errors.operation_not_allowed, ["VIF currently attached to a running VM"]));
 
   let metrics = Db.VIF.get_metrics ~__context ~self in

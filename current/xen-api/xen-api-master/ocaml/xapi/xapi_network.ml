@@ -65,7 +65,7 @@ let attach_internal ?(management_interface=false) ~__context ~self () =
 
   (* Check if we're a Host-Internal Management Network (HIMN) (a.k.a. guest-installer network) *)
   if (List.mem_assoc Xapi_globs.is_guest_installer_network net.API.network_other_config)
-     && (List.assoc Xapi_globs.is_guest_installer_network net.API.network_other_config = "true") then
+  && (List.assoc Xapi_globs.is_guest_installer_network net.API.network_other_config = "true") then
     set_himn_ip ~__context net.API.network_bridge net.API.network_other_config;
 
   (* Create the new PIF.
@@ -171,7 +171,7 @@ let destroy ~__context ~self =
   (* CA-43250: don't let people remove the internal management network *)
   let oc = Db.Network.get_other_config ~__context ~self in
   if List.mem_assoc Xapi_globs.is_host_internal_management_network oc
-     && (try bool_of_string (List.assoc Xapi_globs.is_host_internal_management_network oc) with _ -> false)
+  && (try bool_of_string (List.assoc Xapi_globs.is_host_internal_management_network oc) with _ -> false)
   then raise (Api_errors.Server_error (Api_errors.cannot_destroy_system_network, [ Ref.string_of self ]));
 
   (* destroy all the VIFs now rather than wait for the GC thread. *)

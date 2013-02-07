@@ -161,8 +161,8 @@ let check_template ~vmr ~op ~ref_str =
     `provision;
   ] in
   if false
-     || List.mem op allowed_operations
-     || (op = `destroy && not default_template)
+  || List.mem op allowed_operations
+  || (op = `destroy && not default_template)
   then None
   else Some (Api_errors.vm_is_template, [ref_str; Record_util.vm_operation_to_string op])
 
@@ -267,12 +267,12 @@ let check_operation_error ~__context ~vmr ~vmgmr ~ref ~clone_suspended_vm_enable
   (* make use of the Helpers.ballooning_enabled_for_vm function.   *)
   let current_error = check current_error (fun () -> 
       if vmr.Db_actions.vM_is_control_domain
-         && op <> `data_source_op
-         && op <> `changing_memory_live
-         && op <> `awaiting_memory_live
-         && op <> `metadata_export
-         && op <> `changing_dynamic_range
-         && op <> `start
+      && op <> `data_source_op
+      && op <> `changing_memory_live
+      && op <> `awaiting_memory_live
+      && op <> `metadata_export
+      && op <> `changing_dynamic_range
+      && op <> `start
       then Some (Api_errors.operation_not_allowed, ["Operations on domain 0 are not allowed"])
       else None) in
 

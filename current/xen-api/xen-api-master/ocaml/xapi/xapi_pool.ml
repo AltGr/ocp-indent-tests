@@ -132,7 +132,7 @@ let pre_join_checks ~__context ~rpc ~session_id ~force =
       (Client.Host.get_name_label ~rpc ~session_id ~self:master) master_auth_type master_auth_service_name 
       (Db.Host.get_name_label ~__context ~self:slavetobe) slavetobe_auth_type slavetobe_auth_service_name;
     if (slavetobe_auth_type <> master_auth_type)
-       || (slavetobe_auth_service_name <> master_auth_service_name) then begin
+    || (slavetobe_auth_service_name <> master_auth_service_name) then begin
       error "Cannot join pool whose external authentication configuration is different";
       raise (Api_errors.Server_error(Api_errors.pool_joining_external_auth_mismatch, []))
     end in

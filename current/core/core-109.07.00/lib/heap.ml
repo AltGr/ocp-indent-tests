@@ -320,7 +320,7 @@ let check_heap_property { ar = ar; cmp = cmp } =
       let left_child = calc_left i in
       let right_child = calc_right i in
       if cmp ar.(left_child).el el < 0
-         || cmp ar.(right_child).el el < 0
+      || cmp ar.(right_child).el el < 0
       then raise Exit;
     done;
     true

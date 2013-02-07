@@ -61,8 +61,8 @@ let run ~__context tasks =
     let only_master, only_slave, exnraise, onthread = get_flags_of_list tsk_flags in
     try
       if (only_master && is_master)
-         || (only_slave && (not is_master))
-         || ((not only_slave) && (not only_master)) then (
+      || (only_slave && (not is_master))
+      || ((not only_slave) && (not only_master)) then (
         if onthread then (
           debug "task [starting thread %s]" tsk_name;
           ignore (Thread.create (fun tsk_fct ->

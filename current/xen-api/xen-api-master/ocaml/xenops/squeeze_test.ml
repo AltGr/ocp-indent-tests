@@ -109,7 +109,7 @@ class idealised_vm_with_limit
     (* If the proposed value is smaller and less than the minimum then    *)
     (* this is clipped.                                                   *)
     if proposed_new_memory_actual > domain.memory_actual_kib
-       || proposed_new_memory_actual > minimum_memory
+    || proposed_new_memory_actual > minimum_memory
     then delta
     else minimum_memory -* domain.memory_actual_kib
 (* this takes us to the minimum *)
@@ -151,7 +151,7 @@ class intermittently_stuck_vm
     let notstuck t = int_of_float (t /. interval) mod 2 = 0 in
     let useful_time =
       if notstuck time_of_last_update
-         && (notstuck (time_of_last_update +. time_passed))
+      && (notstuck (time_of_last_update +. time_passed))
       then time_passed
       else 0.
     in

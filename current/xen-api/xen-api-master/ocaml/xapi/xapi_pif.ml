@@ -125,7 +125,7 @@ let assert_no_vlans ~__context ~self =
   (* Disallow if this is a derived interface of a VLAN *)
   if
     Db.PIF.get_VLAN ~__context ~self <> (-1L)
-    && not (Xapi_fist.allow_forget_of_vlan_pif ())
+ && not (Xapi_fist.allow_forget_of_vlan_pif ())
   then raise (Api_errors.Server_error
         (Api_errors.pif_vlan_still_exists,
          [ Ref.string_of self ]))
@@ -157,16 +157,16 @@ let assert_no_tunnels ~__context ~self =
 
 let assert_not_management_pif ~__context ~self =
   if Db.PIF.get_currently_attached ~__context ~self
-     && Db.PIF.get_management ~__context ~self
+  && Db.PIF.get_management ~__context ~self
   then raise (Api_errors.Server_error
         (Api_errors.pif_is_management_iface,
          [ Ref.string_of self ]))
 
 let assert_not_slave_management_pif ~__context ~self =
   if true
-     && Pool_role.is_slave ()
-     && Db.PIF.get_currently_attached ~__context ~self
-     && Db.PIF.get_management ~__context ~self
+  && Pool_role.is_slave ()
+  && Db.PIF.get_currently_attached ~__context ~self
+  && Db.PIF.get_management ~__context ~self
   then raise (Api_errors.Server_error
         (Api_errors.pif_is_management_iface,
          [ Ref.string_of self ]))
@@ -190,7 +190,7 @@ let abort_if_network_attached_to_protected_vms ~__context ~self =
    * has VIFs connected to protected VMs *)
   let pool = Helpers.get_pool ~__context in
   if Db.Pool.get_ha_enabled ~__context ~self:pool
-     && not (Db.Pool.get_ha_allow_overcommit ~__context ~self:pool)
+  && not (Db.Pool.get_ha_allow_overcommit ~__context ~self:pool)
   then begin
     let net = Db.PIF.get_network ~__context ~self in
     let vifs = Db.Network.get_VIFs ~__context ~self:net in

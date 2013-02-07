@@ -298,7 +298,7 @@ module UTF8_UCS_validator = struct include UTF8_UCS_validator
               (fun () -> validate !value)
           else
           if UCS.is_non_character !value
-             || UCS.is_surrogate     !value
+          || UCS.is_surrogate     !value
           then assert_raises UCS_value_prohibited_in_UTF8
               (fun () -> validate !value)
           else
@@ -326,7 +326,7 @@ module XML_UTF8_UCS_validator = struct include XML_UTF8_UCS_validator
               (fun () -> validate !value)
           else
           if UCS.is_non_character !value
-             || UCS.is_surrogate     !value
+          || UCS.is_surrogate     !value
           then assert_raises UCS_value_prohibited_in_UTF8
               (fun () -> validate !value)
           else

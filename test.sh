@@ -286,7 +286,9 @@ if [[ "${TASKS[*]}" =~ "html" ]]; then
     cat <<EOF >>status.html
 </table>
 
-<p style="margin-top:8ex;"><small>* Tuareg times include emacs startup time for
+<p style="margin-top:8ex;">Tests have been run on a $(awk -F': ' '/model name/ {print $2; exit}' </proc/cpuinfo)</p>
+
+<p style="margin-top:3ex;"><small>* Tuareg times include emacs startup time for
 each file (with the -Q option)</small></p>
 </body>
 </html>

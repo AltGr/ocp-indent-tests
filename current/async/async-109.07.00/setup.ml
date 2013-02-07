@@ -266,9 +266,9 @@ module OASISUtils = struct
           OASISString.replace_chars
             (fun c ->
               if ('a' <= c && c <= 'z')
-                 ||
+              ||
                  ('A' <= c && c <= 'Z')
-                 ||
+              ||
                  ('0' <= c && c <= '9') then
                 c
               else
@@ -3341,7 +3341,7 @@ module BaseStandardVar = struct
           else if ocaml_lt_312 () then
             false
           else if (os_type () = "Win32" || os_type () = "Cygwin") 
-                  && flexdll_lt_030 () then
+               && flexdll_lt_030 () then
             begin
               BaseMessage.warning 
                 (f_ ".cmxs generation disabled because FlexDLL needs to be \

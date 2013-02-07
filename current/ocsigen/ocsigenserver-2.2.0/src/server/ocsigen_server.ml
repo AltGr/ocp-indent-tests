@@ -715,7 +715,7 @@ let service receiver sender_slot request meth url port sockaddr =
                         ~scheme:(if ri.ri_ssl then "https" else "http")
                         ~host:(Ocsigen_extensions.get_hostname request)
                         ?port:(if (port = 80 && not ri.ri_ssl)
-                                  || (ri.ri_ssl && port = 443)
+                               || (ri.ri_ssl && port = 443)
                           then None
                           else Some port)
                         ~path:(""::(Url.add_end_slash_if_missing

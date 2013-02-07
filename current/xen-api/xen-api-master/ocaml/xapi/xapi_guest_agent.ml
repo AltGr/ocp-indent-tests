@@ -175,9 +175,9 @@ let all (lookup: string -> string option) (list: string -> string list) ~__conte
      * chmod RO the xenstore tree pre-migration, copy pre-migration and be prepared to unwind
   *)
   if true
-     && lookup "data/updated" <> None 
-     && List.mem_assoc "major" pv_drivers_version 
-     && List.mem_assoc "minor" pv_drivers_version then begin
+  && lookup "data/updated" <> None 
+  && List.mem_assoc "major" pv_drivers_version 
+  && List.mem_assoc "minor" pv_drivers_version then begin
 
     (* Only if the data is valid, cache it (CA-20353) *)
     Mutex.execute mutex (fun () -> Hashtbl.replace cache domid (pv_drivers_version,os_version,networks,other,memory,device_id,last_updated));

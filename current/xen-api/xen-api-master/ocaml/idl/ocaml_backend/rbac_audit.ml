@@ -490,8 +490,8 @@ let audit_line_of __context session_id allowed_denied ok_error result_error acti
 let allowed_pre_fn ~__context ~action ?args () =
   try
     if (has_to_audit action)
-       (* for now, we only cache arg results for destroy actions *)
-       && (Stringext.String.has_substr action ".destroy")
+    (* for now, we only cache arg results for destroy actions *)
+    && (Stringext.String.has_substr action ".destroy")
     then let args' = add_dummy_args __context action args in Some(sexpr_of_parameters __context action args')
     else None
   with e -> 

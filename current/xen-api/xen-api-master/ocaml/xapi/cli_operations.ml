@@ -2132,8 +2132,8 @@ let vm_install_real printer rpc session_id template name description params =
   let sr_ref =
     if Client.VM.get_is_a_snapshot rpc session_id template then
       if false
-         || (List.mem_assoc "sr-name-label" params
-             || List.mem_assoc "sr-uuid" params) then
+      || (List.mem_assoc "sr-name-label" params
+          || List.mem_assoc "sr-uuid" params) then
         failwith "Do not use the sr-name-label or sr-uuid argument when installing from a snapshot. By default, it will install each new disk on the same SR as the corresponding snapshot disks."
       else Some Ref.null
     else None in

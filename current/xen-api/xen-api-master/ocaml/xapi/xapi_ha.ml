@@ -161,7 +161,7 @@ let on_master_failure () =
       match Hashtbl.fold
           (fun uuid host acc ->
             if host.Xha_interface.LiveSetInformation.Host.master
-               && host.Xha_interface.LiveSetInformation.Host.liveness (* CP-25481: a dead host may still have the master lock *)
+            && host.Xha_interface.LiveSetInformation.Host.liveness (* CP-25481: a dead host may still have the master lock *)
             then uuid :: acc else acc) liveset.Xha_interface.LiveSetInformation.hosts [] with
       | [] ->
         info "no other master exists yet; waiting 5 seconds and retrying";
@@ -368,8 +368,8 @@ module Monitor = struct
         let master_uuid = uuid_of_host_address address in
         let master_info = Hashtbl.find liveset.Xha_interface.LiveSetInformation.hosts (Uuid.uuid_of_string master_uuid) in
         if true
-           && master_info.Xha_interface.LiveSetInformation.Host.liveness
-           && master_info.Xha_interface.LiveSetInformation.Host.master
+        && master_info.Xha_interface.LiveSetInformation.Host.liveness
+        && master_info.Xha_interface.LiveSetInformation.Host.master
         then debug "The node we think is the master is still alive and marked as master; this is OK"
         else begin
           warn "We think node %s (%s) is the master but the liveset disagrees" master_uuid address;
@@ -938,8 +938,8 @@ let ha_wait_for_shutdown_via_statefile __context localhost =
       let me = Hashtbl.find hosts liveset.Xha_interface.LiveSetInformation.local_host_id in
       (* If we have no statefile access or if it looks corrupted, fail the operation *)
       if false
-         || not me.Xha_interface.LiveSetInformation.Host.state_file_access
-         || me.Xha_interface.LiveSetInformation.Host.state_file_corrupted
+      || not me.Xha_interface.LiveSetInformation.Host.state_file_access
+      || me.Xha_interface.LiveSetInformation.Host.state_file_corrupted
       then raise (Api_errors.Server_error(Api_errors.ha_lost_statefile, []));
 
       (* check to see if this node still has statefile access *)
@@ -1090,10 +1090,10 @@ let join_liveset __context host =
           master_found := true (* loop will terminate *)
         end else begin
           if false
-             || not master.Xha_interface.LiveSetInformation.Host.liveness
-             || master.Xha_interface.LiveSetInformation.Host.state_file_corrupted
-             || not master.Xha_interface.LiveSetInformation.Host.state_file_access
-             || master.Xha_interface.LiveSetInformation.Host.excluded then begin
+          || not master.Xha_interface.LiveSetInformation.Host.liveness
+          || master.Xha_interface.LiveSetInformation.Host.state_file_corrupted
+          || not master.Xha_interface.LiveSetInformation.Host.state_file_access
+          || master.Xha_interface.LiveSetInformation.Host.excluded then begin
             error "Existing master has failed during HA enable process";
             failwith "Existing master failed during HA enable process"
           end else debug "existing master has not yet asserted itself: looking again in 5s";
@@ -1578,8 +1578,8 @@ let before_clean_shutdown_or_reboot ~__context ~host =
     let me = Hashtbl.find liveset.Xha_interface.LiveSetInformation.hosts
         liveset.Xha_interface.LiveSetInformation.local_host_id in
     if false
-       || not(me.Xha_interface.LiveSetInformation.Host.state_file_access)
-       || me.Xha_interface.LiveSetInformation.Host.state_file_corrupted
+    || not(me.Xha_interface.LiveSetInformation.Host.state_file_access)
+    || me.Xha_interface.LiveSetInformation.Host.state_file_corrupted
     then raise (Api_errors.Server_error(Api_errors.ha_lost_statefile, []));
 
     (* From this point we will fence ourselves if any unexpected error occurs *)

@@ -54,8 +54,8 @@ let minimum_default_entries () =
 (* trim any quotes off the ends *)
 let strip_quotes v =
   if String.length v >= 2
-     && v.[0] = '\''
-     && v.[String.length v - 1] = '\''
+  && v.[0] = '\''
+  && v.[String.length v - 1] = '\''
   then String.sub v 1 (String.length v - 2)
   else v
 

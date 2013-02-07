@@ -523,11 +523,11 @@ module Stable = struct
                GMT-5. *)
             if
               String.is_prefix name ~prefix:"GMT-"
-              || String.is_prefix name ~prefix:"GMT+"
-              || String.is_prefix name ~prefix:"UTC-"
-              || String.is_prefix name ~prefix:"UTC+"
-              || name = "GMT"
-              || name = "UTC"
+           || String.is_prefix name ~prefix:"GMT+"
+           || String.is_prefix name ~prefix:"UTC-"
+           || String.is_prefix name ~prefix:"UTC+"
+           || name = "GMT"
+           || name = "UTC"
             then begin
               let offset =
                 if name = "GMT" || name = "UTC" then 0

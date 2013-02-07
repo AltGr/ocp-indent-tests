@@ -211,10 +211,10 @@ let assert_doesnt_make_vm_non_agile ~__context ~vm ~vdi =
   let pool = Helpers.get_pool ~__context in
   let properly_shared = Helpers.is_sr_properly_shared ~__context ~self:(Db.VDI.get_SR ~__context ~self:vdi) in
   if true
-     && Db.Pool.get_ha_enabled ~__context ~self:pool
-     && not(Db.Pool.get_ha_allow_overcommit ~__context ~self:pool)
-     && Helpers.is_xha_protected ~__context ~self:vm
-     && not properly_shared then begin
+  && Db.Pool.get_ha_enabled ~__context ~self:pool
+  && not(Db.Pool.get_ha_allow_overcommit ~__context ~self:pool)
+  && Helpers.is_xha_protected ~__context ~self:vm
+  && not properly_shared then begin
     warn "Attaching VDI %s makes VM %s not agile" (Ref.string_of vdi) (Ref.string_of vm);
     raise (Api_errors.Server_error(Api_errors.ha_operation_would_break_failover_plan, []))
   end

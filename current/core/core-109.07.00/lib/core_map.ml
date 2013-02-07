@@ -67,7 +67,7 @@ module Tree0 = struct
     let array_length = Array.length array in
     let arr =
       if array_length < 2
-         || let k0, _ = array.(0) in
+      || let k0, _ = array.(0) in
          let k1, _ = array.(1) in
          compare_key k0 k1 < 0
       then (fun i -> array.(i))

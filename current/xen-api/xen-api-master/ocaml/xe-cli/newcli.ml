@@ -201,7 +201,7 @@ let parse_args =
         if extra_args.[!pos] = ',' then (incr pos; i := !pos)
         else
         if !i >= String.length extra_args
-           || extra_args.[!i] = ',' && extra_args.[!i-1] <> '\\' then
+        || extra_args.[!i] = ',' && extra_args.[!i-1] <> '\\' then
           (let seg = String.sub extra_args !pos (!i - !pos) in
            l := String.filter_chars seg ((<>) '\\') :: !l;
            incr i; pos := !i)

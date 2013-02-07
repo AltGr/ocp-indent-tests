@@ -500,8 +500,8 @@ let restart_auto_run_vms ~__context live_set n =
       let plan, config, vms_not_restarted, non_agile_protected_vms_exist = compute_restart_plan ~__context ~all_protected_vms n in
       let plan, config, vms_not_restarted, non_agile_protected_vms_exist = 
         if true
-           && Xapi_hooks.pool_pre_ha_vm_restart_hook_exists ()
-           && (plan <> [] || !reset_vms <> []) then begin
+        && Xapi_hooks.pool_pre_ha_vm_restart_hook_exists ()
+        && (plan <> [] || !reset_vms <> []) then begin
           (* We're about to soak up some resources for 'Level 1' VMs somewhere; before we do that give 'Level 2' VMs a shot *)
           (* Whatever this script does we don't let it break our restart thread *)
           begin
@@ -619,7 +619,7 @@ let restart_auto_run_vms ~__context live_set n =
         (fun vm ->
           try
             if Db.VM.get_power_state ~__context ~self:vm = `Halted
-               && Db.VM.get_ha_restart_priority ~__context ~self:vm = Constants.ha_restart_best_effort  
+            && Db.VM.get_ha_restart_priority ~__context ~self:vm = Constants.ha_restart_best_effort  
             then Client.Client.VM.start rpc session_id vm false true
           with e ->
             error "Failed to restart best-effort VM %s (%s): %s" 

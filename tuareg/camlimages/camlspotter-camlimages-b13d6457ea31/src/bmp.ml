@@ -72,14 +72,14 @@ and bicompression =
 
 and bibitcount =
 | Monochrome
-(* 1    The bitmap is monochrome, and the bmiColors field must 
+(* 1  The bitmap is monochrome, and the bmiColors field must 
    contain two entries. Each bit in the bitmap array represents a 
    pixel. If the bit is clear, the pixel is displayed with the
    color of the first entry in the bmiColors table; if the bit is
    set, the pixel has the color of the second entry in the
    table. *)
 | Color16
-(* 4    The bitmap has a maximum of 16 colors, and the bmiColors 
+(* 4  The bitmap has a maximum of 16 colors, and the bmiColors 
    field contains up to 16 entries. Each pixel in the bitmap is 
    represented by a four-bit index into the color table.
    For example, if the first byte in the bitmap is 0x1F,  then the 
@@ -87,7 +87,7 @@ and bibitcount =
    in the second table entry, and the second pixel contains the 
    color in the 16th table entry. *)
 | Color256
-(* 8    The bitmap has a maximum of 256 colors, and the bmiColors 
+(* 8  The bitmap has a maximum of 256 colors, and the bmiColors 
    field contains up to 256 entries. In this case, each byte in the 
    array represents a single pixel. *)
 | ColorM

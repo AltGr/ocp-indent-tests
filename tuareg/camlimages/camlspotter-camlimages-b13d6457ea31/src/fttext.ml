@@ -53,10 +53,10 @@ let draw_gen render_mode renderf rot func face px py string =
         try
           let px = px + binfo.bitmap_left + x
           and py = py - (binfo.bitmap_top - binfo.bitmap_height + y)
-      (*
-        in
-        and py = py + (binfo.bitmap_top + binfo.bitmap_height - y)
-      *)
+    (*
+      in
+      and py = py + (binfo.bitmap_top + binfo.bitmap_height - y)
+    *)
           in
           func px py level
         with

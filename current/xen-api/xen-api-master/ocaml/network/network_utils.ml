@@ -488,8 +488,8 @@ module Proc = struct
           | [] -> acc
           | line1 :: line2 :: tail ->
             if (String.startswith "Slave Interface:" line1)
-               && (String.startswith "MII Status:" line2)
-               && (String.endswith "up" line2)
+            && (String.startswith "MII Status:" line2)
+            && (String.endswith "up" line2)
             then
               loop (acc + 1) tail
             else
