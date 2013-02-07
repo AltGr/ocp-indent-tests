@@ -977,12 +977,12 @@ module type Key = Key
 module type Key_binable = Key_binable
 
 module type S = S
-with type ('a, 'b, 'c) map  = ('a, 'b, 'c) t
-with type ('a, 'b, 'c) tree = ('a, 'b, 'c) tree
+  with type ('a, 'b, 'c) map  = ('a, 'b, 'c) t
+  with type ('a, 'b, 'c) tree = ('a, 'b, 'c) tree
 
 module type S_binable = S_binable
-with type ('a, 'b, 'c) map  = ('a, 'b, 'c) t
-with type ('a, 'b, 'c) tree = ('a, 'b, 'c) tree
+  with type ('a, 'b, 'c) map  = ('a, 'b, 'c) t
+  with type ('a, 'b, 'c) tree = ('a, 'b, 'c) tree
 
 module Make_using_comparator (Key : Comparator.S) = struct
 

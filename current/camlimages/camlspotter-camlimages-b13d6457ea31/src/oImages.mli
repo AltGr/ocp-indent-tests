@@ -98,7 +98,7 @@ class rgb24_with : int -> int -> Info.info list -> string -> rgb24_class;;
 class type index8_class = object
   inherit oimage
     inherit [Index8.elt] map
-    inherit OColor.rgbmap
+        inherit OColor.rgbmap
 
   method sub : int -> int -> int -> int -> index8_class
   method blit : int -> int -> index8_class -> int -> int -> int -> int -> unit
@@ -120,7 +120,7 @@ class index8_with : int -> int -> Info.info list ->
 class type index16_class = object
   inherit oimage
     inherit [Index16.elt] map
-    inherit OColor.rgbmap
+        inherit OColor.rgbmap
 
   method sub : int -> int -> int -> int -> index16_class
   method blit : int -> int -> index16_class -> int -> int -> int -> int -> unit

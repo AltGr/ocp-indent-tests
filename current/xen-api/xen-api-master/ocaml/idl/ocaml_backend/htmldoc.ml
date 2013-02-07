@@ -18,7 +18,7 @@
 *)
 class my_gen =
   object(self)
-      inherit Odoc_html.html
+  inherit Odoc_html.html
     (** Return HTML code for the given text of a bar tag. *)
     method html_of_lock (t: Odoc_info.text) = 
       (* Decode the locks annotation, stored as s-expresions *)

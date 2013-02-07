@@ -1075,12 +1075,12 @@ module Poly = struct
 end
 
 module type S = S
-with type ('a, 'b) set  = ('a, 'b) t
-with type ('a, 'b) tree = ('a, 'b) tree
+  with type ('a, 'b) set  = ('a, 'b) t
+  with type ('a, 'b) tree = ('a, 'b) tree
 
 module type S_binable = S_binable
-with type ('a, 'b) set  = ('a, 'b) t
-with type ('a, 'b) tree = ('a, 'b) tree
+  with type ('a, 'b) set  = ('a, 'b) t
+  with type ('a, 'b) tree = ('a, 'b) tree
 
 module Make_using_comparator (Elt : Comparator.S) = struct
 

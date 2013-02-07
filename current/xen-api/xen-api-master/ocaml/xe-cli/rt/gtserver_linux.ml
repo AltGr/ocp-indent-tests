@@ -22,7 +22,7 @@ open Gtmessages
 
 class server n np =
   object (self)
-      inherit [message] Server.server n np
+  inherit [message] Server.server n np
 
     method shutdown s timeout =
       self#send s (CmdResult "Shutdown called!");

@@ -58,12 +58,12 @@ module type Elt = Elt
 module type Elt_binable = Elt_binable
 
 module type S = S
-with type ('a, 'b) set  = ('a, 'b) t
-with type ('a, 'b) tree = ('a, 'b) tree
+  with type ('a, 'b) set  = ('a, 'b) t
+  with type ('a, 'b) tree = ('a, 'b) tree
 
 module type S_binable = S_binable
-with type ('a, 'b) set  = ('a, 'b) t
-with type ('a, 'b) tree = ('a, 'b) tree
+  with type ('a, 'b) set  = ('a, 'b) t
+  with type ('a, 'b) tree = ('a, 'b) tree
 
 module Make (Elt : Elt) : S with type Elt.t = Elt.t
 

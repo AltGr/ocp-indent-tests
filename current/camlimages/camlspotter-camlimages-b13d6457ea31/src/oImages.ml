@@ -213,7 +213,7 @@ open Index8;;
 class type index8_class = object
   inherit oimage
     inherit [Index8.elt] map
-    inherit OColor.rgbmap
+        inherit OColor.rgbmap
 
   method sub : int -> int -> int -> int -> index8_class
   method blit : int -> int -> index8_class -> int -> int -> int -> int -> unit
@@ -227,8 +227,8 @@ class type index8_class = object
 end;;
 
 class index8_wrapper img = object (self)
-    inherit oimage_impl
-    inherit OColor.rgbmap img.colormap as colormap
+inherit oimage_impl
+  inherit OColor.rgbmap img.colormap as colormap
 
   method image_class = ClassIndex8
   method image = Index8 img
@@ -283,7 +283,7 @@ open Index16;;
 class type index16_class = object
   inherit oimage
     inherit [Index16.elt] map
-    inherit OColor.rgbmap
+        inherit OColor.rgbmap
 
   method sub : int -> int -> int -> int -> index8_class
   method blit : int -> int -> index8_class -> int -> int -> int -> int -> unit
@@ -297,8 +297,8 @@ class type index16_class = object
 end;;
 
 class index16_wrapper img = object (self)
-    inherit oimage_impl
-    inherit OColor.rgbmap img.colormap as colormap
+inherit oimage_impl
+  inherit OColor.rgbmap img.colormap as colormap
 
   method image_class = ClassIndex16
   method image = Index16 img

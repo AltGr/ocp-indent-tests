@@ -120,7 +120,7 @@ and icon ~dir ~name (req : icon_creator) =
     | _ -> "?","?") in
 
   object (self)
-      inherit GObj.widget_full ebox#as_widget
+  inherit GObj.widget_full ebox#as_widget
 
     method connect_pressed f = pressed := f
     method connect_enter f = enter := f
@@ -219,11 +219,11 @@ class livsh init_dir func =
   let reconf_tout = ref None in
 
   object (self)
-      inherit icon_creator
-      inherit
-        JWidget.status_bar
-      ~packing: (vbox#pack ~expand: false ~fill: false)
-      ~show: true () as status_bar
+  inherit icon_creator
+    inherit
+      JWidget.status_bar
+        ~packing: (vbox#pack ~expand: false ~fill: false)
+        ~show: true () as status_bar
 
     method! activate () = joe#start_rotate; status_bar#activate ()
     method deactivate () = joe#stop_rotate; status_bar#set_fraction 0.0

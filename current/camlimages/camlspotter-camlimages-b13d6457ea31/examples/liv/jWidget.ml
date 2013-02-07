@@ -100,7 +100,7 @@ class img_button ?label ?frames ?border_width ?width ?height ?packing ?show () =
     | None -> None
   in
   object (self)
-      inherit GButton.button (Obj.magic button#as_widget : Gtk.button Gtk.obj)
+  inherit GButton.button (Obj.magic button#as_widget : Gtk.button Gtk.obj)
 
     val mutable current_frames = match frames with Some fs -> fs | None -> []
     val mutable timeout = None

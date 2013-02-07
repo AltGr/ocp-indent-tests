@@ -75,7 +75,7 @@ val assert_power_state_is :
            | `Running
            | `ShuttingDown
            | `Suspended
-           > `Halted `Paused `Running `Suspended ] ->
+             > `Halted `Paused `Running `Suspended ] ->
   unit
 val assert_not_ha_protected : __context:Context.t -> vm:[ `VM ] Ref.t -> unit
 val pause : __context:Context.t -> vm:API.ref_VM -> unit

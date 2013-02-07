@@ -375,8 +375,8 @@ end
 module type S1 = Interval_intf.S1
 
 module type S = Interval_intf.S
-with type 'a poly_t := 'a t
-with type 'a poly_set := 'a Set.t
+  with type 'a poly_t := 'a t
+  with type 'a poly_set := 'a Set.t
 
 module Float = Make (Float   )
 module Int   = Make (Core_int)
