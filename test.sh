@@ -74,7 +74,7 @@ fi
 
 if [ -x "$OCP_INDENT" ]; then
     VERSION=$($OCP_INDENT --version | awk '{ print $NF; exit }')
-    COMMITS_SINCE=$(cd ocp-indent && git log --oneline $VERSION.. 2>/dev/null)
+    COMMITS_SINCE=$(cd ocp-indent && git log --oneline $VERSION.. 2>/dev/null || true)
     if [ -n "$COMMITS_SINCE" ]; then
         VERSION="$VERSION+$(wc -l <<<"$COMMITS_SINCE")"
     fi
