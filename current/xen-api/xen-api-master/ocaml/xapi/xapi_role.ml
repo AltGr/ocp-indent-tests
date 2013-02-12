@@ -69,7 +69,7 @@ let get_common ~__context ~self ~static_fn ~db_fn =
 (*    val get_record : __context:Context.t -> self:ref_role -> role_t*)
 let get_api_record ~static_record =
   {  (* Db_actions.role_t -> API.role_t *)
-    API.role_uuid=static_record.Db_actions.role_uuid;
+     API.role_uuid=static_record.Db_actions.role_uuid;
     API.role_name_label=static_record.Db_actions.role_name_label;
     API.role_name_description=static_record.Db_actions.role_name_description;
     API.role_subroles=static_record.Db_actions.role_subroles;

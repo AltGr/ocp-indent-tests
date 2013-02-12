@@ -338,12 +338,12 @@ let add filename =
         ssidref = 0l;
         xsdata = [];
         platformdata = [ (* HVM defaults *)
-          "nx", "false";
-          "acpi", "true";
-          "apic", "true";
-          "pae", "true";
-          "viridian", "true";
-        ];
+                         "nx", "false";
+                         "acpi", "true";
+                         "apic", "true";
+                         "pae", "true";
+                         "viridian", "true";
+                       ];
         bios_strings = [];
         ty = builder_info;
         suppress_spurious_page_faults = false;

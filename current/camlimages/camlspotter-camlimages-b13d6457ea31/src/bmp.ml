@@ -36,26 +36,26 @@ type bmp = {
 }
 
 and bitmapfileheader = {
-                                                   (* WORD: that is 2 bytes *) bfType : int;  (* Bytes <0   2< *)
-                                                   (* DWORD: that is 2 WORDs *) bfSize : int; (* Bytes <2   6< *)
-                                                   (* WORD *) bfReserved1 : int;              (* Bytes <6   8< *)
-                                                   (* WORD *) bfReserved2 : int;              (* Bytes <8  10< *)
-                                                   (* DWORD *) bfOffBits : int;               (* Bytes <10 14< *)
-                       }
+  (* WORD: that is 2 bytes *) bfType : int;  (* Bytes <0   2< *)
+  (* DWORD: that is 2 WORDs *) bfSize : int; (* Bytes <2   6< *)
+  (* WORD *) bfReserved1 : int;              (* Bytes <6   8< *)
+  (* WORD *) bfReserved2 : int;              (* Bytes <8  10< *)
+  (* DWORD *) bfOffBits : int;               (* Bytes <10 14< *)
+}
 
 and bitmapinfoheader = {
-                                   (* DWORD *) biSize : int;                  (* Bytes <14 18< *)
-                                   (* DWORD *) biWidth : int;                 (* Bytes <18 22< *)
-                                   (* DWORD *) biHeight : int;                (* Bytes <22 26< *)
-                                   (* WORD *) biPlanes  : int;                (* Bytes <26 28< *)
-                                   (* WORD *) biBitCount : bibitcount;        (* Bytes <28 30< *)
-                                   (* DWORD *) biCompression : bicompression; (* Bytes <30 34< *)
-                                   (* DWORD *) biSizeImage : int;             (* Bytes <34 38< *)
-                                   (* DWORD *) biXPelsPerMeter : int;         (* Bytes <38 42< *)
-                                   (* DWORD *) biYPelsPerMeter : int;         (* Bytes <42 46< *)
-                                   (* DWORD *) biClrUsed : int;               (* Bytes <46 50< *)
-                                   (* DWORD *) biClrImportant : int           (* Bytes <50 54< *)
-                       }
+  (* DWORD *) biSize : int;                  (* Bytes <14 18< *)
+  (* DWORD *) biWidth : int;                 (* Bytes <18 22< *)
+  (* DWORD *) biHeight : int;                (* Bytes <22 26< *)
+  (* WORD *) biPlanes  : int;                (* Bytes <26 28< *)
+  (* WORD *) biBitCount : bibitcount;        (* Bytes <28 30< *)
+  (* DWORD *) biCompression : bicompression; (* Bytes <30 34< *)
+  (* DWORD *) biSizeImage : int;             (* Bytes <34 38< *)
+  (* DWORD *) biXPelsPerMeter : int;         (* Bytes <38 42< *)
+  (* DWORD *) biYPelsPerMeter : int;         (* Bytes <42 46< *)
+  (* DWORD *) biClrUsed : int;               (* Bytes <46 50< *)
+  (* DWORD *) biClrImportant : int           (* Bytes <50 54< *)
+}
 
 and bicompression =
   | BI_RGB
@@ -552,12 +552,12 @@ let write_rgbquad oc rgb =
 ;;
 
 let write_bmpFileHeader oc = function {
-                                                 (* WORD *) bfType = bft;
-                                                 (* DWORD *) bfSize = bfs;
-                                                 (* WORD *) bfReserved1 = bfr1;
-                                                 (* WORD *) bfReserved2 = bfr2;
-                                                 (* DWORD *) bfOffBits = bfob
-                                      } ->
+  (* WORD *) bfType = bft;
+  (* DWORD *) bfSize = bfs;
+  (* WORD *) bfReserved1 = bfr1;
+  (* WORD *) bfReserved2 = bfr2;
+  (* DWORD *) bfOffBits = bfob
+} ->
   let start_index = !bytes_written in
   write_word oc bft;
   let bfSize_index = !bytes_written in
@@ -571,18 +571,18 @@ let write_bmpFileHeader oc = function {
 ;;
 
 let write_bmpInfoHeader oc = function {
-                                                  (* DWORD *) biSize = bis;
-                                                  (* DWORD *) biWidth = biw;
-                                                  (* DWORD *) biHeight = bih;
-                                                  (* WORD *) biPlanes  = bip;
-                                                  (* WORD *) biBitCount = bibc;
-                                                  (* DWORD *) biCompression = bic;
-                                                  (* DWORD *) biSizeImage = bisi;
-                                                  (* DWORD *) biXPelsPerMeter = bixpm;
-                                                  (* DWORD *) biYPelsPerMeter = biypm;
-                                                  (* DWORD *) biClrUsed = bicu;
-                                                  (* DWORD *) biClrImportant = bici
-                                      } ->
+  (* DWORD *) biSize = bis;
+  (* DWORD *) biWidth = biw;
+  (* DWORD *) biHeight = bih;
+  (* WORD *) biPlanes  = bip;
+  (* WORD *) biBitCount = bibc;
+  (* DWORD *) biCompression = bic;
+  (* DWORD *) biSizeImage = bisi;
+  (* DWORD *) biXPelsPerMeter = bixpm;
+  (* DWORD *) biYPelsPerMeter = biypm;
+  (* DWORD *) biClrUsed = bicu;
+  (* DWORD *) biClrImportant = bici
+} ->
   let biSize_index = !bytes_written in
   write_dword oc bis;
   write_dword oc biw;
@@ -853,12 +853,12 @@ let bmp_of_image img =
     and biH = bitmap.Rgb24.height
     and data = Rgb24.dump bitmap in
     let bfh = {
-                         (* WORD *) bfType = 19778 (* BM *);
-                         (* DWORD *) bfSize = -1 (* Unknown to be updated *);
-                         (* WORD *) bfReserved1 = 0;
-                         (* WORD *) bfReserved2 = 0;
-                         (* DWORD *) bfOffBits = -1 (* Unknown to be updated *)
-              } in
+      (* WORD *) bfType = 19778 (* BM *);
+      (* DWORD *) bfSize = -1 (* Unknown to be updated *);
+      (* WORD *) bfReserved1 = 0;
+      (* WORD *) bfReserved2 = 0;
+      (* DWORD *) bfOffBits = -1 (* Unknown to be updated *)
+    } in
 
     let bih =
       { (* The size in bytes of this header. *)
@@ -894,12 +894,12 @@ let bmp_of_image img =
     and biH = bitmap.Index8.height
     and data = Index8.dump bitmap in
     let bfh = {
-                         (* WORD *) bfType = 19778 (* BM *);
-                         (* DWORD *) bfSize = -1 (* Unknown to be updated *);
-                         (* WORD *) bfReserved1 = 0;
-                         (* WORD *) bfReserved2 = 0;
-                         (* DWORD *) bfOffBits = -1 (* Unknown to be updated *)
-              } in
+      (* WORD *) bfType = 19778 (* BM *);
+      (* DWORD *) bfSize = -1 (* Unknown to be updated *);
+      (* WORD *) bfReserved1 = 0;
+      (* WORD *) bfReserved2 = 0;
+      (* DWORD *) bfOffBits = -1 (* Unknown to be updated *)
+    } in
     let biBitCount,biClrUsed,biCompression,biClrImportant =
       let col_map_len = Array.length colormap in
       match col_map_len with
