@@ -244,8 +244,8 @@ let cli =
   then (print_line "TEST RUNNING IN ONHOST MODE\n"; cli_onhost)
   else (print_line "TEST RUNNING IN OFFHOST MODE\n"; cli_offhost)
 
-  (* Start by licensing server *)
-  (*
+(* Start by licensing server *)
+(*
 let _ = apply_license_to_server cli
 *)
 

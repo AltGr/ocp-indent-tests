@@ -66,8 +66,8 @@ let (directory, ocsidbm) =
    ref ((Ocsigen_config.get_extdir ())^"/ocsidbm"^Ocsigen_config.native_ext))
 
 
-  (*****************************************************************************)
-  (** Communication with the DB server *)
+(*****************************************************************************)
+(** Communication with the DB server *)
 
 external sys_exit : int -> 'a = "caml_sys_exit"
 
@@ -230,8 +230,8 @@ let db_length store =
 
 
 
-  (*****************************************************************************)
-  (** Public functions: *)
+(*****************************************************************************)
+(** Public functions: *)
 
 (** Type of persistent data *)
 type 'a t = store * string

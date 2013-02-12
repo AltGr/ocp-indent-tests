@@ -152,7 +152,7 @@ let with_blocker t f =
         match t.blocker with
         | Some blocker -> blocker
         | None -> t.blocker <- new_blocker_opt; new_blocker
-      (* END ATOMIC *)
+          (* END ATOMIC *)
       in
       if not (phys_equal blocker new_blocker) then Blocker.save_unused new_blocker;
       blocker

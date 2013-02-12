@@ -802,7 +802,7 @@ module VM = struct
         (fun () -> Device.Dm.stop ~xs ~qemu_domid domid) ();
       log_exn_continue "Error stoping vncterm, already dead ?"
         (fun () -> Device.PV_Vnc.stop ~xs domid) ();
-    (* If qemu is in a different domain to storage, detach disks *)
+      (* If qemu is in a different domain to storage, detach disks *)
     ) Oldest
 
   let destroy = on_domain_if_exists (fun xc xs task vm di ->
@@ -1119,15 +1119,15 @@ module VM = struct
   let wait_shutdown task vm reason timeout =
     event_wait task (Some (timeout |> ceil |> int_of_float))
       (function
-      | Dynamic.Vm id when id = vm.Vm.id ->
-        debug "EVENT on our VM: %s" id;
-        on_domain (fun xc xs _ vm di -> di.shutdown) Oldest task vm
-      | Dynamic.Vm id ->
-        debug "EVENT on other VM: %s" id;
-        false
-      | _ ->
-        debug "OTHER EVENT";
-        false)
+       | Dynamic.Vm id when id = vm.Vm.id ->
+         debug "EVENT on our VM: %s" id;
+         on_domain (fun xc xs _ vm di -> di.shutdown) Oldest task vm
+       | Dynamic.Vm id ->
+         debug "EVENT on other VM: %s" id;
+         false
+       | _ ->
+         debug "OTHER EVENT";
+         false)
 
   (* Create an ext2 filesystem without maximal mount count and
      checking interval. *)
@@ -1206,7 +1206,7 @@ module VM = struct
     let flags' =
       List.map
         (function
-        | Live -> Domain.Live
+         | Live -> Domain.Live
         ) flags in
     on_domain
       (fun xc xs (task:Xenops_task.t) vm di ->
@@ -1757,18 +1757,18 @@ module VBD = struct
     with_xc_and_xs
       (fun xc xs ->
         Opt.iter (function
-        | Ionice qos ->
-          try
-            let (device: Device_common.device) = device_by_id xc xs vm Device_common.Vbd Newest (id_of vbd) in
-            let path = Device_common.kthread_pid_path_of_device ~xs device in
-            let kthread_pid = xs.Xs.read path |> int_of_string in
-            ionice qos kthread_pid
-          with
-          | Xenbus.Xb.Noent ->
-            (* This means the kthread-pid hasn't been written yet. We'll be called back later. *)
-            ()
-          | e ->
-            error "Failed to ionice kthread-pid: %s" (Printexc.to_string e)
+          | Ionice qos ->
+            try
+              let (device: Device_common.device) = device_by_id xc xs vm Device_common.Vbd Newest (id_of vbd) in
+              let path = Device_common.kthread_pid_path_of_device ~xs device in
+              let kthread_pid = xs.Xs.read path |> int_of_string in
+              ionice qos kthread_pid
+            with
+            | Xenbus.Xb.Noent ->
+              (* This means the kthread-pid hasn't been written yet. We'll be called back later. *)
+              ()
+            | e ->
+              error "Failed to ionice kthread-pid: %s" (Printexc.to_string e)
         ) vbd.Vbd.qos
       )
 

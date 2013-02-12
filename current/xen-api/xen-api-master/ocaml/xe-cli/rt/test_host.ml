@@ -31,7 +31,7 @@ let alltests = [
   ("importexport",Tests.importexport);
   ("param",Tests.param);
   ("cd",Tests.cd_guest_verified);
-(*  ("net", Tests.offline_network); *)]
+  (*  ("net", Tests.offline_network); *)]
 
 let _ =
   let tests = ref "" in

@@ -181,37 +181,37 @@ let cancel_tasks ~__context ~self ~all_tasks_in_db ~task_ids =
   let set = (fun value -> Db.VDI.set_current_operations ~__context ~self ~value) in
   Helpers.cancel_tasks ~__context ~ops ~all_tasks_in_db ~task_ids ~set
 
-  (**************************************************************************************)
+(**************************************************************************************)
 
-  (** Helper function to create a new VDI record with all fields copied from
-      an original, except ref and *_operations, UUID and others supplied as optional arguments.
-      If a new UUID is not supplied, a fresh one is generated. 
-      storage_lock defaults to false.
-      Parent defaults to Ref.null.
-  *)
-  (*let clone_record ~uuid ?name_label ?name_description ?sR ?virtual_size ?location
-      ?physical_utilisation ?_type ?sharable ?read_only ?storage_lock ?other_config ?parent
-      ?xenstore_data ?sm_config ~current_operations ~__context ~original () =
-     let a = Db.VDI.get_record_internal ~__context ~self:original in
-     let r = Ref.make () in
-     Db.VDI.create ~__context ~ref:r 
-      ~uuid:(Uuid.to_string uuid)
-      ~name_label:(default a.Db_actions.vDI_name_label name_label)
-      ~name_description:(default a.Db_actions.vDI_name_description name_description)
-      ~allowed_operations:[] ~current_operations
-      ~sR:(default a.Db_actions.vDI_SR sR)    
-      ~virtual_size:(default a.Db_actions.vDI_virtual_size virtual_size)
-      ~physical_utilisation:(default a.Db_actions.vDI_physical_utilisation physical_utilisation)
-      ~_type:(default a.Db_actions.vDI_type _type)
-      ~sharable:(default a.Db_actions.vDI_sharable sharable)
-      ~read_only:(default a.Db_actions.vDI_read_only read_only)
-      ~other_config:(default a.Db_actions.vDI_other_config other_config)
-      ~storage_lock:(default false storage_lock)
-      ~location:(default a.Db_actions.vDI_location location) ~managed:true ~missing:false
-      ~xenstore_data:(default a.Db_actions.vDI_xenstore_data xenstore_data)
-      ~sm_config:(default a.Db_actions.vDI_sm_config sm_config)
-      ~parent:(default Ref.null parent);
-     r*)
+(** Helper function to create a new VDI record with all fields copied from
+    an original, except ref and *_operations, UUID and others supplied as optional arguments.
+    If a new UUID is not supplied, a fresh one is generated. 
+    storage_lock defaults to false.
+    Parent defaults to Ref.null.
+*)
+(*let clone_record ~uuid ?name_label ?name_description ?sR ?virtual_size ?location
+    ?physical_utilisation ?_type ?sharable ?read_only ?storage_lock ?other_config ?parent
+    ?xenstore_data ?sm_config ~current_operations ~__context ~original () =
+   let a = Db.VDI.get_record_internal ~__context ~self:original in
+   let r = Ref.make () in
+   Db.VDI.create ~__context ~ref:r 
+    ~uuid:(Uuid.to_string uuid)
+    ~name_label:(default a.Db_actions.vDI_name_label name_label)
+    ~name_description:(default a.Db_actions.vDI_name_description name_description)
+    ~allowed_operations:[] ~current_operations
+    ~sR:(default a.Db_actions.vDI_SR sR)    
+    ~virtual_size:(default a.Db_actions.vDI_virtual_size virtual_size)
+    ~physical_utilisation:(default a.Db_actions.vDI_physical_utilisation physical_utilisation)
+    ~_type:(default a.Db_actions.vDI_type _type)
+    ~sharable:(default a.Db_actions.vDI_sharable sharable)
+    ~read_only:(default a.Db_actions.vDI_read_only read_only)
+    ~other_config:(default a.Db_actions.vDI_other_config other_config)
+    ~storage_lock:(default false storage_lock)
+    ~location:(default a.Db_actions.vDI_location location) ~managed:true ~missing:false
+    ~xenstore_data:(default a.Db_actions.vDI_xenstore_data xenstore_data)
+    ~sm_config:(default a.Db_actions.vDI_sm_config sm_config)
+    ~parent:(default Ref.null parent);
+   r*)
 
 let require_uuid vdi_info = 
   match vdi_info.Smint.vdi_info_uuid with
@@ -461,7 +461,7 @@ let destroy ~__context ~self =
       List.iter (fun vbd ->
         Helpers.log_exn_continue (Printf.sprintf "destroying VBD: %s" (Ref.string_of vbd))
           (fun vbd -> Db.VBD.destroy ~__context ~self:vbd) vbd) vbds;
-    (* Db.VDI.destroy ~__context ~self *)
+      (* Db.VDI.destroy ~__context ~self *)
     end
 
 let after_resize ~__context ~vdi ~size vdi_info = 

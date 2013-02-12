@@ -41,9 +41,9 @@ let operation_requires_side_effect ({ msg_tag = tag } as msg) =
     if mode=RW then true (*RW=force both setters and getters into custom_actions *)
     else (*{Static/Dynamic}RO=force only getters into custom_actions *)
       (match msg with
-        | { msg_tag = FromField((Setter|Add|Remove), _) } -> false
-        | { msg_tag = FromObject(Make|Delete) } -> false
-        | _ -> true)
+       | { msg_tag = FromField((Setter|Add|Remove), _) } -> false
+       | { msg_tag = FromObject(Make|Delete) } -> false
+       | _ -> true)
   )
   ||
   match tag with

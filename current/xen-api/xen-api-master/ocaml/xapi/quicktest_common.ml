@@ -21,8 +21,8 @@ let ( ** ) = Int64.mul
 let mib = 1024L ** 1024L
 let gib = mib ** 1024L
 
-  (***********************************************************************)
-  (* Nice output stuff                                                   *)
+(***********************************************************************)
+(* Nice output stuff                                                   *)
 
 let total_started = ref 0
 let total_passed = ref 0

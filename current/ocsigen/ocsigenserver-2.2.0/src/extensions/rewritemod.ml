@@ -57,8 +57,8 @@ type assockind =
 
 
 
-        (*****************************************************************************)
-        (* Finding rewrites *)
+(*****************************************************************************)
+(* Finding rewrites *)
 
 let find_rewrite (Regexp (regexp, dest, fullrewrite)) suburl =
   (match Netstring_pcre.string_match regexp suburl 0 with
@@ -78,7 +78,7 @@ let gen regexp = function
       Lwt.return Ocsigen_extensions.Ext_do_nothing
   | Ocsigen_extensions.Req_not_found (err, ri) ->
       catch
-        (* Is it a rewrite? *)
+      (* Is it a rewrite? *)
         (fun () ->
           Ocsigen_messages.debug2 "--Rewritemod: Is it a rewrite?";
           let redir, fullrewrite =

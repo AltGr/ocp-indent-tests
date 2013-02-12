@@ -28,7 +28,7 @@ open Odoc_info.Module
 (* some stuff from stdext; should not be here *)
 
 module String = struct include String
-  (** find all occurences of needle in haystack and return all their respective index *)
+(** find all occurences of needle in haystack and return all their respective index *)
   let find_all needle haystack =
     let m = String.length needle and n = String.length haystack in
 
@@ -214,10 +214,10 @@ let rec print_one_t = function
   | Node (tag, atts, subs) ->
     "<" ^ tag ^
       (match atts with
-        | [] -> ""
-        | _ -> " " ^
-            String.concat " " (List.map
-                (fun (a,v) -> (Printf.sprintf "%s=\"%s\" " a (escape_entities (escape_quotes v)))) atts)
+       | [] -> ""
+       | _ -> " " ^
+           String.concat " " (List.map
+               (fun (a,v) -> (Printf.sprintf "%s=\"%s\" " a (escape_entities (escape_quotes v)))) atts)
       ) ^ ">" ^
       (print_t_list subs) ^
       (Printf.sprintf "</%s>" tag)
@@ -316,12 +316,12 @@ class gen () =
       let loc = "location", self#json_of_loc mt.Module.mt_loc in
       let info = "info", self#json_of_info_opt mt.Module.mt_info in
       let mte = "type", match mt.Module.mt_type with
-          | None -> Empty
-          | Some t -> String (Odoc_info.string_of_module_type t) (* self#json_of_module_type_expr t *)
+        | None -> Empty
+        | Some t -> String (Odoc_info.string_of_module_type t) (* self#json_of_module_type_expr t *)
       in
       let mk = "kind", match mt.Module.mt_kind with
-          | None -> Empty
-          | Some t -> Empty (* self#json_of_module_type_kind t *)
+        | None -> Empty
+        | Some t -> Empty (* self#json_of_module_type_kind t *)
       in
       let file = "file", String mt.Module.mt_file in
       Object (name :: file :: loc :: info :: mte :: mk :: [])
@@ -342,8 +342,8 @@ class gen () =
         Object (["name", String sn.Parameter.sn_name;
                  "type", self#json_of_type_expr sn.Parameter.sn_type] @
               (match sn.Parameter.sn_text with
-                | None -> []
-                | Some t -> ["comment", self#json_of_comment t])
+               | None -> []
+               | Some t -> ["comment", self#json_of_comment t])
           )
       | Parameter.Tuple (l,texpr) ->
         Object ["tuple", Object
@@ -511,22 +511,22 @@ class gen () =
         "module_alias", String "unavailable" (* self#t_of_module_alias ma *)
       | Module_functor (mparam, mk) ->
         "module_functor", Object (["parameter", self#json_of_module_parameter mparam; self#json_of_module_kind mk])
-      (*      node "module_functor"
-          [ self#t_of_module_parameter mparam ; self#t_of_module_kind mk]*)
+        (*      node "module_functor"
+            [ self#t_of_module_parameter mparam ; self#t_of_module_kind mk]*)
       | Module_apply (mk1, mk2) ->
         "module_apply", String "unavailable"
-      (*      node "module_apply"
-          [ self#t_of_module_kind mk1 ; self#t_of_module_kind mk2]*)
+        (*      node "module_apply"
+            [ self#t_of_module_kind mk1 ; self#t_of_module_kind mk2]*)
       | Module_with (mk, s) ->
         "module_with", String "unavailable"
-      (*      node "module_with"
-          [ self#t_of_module_type_kind mk; node "with" [Leaf s] ]*)
+        (*      node "module_with"
+            [ self#t_of_module_type_kind mk; node "with" [Leaf s] ]*)
       | Module_constraint (mk, mtk) ->
         self#json_of_module_kind mk
-      (*      node "module_constraint"
-          [ self#t_of_module_kind mk ;
-            self#t_of_module_type_kind mtk ;
-          ]*)
+          (*      node "module_constraint"
+              [ self#t_of_module_kind mk ;
+                self#t_of_module_type_kind mtk ;
+              ]*)
       | _ ->
         print_endline "Error: Unhandled element (odoc_json)!"; 
         "unknown", String "unavailable"

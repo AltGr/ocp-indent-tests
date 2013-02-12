@@ -180,7 +180,7 @@ module Query = struct
 end
 
 module DP = struct
-(** Functions which create/destroy (or register/unregister) dps *)
+  (** Functions which create/destroy (or register/unregister) dps *)
 
   (** [create task id]: creates and returns a dp *)
   external create: dbg:debug_info -> id:string -> dp = ""
@@ -204,7 +204,7 @@ module DP = struct
 end
 
 module SR = struct
-(** Functions which manipulate SRs *)
+  (** Functions which manipulate SRs *)
 
   (** [create dbg sr device_config physical_size] creates an sr with id [sr] *)
   external create : dbg:debug_info -> sr:sr -> device_config:(string * string) list -> physical_size:int64 -> unit = ""
@@ -234,8 +234,8 @@ module SR = struct
 end
 
 module VDI = struct
-(** Functions which operate on particular VDIs.
-   These functions are all idempotent from the point of view of a given [dp]. *)
+  (** Functions which operate on particular VDIs.
+     These functions are all idempotent from the point of view of a given [dp]. *)
 
   (** [create task sr vdi_info] creates a new VDI in [sr] using [vdi_info]. Some
         fields in the [vdi_info] may be modified (e.g. rounded up), so the function

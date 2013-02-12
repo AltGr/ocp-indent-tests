@@ -49,9 +49,9 @@ let max_stored_events = 500
 
 (** Ordered list of events, newest first *)
 let queue = ref []
-(** Monotonically increasing event ID. One higher than the highest event ID in the queue *)
+                (** Monotonically increasing event ID. One higher than the highest event ID in the queue *)
 let id = ref 0L 
-(** When we GC events we track how many we've deleted so we can send an error to the client *)
+  (** When we GC events we track how many we've deleted so we can send an error to the client *)
 let highest_forgotten_id = ref (-1L)
 
 (** Types used to store user event subscriptions: ***********************************************)
@@ -147,7 +147,7 @@ let event_add ?snapshot ty op reference  =
             id := Int64.add !id Int64.one;
             Condition.broadcast newevents;
           end else begin
-          (* debug "Dropping event %s" (string_of_event ev) *)
+            (* debug "Dropping event %s" (string_of_event ev) *)
           end;
 
           (* GC the events in the queue *)
@@ -160,8 +160,8 @@ let event_add ?snapshot ty op reference  =
           (* Remember the highest ID of the list of events to drop *)
           if to_drop <> [] then
             highest_forgotten_id := Int64.of_string (List.hd to_drop).id;
-        (* debug "After event queue GC: keeping %d; dropping %d (highest dropped id = %Ld)" 
-           (List.length to_keep) (List.length to_drop) !highest_forgotten_id *)
+          (* debug "After event queue GC: keeping %d; dropping %d (highest dropped id = %Ld)" 
+             (List.length to_keep) (List.length to_drop) !highest_forgotten_id *)
         )
     end
 

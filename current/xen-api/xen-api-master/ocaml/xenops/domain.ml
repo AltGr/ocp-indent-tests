@@ -130,13 +130,13 @@ let wait_xen_free_mem ~xc ?(maximum_wait_time_seconds=64) required_memory_kib : 
         accumulated_wait_time_seconds
         free_memory_kib scrub_memory_kib required_memory_kib;
     if free_memory_kib >= required_memory_kib
-    (* We already have enough memory. *)
+      (* We already have enough memory. *)
     then true else
     if scrub_memory_kib = 0L
-    (* We'll never have enough memory. *)
+      (* We'll never have enough memory. *)
     then false else
     if accumulated_wait_time_seconds >= maximum_wait_time_seconds
-    (* We've waited long enough. *)
+      (* We've waited long enough. *)
     then false else
       begin
         Thread.delay 1.0;
@@ -370,7 +370,7 @@ let destroy (task: Xenops_task.t) ~xc ~xs ~qemu_domid domid =
         error "VM = %s; domid = %d; Caught exception %s while destroying device %s"
           (Uuid.to_string uuid) domid
           (Printexc.to_string e) (string_of_device device);
-    (* Keep going on a best-effort basis *)
+        (* Keep going on a best-effort basis *)
     ) all_devices;
 
   (* For each device which has a hotplug entry, perform the cleanup. Even if one
@@ -676,7 +676,7 @@ let build_hvm (task: Xenops_task.t) ~xc ~xs ~static_max_kib ~target_kib ~shadow_
 
   let local_stuff = [
     "serial/0/limit",    string_of_int 65536;
-  (*
+    (*
     "console/port",      string_of_int console_port;
     "console/ring-ref",  sprintf "%nu" console_mfn;
 *)
@@ -834,7 +834,7 @@ let hvm_restore (task: Xenops_task.t) ~xc ~xs ~store_domid ~console_domid ~no_in
       ~vcpus ~extras:[] xenguest_path domid fd in
   let local_stuff = [
     "serial/0/limit",    string_of_int 65536;
-  (*
+    (*
     "console/port",     string_of_int console_port;
     "console/ring-ref", sprintf "%nu" console_mfn;
 *)
@@ -913,17 +913,17 @@ let suspend (task: Xenops_task.t) ~xc ~xs ~hvm xenguest_path domid fd flags ?(pr
       in
 
       (match XenguestHelper.non_debug_receive ~debug_callback:callback cnx with
-        | XenguestHelper.Suspend ->
-          debug "VM = %s; domid = %d; suspend callback called" (Uuid.to_string uuid) domid;
-        | XenguestHelper.Error x ->
-          error "VM = %s; domid = %d; xenguesthelper failed: \"%s\"" (Uuid.to_string uuid) domid x;
-          raise (Xenguest_failure (Printf.sprintf "Error while waiting for suspend notification: %s" x))
-        | msg ->
-          let err = Printf.sprintf "expected %s got %s"
-              (XenguestHelper.string_of_message XenguestHelper.Suspend)
-              (XenguestHelper.string_of_message msg) in
-          error "VM = %s; domid = %d; xenguesthelper protocol failure %s" (Uuid.to_string uuid) domid err;
-          raise (Xenguest_protocol_failure err));
+       | XenguestHelper.Suspend ->
+         debug "VM = %s; domid = %d; suspend callback called" (Uuid.to_string uuid) domid;
+       | XenguestHelper.Error x ->
+         error "VM = %s; domid = %d; xenguesthelper failed: \"%s\"" (Uuid.to_string uuid) domid x;
+         raise (Xenguest_failure (Printf.sprintf "Error while waiting for suspend notification: %s" x))
+       | msg ->
+         let err = Printf.sprintf "expected %s got %s"
+             (XenguestHelper.string_of_message XenguestHelper.Suspend)
+             (XenguestHelper.string_of_message msg) in
+         error "VM = %s; domid = %d; xenguesthelper protocol failure %s" (Uuid.to_string uuid) domid err;
+         raise (Xenguest_protocol_failure err));
       do_suspend_callback ();
       if hvm then (
         debug "VM = %s; domid = %d; suspending qemu-dm" (Uuid.to_string uuid) domid;

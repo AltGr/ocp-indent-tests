@@ -295,7 +295,7 @@ module Metadata = struct
     vifs: Vif.t list;
     pcis: Pci.t list;
     domains: string option;
-  (** Opaque data describing per-domain state *)
+    (** Opaque data describing per-domain state *)
   }
 end
 

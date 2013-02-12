@@ -79,7 +79,7 @@ ENDIF
 module Epoll_flags(Flag_values : sig
       val in_     : Int63.t
       val out     : Int63.t
-      (* val rdhup   : Int63.t *)
+        (* val rdhup   : Int63.t *)
       val pri     : Int63.t
       val err     : Int63.t
       val hup     : Int63.t
@@ -326,10 +326,10 @@ let cores =
       |! List.fold_left ~init:0 ~f:(fun count line ->
         count +
           (match Core_string.lsplit2 ~on:':' line with
-            | None -> 0
-            | Some (label, _) ->
-              if Core_string.(=) (Core_string.rstrip label) "processor" then 1
-              else 0))
+           | None -> 0
+           | Some (label, _) ->
+             if Core_string.(=) (Core_string.rstrip label) "processor" then 1
+             else 0))
     in
     if num_cores > 0 then num_cores
     else failwith "Linux_ext.cores: failed to parse /proc/cpuinfo")
@@ -356,7 +356,7 @@ module Epoll = struct
   module Flags = Epoll_flags(struct
       let in_     = flag_epollin ()
       let out     = flag_epollout ()
-      (* let rdhup   = flag_epollrdhup () *)
+        (* let rdhup   = flag_epollrdhup () *)
       let pri     = flag_epollpri ()
       let err     = flag_epollerr ()
       let hup     = flag_epollhup ()
@@ -705,7 +705,7 @@ module Epoll = struct
   module Flags = Epoll_flags(struct
       let in_     = Int63.of_int (1 lsl 0)
       let out     = Int63.of_int (1 lsl 1)
-      (* let rdhup   = Int63.of_int (1 lsl 2) *)
+        (* let rdhup   = Int63.of_int (1 lsl 2) *)
       let pri     = Int63.of_int (1 lsl 3)
       let err     = Int63.of_int (1 lsl 4)
       let hup     = Int63.of_int (1 lsl 5)
@@ -727,7 +727,7 @@ module Epoll = struct
   let iter_ready _ ~f:_         = assert false
   let fold_ready _ ~init:_ ~f:_ = assert false
 
-(* let pwait _ ~timeout:_ _      = assert false *)
+  (* let pwait _ ~timeout:_ _      = assert false *)
 end
 
 ENDIF

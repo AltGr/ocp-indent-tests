@@ -204,7 +204,7 @@ let checkpoint ~__context ~vm ~new_name =
       Xapi_xenops.suspend ~__context ~self:vm;
     with
     | Api_errors.Server_error(_, _) as e -> raise e
-  (* | _ -> raise (Api_errors.Server_error (Api_errors.vm_checkpoint_suspend_failed, [Ref.string_of vm])) *)
+                                              (* | _ -> raise (Api_errors.Server_error (Api_errors.vm_checkpoint_suspend_failed, [Ref.string_of vm])) *)
   end;
 
   (* snapshot the disks and the suspend VDI *)
@@ -228,9 +228,9 @@ let checkpoint ~__context ~vm ~new_name =
   | Some snap -> snap
 
 
-  (********************************************************************************)
-  (*                        Revert                                                *)
-  (********************************************************************************)
+(********************************************************************************)
+(*                        Revert                                                *)
+(********************************************************************************)
 
 (* The following code have to run on the master as it manipulates the DB cache directly. *)
 let copy_vm_fields ~__context ~metadata ~dst ~do_not_copy ~default_values =

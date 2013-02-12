@@ -50,6 +50,6 @@ val to_list : 'a t -> 'a list
 
 (** complexity: O(1) *)
 val length : 'a t -> int
-(** complexity: O(1) *)
+  (** complexity: O(1) *)
 val is_empty : 'a t -> bool
 

@@ -60,12 +60,12 @@ let valid_operations ~__context record _ref' : table =
   let power_state = Db.VM.get_power_state ~__context ~self:vm in
   let plugged = record.Db_actions.vIF_currently_attached || record.Db_actions.vIF_reserved in
   (match power_state, plugged with
-    | `Running, true -> set_errors Api_errors.device_already_attached [ _ref ] [ `plug ]
-    | `Running, false -> set_errors Api_errors.device_already_detached [ _ref ] [ `unplug ]
-    | _, _ -> 
-      let actual = Record_util.power_to_string power_state in
-      let expected = Record_util.power_to_string `Running in
-      set_errors Api_errors.vm_bad_power_state [ Ref.string_of vm; expected; actual ] [ `plug; `unplug ]);
+   | `Running, true -> set_errors Api_errors.device_already_attached [ _ref ] [ `plug ]
+   | `Running, false -> set_errors Api_errors.device_already_detached [ _ref ] [ `unplug ]
+   | _, _ -> 
+     let actual = Record_util.power_to_string power_state in
+     let expected = Record_util.power_to_string `Running in
+     set_errors Api_errors.vm_bad_power_state [ Ref.string_of vm; expected; actual ] [ `plug; `unplug ]);
 
   (* HVM guests only support plug/unplug IF they have recent PV drivers *)
   let vm_gm = Db.VM.get_guest_metrics ~__context ~self:vm in

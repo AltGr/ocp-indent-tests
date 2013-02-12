@@ -19,12 +19,12 @@ open Client
 
 
 let tc1 rpc session =
-(* Description:
- *
- * - Create a VDI
- * - clone it to create a tree of 3 VDIs
- * - find the parent VDI
- * - make sure we can't clone, snapshot, vbd create+plug vdi destroy *)
+  (* Description:
+   *
+   * - Create a VDI
+   * - clone it to create a tree of 3 VDIs
+   * - find the parent VDI
+   * - make sure we can't clone, snapshot, vbd create+plug vdi destroy *)
 
   let failmsg=ref "" in
 

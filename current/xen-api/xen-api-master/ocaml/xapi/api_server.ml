@@ -17,9 +17,9 @@
 
 (** Actions module *)
 module Actions = struct
-(** The DebugVersion throws a NotImplemented exception for everything
-   by default.  The ReleaseVersion is missing all the fields;
-   so server will not compile unless everything is overridden *)
+  (** The DebugVersion throws a NotImplemented exception for everything
+     by default.  The ReleaseVersion is missing all the fields;
+     so server will not compile unless everything is overridden *)
 
   module Task = Xapi_task
   module Session = Xapi_session
@@ -111,8 +111,8 @@ let is_himn_req req =
   match req.Http.Request.host with
   | Some h ->
     (match !Xapi_mgmt_iface.himn_addr with
-      | Some himn -> himn = h
-      | None -> false)
+     | Some himn -> himn = h
+     | None -> false)
   | None -> false
 
 (* This bit is called directly by the fake_rpc callback *)

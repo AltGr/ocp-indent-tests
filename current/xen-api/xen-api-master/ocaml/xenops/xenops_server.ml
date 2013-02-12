@@ -27,7 +27,7 @@ open D
 
 type context = {
   transferred_fd: Unix.file_descr option;
-(** some API calls take a file descriptor argument *)
+  (** some API calls take a file descriptor argument *)
 }
 
 let make_context () = {
@@ -320,7 +320,7 @@ let push_with_coalesce should_keep item queue =
   Queue.transfer queue' queue
 
 module Queues = struct
-(** A set of queues where 'pop' operates on each queue in a round-robin fashion *)
+  (** A set of queues where 'pop' operates on each queue in a round-robin fashion *)
 
   type tag = string
   (** Each distinct 'tag' value creates a separate virtual queue *)
@@ -450,7 +450,7 @@ module Redirector = struct
       (fun () ->
         Queues.transfer_tag tag queue default;
         overrides := StringMap.remove tag !overrides
-      (* All items with [tag] will enter the default queue *)
+          (* All items with [tag] will enter the default queue *)
       )
 
   module Dump = struct
@@ -758,9 +758,9 @@ let rec atomics_of_operation = function
          fixed we can consider creating qemu as a part of the
          'build' *)
       VM_create_device_model (id, false);
-    (* We hotplug PCI devices into HVM guests via qemu, since
-       otherwise hotunplug triggers some kind of unfixed race
-       condition causing an interrupt storm. *)
+      (* We hotplug PCI devices into HVM guests via qemu, since
+         otherwise hotunplug triggers some kind of unfixed race
+         condition causing an interrupt storm. *)
     ] @ (List.map (fun pci -> PCI_plug pci.Pci.id)
         (PCI_DB.pcis id |> pci_plug_order)
     ) @ [
@@ -796,8 +796,8 @@ let rec atomics_of_operation = function
          qemu reads xenstore keys in preference to its own commandline. After this is
          fixed we can consider creating qemu as a part of the 'build' *)
       VM_create_device_model (id, true);
-    (* We hotplug PCI devices into HVM guests via qemu, since otherwise hotunplug triggers
-       some kind of unfixed race condition causing an interrupt storm. *)
+      (* We hotplug PCI devices into HVM guests via qemu, since otherwise hotunplug triggers
+         some kind of unfixed race condition causing an interrupt storm. *)
     ] @ (List.map (fun pci -> PCI_plug pci.Pci.id)
         (PCI_DB.pcis id |> pci_plug_order)
     )
@@ -1832,20 +1832,20 @@ let internal_event_thread_body = Debug.with_thread_associated "events" (fun () -
       assert (updates <> []);
       List.iter
         (function
-        | Dynamic.Vm id ->
-          debug "Received an event on managed VM %s" id;
-          queue_operation dbg id (VM_check_state id) |> TASK.destroy'
-        | Dynamic.Vbd id ->
-          debug "Received an event on managed VBD %s.%s" (fst id) (snd id);
-          queue_operation dbg (VBD_DB.vm_of id) (VBD_check_state id) |> TASK.destroy'
-        | Dynamic.Vif id ->
-          debug "Received an event on managed VIF %s.%s" (fst id) (snd id);
-          queue_operation dbg (VIF_DB.vm_of id) (VIF_check_state id) |> TASK.destroy'
-        | Dynamic.Pci id ->
-          debug "Received an event on managed PCI %s.%s" (fst id) (snd id);
-          queue_operation dbg (PCI_DB.vm_of id) (PCI_check_state id) |> TASK.destroy'
-        | x ->
-          debug "Ignoring event on %s" (Jsonrpc.to_string (Dynamic.rpc_of_id x))
+         | Dynamic.Vm id ->
+           debug "Received an event on managed VM %s" id;
+           queue_operation dbg id (VM_check_state id) |> TASK.destroy'
+         | Dynamic.Vbd id ->
+           debug "Received an event on managed VBD %s.%s" (fst id) (snd id);
+           queue_operation dbg (VBD_DB.vm_of id) (VBD_check_state id) |> TASK.destroy'
+         | Dynamic.Vif id ->
+           debug "Received an event on managed VIF %s.%s" (fst id) (snd id);
+           queue_operation dbg (VIF_DB.vm_of id) (VIF_check_state id) |> TASK.destroy'
+         | Dynamic.Pci id ->
+           debug "Received an event on managed PCI %s.%s" (fst id) (snd id);
+           queue_operation dbg (PCI_DB.vm_of id) (PCI_check_state id) |> TASK.destroy'
+         | x ->
+           debug "Ignoring event on %s" (Jsonrpc.to_string (Dynamic.rpc_of_id x))
         ) updates;
       id := Some next_id
     done;

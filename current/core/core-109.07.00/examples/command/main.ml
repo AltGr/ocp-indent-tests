@@ -18,12 +18,12 @@ let flag_prompt_if_missing name of_string ~doc =
   let open Command.Spec in
   let arg = Arg_type.create of_string in
   map (flag ("-" ^ name) (optional arg) ~doc) ~f:(function
-  | Some v -> v
-  | None ->
-    printf "enter %s: %!" name;
-    match In_channel.input_line stdin with
-    | None -> failwith "no value entered. aborting."
-    | Some line -> (of_string line)
+    | Some v -> v
+    | None ->
+      printf "enter %s: %!" name;
+      match In_channel.input_line stdin with
+      | None -> failwith "no value entered. aborting."
+      | Some line -> (of_string line)
   )
 
 let fields_flag spec ~doc s field =
@@ -50,7 +50,7 @@ module Sing = struct
             ~doc:"N how loud to sing (number of decibels)"
         +> flag "-date" (optional date) ~doc:"DATE the date"
         +> flag "-note" (listed Note.arg_type) ~doc:"NOTE a note"
-        (* anonymous arguments *)
+          (* anonymous arguments *)
         +> anon ("NAME" %: string)
         +> anon ("FOO" %: string)
         +> anon (sequence ("BAR" %: string))

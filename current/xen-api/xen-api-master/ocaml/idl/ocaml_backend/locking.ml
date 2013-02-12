@@ -77,7 +77,7 @@ let of_message (obj: obj) (x: message) =
          field_has_effect = true) *)
       (* XXX: need to fetch IDs from the database *)
       self
-    (*
+      (*
       self @ (from_ref_relationships obj)
 *)
     | FromObject(_) ->

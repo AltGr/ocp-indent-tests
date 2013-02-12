@@ -19,7 +19,7 @@ type event
 
 (** Type of intervals for repeated events *)
 type interval = private
-  (** No repetition of events *)
+(** No repetition of events *)
   | INone
   (** Regular repetition of events.  [span] is greater than zero.
       Note that this interval will be added to the wakeup time of
@@ -27,9 +27,9 @@ type interval = private
       This means that e.g. if the process is put to sleep, it will not
       experience repetitive calls for intermediate events. *)
   | INormal of Span.t
-  (** Randomized repetition of events.  [span] is greater than zero.
-      The float specifies the maximum ratio with which [span] will be
-      multiplied and added to itself, and is in the range \[0.0, 1.0\]. *)
+      (** Randomized repetition of events.  [span] is greater than zero.
+          The float specifies the maximum ratio with which [span] will be
+          multiplied and added to itself, and is in the range \[0.0, 1.0\]. *)
   | IRandom of Span.t * float
 
 (** [create ?min_size ()] creates a new timer.  The minimum size of the

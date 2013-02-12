@@ -52,8 +52,8 @@ let register_basic_authentication_method, get_basic_authentication_method =
     !fun_auth config)
 
 
-  (*****************************************************************************)
-  (* Basic authentication with a predefined login/password (example) *)
+(*****************************************************************************)
+(* Basic authentication with a predefined login/password (example) *)
 
 let _ = register_basic_authentication_method
     (function

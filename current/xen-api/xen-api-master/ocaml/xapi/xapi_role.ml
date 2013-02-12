@@ -73,9 +73,9 @@ let get_api_record ~static_record =
     API.role_name_label=static_record.Db_actions.role_name_label;
     API.role_name_description=static_record.Db_actions.role_name_description;
     API.role_subroles=static_record.Db_actions.role_subroles;
-  (*API.role_is_basic=static_record.Db_actions.role_is_basic;*)
-  (*API.role_is_complete=static_record.Db_actions.role_is_complete;*)
-  (*API.role_subjects=static_record.Db_actions.role_subjects;*)
+    (*API.role_is_basic=static_record.Db_actions.role_is_basic;*)
+    (*API.role_is_complete=static_record.Db_actions.role_is_complete;*)
+    (*API.role_subjects=static_record.Db_actions.role_subjects;*)
   }
 let get_record ~__context ~self =
   get_common ~__context ~self
@@ -147,21 +147,21 @@ let get_subroles ~__context ~self =
     ~static_fn:(fun static_record -> static_record.role_subroles)
     ~db_fn:(fun ~__context ~self -> Db.Role.get_subroles ~__context ~self)
 
-    (*    val get_is_basic : __context:Context.t -> self:ref_role -> bool*)
-    (*let get_is_basic ~__context ~self =
-       get_common ~__context ~self
-        ~static_fn:(fun static_record -> static_record.role_is_basic)
-        ~db_fn:(fun ~__context ~self -> Db.Role.get_is_basic ~__context ~self)
-    *)
-    (*    val get_is_complete : __context:Context.t -> self:ref_role -> bool*)
-    (*let get_is_complete ~__context ~self =
-       get_common ~__context ~self
-        ~static_fn:(fun static_record -> static_record.role_is_complete)
-        ~db_fn:(fun ~__context ~self -> Db.Role.get_is_complete ~__context ~self)
-    *)
+(*    val get_is_basic : __context:Context.t -> self:ref_role -> bool*)
+(*let get_is_basic ~__context ~self =
+   get_common ~__context ~self
+    ~static_fn:(fun static_record -> static_record.role_is_basic)
+    ~db_fn:(fun ~__context ~self -> Db.Role.get_is_basic ~__context ~self)
+*)
+(*    val get_is_complete : __context:Context.t -> self:ref_role -> bool*)
+(*let get_is_complete ~__context ~self =
+   get_common ~__context ~self
+    ~static_fn:(fun static_record -> static_record.role_is_complete)
+    ~db_fn:(fun ~__context ~self -> Db.Role.get_is_complete ~__context ~self)
+*)
 
-    (* XenCenter needs these functions *)
-    (*
+(* XenCenter needs these functions *)
+(*
 1. get_all_allowed_calls: role->[permission]
 2. get_all_allowed_calls: subject_identifier->[permission]  (see Xapi_subject)
 3. get_all_roles: permission->[roles]

@@ -57,14 +57,14 @@ let dm_to_string tys : O.Module.t =
         let aux (c, _) = (OU.constructor_of c)^" -> \""^c^"\"" in
         "\n    fun v -> match v with\n      "^
           String.concat "\n    | " (List.map aux cs)
-      (* ^"\n    | _ -> raise (StringEnumTypeError \""^name^"\")" *)
+          (* ^"\n    | _ -> raise (StringEnumTypeError \""^name^"\")" *)
       | DT.Float -> "Printf.sprintf \"%0.18g\""
       | DT.Int -> "Int64.to_string"
       | DT.Map(key, value) ->
         let kf = OU.alias_of_ty key and vf = OU.alias_of_ty value in
         "fun m -> map "^kf^" "^vf^" m"
       | DT.Ref s -> "(Ref.string_of : " ^ OU.ocaml_of_ty ty^" -> string)"
-      (*
+        (*
       | DT.Ref "session" -> "(Uuid.string_of_cookie : "^OU.ocaml_of_ty ty^" -> string)"
       | DT.Ref s -> "(Uuid.string_of_uuid : "^OU.ocaml_of_ty ty^" -> string)"
 *)
@@ -104,7 +104,7 @@ let string_to_dm tys : O.Module.t =
       | DT.Map(key, value) ->
         let kf = OU.alias_of_ty key and vf = OU.alias_of_ty value in
         "fun m -> map "^kf^" "^vf^" m"
-      (*
+        (*
       | DT.Ref "session" ->
           "fun x -> (Uuid.cookie_of_string x : "^OU.ocaml_of_ty ty^")"
       | DT.Ref s -> "fun x -> (Uuid.uuid_of_string x : "^OU.ocaml_of_ty ty^")"
@@ -394,7 +394,7 @@ let db_action api : O.Module.t =
           [ "let expr' = Db_filter.expr_of_string expr in";
             "get_records_where ~" ^ Gen_common.context ^ " ~expr:expr'" ]
 
-      (*
+(*
       | FromObject(Private(Copy)) ->
     begin match x.msg_params with
     | [ _, src_name, _; _, dst_name, _ ] -> make_shallow_copy api obj (OU.escape src_name) (OU.escape dst_name) (DU.fields_of_obj obj)

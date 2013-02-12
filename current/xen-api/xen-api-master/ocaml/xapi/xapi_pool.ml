@@ -1333,7 +1333,7 @@ let enable_external_auth ~__context ~pool ~config ~service_name ~auth_type =
       end
     with Not_found -> () (* that's expected, no host had external_auth enabled*)
                       ;
-                        (* 1b. assert that there are no duplicate hostnames in the pool *)
+                      (* 1b. assert that there are no duplicate hostnames in the pool *)
                         if (List.length hosts)
                           <>
                             (List.length

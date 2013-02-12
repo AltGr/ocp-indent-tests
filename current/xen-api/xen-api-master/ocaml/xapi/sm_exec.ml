@@ -26,8 +26,8 @@ module E=Debug.Debugger(struct let name="mscgen" end)
 
 let cmd_name driver = sprintf "%s/%sSR" Xapi_globs.sm_dir driver
 
-  (*********************************************************************************************)
-  (* Random utility functions *)
+(*********************************************************************************************)
+(* Random utility functions *)
 
 type call = {
   (* All calls are performed by a specific Host with a special Session and device_config *)
@@ -144,8 +144,8 @@ let methodResponse xml =
   | xml -> XMLRPC.From.methodResponse xml
 
 
-             (****************************************************************************************)
-             (* Functions that actually execute the python backends *)
+(****************************************************************************************)
+(* Functions that actually execute the python backends *)
 
 let with_session sr f =
   Server_helpers.exec_with_new_task "sm_exec" (fun __context ->
@@ -220,8 +220,8 @@ let exec_xmlrpc ?context ?(needs_session=true) (driver: string) (call: call) =
   else do_call call
 
 
-    (********************************************************************)
-    (** Some functions to cope with the XML that the SM backends return *)    
+(********************************************************************)
+(** Some functions to cope with the XML that the SM backends return *)    
 
 let xmlrpc_parse_failure (xml: string) (reason: string) = 
   raise (Api_errors.Server_error (Api_errors.sr_backend_failure,

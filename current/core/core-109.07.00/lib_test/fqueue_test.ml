@@ -41,7 +41,7 @@ let test =
                   | 0 -> enqueue q i
                   | 1 ->
                     (match dequeue q with
-                      | None -> q | Some (_,q) -> q)
+                     | None -> q | Some (_,q) -> q)
                   | 2 -> (try discard_exn q with Empty -> q)
                   | _ -> q
                 in

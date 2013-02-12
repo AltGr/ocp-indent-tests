@@ -19,8 +19,8 @@ let make_matrix = Array.make_matrix
 let map = Array.map
 let mapi = Array.mapi
 let of_list = Array.of_list
-(* Note that Ocaml's stable_sort and fast_sort are the same. Regular sort is unstable and
-   slower, but uses constant heap space. *)
+  (* Note that Ocaml's stable_sort and fast_sort are the same. Regular sort is unstable and
+     slower, but uses constant heap space. *)
 let sort = Array.sort
 let stable_sort = Array.stable_sort
 let sub = Array.sub
@@ -182,7 +182,7 @@ TEST = filter_opt [||] = [||]
 
 (** [filter_map ~f array] maps [f] over [array] and filters [None] out of the results. *)
 let filter_map t ~f = filter_opt (map t ~f)
-(** Same as {!filter_map} but uses {!Array.mapi}. *)
+  (** Same as {!filter_map} but uses {!Array.mapi}. *)
 let filter_mapi t ~f = filter_opt (mapi t ~f)
 
 let iter2_exn t1 t2 ~f =
@@ -204,7 +204,7 @@ TEST = fold2_exn [| 1 |] [| "1" |] ~init:[] ~f:(fun ac a b -> (a, b) :: ac) = [ 
 
 (** [filter ~f array] removes the elements for which [f] returns false.  *)
 let filter ~f =  filter_map ~f:(fun x -> if f x then Some x else None)
-(** Like {!filter} except [f] also receives the index. *)
+  (** Like {!filter} except [f] also receives the index. *)
 let filteri ~f = filter_mapi ~f:(fun i x -> if f i x then Some x else None)
 
 let exists t ~f =

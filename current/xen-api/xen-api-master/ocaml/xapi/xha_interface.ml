@@ -314,7 +314,7 @@ module LiveSetInformation = struct
       time_since_xapi_restart_first_attempted: int;
       heartbeat_active_list_on_heartbeat: [`host] Uuid.t list;
       heartbeat_active_list_on_statefile: [`host] Uuid.t list;
-    (* ... *)
+      (* ... *)
     }
     let of_xml_element = function
       | Xml.Element("host_raw_data", _, children) ->

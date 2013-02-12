@@ -187,9 +187,9 @@ type request_info =
          the preflight request.
          http://www.w3.org/TR/cors/#access-control-request-method-request-he*)
      ri_access_control_request_headers : string list option Lazy.t;
-    (** Which headers will be used in the actual request as part of
-        the preflight request.
-        http://www.w3.org/TR/cors/#access-control-request-headers-request-h *)
+     (** Which headers will be used in the actual request as part of
+         the preflight request.
+         http://www.w3.org/TR/cors/#access-control-request-headers-request-h *)
 
      ri_accept: ((string option * string option) * float option * (string * string) list) list Lazy.t; (** Accept HTTP header. For example [(Some "text", None)] means ["text/*"]. The float is the "quality" value, if any. The last association list is for other extensions. *)
      ri_accept_charset: (string option * float option) list Lazy.t; (** Accept-Charset HTTP header. [None] for the first value means "*". The float is the "quality" value, if any. *)
@@ -213,10 +213,10 @@ type request_info =
 
      ri_connection_closed: unit Lwt.t; (** a thread waking up when the connection is closed *)
     }
-(** If you force [ri_files] or [ri_post_params], the request is fully read,
-   so it is not possible any more to read it from [ri_http_frame]
-   (and vice versa).
-*)
+    (** If you force [ri_files] or [ri_post_params], the request is fully read,
+       so it is not possible any more to read it from [ri_http_frame]
+       (and vice versa).
+    *)
 and request = {
   request_info: request_info;
   request_config: config_info;
@@ -229,17 +229,17 @@ type answer =
     | Ext_do_nothing
     (** I don't want to do anything *)
     | Ext_found of (unit -> Ocsigen_http_frame.result Lwt.t)
-    (** "OK stop! I will take the page.
-        You can start the following request of the same pipelined connection.
-        Here is the function to generate the page".
-        The extension must return Ext_found as soon as possible
-        when it is sure it is safe to start next request.
-        Usually as soon as you know that the result will be Ext_found.
-        But in some case, for example proxies, you don't want the request of
-        one connection to be handled in different order.
-        In that case, wait to be sure that the new request will not
-        overtake this one.
-    *)
+      (** "OK stop! I will take the page.
+          You can start the following request of the same pipelined connection.
+          Here is the function to generate the page".
+          The extension must return Ext_found as soon as possible
+          when it is sure it is safe to start next request.
+          Usually as soon as you know that the result will be Ext_found.
+          But in some case, for example proxies, you don't want the request of
+          one connection to be handled in different order.
+          In that case, wait to be sure that the new request will not
+          overtake this one.
+      *)
     | Ext_found_stop of (unit -> Ocsigen_http_frame.result Lwt.t)
     (** Found but do not try next extensions *)
     | Ext_next of int (** Page not found. Try next extension.
@@ -279,14 +279,14 @@ type answer =
         from preceding extension (but you may want to modify it).
     *)
     | Ext_retry_with of request * Ocsigen_cookies.cookieset
-    (** Used to retry all the extensions with a new request_info.
-        The extension returns the request_info (possibly modified)
-        and a set of cookies if it wants to set or cookies
-        ([!Ocsigen_cookies.Cookies.empty] for no cookies).
-        You must add these cookies yourself in request_info if you
-        want them to be seen by subsequent extensions,
-        for example using {!Ocsigen_http_frame.compute_new_ri_cookies}.
-    *)
+        (** Used to retry all the extensions with a new request_info.
+            The extension returns the request_info (possibly modified)
+            and a set of cookies if it wants to set or cookies
+            ([!Ocsigen_cookies.Cookies.empty] for no cookies).
+            You must add these cookies yourself in request_info if you
+            want them to be seen by subsequent extensions,
+            for example using {!Ocsigen_http_frame.compute_new_ri_cookies}.
+        *)
     | Ext_sub_result of extension2
     (** Used if your extension want to define option that may contain
         other options from other extensions.
@@ -296,7 +296,7 @@ type answer =
     *)
     | Ext_found_continue_with of 
       (unit -> (Ocsigen_http_frame.result * request) Lwt.t)
-    (** Same as [Ext_found] but may modify the request. *)
+      (** Same as [Ext_found] but may modify the request. *)
     | Ext_found_continue_with' of (Ocsigen_http_frame.result * request)
     (** Same as [Ext_found_continue_with] but does not allow to delay
         the computation of the page. You should probably not use it,
@@ -563,8 +563,8 @@ val register_command_function :
 val get_command_function :
   unit -> (?prefix:string -> string -> string list -> unit Lwt.t)
 
-  (**/**)
-  (**/**)
+(**/**)
+(**/**)
 
 val make_parse_config : Url.path -> parse_config_aux -> parse_fun
 

@@ -88,7 +88,7 @@ let get_latest_tools_vsn () =
   debug "Latest xs-tools version: %s" (string_of_vsn4 latest);
   Xapi_globs.tools_version := latest;
 
-(** Represents the detected PV driver version *)
+  (** Represents the detected PV driver version *)
 type t =
   | Linux of int * int * int * int
   | Windows of int * int * int * int

@@ -263,14 +263,14 @@ let test ({ session_id = session_id; vm = vm; id = id } as env) (op, n) =
       f (Some info)
     with _ -> f None in
   let running_in_xenopsd () = xenopsd (function
-    | Some info -> info.Xenops_interface.Vm.power_state = Xenops_interface.Running
-    | None -> false) in
+      | Some info -> info.Xenops_interface.Vm.power_state = Xenops_interface.Running
+      | None -> false) in
   let paused_in_xenopsd () = xenopsd (function
-    | Some info -> info.Xenops_interface.Vm.power_state = Xenops_interface.Paused
-    | None -> false) in
+      | Some info -> info.Xenops_interface.Vm.power_state = Xenops_interface.Paused
+      | None -> false) in
   let missing_in_xenopsd () = xenopsd (function
-    | Some _ -> false
-    | None -> true) in
+      | Some _ -> false
+      | None -> true) in
   let domain f =
     let open Xenstore in
     Xenops_helpers.with_xs
@@ -288,14 +288,14 @@ let test ({ session_id = session_id; vm = vm; id = id } as env) (op, n) =
         with _ -> f None
       ) in
   let running_domain () = domain (function
-    | Some di -> not(di.Xenctrl.Domain_info.paused) && not(di.Xenctrl.Domain_info.shutdown)
-    | None -> false) in
+      | Some di -> not(di.Xenctrl.Domain_info.paused) && not(di.Xenctrl.Domain_info.shutdown)
+      | None -> false) in
   let paused_domain () = domain (function
-    | Some di -> di.Xenctrl.Domain_info.paused && not(di.Xenctrl.Domain_info.shutdown)
-    | None -> false) in
+      | Some di -> di.Xenctrl.Domain_info.paused && not(di.Xenctrl.Domain_info.shutdown)
+      | None -> false) in
   let missing_domain () = domain (function
-    | Some _ -> false
-    | None -> true) in
+      | Some _ -> false
+      | None -> true) in
 
   let devices_in_sync () =
     let vifs_xenops =

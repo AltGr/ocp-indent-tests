@@ -185,7 +185,7 @@ let builder_of_vm ~__context ~vm timeoffset pci_passthrough =
 let pass_through_pif_carrier = ref false
 
 module MD = struct
-(** Convert between xapi DB records and xenopsd records *)
+  (** Convert between xapi DB records and xenopsd records *)
 
   let of_vbd ~__context ~vm ~vbd =
     let hvm = vm.API.vM_HVM_boot_policy <> "" in
@@ -493,8 +493,8 @@ let string_of_exn = function
 let metadata_m = Mutex.create ()
 
 module Xapi_cache = struct
-(** Keep a cache of the "xenops-translation" of XenAPI VM configuration,
-   updated whenever we receive an event from xapi. *)
+  (** Keep a cache of the "xenops-translation" of XenAPI VM configuration,
+     updated whenever we receive an event from xapi. *)
 
   let cache = Hashtbl.create 10 (* indexed by Vm.id *)
 
@@ -523,9 +523,9 @@ module Xapi_cache = struct
 end
 
 module Xenops_cache = struct
-(** Remember the last events received from xenopsd so we can compute
-   field-level differences. This allows us to minimise the number of
-   database writes we issue upwards. *)
+  (** Remember the last events received from xenopsd so we can compute
+     field-level differences. This allows us to minimise the number of
+     database writes we issue upwards. *)
 
   type t = {
     vm: Vm.state option;
@@ -618,7 +618,7 @@ module Xenops_cache = struct
 end
 
 module Xenopsd_metadata = struct
-(** Manage the lifetime of VM metadata pushed to xenopsd *)
+  (** Manage the lifetime of VM metadata pushed to xenopsd *)
 
   let push ~__context ~upgrade ~self =
     Mutex.execute metadata_m (fun () ->
@@ -1252,40 +1252,40 @@ let rec events_watch ~__context from =
   let open Dynamic in
   List.iter
     (function
-    | Vm id ->
-      if events_suppressed id
-      then debug "ignoring xenops event on VM %s" id
-      else begin
-        debug "xenops event on VM %s" id;
-        update_vm ~__context id;
-      end
-    | Vbd id ->
-      if events_suppressed (fst id)
-      then debug "ignoring xenops event on VBD %s.%s" (fst id) (snd id)
-      else begin
-        debug "xenops event on VBD %s.%s" (fst id) (snd id);
-        update_vbd ~__context id
-      end
-    | Vif id ->
-      if events_suppressed (fst id)
-      then debug "ignoring xenops event on VIF %s.%s" (fst id) (snd id)
-      else begin
-        debug "xenops event on VIF %s.%s" (fst id) (snd id);
-        update_vif ~__context id
-      end
-    | Pci id ->
-      if events_suppressed (fst id)
-      then debug "ignoring xenops event on PCI %s.%s" (fst id) (snd id)
-      else begin
-        debug "xenops event on PCI %s.%s" (fst id) (snd id);
-        update_pci ~__context id
-      end
-    | Task id ->
-      debug "xenops event on Task %s" id;
-      update_task ~__context id
-    | Barrier id ->
-      debug "barrier %d" id;
-      Events_from_xenopsd.wakeup dbg id
+     | Vm id ->
+       if events_suppressed id
+       then debug "ignoring xenops event on VM %s" id
+       else begin
+         debug "xenops event on VM %s" id;
+         update_vm ~__context id;
+       end
+     | Vbd id ->
+       if events_suppressed (fst id)
+       then debug "ignoring xenops event on VBD %s.%s" (fst id) (snd id)
+       else begin
+         debug "xenops event on VBD %s.%s" (fst id) (snd id);
+         update_vbd ~__context id
+       end
+     | Vif id ->
+       if events_suppressed (fst id)
+       then debug "ignoring xenops event on VIF %s.%s" (fst id) (snd id)
+       else begin
+         debug "xenops event on VIF %s.%s" (fst id) (snd id);
+         update_vif ~__context id
+       end
+     | Pci id ->
+       if events_suppressed (fst id)
+       then debug "ignoring xenops event on PCI %s.%s" (fst id) (snd id)
+       else begin
+         debug "xenops event on PCI %s.%s" (fst id) (snd id);
+         update_pci ~__context id
+       end
+     | Task id ->
+       debug "xenops event on Task %s" id;
+       update_task ~__context id
+     | Barrier id ->
+       debug "barrier %d" id;
+       Events_from_xenopsd.wakeup dbg id
     ) events;
   events_watch ~__context (Some next)
 
@@ -1466,24 +1466,24 @@ let events_from_xapi () =
                 if List.length from.events > 200 then warn "Warning: received more than 200 events!";
                 List.iter
                   (function
-                  | { ty = "vm"; reference = vm' } ->
-                    let vm = Ref.of_string vm' in
-                    begin
-                      try
-                        let id = id_of_vm ~__context ~self:vm in
-                        let resident_here = Db.VM.get_resident_on ~__context ~self:vm = localhost in
-                        debug "Event on VM %s; resident_here = %b" id resident_here;
-                        if resident_here
-                        then Xenopsd_metadata.update ~__context ~self:vm |> ignore
-                      with e ->
-                        if not(Db.is_valid_ref __context vm)
-                        then debug "VM %s has been removed: event on it will be ignored" (Ref.string_of vm)
-                        else begin
-                          error "Caught %s while processing XenAPI event for VM %s" (Printexc.to_string e) (Ref.string_of vm);
-                          raise e
-                        end
-                    end
-                  | _ -> warn "Received event for something we didn't register for!"
+                   | { ty = "vm"; reference = vm' } ->
+                     let vm = Ref.of_string vm' in
+                     begin
+                       try
+                         let id = id_of_vm ~__context ~self:vm in
+                         let resident_here = Db.VM.get_resident_on ~__context ~self:vm = localhost in
+                         debug "Event on VM %s; resident_here = %b" id resident_here;
+                         if resident_here
+                         then Xenopsd_metadata.update ~__context ~self:vm |> ignore
+                       with e ->
+                         if not(Db.is_valid_ref __context vm)
+                         then debug "VM %s has been removed: event on it will be ignored" (Ref.string_of vm)
+                         else begin
+                           error "Caught %s while processing XenAPI event for VM %s" (Printexc.to_string e) (Ref.string_of vm);
+                           raise e
+                         end
+                     end
+                   | _ -> warn "Received event for something we didn't register for!"
                   ) from.events;
                 token := from.token;
                 Events_from_xapi.broadcast !token;

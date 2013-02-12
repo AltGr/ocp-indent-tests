@@ -29,8 +29,8 @@ module Audit = Debug.Debugger(struct let name="audit" end)
 let info = Audit.debug
 
 
-  (**************************************************************************************)
-  (* The master uses a global mutex to mark database records before forwarding messages *)
+(**************************************************************************************)
+(* The master uses a global mutex to mark database records before forwarding messages *)
 
 (** All must fear the global mutex *)
 let __internal_mutex = Mutex.create ()
@@ -271,7 +271,7 @@ let map_with_drop ?(doc = "performing unknown operation") f xs =
     with e ->
       debug "Caught exception while %s in message forwarder: %s" (ExnHelper.string_of_exn e) doc; [] in
   List.concat (List.map one xs)
-(* Iterate a function across a list, ignoring applications which throw an exception *)
+  (* Iterate a function across a list, ignoring applications which throw an exception *)
 let iter_with_drop ?(doc = "performing unknown operation") f xs =
   let one x =
     try f x
@@ -578,8 +578,8 @@ module Forward = functor(Local: Custom_actions.CUSTOM_ACTIONS) -> struct
   module VMPP = Local.VMPP
   module VM_appliance = struct
     include Local.VM_appliance
-    (* Add to the VM_appliance's current operations, call a function and then remove from the *)
-    (* current operations. Ensure the allowed_operations are kept up to date. *)
+      (* Add to the VM_appliance's current operations, call a function and then remove from the *)
+      (* current operations. Ensure the allowed_operations are kept up to date. *)
     let with_vm_appliance_operation ~__context ~self ~doc ~op f =
       let task_id = Ref.string_of (Context.get_task_id __context) in
       retry_with_global_lock ~__context ~doc
@@ -589,7 +589,7 @@ module Forward = functor(Local: Custom_actions.CUSTOM_ACTIONS) -> struct
           Xapi_vm_appliance.update_allowed_operations ~__context ~self);
       (* Then do the action with the lock released *)
       finally f
-        (* Make sure to clean up at the end *)
+      (* Make sure to clean up at the end *)
         (fun () ->
           try
             Db.VM_appliance.remove_from_current_operations ~__context ~self ~key:task_id;
@@ -724,7 +724,7 @@ module Forward = functor(Local: Custom_actions.CUSTOM_ACTIONS) -> struct
           Xapi_vm_lifecycle.update_allowed_operations ~__context ~self);
       (* Then do the action with the lock released *)
       finally f
-        (* Make sure to clean up at the end *)
+      (* Make sure to clean up at the end *)
         (fun () ->
           try
             Db.VM.remove_from_current_operations ~__context ~self ~key:task_id;
@@ -1950,7 +1950,7 @@ module Forward = functor(Local: Custom_actions.CUSTOM_ACTIONS) -> struct
           Xapi_host_helpers.update_allowed_operations ~__context ~self);
       (* Then do the action with the lock released *)
       finally f
-        (* Make sure to clean up at the end *)
+      (* Make sure to clean up at the end *)
         (fun () ->
           try
             if operation_allowed ~op then begin
@@ -2294,13 +2294,13 @@ module Forward = functor(Local: Custom_actions.CUSTOM_ACTIONS) -> struct
       Local.Host.compute_memory_overhead ~__context ~host
 
     let get_servertime ~__context ~host =
-    (* info "Host.get_servertime"; *) (* suppressed because the GUI calls this frequently and it isn't interesting for debugging *)
+      (* info "Host.get_servertime"; *) (* suppressed because the GUI calls this frequently and it isn't interesting for debugging *)
       let local_fn = Local.Host.get_servertime ~host in
       do_op_on ~local_fn ~__context ~host
         (fun session_id rpc -> Client.Host.get_servertime rpc session_id host)
 
     let get_server_localtime ~__context ~host =
-    (* info "Host.get_servertime"; *) (* suppressed because the GUI calls this frequently and it isn't interesting for debugging *)
+      (* info "Host.get_servertime"; *) (* suppressed because the GUI calls this frequently and it isn't interesting for debugging *)
       let local_fn = Local.Host.get_server_localtime ~host in
       do_op_on ~local_fn ~__context ~host
         (fun session_id rpc -> Client.Host.get_server_localtime rpc session_id host)

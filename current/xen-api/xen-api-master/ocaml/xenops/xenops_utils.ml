@@ -72,7 +72,7 @@ let prefixes_of k =
   List.map List.rev prefixes
 
 module FileFS = struct
-(** A directory tree containiign files, each of which contain strings *)
+  (** A directory tree containiign files, each of which contain strings *)
 
   let filename_of k = Printf.sprintf "%s/%s" !root (String.concat "/" k)
   let paths_of k = List.map filename_of (prefixes_of k)
@@ -110,7 +110,7 @@ module FileFS = struct
 end
 
 module MemFS = struct
-(** An in-memory tree of Rpc.t values *)
+  (** An in-memory tree of Rpc.t values *)
 
   let root : Rpc.t fs ref = ref (Dir (ref StringMap.empty))
   let m = Mutex.create ()

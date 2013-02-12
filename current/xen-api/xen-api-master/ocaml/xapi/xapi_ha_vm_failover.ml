@@ -29,8 +29,8 @@ let by_order (vm_ref1,vm_rec1) (vm_ref2,vm_rec2) =
   compare vm1_order vm2_order
 
 
-  (*****************************************************************************************************)
-  (* Planning code follows                                                                             *)
+(*****************************************************************************************************)
+(* Planning code follows                                                                             *)
 
 (* Compute the total memory required of a VM (Running or not) *)
 let total_memory_of_vm ~__context policy snapshot = 
@@ -100,9 +100,9 @@ let host_of_non_agile_vm ~__context all_hosts_and_snapshots_sorted (vm, snapshot
     Returns: (VM restart plan, new planning configuration, true if some protected non-agile VMs exist)
 *)
 let compute_restart_plan ~__context ~all_protected_vms ?(change=no_configuration_change) num_failures = 
-(* This function must be deterministic: for the same set of hosts and set of VMs it must produce the same output.
-   We rely partially on the binpacker enforcing its own ordering over hosts and vms, so it's not critical for us
-   to sort the result of Db.*.get_all calls generally. However the handling of non-agile VMs needs special care. *)
+  (* This function must be deterministic: for the same set of hosts and set of VMs it must produce the same output.
+     We rely partially on the binpacker enforcing its own ordering over hosts and vms, so it's not critical for us
+     to sort the result of Db.*.get_all calls generally. However the handling of non-agile VMs needs special care. *)
 
   (* We first must deal with protected but currently offline VMs: we need to simulate the start of these VMs before we can 
      ask any questions about future host failures, since we need to know on which hosts these VMs will end up. 

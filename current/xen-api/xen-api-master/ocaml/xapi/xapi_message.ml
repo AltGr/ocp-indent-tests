@@ -214,11 +214,11 @@ let symlinks _ref gen message basefilename =
 let check_uuid ~__context ~cls ~uuid =
   try
     (match cls with
-      | `VM -> ignore(Db.VM.get_by_uuid ~__context ~uuid)
-      | `Host -> ignore(Db.Host.get_by_uuid ~__context ~uuid)
-      | `SR -> ignore(Db.SR.get_by_uuid ~__context ~uuid)
-      | `Pool -> ignore(Db.Pool.get_by_uuid ~__context ~uuid)
-      | `VMPP -> ignore(Db.VMPP.get_by_uuid ~__context ~uuid)
+     | `VM -> ignore(Db.VM.get_by_uuid ~__context ~uuid)
+     | `Host -> ignore(Db.Host.get_by_uuid ~__context ~uuid)
+     | `SR -> ignore(Db.SR.get_by_uuid ~__context ~uuid)
+     | `Pool -> ignore(Db.Pool.get_by_uuid ~__context ~uuid)
+     | `VMPP -> ignore(Db.VMPP.get_by_uuid ~__context ~uuid)
     );
     true
   with _ ->

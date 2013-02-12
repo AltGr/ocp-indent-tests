@@ -51,8 +51,8 @@ let gc_connector ~__context get_all get_record valid_ref1 valid_ref2 delete_reco
       begin
         let table,reference,valid1,valid2 = 
           (match DB.get_table_from_ref db (Ref.string_of ref) with
-              None -> "UNKNOWN CLASS"
-            | Some c -> c),
+             None -> "UNKNOWN CLASS"
+           | Some c -> c),
           (Ref.string_of ref),
           (print_valid ref_1_valid),
           (print_valid ref_2_valid) in
@@ -232,7 +232,7 @@ let timeout_sessions_common ~__context sessions =
               let parent = (Db.Session.get_parent ~__context ~self:s) in
               (List.for_all
                  (fun t -> task_status_is_completed
-                     (* task might not exist anymore, assume completed in this case *)
+                 (* task might not exist anymore, assume completed in this case *)
                      (try Db.Task.get_status ~__context ~self:t with _->`success)
                  ) 
                  tasks

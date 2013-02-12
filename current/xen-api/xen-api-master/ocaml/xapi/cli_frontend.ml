@@ -2568,7 +2568,7 @@ let tokens_of_argv argv_list =
           add_param (Id "true");
           f xs
         end
-      (* x may be a diadic switch *)
+        (* x may be a diadic switch *)
       else if (starts_with x "-") then
         begin
           match xs with

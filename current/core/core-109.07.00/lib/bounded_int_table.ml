@@ -50,12 +50,12 @@ let invariant t =
     assert (num_keys = Array.length t.defined_entries);
     assert (0 <= t.length && t.length <= num_keys);
     Array.iteri t.entries_by_key ~f:(fun i -> function
-    | None -> ()
-    | Some entry ->
-      assert (i = t.key_to_int entry.key);
-      match t.defined_entries.(entry.defined_entries_index) with
-      | None -> assert false
-      | Some entry' -> assert (phys_equal entry entry'));
+      | None -> ()
+      | Some entry ->
+        assert (i = t.key_to_int entry.key);
+        match t.defined_entries.(entry.defined_entries_index) with
+        | None -> assert false
+        | Some entry' -> assert (phys_equal entry entry'));
     Array.iteri t.defined_entries ~f:(fun i entry_opt ->
       match i < t.length, entry_opt with
       | false, None -> ()

@@ -97,18 +97,18 @@ module type T = sig
 end;;
 
 module Make(T : T) : sig
-(* Draw texts *)
-(* [draw face drawer image x y text] *)
-(* Draw a text on image at (x,y), using drawer function *)
-(* text must be encoded by some encoder and translated into int array *)
+  (* Draw texts *)
+  (* [draw face drawer image x y text] *)
+  (* Draw a text on image at (x,y), using drawer function *)
+  (* text must be encoded by some encoder and translated into int array *)
 
   val draw_text : Freetype.face -> T.elt drawer -> T.t ->
     int -> int -> int array -> unit
 
-    (* Draw rotated texts *)
-    (* [draw_rotated face drawer image x y r text] *)
-    (* Draw a text on image at (x,y) rotated r *)
-    (* Drawn text is automatically smoothed *)
+  (* Draw rotated texts *)
+  (* [draw_rotated face drawer image x y r text] *)
+  (* Draw a text on image at (x,y) rotated r *)
+  (* Drawn text is automatically smoothed *)
 
   val draw_rotated_text : Freetype.face -> T.elt drawer -> T.t->
     int -> int -> float -> int array -> unit

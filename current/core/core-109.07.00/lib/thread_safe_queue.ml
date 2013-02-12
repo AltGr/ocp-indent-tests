@@ -54,7 +54,7 @@ let enqueue t a =
   t.length <- t.length + 1;
   t.back := el;
   t.back <- next;
-(* END ATOMIC SECTION *)
+  (* END ATOMIC SECTION *)
 ;;
 
 let dequeue t =

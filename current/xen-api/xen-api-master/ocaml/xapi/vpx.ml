@@ -95,13 +95,13 @@ let jobState_of_rpc x =
   match x with
   | Rpc.Int n ->
     (match (Int64.to_int n) with
-      | 0 -> Created
-      | 1 -> Queued
-      | 2 -> Running
-      | 3 -> Completed
-      | 4 -> Aborted
-      | 5 -> UserAborted
-      | _ -> rpc_type_error x "JobState" "Int(int64)")
+     | 0 -> Created
+     | 1 -> Queued
+     | 2 -> Running
+     | 3 -> Completed
+     | 4 -> Aborted
+     | 5 -> UserAborted
+     | _ -> rpc_type_error x "JobState" "Int(int64)")
   | e -> rpc_type_error e "JobState" "Int(int64)"
 
 let rpc_of_jobState = function

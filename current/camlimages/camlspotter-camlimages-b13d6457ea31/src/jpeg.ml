@@ -236,8 +236,8 @@ let check_header filename =
       (* some jpeg's start with 7f58, the 7th bit is missing *)
       int_of_char str.[0] lor 0x80 = 0xff &&
       int_of_char str.[1] lor 0x80 = 0xd8
-    (* int_of_char str.[0] = 0xff && int_of_char str.[1] = 0xd8 *)
-    (* && String.sub str 6 4 = "JFIF" --- strict *) then begin
+      (* int_of_char str.[0] = 0xff && int_of_char str.[1] = 0xd8 *)
+      (* && String.sub str 6 4 = "JFIF" --- strict *) then begin
       let w, h =
         try find_jpeg_size ic with
         | Not_found -> -1, -1 in

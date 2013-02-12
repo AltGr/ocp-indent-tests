@@ -69,7 +69,7 @@ let trackid session_id = (Context.trackid_of_session (Some session_id))
 (* Speed-up rbac lookup: (session_ref, permissions set) hashtabl *)
 let session_permissions_tbl = Hashtbl.create 256 (* initial 256 sessions *)
 module Permission_set = Set.Make(String)
-(* This flag enables efficient look-up of the permission set *)
+  (* This flag enables efficient look-up of the permission set *)
 let use_efficient_permission_set = true
 
 let permission_set permission_list = 
@@ -81,7 +81,7 @@ let permission_set permission_list =
 let create_session_permissions_tbl ~session_id ~rbac_permissions =
   if use_efficient_permission_set
   && Pool_role.is_master () (* Create this structure on the master only, *)
-  (* so as to avoid heap-leaking on the slaves *)
+     (* so as to avoid heap-leaking on the slaves *)
   then begin
     debug "Creating permission-set tree for session %s"
       (Context.trackid_of_session (Some session_id));
@@ -185,8 +185,8 @@ let is_permission_in_session ~session_id ~permission ~session =
               ~rbac_permissions:session.API.session_rbac_permissions
           end
       in match permission_tree with
-        | Some(permission_tree) -> find_log permission permission_tree
-        | None -> find_linear permission session.API.session_rbac_permissions
+      | Some(permission_tree) -> find_log permission permission_tree
+      | None -> find_linear permission session.API.session_rbac_permissions
     end
   else (* use linear look-up of permissions *)
     find_linear permission session.API.session_rbac_permissions
@@ -199,14 +199,14 @@ let is_access_allowed ~__context ~session_id ~permission =
   if Session_check.is_local_session __context session_id
   then true
 
-  (* normal user session *)
+(* normal user session *)
   else 
     let session = DB_Action.Session.get_record ~__context ~self:session_id in
     (* the root user can always execute anything *)
     if session.API.session_is_local_superuser
     then true
 
-    (* not root user, so let's decide if permission is allowed or denied *)
+(* not root user, so let's decide if permission is allowed or denied *)
     else
       is_permission_in_session ~session_id ~permission ~session
 

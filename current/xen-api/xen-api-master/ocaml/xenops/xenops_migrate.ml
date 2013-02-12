@@ -219,8 +219,8 @@ module Handshake = struct
     buf.[0] <- char_of_int ((len lsr 8) land 0xff);
     buf.[1] <- char_of_int ((len lsr 0) land 0xff);
     (match r with
-      | Success -> ()
-      | Error msg -> String.blit msg 0 buf 2 len);
+     | Success -> ()
+     | Error msg -> String.blit msg 0 buf 2 len);
     if verbose then debug "Handshake.send: about to write result to remote.";
     if Unix.write s buf 0 (len + 2) <> len + 2
     then raise (Remote_failed "writing result to remote");

@@ -45,9 +45,9 @@ let lru (type a) ?hashable ~max_cache_size f =
       type t = a
       let {Hashtbl.Hashable.hash; compare; sexp_of_t} =
         Option.value ~default:Hashtbl.Hashable.poly hashable
-      (* this [assert false] is unreachable because the only use of [t_of_sexp] by
-         [Hash_queue.Make] is to define [t_of_sexp] on the returned hash queue type,
-         and we never call that function. *)
+        (* this [assert false] is unreachable because the only use of [t_of_sexp] by
+           [Hash_queue.Make] is to define [t_of_sexp] on the returned hash queue type,
+           and we never call that function. *)
       let t_of_sexp _ = assert false
     end)
   in

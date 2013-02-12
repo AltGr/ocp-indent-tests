@@ -112,10 +112,10 @@ let assert_bacon_mode ~__context ~host =
         Eq (Field "power_state", Literal "Running"))) in
   (* We always expect a control domain to be resident on a host *)
   (match List.filter (fun vm -> not (Db.VM.get_is_control_domain ~__context ~self:vm)) vms with
-    | [] -> ()
-    | guest_vms ->
-      let vm_data = [selfref; "vm"; Ref.string_of (List.hd guest_vms)] in
-      raise (Api_errors.Server_error (Api_errors.host_in_use, vm_data)));
+   | [] -> ()
+   | guest_vms ->
+     let vm_data = [selfref; "vm"; Ref.string_of (List.hd guest_vms)] in
+     raise (Api_errors.Server_error (Api_errors.host_in_use, vm_data)));
   debug "Bacon test: VMs OK - %d running VMs" (List.length vms);
   let controldomain = List.find (fun vm -> Db.VM.get_resident_on ~__context ~self:vm = host &&
                                            Db.VM.get_is_control_domain ~__context ~self:vm) (Db.VM.get_all ~__context) in
@@ -303,19 +303,19 @@ let get_vms_which_prevent_evacuation ~__context ~self =
   Hashtbl.fold (fun vm plan acc -> match plan with Error(code, params) -> (vm, (code :: params)) :: acc | _ -> acc) plans []
 
 let compute_evacuation_plan_wlb ~__context ~self =
-(* We treat xapi as primary when it comes to "hard" errors, i.e. those that aren't down to memory constraints.  These are things like
-   VM_REQUIRES_SR or VM_MISSING_PV_DRIVERS.
+  (* We treat xapi as primary when it comes to "hard" errors, i.e. those that aren't down to memory constraints.  These are things like
+     VM_REQUIRES_SR or VM_MISSING_PV_DRIVERS.
 
-   We treat WLB as primary when it comes to placement of things that can actually move.  WLB will return a list of migrations to perform,
-   and we pass those on.  WLB will only return a partial set of migrations -- if there's not enough memory available, or if the VM can't
-   move, then it will simply omit that from the results.
+     We treat WLB as primary when it comes to placement of things that can actually move.  WLB will return a list of migrations to perform,
+     and we pass those on.  WLB will only return a partial set of migrations -- if there's not enough memory available, or if the VM can't
+     move, then it will simply omit that from the results.
 
-   So the algorithm is:
-   Record all the recommendations made by WLB.
-   Record all the non-memory errors from compute_evacuation_plan_no_wlb.  These might overwrite recommendations by WLB, which is the
-   right thing to do because WLB doesn't know about all the HA corner cases (for example), but xapi does.
-   If there are any VMs left over, record them as HOST_NOT_ENOUGH_FREE_MEMORY, because we assume that WLB thinks they don't fit.
-*)
+     So the algorithm is:
+     Record all the recommendations made by WLB.
+     Record all the non-memory errors from compute_evacuation_plan_no_wlb.  These might overwrite recommendations by WLB, which is the
+     right thing to do because WLB doesn't know about all the HA corner cases (for example), but xapi does.
+     If there are any VMs left over, record them as HOST_NOT_ENOUGH_FREE_MEMORY, because we assume that WLB thinks they don't fit.
+  *)
 
   let error_vms = compute_evacuation_plan_no_wlb ~__context ~host:self in
   let vm_recoms = get_evacuation_recoms ~__context ~uuid:(Db.Host.get_uuid ~__context ~self) in
@@ -765,17 +765,17 @@ let management_reconfigure ~__context ~pif =
   let primary_address_type = Db.PIF.get_primary_address_type ~__context ~self:pif in
   let mgmt_pif_option = try Some (get_management_interface ~__context ~host:(Helpers.get_localhost ~__context)) with _ -> None in
   (match mgmt_pif_option with
-    | Some mgmt_pif -> (
-        let mgmt_address_type = Db.PIF.get_primary_address_type ~__context ~self:mgmt_pif in
-        if (primary_address_type <> mgmt_address_type) then
-          raise (Api_errors.Server_error(Api_errors.pif_incompatible_primary_address_type, [ ]));
+   | Some mgmt_pif -> (
+       let mgmt_address_type = Db.PIF.get_primary_address_type ~__context ~self:mgmt_pif in
+       if (primary_address_type <> mgmt_address_type) then
+         raise (Api_errors.Server_error(Api_errors.pif_incompatible_primary_address_type, [ ]));
 
-        if primary_address_type==`IPv4 && Db.PIF.get_ip_configuration_mode ~__context ~self:pif = `None then
-          raise (Api_errors.Server_error(Api_errors.pif_has_no_network_configuration, []))
-        else if primary_address_type==`IPv6 && Db.PIF.get_ipv6_configuration_mode ~__context ~self:pif = `None then
-          raise (Api_errors.Server_error(Api_errors.pif_has_no_v6_network_configuration, []))
-      )
-    | None -> ());
+       if primary_address_type==`IPv4 && Db.PIF.get_ip_configuration_mode ~__context ~self:pif = `None then
+         raise (Api_errors.Server_error(Api_errors.pif_has_no_network_configuration, []))
+       else if primary_address_type==`IPv6 && Db.PIF.get_ipv6_configuration_mode ~__context ~self:pif = `None then
+         raise (Api_errors.Server_error(Api_errors.pif_has_no_v6_network_configuration, []))
+     )
+   | None -> ());
 
   if Db.PIF.get_management ~__context ~self:pif
   then debug "PIF %s is already marked as a management PIF; taking no action" (Ref.string_of pif)
@@ -890,12 +890,12 @@ let create_new_blob ~__context ~host ~name ~mime_type ~public =
   blob
 
 let extauth_hook_script_name = Extauth.extauth_hook_script_name
-(* this special extauth plugin call is only used inside host.enable/disable extauth to avoid deadlock with the mutex *)
+  (* this special extauth plugin call is only used inside host.enable/disable extauth to avoid deadlock with the mutex *)
 let call_extauth_plugin_nomutex ~__context ~host ~fn ~args =
   let plugin = extauth_hook_script_name in
   debug "Calling extauth plugin %s in host %s with event %s and params %s" plugin (Db.Host.get_name_label ~__context ~self:host) fn (List.fold_left (fun a (b,y)->a^"("^b^"="^y^"),") "" args);
   Xapi_plugins.call_plugin (Context.get_session_id __context) plugin fn args
-(* this is the generic extauth plugin call available to xapi users that avoids concurrency problems *)
+  (* this is the generic extauth plugin call available to xapi users that avoids concurrency problems *)
 let call_extauth_plugin ~__context ~host ~fn ~args =
   Mutex.execute serialize_host_enable_disable_extauth (fun () ->
     call_extauth_plugin_nomutex ~__context ~host ~fn ~args
@@ -1124,8 +1124,8 @@ let disable_external_auth_common ?during_pool_eject:(during_pool_eject=false) ~_
       begin (* nothing to do, external authentication is already disabled *)
         let msg = "external authentication service is already disabled" in
         debug "Failed to disable external authentication in host %s: %s" host_name_label msg;
-      (* we do not raise an exception here. for our purposes, there's nothing wrong*)
-      (* disabling an already disabled authentication plugin *)
+        (* we do not raise an exception here. for our purposes, there's nothing wrong*)
+        (* disabling an already disabled authentication plugin *)
       end
     else (* this is the case when auth_type <> "" *)
       begin

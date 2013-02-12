@@ -184,8 +184,8 @@ let rec parse_condition = function
       badconfig "Bad syntax for condition"
 
 
-        (*****************************************************************************)
-        (* Parsing filters *)
+(*****************************************************************************)
+(* Parsing filters *)
 
 let comma_space_regexp = Netstring_pcre.regexp "\ *,\ *"
 

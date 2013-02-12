@@ -107,8 +107,8 @@ module Thread_state = struct
     let resources_to_ids = List.combine all_resources (Range.to_list (Range.make 0 (List.length all_resources))) in
     let resources_to_sll = List.map
         (function
-        | Lock x as y -> y, [ [ "lock" ]; [ x ] ]
-        | Process (name, pid) as y -> y, [ [ "process" ]; [ name ]; [ string_of_int pid ] ]
+         | Lock x as y -> y, [ [ "lock" ]; [ x ] ]
+         | Process (name, pid) as y -> y, [ [ "process" ]; [ name ]; [ string_of_int pid ] ]
         ) all_resources in
 
     let resources_to_threads =

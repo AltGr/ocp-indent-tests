@@ -110,8 +110,8 @@ let prng = Random.State.make_self_init ()
 let retry ?(in_dir=temp_dir_name) ~f prefix suffix =
   let escape s =
     String.map s ~f:(function
-    | '/' | '\'' | '\000' | '\n' | '-' -> '_'
-    | c -> c)
+      | '/' | '\'' | '\000' | '\n' | '-' -> '_'
+      | c -> c)
   in
   let prefix = escape prefix in
   let suffix = escape suffix in

@@ -33,8 +33,8 @@ let call_with_exception_handler fn =
   | e -> 
     raise (Api_errors.Server_error(Api_errors.auth_service_error, [ExnHelper.string_of_exn e]))
 
-      (* PRECONDITION: All of these additional calls require a valid session to be presented.*)
-      (* ==> the session validity is already checked in every server.ml call by using Session_check.check *)
+(* PRECONDITION: All of these additional calls require a valid session to be presented.*)
+(* ==> the session validity is already checked in every server.ml call by using Session_check.check *)
 
 let get_subject_identifier ~__context ~subject_name =
   call_with_exception_handler (fun () -> ((Ext_auth.d()).get_subject_identifier subject_name))

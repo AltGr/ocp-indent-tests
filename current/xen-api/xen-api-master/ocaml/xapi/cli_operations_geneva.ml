@@ -540,7 +540,7 @@ let vm_vif_remove printer rpc session_id params =
   in  
   ignore(Cli_operations.do_vm_op printer rpc session_id op params [])  
 
-  (*
+(*
 
   let recs = 
     List.map (fun (_,v) ->
@@ -549,8 +549,8 @@ let vm_vif_remove printer rpc session_id params =
   "state",Cli_util.power_to_string v.API.vM_power_state])) vms in
   printer (Cli_printer.PTable recs)
 *)
-  (* XXX: rework post API 1.0 *)
-  (*
+(* XXX: rework post API 1.0 *)
+(*
     [("ZURICH PARAMS","");
      ("name" , vm_record.API.vM_name_label );
      ("description" , vm_record.API.vM_name_description );

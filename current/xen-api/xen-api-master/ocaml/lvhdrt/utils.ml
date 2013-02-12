@@ -413,8 +413,8 @@ let wait_for_vdi_deletion rpc session sr ?(delay=90.0) vdis =
     debug "Got exception: %s" (Printexc.to_string e);
     false
 
-    (* ---------------------------------------------------- *)
-    (* Printing out forests of VDIs, for debugging purposes *)
+(* ---------------------------------------------------- *)
+(* Printing out forests of VDIs, for debugging purposes *)
 
 type info = {
   uuid: string;

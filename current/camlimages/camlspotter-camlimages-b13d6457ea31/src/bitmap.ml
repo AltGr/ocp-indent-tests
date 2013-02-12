@@ -70,9 +70,9 @@ module Make(B:Bitdepth) = struct
     access : int -> int -> (string * int);
   };;
 
-(****************************************************************************)
-(*                            Destruction                                   *)
-(****************************************************************************)
+  (****************************************************************************)
+  (*                            Destruction                                   *)
+  (****************************************************************************)
 
   let destroy _t = ();; (* do nothing... *)
 
@@ -116,7 +116,7 @@ module Make(B:Bitdepth) = struct
     | None -> ();;
 
   let memory width height init =
-  (* try to have it whole in memory *)
+    (* try to have it whole in memory *)
 
     check_init init;
 
@@ -247,9 +247,9 @@ module Make(B:Bitdepth) = struct
     swappable_blocks := blk :: !swappable_blocks;
     blk;;
 
-(****************************************************************************)
-(*                            Creation functions                            *)
-(****************************************************************************)
+  (****************************************************************************)
+  (*                            Creation functions                            *)
+  (****************************************************************************)
 
   let create width height init =
     if !maximum_live <= 0 then memory width height init else begin
@@ -390,14 +390,14 @@ module Make(B:Bitdepth) = struct
       access = (fun x y -> scanlines.(y), x * bytes_per_pixel);
     };;
 
-(****************************************************************************)
-(*                            Tool functions                                *)
-(****************************************************************************)
+  (****************************************************************************)
+  (*                            Tool functions                                *)
+  (****************************************************************************)
 
   let access t = t.access;;
 
-(* strip access *)
-(* Here, "strip" is a rectangle region with height 1 *)
+  (* strip access *)
+  (* Here, "strip" is a rectangle region with height 1 *)
 
   let get_strip t x y w =
     (* No region checks for performance. You should wrap this to make safe

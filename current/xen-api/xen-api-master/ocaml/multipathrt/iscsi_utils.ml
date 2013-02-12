@@ -71,8 +71,8 @@ let make_iscsi rpc session_id iscsi_luns num_vifs sr_disk_size key network =
     (try Client.VM.destroy rpc session_id newvm with _ -> ());
     raise e
 
-    (* --------------- iSCSI SR probe helper functions --------------- *)
-    (* Copied and pasted from perftest/perfutil.ml *)
+(* --------------- iSCSI SR probe helper functions --------------- *)
+(* Copied and pasted from perftest/perfutil.ml *)
 
 let parse_sr_probe_for_iqn (xml: string) : string list =
   match Xml.parse_string xml with

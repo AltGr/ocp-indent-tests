@@ -93,37 +93,37 @@ let gen = function
 
 
 
-        (*****************************************************************************)
-        (** Extensions may define new tags for configuring each site.
-            These tags are inside <site ...>...</site> in the config file.
+(*****************************************************************************)
+(** Extensions may define new tags for configuring each site.
+    These tags are inside <site ...>...</site> in the config file.
 
-           For example:
-           <site dir="">
-             <extensiontemplate module=".../mymodule.cmo" />
-           </site>
+   For example:
+   <site dir="">
+     <extensiontemplate module=".../mymodule.cmo" />
+   </site>
 
-           Each extension will set its own configuration options, for example:
-           <site dir="">
-             <extensiontemplate module=".../mymodule.cmo" />
-             <eliom module=".../myeliommodule.cmo" />
-             <static dir="/var/www/plop" />
-           </extension>
+   Each extension will set its own configuration options, for example:
+   <site dir="">
+     <extensiontemplate module=".../mymodule.cmo" />
+     <eliom module=".../myeliommodule.cmo" />
+     <static dir="/var/www/plop" />
+   </extension>
 
-            Here parse_site is the function used to parse the config file inside this
-            site. Use this if you want to put extensions config options inside
-            your own option. For example:
+    Here parse_site is the function used to parse the config file inside this
+    site. Use this if you want to put extensions config options inside
+    your own option. For example:
 
-           {[
-           | Element ("iffound", [], sub) ->
-              let ext = parse_fun sub in
-           (* DANGER: parse_fun MUST be called BEFORE the function! *)
-              (fun charset -> function
-                | Ocsigen_extensions.Req_found (_, _) ->
-                    Lwt.return (Ext_sub_result ext)
-                | Ocsigen_extensions.Req_not_found (err, ri) ->
-                    Lwt.return (Ocsigen_extensions.Ext_not_found err))
-           ]}
-        *)
+   {[
+   | Element ("iffound", [], sub) ->
+      let ext = parse_fun sub in
+   (* DANGER: parse_fun MUST be called BEFORE the function! *)
+      (fun charset -> function
+        | Ocsigen_extensions.Req_found (_, _) ->
+            Lwt.return (Ext_sub_result ext)
+        | Ocsigen_extensions.Req_not_found (err, ri) ->
+            Lwt.return (Ocsigen_extensions.Ext_not_found err))
+   ]}
+*)
 
 let parse_config path _ parse_site = function
   | Element ("extensiontemplate", atts, []) -> gen
@@ -195,13 +195,13 @@ let () = register_extension
     ~name:"extensionname"
     ~fun_site:site_creator
 
-    (* If your extension is safe for users and if you want to allow
-       exactly the same options as for global configuration, use the same
-       [site_creator] function for [user_fun_site] as for [fun_site].
+(* If your extension is safe for users and if you want to allow
+   exactly the same options as for global configuration, use the same
+   [site_creator] function for [user_fun_site] as for [fun_site].
 
-       If you don't want to allow users to use that extension in their
-       configuration files, you can omit user_fun_site.
-    *)
+   If you don't want to allow users to use that extension in their
+   configuration files, you can omit user_fun_site.
+*)
     ~user_fun_site:user_site_creator
     ~init_fun: parse_global_config
 

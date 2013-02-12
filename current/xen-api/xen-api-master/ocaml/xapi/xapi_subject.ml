@@ -120,7 +120,7 @@ let update_all_subjects ~__context =
   let auth_type = Db.Host.get_external_auth_type ~__context ~self:host in
   if auth_type = "" 
   then begin (* external authentication is disabled *)
-  (*debug "External authentication is disabled during update_all_subjects";*)
+    (*debug "External authentication is disabled during update_all_subjects";*)
   end
   else (* external authentication is enabled *)
     let subjects = Db.Subject.get_all ~__context in
@@ -135,7 +135,7 @@ let update_all_subjects ~__context =
           debug "Error trying to update subject %s: %s"
             (Db.Subject.get_subject_identifier ~__context ~self:subj)
             (ExnHelper.string_of_exn e)
-        (* ignore this exception e, do not raise it again *)
+            (* ignore this exception e, do not raise it again *)
         end
     ) subjects
 

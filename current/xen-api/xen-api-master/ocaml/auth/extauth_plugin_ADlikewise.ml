@@ -46,10 +46,10 @@ struct
 
   let likewise_common ?stdin_string:(stdin_string="") params_list likewise_cmd =
 
-  (* SECURITY: params_list is untrusted external data. Therefore, we must be careful against *)
-  (* the user sending arbitrary injection commands by escaping the likewise cmd parameters. *)
-  (* In order to avoid any escaping or injection exploiting the shell, we call Unix.execvp directly (via create_process, see unix.ml), *)
-  (* instead of using the shell to interpret the parameters and execute the likewise cmd. *)
+    (* SECURITY: params_list is untrusted external data. Therefore, we must be careful against *)
+    (* the user sending arbitrary injection commands by escaping the likewise cmd parameters. *)
+    (* In order to avoid any escaping or injection exploiting the shell, we call Unix.execvp directly (via create_process, see unix.ml), *)
+    (* instead of using the shell to interpret the parameters and execute the likewise cmd. *)
 
     let debug_cmd = (likewise_cmd^" "^(List.fold_right (fun p pp->"\""^p^"\" "^pp) params_list "")) in
 
@@ -138,8 +138,8 @@ struct
               let msg = 
                 (Printf.sprintf "Likewise returned success/failure in STDERR for cmd %s: %s" debug_cmd
                    (match err_result with 
-                     | Parse_likewise.Success ls-> "SUCCESS"^(List.fold_left (fun a b -> " "^a^" "^b) "" (List.map (fun (k,v)->k^"="^v) ls))
-                     | Parse_likewise.Failure (code,err)-> Printf.sprintf "FAILURE %i: %s" code err
+                    | Parse_likewise.Success ls-> "SUCCESS"^(List.fold_left (fun a b -> " "^a^" "^b) "" (List.map (fun (k,v)->k^"="^v) ls))
+                    | Parse_likewise.Failure (code,err)-> Printf.sprintf "FAILURE %i: %s" code err
                    )
                 )
               in
@@ -236,8 +236,8 @@ struct
             if use_nt_format then begin (* the default: NT names is unique, whereas UPN ones are not (CA-27744) *)
               (* we prepend the joined-domain name to the subjectname as an NT name: <domain.com>\<subjectname> *) 
               (get_joined_domain_name ()) ^ "\\" ^ subject_name
-            (* obs: (1) likewise accepts a fully qualified domain name <domain.com> with both formats and *)
-            (*      (2) some likewise commands accept only the NT-format, such as lw-find-group-by-name *)
+              (* obs: (1) likewise accepts a fully qualified domain name <domain.com> with both formats and *)
+              (*      (2) some likewise commands accept only the NT-format, such as lw-find-group-by-name *)
             end 
             else begin (* UPN format not the default format (CA-27744) *)
               (* we append the joined-domain name to the subjectname as a UPN name: <subjectname>@<domain.com> *) 
@@ -383,8 +383,8 @@ struct
          ("subject-gid", get_value "Gid" infolist);
          ("subject-sid", get_value "SID" infolist);
          ("subject-is-group", "true");
-      (*(* comma-separated list of subjects that are contained in this subject *)
-         ("contains-byname", List.fold_left (fun (n,v) m ->m^","^v) "" (List.filter (fun (n,v)->n="Member") infolist));*)
+         (*(* comma-separated list of subjects that are contained in this subject *)
+            ("contains-byname", List.fold_left (fun (n,v) m ->m^","^v) "" (List.filter (fun (n,v)->n="Member") infolist));*)
       ]
     else (* subject is user *)
       let subject_name = unmap_lw_space_chars (get_value "Name" infolist) in
@@ -513,9 +513,9 @@ struct
       does not need long-term.]
   *)
   let on_enable config_params =
-  (* but in the ldap plugin, we should 'join the AD/kerberos domain', i.e. we should*)
-  (* basically: (1) create a machine account in the kerberos realm,*)
-  (* (2) store the machine account password somewhere locally (in a keytab) *) 
+    (* but in the ldap plugin, we should 'join the AD/kerberos domain', i.e. we should*)
+    (* basically: (1) create a machine account in the kerberos realm,*)
+    (* (2) store the machine account password somewhere locally (in a keytab) *) 
 
     if not ( (List.mem_assoc "user" config_params)
              && (List.mem_assoc "pass" config_params)
@@ -627,8 +627,8 @@ struct
      within the body of the on_disable method)
   *)
   let on_disable config_params =
-  (* but in the ldap plugin, we should 'leave the AD/kerberos domain', i.e. we should *)
-  (* (1) remove the machine account from the kerberos realm, (2) remove the keytab locally *) 
+    (* but in the ldap plugin, we should 'leave the AD/kerberos domain', i.e. we should *)
+    (* (1) remove the machine account from the kerberos realm, (2) remove the keytab locally *) 
 
     let likewise_failure =
       (try
@@ -723,7 +723,7 @@ struct
      starting for the first time after a host boot
   *)
   let on_xapi_initialize system_boot =
-  (* the AD server is initialized outside xapi, by init.d scripts *)
+    (* the AD server is initialized outside xapi, by init.d scripts *)
 
     (* this function is called during xapi initialization in xapi.ml *)
 
@@ -742,7 +742,7 @@ struct
      Called internally when xapi is doing a clean exit.
   *)
   let on_xapi_exit () =
-  (* nothing to do here in this unix plugin *) 
+    (* nothing to do here in this unix plugin *) 
 
     (* in the ldap plugin, we should remove the tgt ticket in /tmp/krb5cc_0 *)
     ()

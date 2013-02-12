@@ -79,7 +79,7 @@ end = struct
           fermentum condimentum eros, sit amet pulvinar dui ultrices in."]
 
     TEST = word_wrap long_text 39 =
-        (*
+      (*
         .........1.........2.........3.........4
         1234567890123456789012345678901234567890
       *)

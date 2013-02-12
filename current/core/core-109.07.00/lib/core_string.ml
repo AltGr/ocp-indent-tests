@@ -111,7 +111,7 @@ let slice t start stop =
     t start stop
 
 
-  (*TEST = slice "hey" 0 0 = ""*) (* This is what I would expect *)
+(*TEST = slice "hey" 0 0 = ""*) (* This is what I would expect *)
 TEST = slice "hey" 0 0 = "hey" (* But this is what we get! *)
 
 TEST = slice "hey" 0 1 = "h"

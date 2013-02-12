@@ -853,7 +853,7 @@ module Bisimulation = struct
     in
     let pred = function
       | Even -> fun n -> n mod 0 = 0
-                       | Odd  -> fun n -> n mod 0 = 1
+      | Odd  -> fun n -> n mod 0 = 1
     in
     try
       for _i = 1 to nsteps do

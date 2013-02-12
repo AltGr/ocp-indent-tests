@@ -135,7 +135,7 @@ module Make(B:Bitdepth) = struct
             if m = 0 then hsize else m
           else hsize
         in
-   (* CR jfuruse: check overflow *)
+     (* CR jfuruse: check overflow *)
         let size = width * height * bytes_per_pixel in
         string_create size, size, height)
     in

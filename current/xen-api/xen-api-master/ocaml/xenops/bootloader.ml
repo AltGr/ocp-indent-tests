@@ -71,8 +71,8 @@ let parse_output x =
   (* linux (kernel /var/lib/xen/vmlinuz.SFO5fb)(ramdisk /var/lib/xen/initrd.MUitgP)(args 'root=/dev/sda1 ro') *)
   | SExpr.Node (SExpr.Symbol "linux" :: list) ->
     let l = List.map (function
-      | SExpr.Node [ SExpr.Symbol x; SExpr.Symbol y | SExpr.String y ] -> (x,y)
-      | _ -> raise (Bad_sexpr sexpr)) list in
+        | SExpr.Node [ SExpr.Symbol x; SExpr.Symbol y | SExpr.String y ] -> (x,y)
+        | _ -> raise (Bad_sexpr sexpr)) list in
     {
       kernel_path = List.assoc "kernel" l;
       initrd_path = (try Some (List.assoc "ramdisk" l) with _ -> None);

@@ -561,7 +561,7 @@ let wait_all_senders conn =
   Lwt.finalize
     (fun () ->
       Lwt.catch
-        (*XXX Do we need a flush here?  Are we properly flushing in case of an error? *)
+      (*XXX Do we need a flush here?  Are we properly flushing in case of an error? *)
         (fun () ->
           conn.senders.w_wait >>= fun () ->
           Lwt_chan.flush conn.chan)
@@ -806,7 +806,7 @@ let send
             | Some ka ->
                 hds
                 <<?! (* We override the value *)
-                  (*XXX Check: HTTP/1.0 *)
+                (*XXX Check: HTTP/1.0 *)
                   (Http_headers.connection,
                    if ka
                    (* && not (not chunked && res.res_content_length = None) *)
@@ -887,7 +887,7 @@ let send
   let headers =
     res.res_headers
     <<?
-      (* il faut récupérer la date de dernière modification *)
+    (* il faut récupérer la date de dernière modification *)
       (Http_headers.last_modified,
        match res.res_lastmodified with
              None    -> None (* We do not put last modified for dynamically
@@ -921,7 +921,7 @@ let send
   in
   let mkcook path exp name c secure =
     Format.sprintf "%s=%s%s%s" name c
-      (*VVV encode = true? *)
+    (*VVV encode = true? *)
       ("; path=/" ^ Url.string_of_url_path ~encode:true path)
       (if secure && slot.sl_ssl then "; secure" else "")^
       (match exp with
@@ -952,7 +952,7 @@ let send
        match res.res_etag with
          | None   ->  None
          | Some l ->  Some (Format.sprintf "\"%s\"" l))
-    (*XXX Is it the right place to perform quoting?*)
+      (*XXX Is it the right place to perform quoting?*)
     <<?
       (Http_headers.content_type,
        match res.res_content_type with

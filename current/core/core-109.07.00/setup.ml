@@ -6,7 +6,7 @@
    documentation about functions used in this file.
 *)
 module OASISGettext = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISGettext.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISGettext.ml" *)
 
   let ns_ str =
     str
@@ -29,7 +29,7 @@ module OASISGettext = struct
 end
 
 module OASISContext = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISContext.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISContext.ml" *)
 
   open OASISGettext
 
@@ -90,7 +90,7 @@ module OASISContext = struct
 end
 
 module OASISString = struct
-(* # 1 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISString.ml" *)
+  (* # 1 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISString.ml" *)
 
 
 
@@ -215,7 +215,7 @@ module OASISString = struct
 end
 
 module OASISUtils = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISUtils.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISUtils.ml" *)
 
   open OASISGettext
 
@@ -310,7 +310,7 @@ module OASISUtils = struct
 end
 
 module PropList = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/PropList.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/PropList.ml" *)
 
   open OASISGettext
 
@@ -323,20 +323,20 @@ module PropList = struct
   let () =
     Printexc.register_printer
       (function
-      | Not_set (nm, Some rsn) ->
-        Some 
-          (Printf.sprintf (f_ "Field '%s' is not set: %s") nm rsn)
-      | Not_set (nm, None) ->
-        Some 
-          (Printf.sprintf (f_ "Field '%s' is not set") nm)
-      | No_printer nm ->
-        Some
-          (Printf.sprintf (f_ "No default printer for value %s") nm)
-      | Unknown_field (nm, schm) ->
-        Some 
-          (Printf.sprintf (f_ "Field %s is not defined in schema %s") nm schm)
-      | _ ->
-        None)
+       | Not_set (nm, Some rsn) ->
+         Some 
+           (Printf.sprintf (f_ "Field '%s' is not set: %s") nm rsn)
+       | Not_set (nm, None) ->
+         Some 
+           (Printf.sprintf (f_ "Field '%s' is not set") nm)
+       | No_printer nm ->
+         Some
+           (Printf.sprintf (f_ "No default printer for value %s") nm)
+       | Unknown_field (nm, schm) ->
+         Some 
+           (Printf.sprintf (f_ "Field %s is not defined in schema %s") nm schm)
+       | _ ->
+         None)
 
   module Data =
   struct
@@ -350,7 +350,7 @@ module PropList = struct
     let clear t =
       Hashtbl.clear t
 
-  (* # 71 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/PropList.ml" *)
+    (* # 71 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/PropList.ml" *)
   end
 
   module Schema =
@@ -591,7 +591,7 @@ module PropList = struct
 end
 
 module OASISMessage = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISMessage.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISMessage.ml" *)
 
 
   open OASISGettext
@@ -630,7 +630,7 @@ module OASISMessage = struct
 end
 
 module OASISVersion = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISVersion.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISVersion.ml" *)
 
   open OASISGettext
 
@@ -809,7 +809,7 @@ module OASISVersion = struct
 end
 
 module OASISLicense = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISLicense.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISLicense.ml" *)
 
   (** License for _oasis fields
       @author Sylvain Le Gall
@@ -849,7 +849,7 @@ module OASISLicense = struct
 end
 
 module OASISExpr = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISExpr.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISExpr.ml" *)
 
 
 
@@ -939,7 +939,7 @@ module OASISExpr = struct
 end
 
 module OASISTypes = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISTypes.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISTypes.ml" *)
 
 
 
@@ -1174,7 +1174,7 @@ module OASISTypes = struct
 end
 
 module OASISUnixPath = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISUnixPath.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISUnixPath.ml" *)
 
   type unix_filename = string
   type unix_dirname = string
@@ -1258,7 +1258,7 @@ module OASISUnixPath = struct
 end
 
 module OASISHostPath = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISHostPath.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISHostPath.ml" *)
 
 
   open Filename
@@ -1291,7 +1291,7 @@ module OASISHostPath = struct
 end
 
 module OASISSection = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISSection.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISSection.ml" *)
 
   open OASISTypes
 
@@ -1335,12 +1335,12 @@ module OASISSection = struct
       section_id sct
     in
     (match k with
-      | `Library    -> "library" 
-      | `Executable -> "executable"
-      | `Flag       -> "flag"
-      | `SrcRepo    -> "src repository"
-      | `Test       -> "test"
-      | `Doc        -> "doc")
+     | `Library    -> "library" 
+     | `Executable -> "executable"
+     | `Flag       -> "flag"
+     | `SrcRepo    -> "src repository"
+     | `Test       -> "test"
+     | `Doc        -> "doc")
     ^" "^nm
 
   let section_find id scts =
@@ -1370,12 +1370,12 @@ module OASISSection = struct
 end
 
 module OASISBuildSection = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISBuildSection.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISBuildSection.ml" *)
 
 end
 
 module OASISExecutable = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISExecutable.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISExecutable.ml" *)
 
   open OASISTypes
 
@@ -1406,7 +1406,7 @@ module OASISExecutable = struct
 end
 
 module OASISLibrary = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISLibrary.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISLibrary.ml" *)
 
   open OASISTypes
   open OASISUtils
@@ -1685,8 +1685,8 @@ module OASISLibrary = struct
       in
       MapString.map
         (function
-        | `Solved fndlb_nm -> fndlb_nm
-        | `Unsolved _ -> assert false)
+         | `Solved fndlb_nm -> fndlb_nm
+         | `Unsolved _ -> assert false)
         mp
     in
 
@@ -1839,32 +1839,32 @@ module OASISLibrary = struct
 end
 
 module OASISFlag = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISFlag.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISFlag.ml" *)
 
 end
 
 module OASISPackage = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISPackage.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISPackage.ml" *)
 
 end
 
 module OASISSourceRepository = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISSourceRepository.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISSourceRepository.ml" *)
 
 end
 
 module OASISTest = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISTest.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISTest.ml" *)
 
 end
 
 module OASISDocument = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISDocument.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISDocument.ml" *)
 
 end
 
 module OASISExec = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISExec.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISExec.ml" *)
 
   open OASISGettext
   open OASISUtils
@@ -1942,7 +1942,7 @@ module OASISExec = struct
 end
 
 module OASISFileUtil = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISFileUtil.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISFileUtil.ml" *)
 
   open OASISGettext
 
@@ -2049,15 +2049,15 @@ module OASISFileUtil = struct
     else
       OASISExec.run ~ctxt
         (match Sys.os_type with
-          | "Win32" -> "copy"
-          | _ -> "cp")
+         | "Win32" -> "copy"
+         | _ -> "cp")
         [q src; q tgt]
 
   let mkdir ~ctxt tgt =
     OASISExec.run ~ctxt
       (match Sys.os_type with
-        | "Win32" -> "md"
-        | _ -> "mkdir")
+       | "Win32" -> "md"
+       | _ -> "mkdir")
       [q tgt]
 
   let rec mkdir_parent ~ctxt f tgt =
@@ -2139,7 +2139,7 @@ end
 
 # 2142 "setup.ml"
 module BaseEnvLight = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseEnvLight.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseEnvLight.ml" *)
 
   module MapString = Map.Make(String)
 
@@ -2237,7 +2237,7 @@ end
 
 # 2240 "setup.ml"
 module BaseContext = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseContext.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseContext.ml" *)
 
   open OASISContext
 
@@ -2248,7 +2248,7 @@ module BaseContext = struct
 end
 
 module BaseMessage = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseMessage.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseMessage.ml" *)
 
   (** Message to user, overrid for Base
       @author Sylvain Le Gall
@@ -2267,7 +2267,7 @@ module BaseMessage = struct
 end
 
 module BaseEnv = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseEnv.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseEnv.ml" *)
 
   open OASISGettext
   open OASISUtils
@@ -2389,8 +2389,8 @@ module BaseEnv = struct
     in
     String.iter
       (function
-      | '$' -> Buffer.add_string buff "\\$"
-      | c   -> Buffer.add_char   buff c)
+       | '$' -> Buffer.add_string buff "\\$"
+       | c   -> Buffer.add_char   buff c)
       vl;
     Buffer.contents buff
 
@@ -2727,7 +2727,7 @@ module BaseEnv = struct
 end
 
 module BaseArgExt = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseArgExt.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseArgExt.ml" *)
 
   open OASISUtils
   open OASISGettext
@@ -2755,7 +2755,7 @@ module BaseArgExt = struct
 end
 
 module BaseCheck = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseCheck.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseCheck.ml" *)
 
   open BaseEnv
   open BaseMessage
@@ -2881,7 +2881,7 @@ module BaseCheck = struct
 end
 
 module BaseOCamlcConfig = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseOCamlcConfig.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseOCamlcConfig.ml" *)
 
 
   open BaseEnv
@@ -2997,7 +2997,7 @@ module BaseOCamlcConfig = struct
 end
 
 module BaseStandardVar = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseStandardVar.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseStandardVar.ml" *)
 
 
   open OASISGettext
@@ -3361,7 +3361,7 @@ module BaseStandardVar = struct
 end
 
 module BaseFileAB = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseFileAB.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseFileAB.ml" *)
 
   open BaseEnv
   open OASISGettext
@@ -3409,7 +3409,7 @@ module BaseFileAB = struct
 end
 
 module BaseLog = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseLog.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseLog.ml" *)
 
   open OASISUtils
 
@@ -3528,7 +3528,7 @@ module BaseLog = struct
 end
 
 module BaseBuilt = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseBuilt.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseBuilt.ml" *)
 
   open OASISTypes
   open OASISGettext
@@ -3544,10 +3544,10 @@ module BaseBuilt = struct
   let to_log_event_file t nm =
     "built_"^
       (match t with
-        | BExec -> "exec"
-        | BExecLib -> "exec_lib"
-        | BLib -> "lib"
-        | BDoc -> "doc")^
+       | BExec -> "exec"
+       | BExecLib -> "exec_lib"
+       | BLib -> "lib"
+       | BDoc -> "doc")^
       "_"^nm
 
   let to_log_event_done t nm =
@@ -3606,12 +3606,12 @@ module BaseBuilt = struct
               fn
               (Printf.sprintf
                  (match t with
-                   | BExec | BExecLib ->
-                     (f_ "executable %s")
-                   | BLib ->
-                     (f_ "library %s")
-                   | BDoc ->
-                     (f_ "documentation %s"))
+                  | BExec | BExecLib ->
+                    (f_ "executable %s")
+                  | BLib ->
+                    (f_ "library %s")
+                  | BDoc ->
+                    (f_ "documentation %s"))
                  nm);
             acc
           end)
@@ -3644,10 +3644,10 @@ module BaseBuilt = struct
       (BExec, cs.cs_name, [[ffn unix_exec_is]])
       ::
         (match unix_dll_opt with
-          | Some fn ->
-            [BExecLib, cs.cs_name, [[ffn fn]]]
-          | None ->
-            [])
+         | Some fn ->
+           [BExecLib, cs.cs_name, [[ffn fn]]]
+         | None ->
+           [])
     in
     evs,
     unix_exec_is,
@@ -3675,7 +3675,7 @@ module BaseBuilt = struct
 end
 
 module BaseCustom = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseCustom.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseCustom.ml" *)
 
   open BaseEnv
   open BaseMessage
@@ -3710,8 +3710,8 @@ module BaseCustom = struct
               (f_ "Command '%s' fail with error: %s")
               (String.concat " " (cmd :: args))
               (match e with
-                | Failure msg -> msg
-                | e -> Printexc.to_string e)
+               | Failure msg -> msg
+               | e -> Printexc.to_string e)
         end
       | None ->
         ()
@@ -3725,7 +3725,7 @@ module BaseCustom = struct
 end
 
 module BaseDynVar = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseDynVar.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseDynVar.ml" *)
 
 
   open OASISTypes
@@ -3738,41 +3738,41 @@ module BaseDynVar = struct
     (* TODO: provide compile option for library libary_byte_args_VARNAME... *)
     List.iter
       (function
-      | Executable (cs, bs, exec) ->
-        if var_choose bs.bs_build then
-          var_ignore
-            (var_redefine
-               (* We don't save this variable *)
-               ~dump:false
-               ~short_desc:(fun () ->
-                 Printf.sprintf
-                   (f_ "Filename of executable '%s'")
-                   cs.cs_name)
-               (OASISUtils.varname_of_string cs.cs_name)
-               (fun () ->
-                 let fn_opt =
-                   fold
-                     BExec cs.cs_name
-                     (fun _ fn -> Some fn)
-                     None
-                 in
-                 match fn_opt with
-                 | Some fn -> fn
-                 | None ->
-                   raise
-                     (PropList.Not_set
-                        (cs.cs_name,
-                         Some (Printf.sprintf
-                             (f_ "Executable '%s' not yet built.")
-                             cs.cs_name)))))
+       | Executable (cs, bs, exec) ->
+         if var_choose bs.bs_build then
+           var_ignore
+             (var_redefine
+             (* We don't save this variable *)
+                ~dump:false
+                ~short_desc:(fun () ->
+                  Printf.sprintf
+                    (f_ "Filename of executable '%s'")
+                    cs.cs_name)
+                (OASISUtils.varname_of_string cs.cs_name)
+                (fun () ->
+                  let fn_opt =
+                    fold
+                      BExec cs.cs_name
+                      (fun _ fn -> Some fn)
+                      None
+                  in
+                  match fn_opt with
+                  | Some fn -> fn
+                  | None ->
+                    raise
+                      (PropList.Not_set
+                         (cs.cs_name,
+                          Some (Printf.sprintf
+                              (f_ "Executable '%s' not yet built.")
+                              cs.cs_name)))))
 
-      | Library _ | Flag _ | Test _ | SrcRepo _ | Doc _ ->
-        ())
+       | Library _ | Flag _ | Test _ | SrcRepo _ | Doc _ ->
+         ())
       pkg.sections
 end
 
 module BaseTest = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseTest.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseTest.ml" *)
 
   open BaseEnv
   open BaseMessage
@@ -3806,7 +3806,7 @@ module BaseTest = struct
               chdir dir;
               fun () -> chdir cwd
 
-                      | None ->
+            | None ->
               fun () -> ()
           in
           try
@@ -3862,7 +3862,7 @@ module BaseTest = struct
 end
 
 module BaseDoc = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseDoc.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseDoc.ml" *)
 
   open BaseEnv
   open BaseMessage
@@ -3897,7 +3897,7 @@ module BaseDoc = struct
 end
 
 module BaseSetup = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseSetup.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseSetup.ml" *)
 
   open BaseEnv
   open BaseMessage
@@ -4000,17 +4000,17 @@ module BaseSetup = struct
     BaseDoc.doc
       (join_plugin_sections
          (function
-         | Doc (cs, e) ->
-           Some
-             (lookup_plugin_section
-                "documentation"
-                (s_ "build")
-                cs.cs_name
-                t.doc,
-              cs,
-              e)
-         | _ ->
-           None)
+          | Doc (cs, e) ->
+            Some
+              (lookup_plugin_section
+                 "documentation"
+                 (s_ "build")
+                 cs.cs_name
+                 t.doc,
+               cs,
+               e)
+          | _ ->
+            None)
          t.package.sections)
       t.package
       args
@@ -4019,17 +4019,17 @@ module BaseSetup = struct
     BaseTest.test
       (join_plugin_sections
          (function
-         | Test (cs, e) ->
-           Some
-             (lookup_plugin_section
-                "test"
-                (s_ "run")
-                cs.cs_name
-                t.test,
-              cs,
-              e)
-         | _ ->
-           None)
+          | Test (cs, e) ->
+            Some
+              (lookup_plugin_section
+                 "test"
+                 (s_ "run")
+                 cs.cs_name
+                 t.test,
+               cs,
+               e)
+          | _ ->
+            None)
          t.package.sections)
       t.package
       args
@@ -4111,8 +4111,8 @@ module BaseSetup = struct
         warning
           (f_ "Action fail with error: %s")
           (match e with
-            | Failure msg -> msg
-            | e -> Printexc.to_string e)
+           | Failure msg -> msg
+           | e -> Printexc.to_string e)
     in
 
     let generic_clean t cstm mains docs tests args =
@@ -4123,31 +4123,31 @@ module BaseSetup = struct
           (* Clean section *)
           List.iter
             (function
-            | Test (cs, test) ->
-              let f =
-                try
-                  List.assoc cs.cs_name tests
-                with Not_found ->
-                  fun _ _ _ -> ()
-              in
-              failsafe
-                (f t.package (cs, test))
-                args
-            | Doc (cs, doc) ->
-              let f =
-                try
-                  List.assoc cs.cs_name docs
-                with Not_found ->
-                  fun _ _ _ -> ()
-              in
-              failsafe
-                (f t.package (cs, doc))
-                args
-            | Library _
-            | Executable _
-            | Flag _
-            | SrcRepo _ ->
-              ())
+             | Test (cs, test) ->
+               let f =
+                 try
+                   List.assoc cs.cs_name tests
+                 with Not_found ->
+                   fun _ _ _ -> ()
+               in
+               failsafe
+                 (f t.package (cs, test))
+                 args
+             | Doc (cs, doc) ->
+               let f =
+                 try
+                   List.assoc cs.cs_name docs
+                 with Not_found ->
+                   fun _ _ _ -> ()
+               in
+               failsafe
+                 (f t.package (cs, doc))
+                 args
+             | Library _
+             | Executable _
+             | Flag _
+             | SrcRepo _ ->
+               ())
             t.package.sections;
           (* Clean whole package *)
           List.iter
@@ -4247,23 +4247,23 @@ module BaseSetup = struct
           ~ctxt:!BaseContext.default
           ~f_exit_code:
           (function
-          | 0 ->
-            ()
-          | 1 ->
-            failwithf
-              (f_ "Executable '%s' is probably an old version \
-                   of oasis (< 0.3.0), please update to version \
-                   v%s.")
-              oasis_exec t.oasis_version
-          | 127 ->
-            failwithf
-              (f_ "Cannot find executable '%s', please install \
-                   oasis v%s.")
-              oasis_exec t.oasis_version
-          | n ->
-            failwithf
-              (f_ "Command '%s version' exited with code %d.")
-              oasis_exec n)
+           | 0 ->
+             ()
+           | 1 ->
+             failwithf
+               (f_ "Executable '%s' is probably an old version \
+                    of oasis (< 0.3.0), please update to version \
+                    v%s.")
+               oasis_exec t.oasis_version
+           | 127 ->
+             failwithf
+               (f_ "Cannot find executable '%s', please install \
+                    oasis v%s.")
+               oasis_exec t.oasis_version
+           | n ->
+             failwithf
+               (f_ "Command '%s version' exited with code %d.")
+               oasis_exec n)
           oasis_exec ["version"]
       in
       if OASISVersion.comparator_apply
@@ -4287,13 +4287,13 @@ module BaseSetup = struct
                 ~ctxt:!BaseContext.default
                 ~f_exit_code:
                 (function
-                | 0 ->
-                  ()
-                | n ->
-                  failwithf
-                    (f_ "Unable to update setup.ml using '%s', \
-                         please fix the problem and retry.")
-                    oasis_exec)
+                 | 0 ->
+                   ()
+                 | n ->
+                   failwithf
+                     (f_ "Unable to update setup.ml using '%s', \
+                          please fix the problem and retry.")
+                     oasis_exec)
                 oasis_exec ("setup" :: t.oasis_setup_args);
               OASISExec.run ~ctxt:!BaseContext.default ocaml (setup_ml :: args)
             end
@@ -4431,32 +4431,32 @@ module BaseSetup = struct
       (** Initialize flags *)
       List.iter
         (function
-        | Flag (cs, {flag_description = hlp;
-                     flag_default = choices}) ->
-          begin
-            let apply ?short_desc () =
-              var_ignore
-                (var_define
-                   ~cli:CLIEnable
-                   ?short_desc
-                   (OASISUtils.varname_of_string cs.cs_name)
-                   (fun () ->
-                     string_of_bool
-                       (var_choose
-                          ~name:(Printf.sprintf
-                              (f_ "default value of flag %s")
-                              cs.cs_name)
-                          ~printer:string_of_bool
-                          choices)))
-            in
-            match hlp with
-            | Some hlp ->
-              apply ~short_desc:(fun () -> hlp) ()
-            | None ->
-              apply ()
-          end
-        | _ ->
-          ())
+         | Flag (cs, {flag_description = hlp;
+                      flag_default = choices}) ->
+           begin
+             let apply ?short_desc () =
+               var_ignore
+                 (var_define
+                    ~cli:CLIEnable
+                    ?short_desc
+                    (OASISUtils.varname_of_string cs.cs_name)
+                    (fun () ->
+                      string_of_bool
+                        (var_choose
+                           ~name:(Printf.sprintf
+                               (f_ "default value of flag %s")
+                               cs.cs_name)
+                           ~printer:string_of_bool
+                           choices)))
+             in
+             match hlp with
+             | Some hlp ->
+               apply ~short_desc:(fun () -> hlp) ()
+             | None ->
+               apply ()
+           end
+         | _ ->
+           ())
         t.package.sections;
 
       BaseStandardVar.init t.package;
@@ -4477,7 +4477,7 @@ end
 
 # 4480 "setup.ml"
 module InternalConfigurePlugin = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/internal/InternalConfigurePlugin.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/internal/InternalConfigurePlugin.ml" *)
 
   (** Configure using internal scheme
       @author Sylvain Le Gall
@@ -4525,29 +4525,29 @@ module InternalConfigurePlugin = struct
     let check_tools lst =
       List.iter
         (function
-        | ExternalTool tool ->
-          begin
-            try
-              var_ignore_eval (BaseCheck.prog tool)
-            with e ->
-              warn_exception e;
-              add_errors (f_ "Cannot find external tool '%s'") tool
-          end
-        | InternalExecutable nm1 ->
-          (* Check that matching tool is built *)
-          List.iter
-            (function
-            | Executable ({cs_name = nm2},
-                {bs_build = build},
-                _) when nm1 = nm2 ->
-              if not (var_choose build) then
-                add_errors
-                  (f_ "Cannot find buildable internal executable \
-                       '%s' when checking build depends")
-                  nm1
-            | _ ->
-              ())
-            pkg.sections)
+         | ExternalTool tool ->
+           begin
+             try
+               var_ignore_eval (BaseCheck.prog tool)
+             with e ->
+               warn_exception e;
+               add_errors (f_ "Cannot find external tool '%s'") tool
+           end
+         | InternalExecutable nm1 ->
+           (* Check that matching tool is built *)
+           List.iter
+             (function
+              | Executable ({cs_name = nm2},
+                  {bs_build = build},
+                  _) when nm1 = nm2 ->
+                if not (var_choose build) then
+                  add_errors
+                    (f_ "Cannot find buildable internal executable \
+                         '%s' when checking build depends")
+                    nm1
+              | _ ->
+                ())
+             pkg.sections)
         lst
     in
 
@@ -4571,39 +4571,39 @@ module InternalConfigurePlugin = struct
           (* Check depends *)
           List.iter
             (function
-            | FindlibPackage (findlib_pkg, version_comparator) ->
-              begin
-                try
-                  var_ignore_eval
-                    (BaseCheck.package ?version_comparator findlib_pkg)
-                with e ->
-                  warn_exception e;
-                  match version_comparator with
-                  | None ->
-                    add_errors
-                      (f_ "Cannot find findlib package %s")
-                      findlib_pkg
-                  | Some ver_cmp ->
-                    add_errors
-                      (f_ "Cannot find findlib package %s (%s)")
-                      findlib_pkg
-                      (OASISVersion.string_of_comparator ver_cmp)
-              end
-            | InternalLibrary nm1 ->
-              (* Check that matching library is built *)
-              List.iter
-                (function
-                | Library ({cs_name = nm2},
-                    {bs_build = build},
-                    _) when nm1 = nm2 ->
-                  if not (var_choose build) then
-                    add_errors
-                      (f_ "Cannot find buildable internal library \
-                           '%s' when checking build depends")
-                      nm1
-                | _ ->
-                  ())
-                pkg.sections)
+             | FindlibPackage (findlib_pkg, version_comparator) ->
+               begin
+                 try
+                   var_ignore_eval
+                     (BaseCheck.package ?version_comparator findlib_pkg)
+                 with e ->
+                   warn_exception e;
+                   match version_comparator with
+                   | None ->
+                     add_errors
+                       (f_ "Cannot find findlib package %s")
+                       findlib_pkg
+                   | Some ver_cmp ->
+                     add_errors
+                       (f_ "Cannot find findlib package %s (%s)")
+                       findlib_pkg
+                       (OASISVersion.string_of_comparator ver_cmp)
+               end
+             | InternalLibrary nm1 ->
+               (* Check that matching library is built *)
+               List.iter
+                 (function
+                  | Library ({cs_name = nm2},
+                      {bs_build = build},
+                      _) when nm1 = nm2 ->
+                    if not (var_choose build) then
+                      add_errors
+                        (f_ "Cannot find buildable internal library \
+                             '%s' when checking build depends")
+                        nm1
+                  | _ ->
+                    ())
+                 pkg.sections)
             bs.bs_build_depends
         end
     in
@@ -4669,17 +4669,17 @@ module InternalConfigurePlugin = struct
     (* Check build depends *)
     List.iter
       (function
-      | Executable (_, bs, _)
-      | Library (_, bs, _) as sct ->
-        build_checks sct bs
-      | Doc (_, doc) ->
-        if var_choose doc.doc_build then
-          check_tools doc.doc_build_tools
-      | Test (_, test) ->
-        if var_choose test.test_run then
-          check_tools test.test_tools
-      | _ ->
-        ())
+       | Executable (_, bs, _)
+       | Library (_, bs, _) as sct ->
+         build_checks sct bs
+       | Doc (_, doc) ->
+         if var_choose doc.doc_build then
+           check_tools doc.doc_build_tools
+       | Test (_, test) ->
+         if var_choose test.test_run then
+           check_tools test.test_tools
+       | _ ->
+         ())
       pkg.sections;
 
     (* Check if we need native dynlink (presence of libraries that compile to
@@ -4689,13 +4689,13 @@ module InternalConfigurePlugin = struct
       let has_cmxa =
         List.exists
           (function
-          | Library (_, bs, _) ->
-            var_choose bs.bs_build &&
-            (bs.bs_compiled_object = Native ||
-             (bs.bs_compiled_object = Best &&
-              bool_of_string (BaseStandardVar.is_native ())))
-          | _  ->
-            false)
+           | Library (_, bs, _) ->
+             var_choose bs.bs_build &&
+             (bs.bs_compiled_object = Native ||
+              (bs.bs_compiled_object = Best &&
+               bool_of_string (BaseStandardVar.is_native ())))
+           | _  ->
+             false)
           pkg.sections
       in
       if has_cmxa then
@@ -4719,7 +4719,7 @@ module InternalConfigurePlugin = struct
 end
 
 module InternalInstallPlugin = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/internal/InternalInstallPlugin.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/internal/InternalInstallPlugin.ml" *)
 
   (** Install using internal scheme
       @author Sylvain Le Gall
@@ -4839,10 +4839,10 @@ module InternalInstallPlugin = struct
         Filename.concat
           tgt_dir
           (match tgt_fn with
-            | Some fn ->
-              fn
-            | None ->
-              Filename.basename src_file)
+           | Some fn ->
+             fn
+           | None ->
+             Filename.basename src_file)
       in
       (* Create target directory if needed *)
       OASISFileUtil.mkdir_parent
@@ -5115,10 +5115,10 @@ module InternalInstallPlugin = struct
       in
       List.iter
         (function
-        | Executable (cs, bs, exec)->
-          install_exec (cs, bs, exec)
-        | _ ->
-          ())
+         | Executable (cs, bs, exec)->
+           install_exec (cs, bs, exec)
+         | _ ->
+           ())
         pkg.sections
     in
 
@@ -5149,10 +5149,10 @@ module InternalInstallPlugin = struct
       in
       List.iter
         (function
-        | Doc (cs, doc) ->
-          install_doc (cs, doc)
-        | _ ->
-          ())
+         | Doc (cs, doc) ->
+           install_doc (cs, doc)
+         | _ ->
+           ())
         pkg.sections
     in
 
@@ -5230,7 +5230,7 @@ end
 
 # 5233 "setup.ml"
 module OCamlbuildCommon = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/ocamlbuild/OCamlbuildCommon.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/ocamlbuild/OCamlbuildCommon.ml" *)
 
   (** Functions common to OCamlbuild build and doc plugin
   *)
@@ -5332,7 +5332,7 @@ module OCamlbuildCommon = struct
 end
 
 module OCamlbuildPlugin = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/ocamlbuild/OCamlbuildPlugin.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/ocamlbuild/OCamlbuildPlugin.ml" *)
 
   (** Build using ocamlbuild
       @author Sylvain Le Gall
@@ -5430,10 +5430,10 @@ module OCamlbuildPlugin = struct
                   (* Fix evs, we want to use the unix_tgt, without copying *)
                   List.map
                     (function
-                    | BaseBuilt.BExec, nm, lst when nm = cs.cs_name ->
-                      BaseBuilt.BExec, nm, [[in_build_dir_of_unix unix_tgt]]
-                    | ev ->
-                      ev)
+                     | BaseBuilt.BExec, nm, lst when nm = cs.cs_name ->
+                       BaseBuilt.BExec, nm, [[in_build_dir_of_unix unix_tgt]]
+                     | ev ->
+                       ev)
                     evs
                 in
                 evs, [unix_tgt]
@@ -5493,19 +5493,19 @@ module OCamlbuildPlugin = struct
     run_clean extra_args;
     List.iter
       (function
-      | Library (cs, _, _) ->
-        BaseBuilt.unregister BaseBuilt.BLib cs.cs_name
-      | Executable (cs, _, _) ->
-        BaseBuilt.unregister BaseBuilt.BExec cs.cs_name;
-        BaseBuilt.unregister BaseBuilt.BExecLib cs.cs_name
-      | _ ->
-        ())
+       | Library (cs, _, _) ->
+         BaseBuilt.unregister BaseBuilt.BLib cs.cs_name
+       | Executable (cs, _, _) ->
+         BaseBuilt.unregister BaseBuilt.BExec cs.cs_name;
+         BaseBuilt.unregister BaseBuilt.BExecLib cs.cs_name
+       | _ ->
+         ())
       pkg.sections
 
 end
 
 module OCamlbuildDocPlugin = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/ocamlbuild/OCamlbuildDocPlugin.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/ocamlbuild/OCamlbuildDocPlugin.ml" *)
 
   (* Create documentation using ocamlbuild .odocl files
      @author Sylvain Le Gall
@@ -5555,7 +5555,7 @@ end
 
 # 5558 "setup.ml"
 module CustomPlugin = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/custom/CustomPlugin.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/custom/CustomPlugin.ml" *)
 
   (** Generate custom configure/build/doc/test/install system
       @author
@@ -5639,13 +5639,13 @@ module CustomPlugin = struct
       *)
       List.iter
         (function
-        | Library (cs, _, _) ->
-          BaseBuilt.unregister BaseBuilt.BLib cs.cs_name
-        | Executable (cs, _, _) ->
-          BaseBuilt.unregister BaseBuilt.BExec cs.cs_name;
-          BaseBuilt.unregister BaseBuilt.BExecLib cs.cs_name
-        | _ ->
-          ())
+         | Library (cs, _, _) ->
+           BaseBuilt.unregister BaseBuilt.BLib cs.cs_name
+         | Executable (cs, _, _) ->
+           BaseBuilt.unregister BaseBuilt.BExec cs.cs_name;
+           BaseBuilt.unregister BaseBuilt.BExecLib cs.cs_name
+         | _ ->
+           ())
         pkg.sections
 
     let distclean t pkg extra_args =

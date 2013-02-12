@@ -33,8 +33,8 @@ open Db_filter_types
 (* Create a redo_log instance to use for HA. *)
 let ha_redo_log = Redo_log.create ~name:"HA redo log" ~state_change_callback:None ~read_only:false
 
-  (*********************************************************************************************)
-  (* Interface with the low-level HA subsystem                                                 *)
+(*********************************************************************************************)
+(* Interface with the low-level HA subsystem                                                 *)
 
 let ha_set_pool_state = Filename.concat Fhs.xhadir "ha_set_pool_state"
 let ha_start_daemon = Filename.concat Fhs.xhadir "ha_start_daemon"
@@ -126,8 +126,8 @@ let uuid_of_host_address address =
    2. I was happily running as someone's slave but they left the liveset.
 *)
 let on_master_failure () =
-(* The plan is: keep asking if I should be the master. If I'm rejected then query the
-   live set and see if someone else has been marked as master, if so become a slave of them. *)
+  (* The plan is: keep asking if I should be the master. If I'm rejected then query the
+     live set and see if someone else has been marked as master, if so become a slave of them. *)
 
   let become_master () =
     info "This node will become the master";
@@ -239,7 +239,7 @@ module Timeouts = struct
 end
 
 module Monitor = struct
-(** Control the background HA monitoring thread *)
+  (** Control the background HA monitoring thread *)
 
   let request_shutdown = ref false
   let prevent_failover_actions_until = ref 0. (* protected by the request_shutdown_m too *)
@@ -672,8 +672,8 @@ let ha_prevent_restarts_for __context seconds =
   Monitor.prevent_restarts_for seconds
 
 
-  (* ----------------------------- *)
-  (* Interaction with the redo log *)
+(* ----------------------------- *)
+(* Interaction with the redo log *)
 
 (* This function is called when HA is enabled during run-time: flush the DB to
  * the redo-log and make future DB changes get written as deltas. *)
@@ -686,8 +686,8 @@ let redo_log_ha_enabled_during_runtime __context =
   end else begin
     info "Switching on HA redo log.";
     Redo_log.enable ha_redo_log Xapi_globs.ha_metadata_vdi_reason
-  (* upon the first attempt to write a delta, it will realise that a DB flush
-   * is necessary as the I/O process will not be running *)
+      (* upon the first attempt to write a delta, it will realise that a DB flush
+       * is necessary as the I/O process will not be running *)
   end
 
 
@@ -820,7 +820,7 @@ let on_server_restart () =
 
     debug "About to start the monitor";
     Monitor.start ();
-  (* We signal the monitor that the database state is valid (wrt liveness + disabledness of hosts) later *)
+    (* We signal the monitor that the database state is valid (wrt liveness + disabledness of hosts) later *)
   end
 
 (** Called in the master xapi startup when the database is ready. We set all hosts (including this one) to
@@ -840,8 +840,8 @@ let on_database_engine_ready () =
     );
   Monitor.signal_database_state_valid ()
 
-  (*********************************************************************************************)
-  (* Internal API calls to configure individual hosts                                          *)
+(*********************************************************************************************)
+(* Internal API calls to configure individual hosts                                          *)
 
 (** Internal API call to prevent this node making an unsafe failover decision.
    This call is idempotent. *)
@@ -1108,9 +1108,9 @@ let join_liveset __context host =
 
 (* The last proposal received *)
 let proposed_master : string option ref = ref None
-(* The time the proposal was received. XXX need to be quite careful with timeouts to handle
-   the case where the proposed new master dies in the middle of the protocol. Once we believe
-   he has fenced himself then we can abort the transaction. *)
+  (* The time the proposal was received. XXX need to be quite careful with timeouts to handle
+     the case where the proposed new master dies in the middle of the protocol. Once we believe
+     he has fenced himself then we can abort the transaction. *)
 let proposed_master_time = ref 0.
 
 let proposed_master_m = Mutex.create ()
@@ -1139,7 +1139,7 @@ let rec propose_new_master_internal ~__context ~address ~manual =
             x (Date.to_string (Date.of_float !proposed_master_time)) diff)
     end
   | None ->
-  (* XXX no more automatic transititions *)
+    (* XXX no more automatic transititions *)
 
     proposed_master := Some address;
     proposed_master_time := Unix.gettimeofday ()
@@ -1179,8 +1179,8 @@ let abort_new_master ~__context ~address =
       proposed_master := None)
 
 
-    (*********************************************************************************************)
-    (* External API calls ( Pool.* )                                                             *)
+(*********************************************************************************************)
+(* External API calls ( Pool.* )                                                             *)
 
 (* Called either from the API call Pool.ha_disable or from Pool.ha_enable in a failure case.
    This function does its best to turn everything off such that if a failure occurs then the

@@ -48,8 +48,8 @@ let map_rev_accu_split func lst accu1 accu2 =
   let rec aux accu1 accu2 = function
     | [] -> (accu1, accu2)
     | x :: xs -> match func x with
-      | Left y -> aux (y :: accu1) accu2 xs
-      | Right y -> aux accu1 (y :: accu2) xs
+        | Left y -> aux (y :: accu1) accu2 xs
+        | Right y -> aux accu1 (y :: accu2) xs
   in
   aux accu1 accu2 lst
 
@@ -101,14 +101,14 @@ sig
   val write : t -> (string * OStream.outcome Lwt.u option) -> unit
 
   val listeners : t -> int
-  (* The up-to-date count of registered clients *)
+    (* The up-to-date count of registered clients *)
   val send_listeners : t -> int -> unit
     (* [send_listeners c i] adds [i] to [listeners c]. [i] may be negative. *)
 
   val find_channel : chan_id -> t
-  (* may raise Not_found if the channel was collected or never created.
-   * Basically ids are meant for clients to tell a server to start listening
-   * to it. *)
+    (* may raise Not_found if the channel was collected or never created.
+     * Basically ids are meant for clients to tell a server to start listening
+     * to it. *)
   val get_id : t -> chan_id
     (* [find_channel (get_id ch)] returns [ch] if the channel wasn't destroyed
      * that is. *)
@@ -217,8 +217,8 @@ end
 
 
 module Messages :
-(* All about messages from between clients and server *)
-(*
+  (* All about messages from between clients and server *)
+  (*
    * The client sends a POST request with a "registration" parameter containing
    * a list of channel ids. Separator for the list are semi-colon : ';'.
    *
@@ -308,7 +308,7 @@ end = struct
       (function
         (*when write has been made with outcome notifier*)
         | (c, _, Some x) -> (Lwt.wakeup x outcome ; Lwt.return ())
-        (*when it hasn't*)
+          (*when it hasn't*)
         | (_, _, None) -> Lwt.return ()
       )
       s
@@ -402,8 +402,8 @@ end = struct
 end
 
 module Main :
-(* a client can wait for all the channels on which it
- * is registered and return with the first result. *)
+  (* a client can wait for all the channels on which it
+   * is registered and return with the first result. *)
 sig
 
   val main : OX.request -> unit -> OFrame.result Lwt.t

@@ -266,8 +266,8 @@ let mapi t ~f =
   iter t ~f:(fun ~key ~data -> replace new_t ~key ~data:(f ~key ~data));
   new_t
 
-  (* How about this? *)
-  (*
+(* How about this? *)
+(*
 let mapi t ~f =
   let new_t =
     create ~growth_allowed:t.growth_allowed
@@ -293,8 +293,8 @@ let filter_mapi t ~f =
     | None -> ());
   new_t
 
-  (* How about this? *)
-  (*
+(* How about this? *)
+(*
 let filter_mapi t ~f =
   let new_t =
     create ~growth_allowed:t.growth_allowed
@@ -362,8 +362,8 @@ let change t id f =
 let incr ?(by = 1) t key =
   change t key
     (function
-    | None -> Some by
-    | Some i -> Some (i + by))
+     | None -> Some by
+     | Some i -> Some (i + by))
 
 let add_multi t ~key ~data =
   match find t key with

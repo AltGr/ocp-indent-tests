@@ -124,9 +124,9 @@ let uuid_of_domid domains domid =
   with Not_found ->
     failwith (Printf.sprintf "Failed to find uuid corresponding to domid: %d" domid)
 
-      (*****************************************************)
-      (* cpu related code                                  *)
-      (*****************************************************)
+(*****************************************************)
+(* cpu related code                                  *)
+(*****************************************************)
 
 (* This function is used both for getting vcpu stats and for getting the uuids
  * of the VMs present on this host. *)
@@ -263,9 +263,9 @@ let update_loadavg () =
     ~value:(Rrd.VT_Float (Rrdd_common.loadavg ()))
     ~ty:Rrd.Gauge ~default:true ()
 
-  (*****************************************************)
-  (* network related code                              *)
-  (*****************************************************)
+(*****************************************************)
+(* network related code                              *)
+(*****************************************************)
 
 let update_netdev doms =
   let stats = Network_monitor.read_stats () in
@@ -319,9 +319,9 @@ let update_netdev doms =
        ~units:"B/s" ~value:(Rrd.VT_Int64 sum_tx) ~ty:Rrd.Derive ~min:0.0 ~default:true ())
   ] @ dss
 
-  (*****************************************************)
-  (* disk related code                                 *)
-  (*****************************************************)
+(*****************************************************)
+(* disk related code                                 *)
+(*****************************************************)
 
 let update_vbds doms =
   let read_int_file file =

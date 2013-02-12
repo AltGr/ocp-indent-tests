@@ -63,11 +63,11 @@ val diff : t -> t -> Span.t
 (** [abs_diff t1 t2] returns the absolute span of time [t1] minus time [t2]. *)
 val abs_diff : t -> t -> Span.t
 
-  (** {6 Constants} *)
+(** {6 Constants} *)
 
-  (** {6 Conversions} *)
-  (** All these conversion functions use the current time zone. Unless marked _utc,
-      in which case they use Universal Coordinated Time *)
+(** {6 Conversions} *)
+(** All these conversion functions use the current time zone. Unless marked _utc,
+    in which case they use Universal Coordinated Time *)
 
 val of_date_ofday : Zone.t -> Date.t -> Ofday.t -> t
 val to_date_ofday : t -> Zone.t -> Date.t * Ofday.t

@@ -56,26 +56,26 @@ module Stable = struct
 
     let write_new_string_and_sexp_formats__read_both () =
       modify_string_and_sexp_format (function
-      | `Force_old ->
-        failwith "write_new_string_and_sexp_formats__read_both called after \
-                  forbid_new_string_and_sexp_formats"
-      | _ -> `Write_new_read_both)
+        | `Force_old ->
+          failwith "write_new_string_and_sexp_formats__read_both called after \
+                    forbid_new_string_and_sexp_formats"
+        | _ -> `Write_new_read_both)
     ;;
 
     let write_new_string_and_sexp_formats__read_only_new () =
       modify_string_and_sexp_format (function
-      | `Force_old ->
-        failwith "write_new_string_and_sexp_formats__read_only_new called after \
-                  forbid_new_string_and_sexp_formats"
-      | _ -> `Write_new_read_only_new)
+        | `Force_old ->
+          failwith "write_new_string_and_sexp_formats__read_only_new called after \
+                    forbid_new_string_and_sexp_formats"
+        | _ -> `Write_new_read_only_new)
     ;;
 
     let forbid_new_string_and_sexp_formats () =
       modify_string_and_sexp_format (function
-      | `Old | `Force_old -> `Force_old
-      | _ ->
-        failwith "use_new_string_and_sexp_formats called before \
-                  forbid_new_string_and_sexp_formats"
+        | `Old | `Force_old -> `Force_old
+        | _ ->
+          failwith "use_new_string_and_sexp_formats called before \
+                    forbid_new_string_and_sexp_formats"
       )
     ;;
 

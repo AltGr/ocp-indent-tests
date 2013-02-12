@@ -185,15 +185,15 @@ module Ip_address = struct
       (Lwt_unix.getaddrinfo host "" [])
       aux
 
-(*
+  (*
   let getnameinfo ia p =
     try
       Lwt_unix.getnameinfo (Unix.ADDR_INET (ia, p)) [Unix.NI_NAMEREQD] >>= fun r ->
-  Lwt.return r.Unix.ni_hostname
+    Lwt.return r.Unix.ni_hostname
     with
     | Not_found ->
-  let hs = Unix.string_of_inet_addr ia in
-  Lwt.return
+    let hs = Unix.string_of_inet_addr ia in
+    Lwt.return
           (if String.length hs > 7 && String.sub hs 0 7 = "::ffff:"
           then String.sub hs 7 (String.length hs - 7)
           else if String.contains hs ':'
@@ -341,7 +341,7 @@ module Url = struct
       fixup_url_string (String.concat "/"
           (List.map (*Netencoding.Url.encode*)
              (MyUrl.encode ~plus:false) l))
-    (* ' ' are not encoded to '+' in paths *)
+      (* ' ' are not encoded to '+' in paths *)
     else String.concat "/" l (* BYXXX : check illicit characters *)
 
 
@@ -411,9 +411,9 @@ module Url = struct
 
       let path = List.map (Netencoding.Url.decode ~plus:false) (Neturl.split_path pathstring) in
       let path = remove_dotdot path (* and remove "//" *)
-      (* here we remove .. from paths, as it is dangerous.
-         But in some very particular cases, we may want them?
-         I prefer forbid that. *)
+        (* here we remove .. from paths, as it is dangerous.
+           But in some very particular cases, we may want them?
+           I prefer forbid that. *)
       in
       let uri_string = match query with
         | None -> pathstring

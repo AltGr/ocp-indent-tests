@@ -144,8 +144,8 @@ let () =
      to eliminate the extra wrapping of "(Exn ...)". *)
   Sexplib.Conv.Exn_converter.add_auto (Exn (of_string "<template>"))
     (function
-    | Exn t -> sexp_of_t t
-    | _ -> assert false)
+     | Exn t -> sexp_of_t t
+     | _ -> assert false)
 ;;
 
 let to_exn t = Exn t

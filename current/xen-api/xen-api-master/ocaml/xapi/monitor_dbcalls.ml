@@ -40,15 +40,15 @@ let get_updates_values = get_updates ~f:(fun _ v acc -> v::acc)
 let pifs_cached_m : Mutex.t = Mutex.create ()
 let pifs_cached : (string, Monitor_types.pif) Hashtbl.t = Hashtbl.create 10
 let pifs_tmp    : (string, Monitor_types.pif) Hashtbl.t = Hashtbl.create 10
-(* A cache mapping PIF names to bond.links_up. *)
+  (* A cache mapping PIF names to bond.links_up. *)
 let bonds_links_up_cached_m : Mutex.t = Mutex.create ()
 let bonds_links_up_cached : (string, int) Hashtbl.t = Hashtbl.create 10
 let bonds_links_up_tmp    : (string, int) Hashtbl.t = Hashtbl.create 10
-(* A cache mapping vm_uuids to actual memory. *)
+  (* A cache mapping vm_uuids to actual memory. *)
 let vm_memory_cached_m : Mutex.t = Mutex.create ()
 let vm_memory_cached : (string, Int64.t) Hashtbl.t = Hashtbl.create 100
 let vm_memory_tmp    : (string, Int64.t) Hashtbl.t = Hashtbl.create 100
-(* A cache for host's free/total memory. *)
+  (* A cache for host's free/total memory. *)
 let host_memory_m : Mutex.t = Mutex.create ()
 let host_memory_free_cached : Int64.t ref = ref Int64.zero
 let host_memory_total_cached : Int64.t ref = ref Int64.zero

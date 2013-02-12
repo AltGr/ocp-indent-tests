@@ -209,7 +209,7 @@ module PixelFormat = struct
       red_shift = int_of_char buf.[10];
       green_shift = int_of_char buf.[11];
       blue_shift = int_of_char buf.[12];
-    (* ignoring padding *)
+      (* ignoring padding *)
     }
 end
 

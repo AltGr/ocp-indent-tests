@@ -51,8 +51,8 @@ let errlog s =
 
 
 
-  (*****************************************************************************)
-  (** Internal functions: storage in files using DBM *)
+(*****************************************************************************)
+(** Internal functions: storage in files using DBM *)
 
 module Tableoftables = Map.Make(struct
     type t = string
@@ -76,7 +76,7 @@ let list_tables () =
       if Filename.check_suffix n suffix
       then (Filename.chop_extension n)::(aux ())
       else if Filename.check_suffix n (suffix^".pag")
-      (* depending on the version of dbm, there may be a .pag suffix *)
+        (* depending on the version of dbm, there may be a .pag suffix *)
       then (Filename.chop_extension (Filename.chop_extension n))::(aux ())
       else aux ()
     with End_of_file -> Unix.closedir d; []
@@ -115,8 +115,8 @@ let open_db_if_exists name =
     | Unix.Unix_error (Unix.ENOENT, _, _)
     | Dbm.Dbm_error _ -> raise Not_found
 
-                           (* open all files and register them in the table of tables *)
-                           (*
+(* open all files and register them in the table of tables *)
+(*
    let _ = List.iter (fun a ->
    try ignore (open_db a)
    with ... -> errlog ("Error while openning database "^a))
@@ -194,8 +194,8 @@ let _ = Sys.set_signal Sys.sigpipe Sys.Signal_ignore
 
 let _ = Unix.setsid ()
 
-  (*****************************************************************************)
-  (** Communication functions: *)
+(*****************************************************************************)
+(** Communication functions: *)
 
 let send outch v =
   Lwt_chan.output_value outch v >>=
@@ -291,54 +291,54 @@ let _ = Lwt_unix.run
 
 
 
-    (*****************************************************************************)
-    (** Garbage collection of expired data *)
-    (* Experimental
+(*****************************************************************************)
+(** Garbage collection of expired data *)
+(* Experimental
 
-       exception Exn1
-       let dbm_fold f t beg =
-       let rec aux nextkey beg =
-        try
-          let k = try nextkey t with Not_found -> raise Exn1 in
-          let v = try Dbm.find k t with Not_found -> raise Exn1 in
-          aux Dbm.nextkey (f k v beg)
-        with Exn1 -> beg
-       in
-       aux Dbm.firstkey beg
+   exception Exn1
+   let dbm_fold f t beg =
+   let rec aux nextkey beg =
+    try
+      let k = try nextkey t with Not_found -> raise Exn1 in
+      let v = try Dbm.find k t with Not_found -> raise Exn1 in
+      aux Dbm.nextkey (f k v beg)
+    with Exn1 -> beg
+   in
+   aux Dbm.firstkey beg
 
-       let _ =
-       match sessiongcfrequency with
-        None -> () (* No garbage collection *)
-       | Some t ->
-          let rec f () =
-            Lwt_unix.sleep t >>=
-            (fun () ->
-              let now = Unix.time () in
-              print_endline "GC of persistent data";
-              Tableoftables.fold
-                (fun name t thr ->
-                  thr >>=
-                  (fun () ->
-                    dbm_fold
-                      (fun k v thr ->
-                        thr >>=
-                        (fun () ->
-                          (match fst (Marshal.from_string v 0) with
-                          | Some exp when exp < now ->
-                              try
-                                Dbm.remove t k
-                              with _ -> ());
-                          Lwt_unix.yield ()
-                        )
-                      )
-                      t
-                      (return ()))
-                )
-                !tableoftables
-                (return ())
-            ) >>=
-            f
-          in ignore (f ())
+   let _ =
+   match sessiongcfrequency with
+    None -> () (* No garbage collection *)
+   | Some t ->
+      let rec f () =
+        Lwt_unix.sleep t >>=
+        (fun () ->
+          let now = Unix.time () in
+          print_endline "GC of persistent data";
+          Tableoftables.fold
+            (fun name t thr ->
+              thr >>=
+              (fun () ->
+                dbm_fold
+                  (fun k v thr ->
+                    thr >>=
+                    (fun () ->
+                      (match fst (Marshal.from_string v 0) with
+                      | Some exp when exp < now ->
+                          try
+                            Dbm.remove t k
+                          with _ -> ());
+                      Lwt_unix.yield ()
+                    )
+                  )
+                  t
+                  (return ()))
+            )
+            !tableoftables
+            (return ())
+        ) >>=
+        f
+      in ignore (f ())
 
-    *)
+*)
 

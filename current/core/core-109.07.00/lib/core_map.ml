@@ -31,8 +31,8 @@ module Tree0 = struct
     let rec loop lower upper t =
       let in_range k =
         (match lower with
-          | None -> true
-          | Some lower -> compare_key lower k < 0
+         | None -> true
+         | Some lower -> compare_key lower k < 0
         )
         && (match upper with
           | None -> true

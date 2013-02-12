@@ -67,8 +67,8 @@ module Domain = struct
   let cache = Hashtbl.create 10
 
   let m = Mutex.create ()
-  (* get_per_domain can return None if the domain is deleted by
-     someone else while we are processing some other event handlers *)
+    (* get_per_domain can return None if the domain is deleted by
+       someone else while we are processing some other event handlers *)
   let get_per_domain (xc, xs) domid = 
     if Hashtbl.mem cache domid
     then Some (Hashtbl.find cache domid)
@@ -251,7 +251,7 @@ module Domain = struct
           (* Log but don't throw an exception *)
           error "xenstore-write %d %s = %s failed: %s" domid key value (Printexc.to_string e)
       end
-  (** Returns true if the key exists, false otherwise *)
+      (** Returns true if the key exists, false otherwise *)
   let exists (xc, xs) domid key = try ignore(read (xc, xs) domid key); true with Xenbus.Xb.Noent -> false
   (** Delete the key. Don't throw exceptions. *)
   let rm_noexn (xc, xs) domid key = 
@@ -417,10 +417,10 @@ let make_host ~verbose ~xc ~xs =
                    let offset_kib = memory_actual_kib' -* target_kib in
                    debug "domid %d just %s; calibrating memory-offset = %Ld KiB" di.domid
                      (match can_balloon, has_guest_agent with
-                       | true, false -> "advertised a balloon driver"
-                       | true, true -> "started a guest agent and advertised a balloon driver"
-                       | false, true -> "started a guest agent (but has no balloon driver)"
-                       | false, false -> "N/A" (*impossible: see if has_booted above *)
+                      | true, false -> "advertised a balloon driver"
+                      | true, true -> "started a guest agent and advertised a balloon driver"
+                      | false, true -> "started a guest agent (but has no balloon driver)"
+                      | false, false -> "N/A" (*impossible: see if has_booted above *)
                      ) offset_kib;
                    Domain.set_memory_offset_noexn cnx di.domid offset_kib;
                    offset_kib

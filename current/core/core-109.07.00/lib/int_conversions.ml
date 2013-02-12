@@ -162,7 +162,7 @@ module Make (I : sig
     let s = I.to_string t in
     Sexplib.Sexp.Atom
       (match !sexp_of_int_style with
-        | `Underscores -> insert_underscores s
-        | `No_underscores -> s)
+       | `Underscores -> insert_underscores s
+       | `No_underscores -> s)
   ;;
 end

@@ -128,28 +128,28 @@ let parse_port (x: string) =
 (* nothing about. These will get passed straight into the server *)
 let parse_args =
 
-(* Set the key to the value. Return whether the key is one we know about *)
-(* compat mode is special as the argument is passed in two places. Once  *)
-(* at the top of the message to the cli server in order to indicate that *)
-(* we need to use 'geneva style' parsing - that is, allow key = value as *)
-(* opposed to key=value. Secondly, the key then gets passed along with   *)
-(* all the others to the operations. So we need to register it's there,  *)
-(* but not strip it                                                      *)
+  (* Set the key to the value. Return whether the key is one we know about *)
+  (* compat mode is special as the argument is passed in two places. Once  *)
+  (* at the top of the message to the cli server in order to indicate that *)
+  (* we need to use 'geneva style' parsing - that is, allow key = value as *)
+  (* opposed to key=value. Secondly, the key then gets passed along with   *)
+  (* all the others to the operations. So we need to register it's there,  *)
+  (* but not strip it                                                      *)
 
   let reserve_args = ref [] in
 
   let set_keyword (k,v) =
     try
       (match k with
-        | "server" -> xapiserver := v
-        | "port" -> xapiport := Some (parse_port v)
-        | "username" -> xapiuname := v
-        | "password" -> xapipword := v
-        | "passwordfile" -> xapipasswordfile := v
-        | "nossl"   -> xeusessl := not(bool_of_string v)
-        | "debug" -> xedebug := (try bool_of_string v with _ -> false)
-        | "debugonfail" -> xedebugonfail := (try bool_of_string v with _ -> false)
-        | _ -> raise Not_found);
+       | "server" -> xapiserver := v
+       | "port" -> xapiport := Some (parse_port v)
+       | "username" -> xapiuname := v
+       | "password" -> xapipword := v
+       | "passwordfile" -> xapipasswordfile := v
+       | "nossl"   -> xeusessl := not(bool_of_string v)
+       | "debug" -> xedebug := (try bool_of_string v with _ -> false)
+       | "debugonfail" -> xedebugonfail := (try bool_of_string v with _ -> false)
+       | _ -> raise Not_found);
       true
     with Not_found -> false in
 
@@ -477,10 +477,10 @@ let main_loop ifd ofd =
           marshal ofd (Response Failed) in
       keep_connection ();
       (match !tc_save with
-        | Some tc ->
-          Unix.tcsetattr Unix.stdin Unix.TCSANOW tc;
-          print_endline "\r"
-        | None -> ())
+       | Some tc ->
+         Unix.tcsetattr Unix.stdin Unix.TCSANOW tc;
+         print_endline "\r"
+       | None -> ())
     | Command (HttpPut(filename, url)) ->
       begin
         try
@@ -645,9 +645,9 @@ let main () =
   | Stunnel_exit (i, e) ->
     error "Stunnel process %d %s.\n" i
       (match e with
-        | Unix.WEXITED c -> "existed with exit code " ^ string_of_int c
-        | Unix.WSIGNALED c -> "killed by signal " ^ (Unixext.string_of_signal c)
-        | Unix.WSTOPPED c -> "stopped by signal " ^ string_of_int c)
+       | Unix.WEXITED c -> "existed with exit code " ^ string_of_int c
+       | Unix.WSIGNALED c -> "killed by signal " ^ (Unixext.string_of_signal c)
+       | Unix.WSTOPPED c -> "stopped by signal " ^ string_of_int c)
   | e ->
     error "Unhandled exception\n%s\n" (Printexc.to_string e) in
   begin match !stunnel_process with

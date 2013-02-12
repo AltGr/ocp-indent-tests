@@ -24,10 +24,10 @@ let _ =
   Arg.parse [
     "-format", Arg.Symbol ([ "eps"; "gif"; "x11" ], 
       (function 
-      | "eps" -> format := `Eps
-      | "gif" -> format := `Gif
-      | "x11" -> format := `X11
-      | _ -> failwith "huh ?")),
+       | "eps" -> format := `Eps
+       | "gif" -> format := `Gif
+       | "x11" -> format := `X11
+       | _ -> failwith "huh ?")),
     " Set output format (default: X11)";
     "-output", Arg.Set_string graphic_filename,                    " Set default output file (for non-X11 modes)";
     "-separate", Arg.Set separate_graphs,                          " Plot each data series on separate axes";

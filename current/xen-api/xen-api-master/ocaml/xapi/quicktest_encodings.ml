@@ -476,8 +476,8 @@ module UTF8_codec = struct include UTF8_codec
   (** v_max = the greatest UCS value encodable in b bytes. *)
   (**                                                      *)
   let valid_character_decodings = [
-  (*               7654321   *)
-  (* 0b0xxxxxxx                                  *)  (* 00000000000000xxxxxxx   *)
+    (*               7654321   *)
+    (* 0b0xxxxxxx                                  *)  (* 00000000000000xxxxxxx   *)
     "\x00"             (* 0b00000000                                  *), (0b000000000000000000000l, 1);
     "\x7f"             (* 0b01111111                                  *), (0b000000000000001111111l, 1);
     (*           10987654321   *)

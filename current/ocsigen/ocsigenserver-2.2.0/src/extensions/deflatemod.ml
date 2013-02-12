@@ -103,7 +103,7 @@ let rec output oz f buf pos len  =
       (* If we didn't deflate the whole input or if the buffer is full, continue *)
       if (used_in < len) || (oz.avail = 0)
       then output oz f buf (pos + used_in) (len - used_in)
-      (* otherwise, go to the next part of the stream *)
+        (* otherwise, go to the next part of the stream *)
       else
         next_cont oz f
     ))
@@ -155,7 +155,7 @@ let compress deflate stream =
     (try
       Zlib.deflate_end zstream
     with
-          (* ignore errors, deflate_end cleans everything anyway *)
+      (* ignore errors, deflate_end cleans everything anyway *)
           Zlib.Error _ -> ());
     return (Ocsigen_messages.debug2 "--Deflatemod: Zlib stream closed") in
   let oz =
@@ -173,9 +173,9 @@ let compress deflate stream =
       ~finalize (fun () -> Ocsigen_stream.cont gzip_header new_stream)
 
 
-    (*****************************************************************************)
-    (** The filter function *)
-    (* We implement Content-Encoding, not Transfer-Encoding *)
+(*****************************************************************************)
+(** The filter function *)
+(* We implement Content-Encoding, not Transfer-Encoding *)
 
 type encoding = Deflate | Gzip | Id | Star | Not_acceptable
 
@@ -198,8 +198,8 @@ let enc_compare e e' = match e,e' with
 let rec filtermap f = function
   |[] -> []
   |t::q -> match f t with
-    |Some s -> s::(filtermap f q)
-    |None -> filtermap f q
+      |Some s -> s::(filtermap f q)
+      |None -> filtermap f q
 
 let convert = function
   |(Some "deflate",v) -> Some (Deflate, qvalue v)
@@ -295,19 +295,19 @@ let rec parse_global_config = function
                               "Buffer size should be a positive integer")) in
       buffer_size := if s > 0 then s else 8192 ;
       parse_global_config ll
-  (* TODO: Pas de filtre global pour l'instant
-   * le nom de balise contenttype est mauvais, au passage
-     | (Element ("contenttype", [("compress", b)], choices))::ll ->
-       let l = (try parse_filter choices
-               with Not_found -> raise (Error_in_config_file
-                    "Can't parse mime-type content")) in
-       (match b with
-       |"only" -> choice_list := Compress_only l
-       |"allbut" -> choice_list := All_but l
-       | _ ->  raise (Error_in_config_file
-       "Attribute \"compress\" should be \"allbut\" or \"only\""));
-       parse_global_config ll
-  *)
+      (* TODO: Pas de filtre global pour l'instant
+       * le nom de balise contenttype est mauvais, au passage
+         | (Element ("contenttype", [("compress", b)], choices))::ll ->
+           let l = (try parse_filter choices
+                   with Not_found -> raise (Error_in_config_file
+                        "Can't parse mime-type content")) in
+           (match b with
+           |"only" -> choice_list := Compress_only l
+           |"allbut" -> choice_list := All_but l
+           | _ ->  raise (Error_in_config_file
+           "Attribute \"compress\" should be \"allbut\" or \"only\""));
+           parse_global_config ll
+      *)
   | _ -> raise (Error_in_config_file
                "Unexpected content inside deflatemod config")
 

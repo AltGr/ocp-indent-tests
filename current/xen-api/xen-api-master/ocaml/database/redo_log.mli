@@ -16,7 +16,7 @@
 (** {2 VDI related} *)
 
 val get_static_device : string -> string option
-(** Finds an attached metadata VDI with a given reason *)
+  (** Finds an attached metadata VDI with a given reason *)
 val minimum_vdi_size : int64 
 (** Minimum size for redo log VDI *)
 val redo_log_sm_config : (string * string) list
@@ -42,11 +42,11 @@ type redo_log = {
 (** {2 Enabling and disabling writing} *)
 
 val is_enabled : redo_log -> bool
-(** Returns [true] iff writing deltas to the block device is enabled. *)
+  (** Returns [true] iff writing deltas to the block device is enabled. *)
 val enable : redo_log -> string -> unit
-(** Enables writing deltas to the block device. Subsequent modifications to the database will be persisted to the block device. Takes a static-VDI reason as argument to select the device to use. *)
+  (** Enables writing deltas to the block device. Subsequent modifications to the database will be persisted to the block device. Takes a static-VDI reason as argument to select the device to use. *)
 val enable_block : redo_log -> string -> unit
-(** Enables writing deltas to the block device. Subsequent modifications to the database will be persisted to the block device. Takes a path as argument to select the device to use. *)
+  (** Enables writing deltas to the block device. Subsequent modifications to the database will be persisted to the block device. Takes a path as argument to select the device to use. *)
 val disable : redo_log -> unit
   (** Disables writing deltas to the block device. Subsequent modifications to the database will not be persisted to the block device. *)
 
@@ -57,9 +57,9 @@ val redo_log_events: (string * bool) Event.channel
 (** {2 Lifecycle of I/O process} *)
 
 val startup : redo_log -> unit
-(** Start the I/O process. Will do nothing if it's already started. *)
+  (** Start the I/O process. Will do nothing if it's already started. *)
 val shutdown : redo_log -> unit
-(** Stop the I/O process. Will do nothing if it's not already started. *)
+  (** Stop the I/O process. Will do nothing if it's not already started. *)
 val switch : redo_log -> string -> unit
   (** Start using the VDI with the given reason as redo-log, discarding the current one. *)
 
@@ -79,11 +79,11 @@ val with_active_redo_logs : (redo_log -> unit) -> unit
 (** The type of a delta, describing an incremental change to the database. *)
 type t =
   | CreateRow of string * string * (string*string) list
-  (** [CreateRow (tblname, newobjref, [(k1,v1); ...])]
-      represents the creation of a row in table [tblname], with key [newobjref], and columns [[k1; ...]] having values [[v1; ...]]. *)
+        (** [CreateRow (tblname, newobjref, [(k1,v1); ...])]
+            represents the creation of a row in table [tblname], with key [newobjref], and columns [[k1; ...]] having values [[v1; ...]]. *)
   | DeleteRow of string * string
-  (** [DeleteRow (tblname, objref)]
-      represents the deletion of a row in table [tblname] with key [objref]. *)
+      (** [DeleteRow (tblname, objref)]
+          represents the deletion of a row in table [tblname] with key [objref]. *)
   | WriteField of string * string * string * string
     (** [WriteField (tblname, objref, fldname, newval)]
         represents the write to the field with name [fldname] of a row in table [tblname] with key [objref], overwriting its value with [newval]. *)

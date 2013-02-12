@@ -36,25 +36,25 @@ type bmp = {
 }
 
 and bitmapfileheader = {
-                       (* WORD: that is 2 bytes *) bfType : int;  (* Bytes <0   2< *)
-                       (* DWORD: that is 2 WORDs *) bfSize : int; (* Bytes <2   6< *)
-                       (* WORD *) bfReserved1 : int;              (* Bytes <6   8< *)
-                       (* WORD *) bfReserved2 : int;              (* Bytes <8  10< *)
-                       (* DWORD *) bfOffBits : int;               (* Bytes <10 14< *)
+                                                   (* WORD: that is 2 bytes *) bfType : int;  (* Bytes <0   2< *)
+                                                   (* DWORD: that is 2 WORDs *) bfSize : int; (* Bytes <2   6< *)
+                                                   (* WORD *) bfReserved1 : int;              (* Bytes <6   8< *)
+                                                   (* WORD *) bfReserved2 : int;              (* Bytes <8  10< *)
+                                                   (* DWORD *) bfOffBits : int;               (* Bytes <10 14< *)
                        }
 
 and bitmapinfoheader = {
-                       (* DWORD *) biSize : int;                  (* Bytes <14 18< *)
-                       (* DWORD *) biWidth : int;                 (* Bytes <18 22< *)
-                       (* DWORD *) biHeight : int;                (* Bytes <22 26< *)
-                       (* WORD *) biPlanes  : int;                (* Bytes <26 28< *)
-                       (* WORD *) biBitCount : bibitcount;        (* Bytes <28 30< *)
-                       (* DWORD *) biCompression : bicompression; (* Bytes <30 34< *)
-                       (* DWORD *) biSizeImage : int;             (* Bytes <34 38< *)
-                       (* DWORD *) biXPelsPerMeter : int;         (* Bytes <38 42< *)
-                       (* DWORD *) biYPelsPerMeter : int;         (* Bytes <42 46< *)
-                       (* DWORD *) biClrUsed : int;               (* Bytes <46 50< *)
-                       (* DWORD *) biClrImportant : int           (* Bytes <50 54< *)
+                                   (* DWORD *) biSize : int;                  (* Bytes <14 18< *)
+                                   (* DWORD *) biWidth : int;                 (* Bytes <18 22< *)
+                                   (* DWORD *) biHeight : int;                (* Bytes <22 26< *)
+                                   (* WORD *) biPlanes  : int;                (* Bytes <26 28< *)
+                                   (* WORD *) biBitCount : bibitcount;        (* Bytes <28 30< *)
+                                   (* DWORD *) biCompression : bicompression; (* Bytes <30 34< *)
+                                   (* DWORD *) biSizeImage : int;             (* Bytes <34 38< *)
+                                   (* DWORD *) biXPelsPerMeter : int;         (* Bytes <38 42< *)
+                                   (* DWORD *) biYPelsPerMeter : int;         (* Bytes <42 46< *)
+                                   (* DWORD *) biClrUsed : int;               (* Bytes <46 50< *)
+                                   (* DWORD *) biClrImportant : int           (* Bytes <50 54< *)
                        }
 
 and bicompression =
@@ -72,14 +72,14 @@ and bicompression =
 
 and bibitcount =
   | Monochrome
-  (* 1  The bitmap is monochrome, and the bmiColors field must 
+  (* 1    The bitmap is monochrome, and the bmiColors field must 
      contain two entries. Each bit in the bitmap array represents a 
      pixel. If the bit is clear, the pixel is displayed with the
      color of the first entry in the bmiColors table; if the bit is
      set, the pixel has the color of the second entry in the
         table. *)
   | Color16
-  (* 4  The bitmap has a maximum of 16 colors, and the bmiColors 
+  (* 4    The bitmap has a maximum of 16 colors, and the bmiColors 
      field contains up to 16 entries. Each pixel in the bitmap is 
      represented by a four-bit index into the color table.
      For example, if the first byte in the bitmap is 0x1F,  then the 
@@ -87,14 +87,14 @@ and bibitcount =
      in the second table entry, and the second pixel contains the 
      color in the 16th table entry. *)
   | Color256
-  (* 8  The bitmap has a maximum of 256 colors, and the bmiColors 
+  (* 8    The bitmap has a maximum of 256 colors, and the bmiColors 
      field contains up to 256 entries. In this case, each byte in the 
      array represents a single pixel. *)
   | ColorM
-(* 24 The bitmap has a maximum of 2^24 colors. The bmiColors
-      field is NULL, and each three bytes in the bitmap array
-      represents the relative intensities of red, green, and blue,
-      respectively, of a pixel. *)
+  (* 24 The bitmap has a maximum of 2^24 colors. The bmiColors
+        field is NULL, and each three bytes in the bitmap array
+        represents the relative intensities of red, green, and blue,
+        respectively, of a pixel. *)
 ;;
 
 (* =================================================================== *)
@@ -552,7 +552,7 @@ let write_rgbquad oc rgb =
 ;;
 
 let write_bmpFileHeader oc = function {
-                                      (* WORD *) bfType = bft;
+                                                 (* WORD *) bfType = bft;
                                                  (* DWORD *) bfSize = bfs;
                                                  (* WORD *) bfReserved1 = bfr1;
                                                  (* WORD *) bfReserved2 = bfr2;
@@ -571,7 +571,7 @@ let write_bmpFileHeader oc = function {
 ;;
 
 let write_bmpInfoHeader oc = function {
-                                      (* DWORD *) biSize = bis;
+                                                  (* DWORD *) biSize = bis;
                                                   (* DWORD *) biWidth = biw;
                                                   (* DWORD *) biHeight = bih;
                                                   (* WORD *) biPlanes  = bip;
@@ -603,7 +603,7 @@ let write_bmpInfoHeader oc = function {
 let write_colors oc color_map =
   (* If color_map is empty, should output a NULL character *)
   if Array.length color_map = 0 then write_byte oc 0
-  (* Otherwise write the rgb colors of the colormap *)
+    (* Otherwise write the rgb colors of the colormap *)
   else Array.iter (write_rgbquad oc) color_map
 ;;
 
@@ -766,7 +766,7 @@ let write_image4data bmp oc =
         end in
       write_line start 0 bitmap.[start];
       write_end_of_scan_line oc;
-    (* No padding in this mode *)
+      (* No padding in this mode *)
     done;
     write_end_of_bitmap oc;
     let end_bitmap_index = !bytes_written in
@@ -828,7 +828,7 @@ let write_image8data bmp oc =
         end in
       write_line start 0 bitmap.[start];
       write_end_of_scan_line oc;
-    (* No padding in this mode *)
+      (* No padding in this mode *)
     done;
     write_end_of_bitmap oc;
     let end_bitmap_index = !bytes_written in
@@ -853,7 +853,7 @@ let bmp_of_image img =
     and biH = bitmap.Rgb24.height
     and data = Rgb24.dump bitmap in
     let bfh = {
-              (* WORD *) bfType = 19778 (* BM *);
+                         (* WORD *) bfType = 19778 (* BM *);
                          (* DWORD *) bfSize = -1 (* Unknown to be updated *);
                          (* WORD *) bfReserved1 = 0;
                          (* WORD *) bfReserved2 = 0;
@@ -894,7 +894,7 @@ let bmp_of_image img =
     and biH = bitmap.Index8.height
     and data = Index8.dump bitmap in
     let bfh = {
-              (* WORD *) bfType = 19778 (* BM *);
+                         (* WORD *) bfType = 19778 (* BM *);
                          (* DWORD *) bfSize = -1 (* Unknown to be updated *);
                          (* WORD *) bfReserved1 = 0;
                          (* WORD *) bfReserved2 = 0;

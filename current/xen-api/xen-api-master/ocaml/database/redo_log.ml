@@ -17,8 +17,8 @@ open Stringext
 
 module R = Debug.Debugger(struct let name = "redo_log" end)
 
-  (* --------------------------------------- *)
-  (* Functions relating to the redo log VDI. *)
+(* --------------------------------------- *)
+(* Functions relating to the redo log VDI. *)
 
 let get_static_device reason =
   (* Specifically use Static_vdis_list rather than Static_vdis to avoid the
@@ -41,8 +41,8 @@ let minimum_vdi_size =
 
 let redo_log_sm_config = [ "type", "raw" ]
 
-                         (* ---------------------------------------------------- *)
-                         (* Encapsulate the state of a single redo_log instance. *)
+(* ---------------------------------------------------- *)
+(* Encapsulate the state of a single redo_log instance. *)
 
 type redo_log = {
   name: string;
@@ -70,8 +70,8 @@ module RedoLogSet = Set.Make(
 (* Keep a store of all redo_logs - this will make it easy to write to all the active ones. *)
 let all_redo_logs = ref (RedoLogSet.empty)
 
-  (* ------------------------------------------------------------------------ *)
-  (* Functions relating to whether writing to the log is enabled or disabled. *)
+(* ------------------------------------------------------------------------ *)
+(* Functions relating to whether writing to the log is enabled or disabled. *)
 
 let ready_to_write = ref true (* Controls whether DB writes are also copied to the redo log. *)
 
@@ -92,8 +92,8 @@ let disable log =
   log.device := None;
   log.enabled := false
 
-  (* ------------------------------------------------------------------------------------------------ *)
-  (* Functions relating to whether the latest attempt to read/write the redo-log succeeded or failed. *)
+(* ------------------------------------------------------------------------------------------------ *)
+(* Functions relating to whether the latest attempt to read/write the redo-log succeeded or failed. *)
 
 let redo_log_events = Event.new_channel ()
 
@@ -113,20 +113,20 @@ let can_connect_fn log =
   end;
   log.currently_accessible := true
 
-  (* ----------------------------------------------------------- *)
-  (* Functions relating to the serialisation of redo log entries *)
+(* ----------------------------------------------------------- *)
+(* Functions relating to the serialisation of redo log entries *)
 
 (* The type of a delta, describing an incremental change to the database. *)
 type t =
   (* (tblname, newobjref, (k,v) list) *)
   | CreateRow of string * string * (string*string) list
-  (* (tblname, objref) *)
+        (* (tblname, objref) *)
   | DeleteRow of string * string
-  (* (tblname, objref, fldname, newval) *)
+      (* (tblname, objref, fldname, newval) *)
   | WriteField of string * string * string * string
 
-    (* First 9 bytes of encoding of entries is an ASCII string indicating the kind of record, from {"CreateRow", "DeleteRow", "WriteFiel"} *)
-    (* Constituent strings are expressed as "<length><string>", where the length is specified in decimal using 8 ASCII digits *)
+(* First 9 bytes of encoding of entries is an ASCII string indicating the kind of record, from {"CreateRow", "DeleteRow", "WriteFiel"} *)
+(* Constituent strings are expressed as "<length><string>", where the length is specified in decimal using 8 ASCII digits *)
 
 exception MalformedLogEntry of string
 
@@ -196,8 +196,8 @@ let string_to_redo_log_entry str =
     raise (MalformedLogEntry s)
 
 
-      (* ---------------------------------------------------------------------- *)
-      (* Functions relating to communication with the block device I/O process. *)
+(* ---------------------------------------------------------------------- *)
+(* Functions relating to communication with the block device I/O process. *)
 
 exception RedoLogFailure of string
 exception CommunicationsProblem of string
@@ -370,8 +370,8 @@ let action_write_db marker generation_count write_fn sock datasockpath =
 
   finally
     (fun () ->
-    (* Send data straight down the data channel, then close it to send an EOF. *)
-    (* Ideally, we would check whether this completes before the latest_response_time. Could implement this by performing the write in a separate thread. *)
+      (* Send data straight down the data channel, then close it to send an EOF. *)
+      (* Ideally, we would check whether this completes before the latest_response_time. Could implement this by performing the write in a separate thread. *)
 
       try
         write_fn datasock;
@@ -436,8 +436,8 @@ let action_write_delta marker generation_count data flush_db_fn sock datasockpat
   | e -> R.warn "Received unexpected response"; raise (CommunicationsProblem ("unrecognised writedelta response ["^e^"]"))
 
 
-    (* ----------------------------------------------------------------------------------------------- *)
-    (* Functions relating to the exponential back-off of repeated attempts to reconnect after failure. *)
+(* ----------------------------------------------------------------------------------------------- *)
+(* Functions relating to the exponential back-off of repeated attempts to reconnect after failure. *)
 
 let initialise_backoff_delay log =
   log.backoff_delay := Xapi_globs.redo_log_initial_backoff_delay
@@ -469,8 +469,8 @@ let maybe_retry f log =
     R.debug "No; we'll wait a bit longer before trying again."
 
 
-    (* -------------------------------------------------------------------- *)
-    (* Functions relating to the lifecycle of the block device I/O process. *)
+(* -------------------------------------------------------------------- *)
+(* Functions relating to the lifecycle of the block device I/O process. *)
 
 (* Close any existing socket and kill the corresponding process. *)
 let shutdown log =
@@ -655,8 +655,8 @@ let connect_and_do f log =
 let connect_and_perform_action f desc log =
   connect_and_do (perform_action f desc) log
 
-  (* ------------------------------------------------------------------- *)
-  (* Functions for handling creation and deletion of redo log instances. *)
+(* ------------------------------------------------------------------- *)
+(* Functions for handling creation and deletion of redo log instances. *)
 
 let redo_log_creation_mutex = Mutex.create ()
 
@@ -696,8 +696,8 @@ let with_active_redo_logs f =
       in
       RedoLogSet.iter f active_redo_logs)
 
-    (* --------------------------------------------------------------- *)
-    (* Functions which interact with the redo log on the block device. *)
+(* --------------------------------------------------------------- *)
+(* Functions which interact with the redo log on the block device. *)
 
 let write_db generation_count write_fn log =
   if is_enabled log then
@@ -740,8 +740,8 @@ let empty log =
   if is_enabled log then
     connect_and_perform_action (action_empty) "invalidate the redo log" log
 
-    (** ------------------------------------------------ *)
-    (** Functions which operate on all active redo_logs. *)
+(** ------------------------------------------------ *)
+(** Functions which operate on all active redo_logs. *)
 
 (* Flush the database to the given redo_log instance. *)
 let flush_db_to_redo_log db log =

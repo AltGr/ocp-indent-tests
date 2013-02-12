@@ -21,7 +21,7 @@ val print_api_stats : api -> unit
 
 (* Extract a list of relations from an API *)
 val relations_of_api : api -> relation list
-(* Extract a list of the objects from an API *)
+  (* Extract a list of the objects from an API *)
 val objects_of_api : api -> obj list
 
 (** Find and return a field by name *)

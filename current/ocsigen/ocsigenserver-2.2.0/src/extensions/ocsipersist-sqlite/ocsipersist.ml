@@ -48,8 +48,8 @@ let rec parse_global_config = function
 let db_file = ref ((Ocsigen_config.get_datadir ())^"/ocsidb")
 
 
-  (*****************************************************************************)
-  (** Useful functions on database *)
+(*****************************************************************************)
+(** Useful functions on database *)
 
 let yield () =
   Thread.yield ()
@@ -218,8 +218,8 @@ let db_length table =
 
 
 
-  (*****************************************************************************)
-  (** Public functions: *)
+(*****************************************************************************)
+(** Public functions: *)
 
 (** Type of persistent data *)
 type 'a t = string * string

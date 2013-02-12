@@ -69,8 +69,8 @@ let add_colors cmap cs =
   let cntr = ref len in
   List.map
     (function
-    | Some x -> x
-    | None -> let x = !cntr in incr cntr; x)
+     | Some x -> x
+     | None -> let x = !cntr in incr cntr; x)
     ret;;
 
 let copy cmap = {

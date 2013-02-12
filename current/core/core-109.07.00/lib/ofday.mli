@@ -20,8 +20,8 @@ val end_of_day : t
 val to_span_since_start_of_day : t -> Span.t
 val of_span_since_start_of_day : Span.t -> t
 
-  (* Due to a circular reference, this function is defined in Core.Std. *)
-  (* val now : unit -> t *)
+(* Due to a circular reference, this function is defined in Core.Std. *)
+(* val now : unit -> t *)
 
 (** [add t s] shifts the time of day [t] by the span [s].  It returns None if
     the result is not in the same day.

@@ -233,8 +233,8 @@ let assert_session_has_internal_sr_access ~__context ~sr =
   if not(session_has_internal_sr_access ~__context ~sr)
   then raise (Api_errors.Server_error(Api_errors.permission_denied, [""]))
 
-    (*****************************************************************************)
-    (* Higher-level functions                                                    *)
+(*****************************************************************************)
+(* Higher-level functions                                                    *)
 
 let get_my_pbd_for_sr __context sr_id =
   let me = Helpers.get_localhost __context in

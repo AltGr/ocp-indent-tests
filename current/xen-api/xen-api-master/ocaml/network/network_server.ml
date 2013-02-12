@@ -203,7 +203,7 @@ module Interface = struct
         Dhcp6c.stop name;
         Ip.flush_ip_addr ~ipv6:true name;
         Sysctl.set_ipv6_autoconf name true;
-      (* Cannot link set down/up due to CA-89882 - IPv4 default route cleared *)
+        (* Cannot link set down/up due to CA-89882 - IPv4 default route cleared *)
       | Static6 addrs ->
         Dhcp6c.stop name;
         Sysctl.set_ipv6_autoconf name false;
@@ -701,12 +701,12 @@ module Bridge = struct
           debug "Ensuring the following persistent bridges are up: %s"
             (String.concat ", " (List.map (fun (name, _) -> name) persistent_config));
           let vlan_parents = List.filter_map (function
-            | (_, {vlan=Some (parent, _)}) ->
-              if not (List.mem_assoc parent persistent_config) then
-                Some (parent, List.assoc parent config)
-              else
-                None
-            | _ -> None) persistent_config in
+              | (_, {vlan=Some (parent, _)}) ->
+                if not (List.mem_assoc parent persistent_config) then
+                  Some (parent, List.assoc parent config)
+                else
+                  None
+              | _ -> None) persistent_config in
           debug "Additionally ensuring the following VLAN parent bridges are up: %s"
             (String.concat ", " (List.map (fun (name, _) -> name) vlan_parents));
           let config = vlan_parents @ persistent_config in

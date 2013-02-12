@@ -80,7 +80,7 @@ let sample (name: string) (x: float) : unit =
         else Normal_population.empty in
       let p' = Normal_population.sample p x' in
       Hashtbl.replace timings name p';
-    (*       debug "Population %s time = %f mean = %s" name x (string_of p'); *)
+      (*       debug "Population %s time = %f mean = %s" name x (string_of p'); *)
     )
     (*
   (* Check to see if the value is > 3 standard deviations from the mean *)
@@ -106,8 +106,8 @@ let summarise () =
       Hashtbl.fold (fun k v acc -> (k, string_of v) :: acc) timings []
     )
 
-    (*****************************)
-    (* Database stats            *)
+(*****************************)
+(* Database stats            *)
 
 type dbcallty = Read | Write | Create | Drop
 
@@ -117,7 +117,7 @@ let dbstats_write_dbcalls : (string,int) Hashtbl.t = Hashtbl.create 100
 let dbstats_create_dbcalls : (string,int) Hashtbl.t = Hashtbl.create 100
 let dbstats_drop_dbcalls : (string,int) Hashtbl.t = Hashtbl.create 100
 let dbstats_task : (string,(string * dbcallty) list) Hashtbl.t = Hashtbl.create 100
-(* let dbstats_taskthreads : (string, int list) Hashtbl.t = Hashtbl.create 100*)
+  (* let dbstats_taskthreads : (string, int list) Hashtbl.t = Hashtbl.create 100*)
 let dbstats_threads : (int, (string * dbcallty) list) Hashtbl.t = Hashtbl.create 100
 
 let log_stats = ref false

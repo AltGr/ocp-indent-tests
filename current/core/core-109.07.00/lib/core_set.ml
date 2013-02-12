@@ -36,7 +36,7 @@ module Tree0 = struct
     | Empty
     (* (Leaf x) is the same as (Node (Empty, x, Empty, 1, 1)) but uses less space. *)
     | Leaf of 'a
-    (* first int is height, second is sub-tree size *)
+      (* first int is height, second is sub-tree size *)
     | Node of 'a t * 'a * 'a t * int * int
 
   type 'a tree = 'a t
@@ -59,8 +59,8 @@ module Tree0 = struct
     let rec loop lower upper t =
       let in_range v =
         (match lower with
-          | None -> true
-          | Some lower -> compare_elt lower v < 0
+         | None -> true
+         | Some lower -> compare_elt lower v < 0
         )
         && (match upper with
           | None -> true
@@ -539,7 +539,7 @@ module Tree0 = struct
         let c = compare_elt v1 v2 in
         if c = 0
         then subset l1 l2 && subset r1 r2
-        (* Note that height and size don't matter here. *)
+             (* Note that height and size don't matter here. *)
         else if c < 0 then
           subset (Node (l1, v1, Empty, 0, 0)) l2 && subset r1 t2
         else
@@ -600,8 +600,8 @@ module Tree0 = struct
       | Empty -> accu
       | Leaf v ->
         (match p v with
-          | None -> accu
-          | Some v -> add accu v ~compare_elt)
+         | None -> accu
+         | Some v -> add accu v ~compare_elt)
       | Node(l, v, r, _, _) ->
         filt (filt (match p v with
               | None -> accu

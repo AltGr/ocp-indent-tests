@@ -26,15 +26,15 @@ open D
 
 (** If we can't execute the losetup program (for example) *)
 exception External_command_failure of string
-(** Timeout waiting for the backend hotplug scripts *)
+  (** Timeout waiting for the backend hotplug scripts *)
 exception Device_timeout of device
-(** Timeout waiting for the frontend hotplug scripts (in the case of dom0) *)
+  (** Timeout waiting for the frontend hotplug scripts (in the case of dom0) *)
 exception Frontend_device_timeout of device
-(** An explicit failure waiting for the frontend hotplug scripts (in the case of dom0) *)
+  (** An explicit failure waiting for the frontend hotplug scripts (in the case of dom0) *)
 exception Frontend_device_error of string
-(** Ff we can't find the file we're trying to losetup *)
+  (** Ff we can't find the file we're trying to losetup *)
 exception Loopdev_error of string
-(** we can't delete a loop device *)
+  (** we can't delete a loop device *)
 exception Loopdev_delete_error
 (** If all the loopback devices are busy *)
 exception Loopdev_all_busy
@@ -241,18 +241,18 @@ let release (task:Xenops_task.t) ~xs (x: device) =
   let path = get_hotplug_path x in
   let all = try xs.Xs.directory path with _ -> [] in
   List.iter (function
-  | "loop-device" ->
-    let loopdev = xs.Xs.read (path ^ "/loop-device") in
-    debug "Hotplug.release releasing %s" loopdev;
-    umount_loopdev loopdev;
-    xs.Xs.rm (path ^ "/loop-device")
-  | "hotplug" ->
-    debug "xenstore-rm %s/online" path;
-    xs.Xs.rm (path ^ "/online")
-  | "" -> () (* XXX? *)
-  | x ->
-    warn "Warning, deleting unexpected '%s' entry from %s" x path;
-    xs.Xs.rm (path ^ "/" ^ x)
+    | "loop-device" ->
+      let loopdev = xs.Xs.read (path ^ "/loop-device") in
+      debug "Hotplug.release releasing %s" loopdev;
+      umount_loopdev loopdev;
+      xs.Xs.rm (path ^ "/loop-device")
+    | "hotplug" ->
+      debug "xenstore-rm %s/online" path;
+      xs.Xs.rm (path ^ "/online")
+    | "" -> () (* XXX? *)
+    | x ->
+      warn "Warning, deleting unexpected '%s' entry from %s" x path;
+      xs.Xs.rm (path ^ "/" ^ x)
   ) all;
   xs.Xs.rm path;
   xs.Xs.rm (get_private_data_path_of_device x)

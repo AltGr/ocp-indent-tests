@@ -269,10 +269,10 @@ module Make (Basic : Basic) : S with type ('k, 'v) t = ('k, 'v) Basic.t = struct
     | Sexp.List sexps ->
       let t = create poly in
       List.iter sexps ~f:(function
-      | Sexp.List [k_sexp; v_sexp] ->
-        add t ~key:(k_of_sexp k_sexp) ~data:(d_of_sexp v_sexp)
-      | Sexp.List _ | Sexp.Atom _ ->
-        Sexplib.Conv.of_sexp_error "Hashtbl.t_of_sexp: tuple list needed" sexp);
+        | Sexp.List [k_sexp; v_sexp] ->
+          add t ~key:(k_of_sexp k_sexp) ~data:(d_of_sexp v_sexp)
+        | Sexp.List _ | Sexp.Atom _ ->
+          Sexplib.Conv.of_sexp_error "Hashtbl.t_of_sexp: tuple list needed" sexp);
       t
     | Sexp.Atom _ ->
       Sexplib.Conv.of_sexp_error
@@ -312,10 +312,10 @@ module Make (Basic : Basic) : S with type ('k, 'v) t = ('k, 'v) Basic.t = struct
         | Sexp.List sexps ->
           let t = create hashable in
           List.iter sexps ~f:(function
-          | Sexp.List [k_sexp; v_sexp] ->
-            add t ~key:(Key.t_of_sexp k_sexp) ~data:(d_of_sexp v_sexp)
-          | Sexp.List _ | Sexp.Atom _ ->
-            Sexplib.Conv.of_sexp_error "Hashtbl.t_of_sexp: tuple list needed" sexp);
+            | Sexp.List [k_sexp; v_sexp] ->
+              add t ~key:(Key.t_of_sexp k_sexp) ~data:(d_of_sexp v_sexp)
+            | Sexp.List _ | Sexp.Atom _ ->
+              Sexplib.Conv.of_sexp_error "Hashtbl.t_of_sexp: tuple list needed" sexp);
           t
         | Sexp.Atom _ ->
           Sexplib.Conv.of_sexp_error

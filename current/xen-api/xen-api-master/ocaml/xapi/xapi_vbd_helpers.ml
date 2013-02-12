@@ -106,16 +106,16 @@ let valid_operations ~expensive_sharing_checks ~__context record _ref' : table =
   let power_state = Db.VM.get_power_state ~__context ~self:vm in
   let plugged = record.Db_actions.vBD_currently_attached || record.Db_actions.vBD_reserved in
   (match power_state, plugged with
-    | `Running, true -> set_errors Api_errors.device_already_attached [ _ref ] [ `plug ]
-    | `Running, false -> set_errors Api_errors.device_already_detached [ _ref ] [ `unplug; `unplug_force ]
-    | _, _ -> 
-      let actual = Record_util.power_to_string power_state in
-      let expected = Record_util.power_to_string `Running in
-      (* If not Running, always block these operations: *)
-      let bad_ops = [ `plug; `unplug; `unplug_force ] in
-      (* However allow VBD pause and unpause if the VM is paused: *)
-      let bad_ops' = if power_state = `Paused then bad_ops else `pause :: `unpause :: bad_ops in
-      set_errors Api_errors.vm_bad_power_state [ Ref.string_of vm; expected; actual ] bad_ops');
+   | `Running, true -> set_errors Api_errors.device_already_attached [ _ref ] [ `plug ]
+   | `Running, false -> set_errors Api_errors.device_already_detached [ _ref ] [ `unplug; `unplug_force ]
+   | _, _ -> 
+     let actual = Record_util.power_to_string power_state in
+     let expected = Record_util.power_to_string `Running in
+     (* If not Running, always block these operations: *)
+     let bad_ops = [ `plug; `unplug; `unplug_force ] in
+     (* However allow VBD pause and unpause if the VM is paused: *)
+     let bad_ops' = if power_state = `Paused then bad_ops else `pause :: `unpause :: bad_ops in
+     set_errors Api_errors.vm_bad_power_state [ Ref.string_of vm; expected; actual ] bad_ops');
 
   (* HVM guests only support plug/unplug IF they have recent PV drivers *)
   (* They can only eject/insert CDs not plug/unplug *)
@@ -123,8 +123,8 @@ let valid_operations ~expensive_sharing_checks ~__context record _ref' : table =
   let vm_gmr = try Some (Db.VM_guest_metrics.get_record_internal ~__context ~self:vm_gm) with _ -> None in  
   if power_state = `Running && Helpers.has_booted_hvm ~__context ~self:vm then begin
     (match Xapi_pv_driver_version.make_error_opt (Xapi_pv_driver_version.of_guest_metrics vm_gmr) vm vm_gm with
-      | Some(code, params) -> set_errors code params [ `plug; `unplug; `unplug_force ]
-      | None -> ());
+     | Some(code, params) -> set_errors code params [ `plug; `unplug; `unplug_force ]
+     | None -> ());
     if record.Db_actions.vBD_type = `CD
     then set_errors Api_errors.operation_not_allowed 
         [ "HVM CDROMs cannot be hotplugged/unplugged, only inserted or ejected" ] [ `plug; `unplug; `unplug_force ]

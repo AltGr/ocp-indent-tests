@@ -47,11 +47,11 @@ let normalize_filename file =
   let tkns =
     List.fold_left
       (fun acc -> function
-      | "." -> acc
-      | ".." ->
-        begin try List.tl acc with
-          | _ -> if is_absolute then acc else ".." :: acc end
-      | tkn -> tkn :: acc)
+        | "." -> acc
+        | ".." ->
+          begin try List.tl acc with
+            | _ -> if is_absolute then acc else ".." :: acc end
+        | tkn -> tkn :: acc)
       [] tkns in
   (if is_absolute then "/" else "") ^
     Mstring.catenate_sep "/" (List.rev tkns);;

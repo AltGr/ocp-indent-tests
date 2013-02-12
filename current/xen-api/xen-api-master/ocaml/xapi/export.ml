@@ -507,8 +507,8 @@ let handler (req: Request.t) s _ =
       then 
         begin
           try
-          (* We do this outside the Xapi_http.with_context below since that will complete the *)
-          (* task when it exits, and we don't want to do that *)
+            (* We do this outside the Xapi_http.with_context below since that will complete the *)
+            (* task when it exits, and we don't want to do that *)
 
             let host = find_host_for_VM ~__context vm_ref in
 
@@ -565,7 +565,7 @@ let handler (req: Request.t) s _ =
                     else go s
                   )
 
-              (* Exceptions are handled by Server_helpers.with_context *)
+                (* Exceptions are handled by Server_helpers.with_context *)
               ))
         end
     )

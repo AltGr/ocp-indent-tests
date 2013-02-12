@@ -57,11 +57,11 @@ let set_is_a_template ~__context ~self ~value =
     then raise
         (Api_errors.Server_error
            (Api_errors.vm_is_protected, [Ref.string_of self]))
-    (* If the VM is not protected then we can convert the VM to a template,
-     * but we should clear the ha_always_run flag
-     * (which will be true if the VM has ha_restart_priority = "restart" and was shut down from inside).
-     *
-     * We don't want templates to have this flag, or HA will try to start them. *)
+        (* If the VM is not protected then we can convert the VM to a template,
+         * but we should clear the ha_always_run flag
+         * (which will be true if the VM has ha_restart_priority = "restart" and was shut down from inside).
+         *
+         * We don't want templates to have this flag, or HA will try to start them. *)
     else Db.VM.set_ha_always_run ~__context ~self ~value:false;
     (* delete the vm metrics associated with the vm if it exists, when we templat'ize it *)
     try Db.VM_metrics.destroy ~__context ~self:m with _ -> ()
@@ -230,7 +230,7 @@ let validate_memory ~__context ~snapshot:vm_record =
   (* to have valid constraints without allowing coercion.         *)
   match Vm_memory_constraints.transform constraints with
   | Some constraints -> ()
-  (* Do nothing. *)
+    (* Do nothing. *)
   | None ->
     (* The constraints could not be coerced. *)
     raise (Api_errors.Server_error (Api_errors.memory_constraint_violation, []))
@@ -369,7 +369,7 @@ let assert_can_see_networks ~__context ~self ~host =
           ~__context
           ~self:network
           ~host
-      (* throw exception more appropriate to this context: *)
+        (* throw exception more appropriate to this context: *)
       with exn ->
         debug
           "Caught exception while checking if network %s could be attached on host %s:%s"

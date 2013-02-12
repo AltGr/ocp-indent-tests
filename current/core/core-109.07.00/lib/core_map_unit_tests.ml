@@ -41,8 +41,8 @@ module Unit_tests
 
        val simplify_accessor : (int, Int.comparator, 'c) access_options -> 'c
      end)
-  (* The result signature doesn't actually mean anything -- the values are required so
-     that implementors are reminded to add a unit test for each one. *)
+    (* The result signature doesn't actually mean anything -- the values are required so
+       that implementors are reminded to add a unit test for each one. *)
   : Creators_and_accessors = struct
   module Map = struct
     include Map
@@ -394,8 +394,8 @@ module Unit_tests
   TEST =
     let m1 = Map.add (random_map Key.samples) ~key:Key.sample ~data:0 in
     let m2 = Map.change m1 Key.sample (function
-      | Some _ -> None
-      | None -> Some 0)
+        | Some _ -> None
+        | None -> Some 0)
     in
     match Map.find m2 Key.sample with
     | None -> true
@@ -525,10 +525,10 @@ module Unit_tests
     let m1 = random_map Key.samples in
     let m2 =
       Map.change m1 key (function
-      | None -> assert false
-      | Some v ->
-        assert (v <> 2_000);
-        Some 2_000)
+        | None -> assert false
+        | Some v ->
+          assert (v <> 2_000);
+          Some 2_000)
     in
     Map.symmetric_diff m1 m2 ~data_equal:(=) =
       [(key, `Unequal (Map.find_exn m1 key, 2000))]
@@ -539,8 +539,8 @@ module Unit_tests
   TEST =
     let map = random_map Key.samples in
     let added_to_self = Map.merge map map ~f:(fun ~key:_ -> function
-      | `Left _ | `Right _ -> assert false
-      | `Both (x1, x2) -> Some (x1 + x2))
+        | `Left _ | `Right _ -> assert false
+        | `Both (x1, x2) -> Some (x1 + x2))
     in
     let doubled = Map.map map ~f:(fun x -> x * 2) in
     Map.equal (=) added_to_self doubled

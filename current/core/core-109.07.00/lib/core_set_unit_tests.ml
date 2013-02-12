@@ -41,10 +41,10 @@ module Unit_tests
   module Set = struct
     include Set
     let add            = simplify_accessor add
-    (* let remove         = simplify_accessor remove *)
+      (* let remove         = simplify_accessor remove *)
     let mem            = simplify_accessor mem
-    (* let filter         = simplify_accessor filter *)
-    (* let compare_direct = simplify_accessor compare_direct *)
+      (* let filter         = simplify_accessor filter *)
+      (* let compare_direct = simplify_accessor compare_direct *)
     let equal          = simplify_accessor equal
     let inter          = simplify_accessor inter
     let subset         = simplify_accessor subset
@@ -58,7 +58,7 @@ module Unit_tests
     let of_list        = simplify_creator of_list
     let of_sorted_array = simplify_creator of_sorted_array
     let of_sorted_array_unchecked = simplify_creator of_sorted_array_unchecked
-  (* let of_tree        = simplify_creator of_tree *)
+      (* let of_tree        = simplify_creator of_tree *)
   end
 
   type ('a, 'b) t = Unit_test_follows
@@ -182,9 +182,9 @@ module Unit_tests
       Set.iter2 (set_of_list l1) (set_of_list l2) ~f:(fun a -> result := a :: !result);
       let result =
         List.rev_map !result ~f:(function
-        | `Left a -> `Left (Elt.to_int a)
-        | `Right a -> `Right (Elt.to_int a)
-        | `Both (a, b) -> `Both (Elt.to_int a, Elt.to_int b)
+          | `Left a -> `Left (Elt.to_int a)
+          | `Right a -> `Right (Elt.to_int a)
+          | `Both (a, b) -> `Both (Elt.to_int a, Elt.to_int b)
         )
       in
       assert (result = expected)

@@ -353,7 +353,7 @@ let spawn_db_flush_threads() =
                       period_start := Unix.gettimeofday();
                       my_writes_this_period := 0;
                     end
-                (* else debug "[%s] not resetting write-limit counters: not in new period yet" db_path *)
+                    (* else debug "[%s] not resetting write-limit counters: not in new period yet" db_path *)
                 end
               with
                 e -> debug "Exception in DB flushing thread: %s" (Printexc.to_string e)

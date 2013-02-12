@@ -120,8 +120,8 @@ exception NotEnoughSpace
 (* Make informational output go to the syslog *)
 let initialise_logging () = Debug.set_facility Syslog.Local5
 
-    (* --------------------------------------------- *)
-    (* Functions to deal with layout of block device *)
+(* --------------------------------------------- *)
+(* Functions to deal with layout of block device *)
 
 let start_of_half half =
   match half with
@@ -152,8 +152,8 @@ let get_pointer half =
 
 
 
-  (* ----------------------------------------------------------- *)
-  (* Helper functions to read and write to/from the block device *)
+(* ----------------------------------------------------------- *)
+(* Helper functions to read and write to/from the block device *)
 
 (* Lay out a blank double-buffered redo log on the given block device. *)
 (* May raise Unixext.Timeout exception *)
@@ -272,8 +272,8 @@ let read_delta block_dev_fd target_response_time =
 
 
 
-  (* -------------------------------------------- *)
-  (* Functions to help with socket communications *)
+(* -------------------------------------------- *)
+(* Functions to help with socket communications *)
 
 (* Returns a server socket listening on the specified socket file *)
 let listen_on sock =
@@ -353,8 +353,8 @@ let transfer_database_to_sock sock db_fn target_response_time =
       Unix.close data_client
     )
 
-    (* --------------------------------------------------- *)
-    (* Functions to read and write from the client process *)
+(* --------------------------------------------------- *)
+(* Functions to read and write from the client process *)
 
 exception ExpectedSeparator
 
@@ -394,8 +394,8 @@ let read_generation_count client = read_data client generation_size
 let read_length client = read_data client size_size
 
 
-  (* --------------------------------------------------------------------- *)
-  (* Functions to perform the actions which may be requested by the client *)
+(* --------------------------------------------------------------------- *)
+(* Functions to perform the actions which may be requested by the client *)
 
 (* Perform a "writedb" operation. *)
 let action_writedb block_dev_fd client datasock target_response_time =
@@ -649,8 +649,8 @@ let action_read block_dev_fd client datasock target_response_time =
     send_failure client failure_mesg excstr
 
 
-    (* ---------------------- *)
-    (* Command-line interface *)
+(* ---------------------- *)
+(* Command-line interface *)
 
 let block_dev = ref ""
 let ctrlsock = ref ""

@@ -552,13 +552,13 @@ let vbd_list x =
         let ty = match vbd.Vbd.ty with Vbd.CDROM -> "CDROM" | Vbd.Disk -> "HDD" in
         let plugged = if state.Vbd.plugged then "X" else " " in
         let disk = Opt.default "" (Opt.map (function
-            | Local x -> x |> trim 32
-            | VDI path -> path |> trim 32
+              | Local x -> x |> trim 32
+              | VDI path -> path |> trim 32
             ) vbd.Vbd.backend) in
         let info = Client.VBD.stat dbg (vbd.Vbd.id) in
         let disk2 = Opt.default "" (Opt.map (function
-            | Local x -> x |> trim 32
-            | VDI path -> path |> trim 32) (snd info).Vbd.backend_present) in
+              | Local x -> x |> trim 32
+              | VDI path -> path |> trim 32) (snd info).Vbd.backend_present) in
         line id position mode ty plugged disk disk2
       ) vbds in
   List.iter print_endline (header :: lines)
@@ -642,18 +642,18 @@ let rec events_watch from =
   let open Dynamic in
   let lines = List.map
       (function
-      | Vm id ->
-        Printf.sprintf "VM %s" id
-      | Vbd id ->
-        Printf.sprintf "VBD %s.%s" (fst id) (snd id)
-      | Vif id ->
-        Printf.sprintf "VIF %s.%s" (fst id) (snd id)
-      | Pci id ->
-        Printf.sprintf "PCI %s.%s" (fst id) (snd id)
-      | Task id ->
-        Printf.sprintf "Task %s" id
-      | Barrier id ->
-        Printf.sprintf "Barrier %d" id
+       | Vm id ->
+         Printf.sprintf "VM %s" id
+       | Vbd id ->
+         Printf.sprintf "VBD %s.%s" (fst id) (snd id)
+       | Vif id ->
+         Printf.sprintf "VIF %s.%s" (fst id) (snd id)
+       | Pci id ->
+         Printf.sprintf "PCI %s.%s" (fst id) (snd id)
+       | Task id ->
+         Printf.sprintf "Task %s" id
+       | Barrier id ->
+         Printf.sprintf "Barrier %d" id
       ) events in
   List.iter (fun x -> Printf.printf "%-8d %s\n" next x) lines;
   flush stdout;

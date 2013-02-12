@@ -79,7 +79,7 @@ module type S0 = sig
   val find_map : t -> f:(elt -> 'a option) -> 'a option
   val to_list  : t -> elt list
   val to_array : t -> elt array
-(* val compare : t -> t -> cmp:(elt -> elt -> int) -> int *)
+    (* val compare : t -> t -> cmp:(elt -> elt -> int) -> int *)
 end
 
 module type S0_phantom = sig
@@ -97,7 +97,7 @@ module type S0_phantom = sig
   val find_map : _ t -> f:(elt -> 'a option) -> 'a option
   val to_list  : _ t -> elt list
   val to_array : _ t -> elt array
-(* val compare : _ t -> _ t -> cmp:(elt -> elt -> int) -> int *)
+    (* val compare : _ t -> _ t -> cmp:(elt -> elt -> int) -> int *)
 end
 
 (* Signature for polymorphic container, e.g., 'a list or 'a array *)
@@ -115,7 +115,7 @@ module type S1 = sig
   val find_map : 'a t -> f:('a -> 'b option) -> 'b option
   val to_list  : 'a t -> 'a list
   val to_array : 'a t -> 'a array
-(* val compare : 'a t -> 'a t -> cmp:('a -> 'a -> int) -> int *)
+    (* val compare : 'a t -> 'a t -> cmp:('a -> 'a -> int) -> int *)
 end
 
 module type S1_phantom = sig
@@ -149,7 +149,7 @@ module type Generic = sig
   val find_map : 'a t -> f:('a elt -> 'b option) -> 'b option
   val to_list  : 'a t -> 'a elt list
   val to_array : 'a t -> 'a elt array
-(* val compare : 'a t -> 'a t -> cmp:('a elt -> 'a elt -> int) -> int *)
+    (* val compare : 'a t -> 'a t -> cmp:('a elt -> 'a elt -> int) -> int *)
 end
 
 module type Generic_phantom = sig
@@ -167,7 +167,7 @@ module type Generic_phantom = sig
   val find_map : ('a, _) t -> f:('a elt -> 'b option) -> 'b option
   val to_list  : ('a, _) t -> 'a elt list
   val to_array : ('a, _) t -> 'a elt array
-(* val compare : 'a t -> 'a t -> cmp:('a elt -> 'a elt -> int) -> int *)
+    (* val compare : 'a t -> 'a t -> cmp:('a elt -> 'a elt -> int) -> int *)
 end
 
 (* The following functors exist as a consistency check among all the various [S?]

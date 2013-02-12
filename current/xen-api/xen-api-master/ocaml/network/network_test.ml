@@ -41,11 +41,11 @@ let _ =
   Interface.set_ipv4_addr "xenbr0" (DHCP4 [`set_gateway; `set_dns]);
   Interface.set_ipv4_addr "xenbr1" (DHCP4 []);
   (match Interface.get_ipv4_gateway "xenbr0" with
-    | None -> Printf.printf "Xenbr0 has no gateway\n"
-    | Some g -> Printf.printf "The gateway of xenbr0 is %s\n" (Unix.string_of_inet_addr g));
+   | None -> Printf.printf "Xenbr0 has no gateway\n"
+   | Some g -> Printf.printf "The gateway of xenbr0 is %s\n" (Unix.string_of_inet_addr g));
   (match Interface.get_ipv4_gateway "xenbr1" with
-    | None -> Printf.printf "Xenbr1 has no gateway\n"
-    | Some g -> Printf.printf "The gateway of xenbr0 is %s\n" (Unix.string_of_inet_addr g));
+   | None -> Printf.printf "Xenbr1 has no gateway\n"
+   | Some g -> Printf.printf "The gateway of xenbr0 is %s\n" (Unix.string_of_inet_addr g));
   Printf.printf "DNS servers: %s\n" (String.concat ", " (List.map Unix.string_of_inet_addr (Interface.get_dns "eth1")));
   Printf.printf "MTU of eth0: %d\n" (Interface.get_mtu "eth0");
   Interface.set_ipv4_gateway "xenbr1" (Unix.inet_addr_of_string "10.80.224.1");

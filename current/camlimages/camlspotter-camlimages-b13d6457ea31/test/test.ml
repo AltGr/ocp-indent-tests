@@ -125,7 +125,7 @@ let treat_image name =
         let put_x = x + frame.frame_left
         and put_y = y + frame.frame_top in
         show_image (Index8 frame.frame_bitmap) put_x put_y;
-      (* if not (go_on ()) then raise Exit *) )
+        (* if not (go_on ()) then raise Exit *) )
         sequence.frames;
       begin
         try

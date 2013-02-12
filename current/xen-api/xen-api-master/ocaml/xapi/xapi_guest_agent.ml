@@ -104,8 +104,8 @@ let networks path (list: string -> string list) =
 let other all_control = 
   List.map (fun x -> "control/" ^ x, x) all_control
 
-  (* There are two memory keys: data/meminfo_free and data/meminfo_total. These are *)
-  (* inserted into the memory map with the keys 'free' and 'total' *)
+(* There are two memory keys: data/meminfo_free and data/meminfo_total. These are *)
+(* inserted into the memory map with the keys 'free' and 'total' *)
 
 (** Cache the results so that we only actually update the master's database when
     the results of these lookups differ *)

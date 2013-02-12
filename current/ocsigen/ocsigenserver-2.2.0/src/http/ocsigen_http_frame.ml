@@ -307,9 +307,9 @@ type t =
     { frame_header : Http_header.http_header;
       frame_content : string Ocsigen_stream.t option;
       frame_abort : unit -> unit Lwt.t
-    (*VVV abort looks like a hack.
-       It has been added for the reverse proxy, to enable closing the connection
-       if the request is cancelled ...
-       à revoir...
-    *)
+          (*VVV abort looks like a hack.
+             It has been added for the reverse proxy, to enable closing the connection
+             if the request is cancelled ...
+             à revoir...
+          *)
     }

@@ -49,16 +49,16 @@ let string_of_vdi_type vdi_type =
   Rpc.string_of_rpc (API.rpc_of_vdi_type vdi_type)
 
 module SMAPIv1 = struct
-(** xapi's builtin ability to call local SM plugins using the existing
-    protocol. The code here should only call the SM functions and encapsulate
-    the return or error properly. It should not perform side-effects on
-    the xapi database: these should be handled in the layer above so they
-    can be shared with other SM implementation types.
+  (** xapi's builtin ability to call local SM plugins using the existing
+      protocol. The code here should only call the SM functions and encapsulate
+      the return or error properly. It should not perform side-effects on
+      the xapi database: these should be handled in the layer above so they
+      can be shared with other SM implementation types.
 
-    Where this layer has to perform interface adjustments (see VDI.activate
-    and the read/write debacle), this highlights desirable improvements to
-    the backend interface.
-*)
+      Where this layer has to perform interface adjustments (see VDI.activate
+      and the read/write debacle), this highlights desirable improvements to
+      the backend interface.
+  *)
 
   type context = Smint.request
 
@@ -238,8 +238,8 @@ module SMAPIv1 = struct
               f device_config _type sr self
             )
         )
-    (* Allow us to remember whether a VDI is attached read/only or read/write.
-       If this is meaningful to the backend then this should be recorded there! *)
+        (* Allow us to remember whether a VDI is attached read/only or read/write.
+           If this is meaningful to the backend then this should be recorded there! *)
     let vdi_read_write = Hashtbl.create 10
     let vdi_read_write_m = Mutex.create ()
 
@@ -716,7 +716,7 @@ let bind ~__context ~pbd =
         (fun rpc session_id -> XenAPI.VM.start rpc session_id driver false false)
     with (Api_errors.Server_error(code, params)) when code = Api_errors.vm_bad_power_state ->
       error "Caught VM_BAD_POWER_STATE [ %s ]" (String.concat "; " params);
-  (* ignore for now *)
+      (* ignore for now *)
   end;
   let uuid = Db.VM.get_uuid ~__context ~self:driver in
 
@@ -866,16 +866,16 @@ let rec events_watch ~__context from =
   let open Dynamic in
   List.iter
     (function
-    | Task id ->
-      debug "sm event on Task %s" id;
-      update_task ~__context id
-    | Vdi vdi -> 
-      debug "sm event on VDI %s: ignoring" vdi
-    | Dp dp ->
-      debug "sm event on DP %s: ignoring" dp
-    | Mirror id ->
-      debug "sm event on mirror: %s" id;
-      update_mirror ~__context id
+     | Task id ->
+       debug "sm event on Task %s" id;
+       update_task ~__context id
+     | Vdi vdi -> 
+       debug "sm event on VDI %s: ignoring" vdi
+     | Dp dp ->
+       debug "sm event on DP %s: ignoring" dp
+     | Mirror id ->
+       debug "sm event on mirror: %s" id;
+       update_mirror ~__context id
     ) events;
   events_watch ~__context next
 
@@ -1033,9 +1033,9 @@ let resynchronise_pbds ~__context ~pbds =
         Db.PBD.set_currently_attached ~__context ~self ~value:false;
     ) pbds
 
-  (* -------------------------------------------------------------------------------- *)
-  (* The following functions are symptoms of a broken interface with the SM layer.
-     They should be removed, by enhancing the SM layer. *)
+(* -------------------------------------------------------------------------------- *)
+(* The following functions are symptoms of a broken interface with the SM layer.
+   They should be removed, by enhancing the SM layer. *)
 
 (* This is a layering violation. The layers are:
      xapi: has a pool-wide view

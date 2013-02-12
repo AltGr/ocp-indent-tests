@@ -44,8 +44,8 @@ let translate =
       else filename
 
 
-      (************************************************************************)
-      (* Loading files *)
+(************************************************************************)
+(* Loading files *)
 
 let isloaded, addloaded =
   let set = ref String.Set.empty in
@@ -136,8 +136,8 @@ let init_module pre post force name =
     | e -> raise (Dynlink_error (name, e))
 
 
-             (************************************************************************)
-             (* Manipulating Findlib's search path *)
+(************************************************************************)
+(* Manipulating Findlib's search path *)
 
 let () = Findlib.init ()
 let ocsigen_search_path = ref []
@@ -158,8 +158,8 @@ let add_ocamlpath p =
   update_search_path ()
 
 
-  (************************************************************************)
-  (* Using Findlib to locate files *)
+(************************************************************************)
+(* Using Findlib to locate files *)
 
 let findfiles =
   let cmx = Netstring_pcre.regexp_case_fold "\\.cmx($| |a)" in
@@ -196,8 +196,8 @@ let findfiles =
       | e -> raise (Findlib_error (package, e))
 
 
-               (************************************************************************)
-               (* Error formatting *)
+(************************************************************************)
+(* Error formatting *)
 
 open Printf
 

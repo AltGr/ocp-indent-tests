@@ -74,16 +74,16 @@ let _ =
       "-dirsample", Arg.Unit (fun () -> dirsample := true), ": random per directory sample mode";
       "-wait", Arg.Float (fun sec -> Tout.wait := sec), "sec : wait sec";
       "-root", Arg.String (function
-        "center" -> D.root_mode := `CENTER
-      | "random" -> D.root_mode := `RANDOM
-      | _ -> raise (Failure "root mode")), ": on root [center|random]";
+          "center" -> D.root_mode := `CENTER
+        | "random" -> D.root_mode := `RANDOM
+        | _ -> raise (Failure "root mode")), ": on root [center|random]";
       (*
       "-transition", Arg.String (function
-    "myst" -> D.transition := `MYST
-  | "transparent" -> D.transition := `TRANSPARENT
-  | _ -> raise (Failure "transition")), ": transition [myst|transparent]";
+      "myst" -> D.transition := `MYST
+    | "transparent" -> D.transition := `TRANSPARENT
+    | _ -> raise (Failure "transition")), ": transition [myst|transparent]";
       "-transparentborder", Arg.Unit (fun () ->
-  base_filters := `TRANSPARENT_BORDER :: !base_filters),
+    base_filters := `TRANSPARENT_BORDER :: !base_filters),
       ": transparent border filter";
 *)
       "-size", Arg.String (fun s ->
@@ -396,48 +396,48 @@ let _ =
   let bind () =
     let callback = fun ev ->
       begin match GdkEvent.Key.string ev with
-      (*
+        (*
       | "E" -> 
-    filter_toggle `ENHANCE;
-    display_current true
+      filter_toggle `ENHANCE;
+      display_current true
 
 *)
-      (*
+        (*
       | "N" -> 
-    filter_toggle `NORMALIZE;
-    display_current true
+      filter_toggle `NORMALIZE;
+      display_current true
 *)
 
-        |  "l" -> display_current true
+        |    "l" -> display_current true
 
         | " " | "n" | "f" -> next None
         | "p" | "b" -> prev None
         | "q" -> Main.quit ()
-        (*
+                   (*
       | "v" -> 
-  (* liv visual shell *)
-      let rec func = fun file typ ->
-      match typ with
-      | "image", _ -> 
-              display_image false file
+    (* liv visual shell *)
+        let rec func = fun file typ ->
+        match typ with
+        | "image", _ -> 
+                  display_image false file
 (*
             | "special", "dir" -> 
                 new Livsh.livsh file func; ()
 *)
-      | _ -> Gdk.X.beep ()
+        | _ -> Gdk.X.beep ()
+        in
+      (* where we should display ? *)
+      let dirname = 
+        if Array.length files = 0 then Unix.getcwd ()
+        else Filename.dirname files.(!cur) 
       in
-    (* where we should display ? *)
-    let dirname = 
-      if Array.length files = 0 then Unix.getcwd ()
-      else Filename.dirname files.(!cur) 
-    in
-    let dirname =
-      if Filename.is_relative dirname then begin
-         let cwd = Unix.getcwd () in
-        Filename.concat cwd dirname
-      end else dirname
-    in
-    ignore (new Livsh.livsh dirname func)
+      let dirname =
+        if Filename.is_relative dirname then begin
+           let cwd = Unix.getcwd () in
+          Filename.concat cwd dirname
+        end else dirname
+      in
+      ignore (new Livsh.livsh dirname func)
 *)
         | _ -> () 
       end; false
@@ -484,7 +484,7 @@ let _ =
       Gc.finalise release string;
       let buf = Gpointer.region_of_string string in
       ignore (GdkPixbuf.from_data ~width: 100 ~height: 10
-    ~bits: 8 ~rowstride:300 ~has_alpha: false buf);
+        ~bits: 8 ~rowstride:300 ~has_alpha: false buf);
       ()
     in
     for i = 0 to 100 do f () done

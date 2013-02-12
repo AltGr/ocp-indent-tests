@@ -58,8 +58,8 @@ let _ =
       in
       let rec flatten_contents contents =
         List.fold_left (fun l -> function
-        | Field f -> f :: l
-        | Namespace (name, contents) -> flatten_contents contents @ l
+          | Field f -> f :: l
+          | Namespace (name, contents) -> flatten_contents contents @ l
         ) [] contents
       in
       let fields = flatten_contents obj.contents in

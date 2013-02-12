@@ -66,9 +66,9 @@ let load name opts =
   let set_scanline =
     match colormodel, img with
     | _, Rgb24 img -> fun buf y -> Rgb24.set_scanline img y buf
-                                 | _, Cmyk32 img -> fun buf y -> Cmyk32.set_scanline img y buf
-                                                               | BLACKWHITE, Index8 img
-                                                               | WHITEBLACK, Index8 img ->
+    | _, Cmyk32 img -> fun buf y -> Cmyk32.set_scanline img y buf
+    | BLACKWHITE, Index8 img
+    | WHITEBLACK, Index8 img ->
       let bits = [| 128; 64; 32; 16; 8; 4; 2; 1 |] in
       fun buf y ->
         for x = 0 to w - 1 do
@@ -77,7 +77,7 @@ let load name opts =
           if Char.code buf.[c] land Array.unsafe_get bits b <> 0 then
             Index8.unsafe_set img x y 1
         done
-                | _ -> assert false in
+    | _ -> assert false in
 
   for y = 0 to h - 1 do
     read_scanline tif buf y;

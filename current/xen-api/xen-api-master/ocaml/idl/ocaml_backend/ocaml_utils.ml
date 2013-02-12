@@ -86,7 +86,7 @@ let rec ocaml_of_ty = function
   | Set x -> ocaml_of_ty x ^ " list"
   | Enum(name, cs) -> ocaml_of_enum (List.map fst cs)
   | Map(l, r) -> "("^alias_of_ty l^" * "^alias_of_ty r^") list"
-  (*  | Ref "session" -> "Uuid.cookie" *)
+    (*  | Ref "session" -> "Uuid.cookie" *)
   | Ref ty -> "[`"^ty^"] Ref.t"
   | Record x -> failwith "ocaml_of_ty got a record"
 

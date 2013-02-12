@@ -15,7 +15,7 @@ class status_bar ?packing ?show () =
   let progress =
     (*
     let f = GBin.frame ~width: 120 ~border_width: 0 ~shadow_type: `IN
-  ~packing: (hbox#pack ~expand: false ~fill: false) () in
+    ~packing: (hbox#pack ~expand: false ~fill: false) () in
 *)
     let f = GBin.event_box ~width: 120 
         ~packing: (hbox#pack ~expand: false ~fill: false) () in
@@ -45,7 +45,7 @@ class status_bar ?packing ?show () =
     method get_fraction = progress#fraction
 
     method event = progress#event
-    (*
+      (*
   method set_activity_blocks = progress#set_activity_blocks
   method set_activity_step = progress#set_activity_step
   method set_bar_style = progress#set_bar_style

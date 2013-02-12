@@ -49,9 +49,9 @@ let rec xmlrpc_to_json xml =
     "{"^(String.concat "," elts)^"}"
   | Element("array",_,[Element("data",_,values)]) ->
     let values = List.map (function 
-      |Element("value",_,[v]) -> xmlrpc_to_json v 
-      | Element("value",_,[]) -> "\"\""
-      | _ -> failwith "Bad XMLRPC"
+        |Element("value",_,[v]) -> xmlrpc_to_json v 
+        | Element("value",_,[]) -> "\"\""
+        | _ -> failwith "Bad XMLRPC"
       ) values in
     "["^(String.concat "," values)^"]"
   | Element(n,_,_) -> (Printf.fprintf stderr "%s" ("Bad XMLRPC (expecting something, got "^n^")"); "<bad2 (got "^n^">")

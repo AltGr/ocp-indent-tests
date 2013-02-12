@@ -32,8 +32,8 @@ exception Not_concerned
 let bad_config s = raise (Error_in_config_file s)
 
 
-  (*****************************************************************************)
-  (* Structures describing the static pages a each virtual server *)
+(*****************************************************************************)
+(* Structures describing the static pages a each virtual server *)
 
 (* A static site is either an entire directory served unconditionnaly,
    or a more elaborate redirection based on regexpes and http error
@@ -161,8 +161,8 @@ let gen ~usermode ?cache dir = function
 
         (function
           | Ocsigen_local_files.Failed_403 -> return (Ext_next 403)
-          (* XXX We should try to leave an information about this
-             error for later *)
+                                                (* XXX We should try to leave an information about this
+                                                   error for later *)
           | Ocsigen_local_files.NotReadableDirectory ->
               return (Ext_next err)
           | NoSuchUser | Not_concerned

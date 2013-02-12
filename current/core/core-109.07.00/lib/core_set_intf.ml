@@ -13,9 +13,9 @@ module type Accessors = sig
   include Container.Generic_phantom
 
   type ('a, 'comparator) tree
-  (* The [options] type is used to make [Accessors] flexible as to whether a comparator
-     is required to be passed to certain functions.  See core_map.mli for a detailed
-     explanation. *)
+    (* The [options] type is used to make [Accessors] flexible as to whether a comparator
+       is required to be passed to certain functions.  See core_map.mli for a detailed
+       explanation. *)
   type ('a, 'comparator, 'z) options
 
   (** Test if invariants of internal AVL search tree hold. *)
@@ -54,7 +54,7 @@ module type Accessors = sig
     : ('a, 'comparator,
       ('a, 'comparator) t -> ('a, 'comparator) t -> bool
     ) options
-  (** [subset t1 t2] returns true iff [t1] is a subset of [t2]. *)
+    (** [subset t1 t2] returns true iff [t1] is a subset of [t2]. *)
   val subset
     : ('a, 'comparator,
       ('a, 'comparator) t -> ('a, 'comparator) t -> bool
@@ -85,8 +85,8 @@ module type Accessors = sig
     :  ('a, 'comparator,
       ('a, 'comparator) t -> f:('a elt -> bool) -> ('a, 'comparator) t
     ) options
-  (** if [res = partition_tf set ~f] then [fst res] are the elements on which [f]
-      produced [true], and [snd res] are the elements on which [f] produces [false] *)
+    (** if [res = partition_tf set ~f] then [fst res] are the elements on which [f]
+        produced [true], and [snd res] are the elements on which [f] produces [false] *)
   val partition_tf
     :  ('a, 'comparator,
       ('a, 'comparator) t
@@ -135,8 +135,8 @@ module type Accessors = sig
     ) options
 
   val find_exn : ('a, _) t -> f:('a elt -> bool) -> 'a elt
-  (** [find_index t i] returns the [i]th smallest element of [t] in O(log n) time.  The
-      smallest element has [i = 0]. *)
+    (** [find_index t i] returns the [i]th smallest element of [t] in O(log n) time.  The
+        smallest element has [i = 0]. *)
   val find_index : ('a, _) t -> int -> 'a elt option
   val remove_index
     : ('a, 'comparator,
@@ -166,7 +166,7 @@ module type Creators = sig
     :  ('a, 'comparator,
       ('a, 'comparator) t list -> ('a, 'comparator) t
     ) options
-  (* The list or array need not be sorted *)
+    (* The list or array need not be sorted *)
   val of_list  : ('a, 'comparator, 'a elt list  -> ('a, 'comparator) t) options
   val of_array : ('a, 'comparator, 'a elt array -> ('a, 'comparator) t) options
 

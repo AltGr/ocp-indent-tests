@@ -53,7 +53,7 @@ module Ip_address : sig
 
   val get_inet_addr : string -> Unix.inet_addr Lwt.t
 
-(* val getnameinfo : Unix.inet_addr -> int -> string Lwt.t *)
+  (* val getnameinfo : Unix.inet_addr -> int -> string Lwt.t *)
 
 end
 

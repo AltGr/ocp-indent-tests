@@ -62,8 +62,8 @@ val get : 'a t -> 'a Lwt.t
 val set : 'a t -> 'a -> unit Lwt.t
     (** [set pv value] sets a persistent value [pv] to [value] *)
 
-    (*****************************************************************************)
-    (** {2 Persistent tables} *)
+(*****************************************************************************)
+(** {2 Persistent tables} *)
 
 (** Type of persistent table *)
 type 'value table

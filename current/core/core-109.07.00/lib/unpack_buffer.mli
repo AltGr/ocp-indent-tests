@@ -3,20 +3,20 @@
 open Std_internal
 
 module Unpack_one : sig
-(** If [unpack_one : ('value, 'partial_unpack) unpack_one], then [unpack_one buf ?pos
-    ?len ?partial_unpack] must unpack at most one value of type ['value] from [buf]
-    starting at [pos], and not using more than [len] characters.  [unpack_one] must
-    returns one the following:
+  (** If [unpack_one : ('value, 'partial_unpack) unpack_one], then [unpack_one buf ?pos
+      ?len ?partial_unpack] must unpack at most one value of type ['value] from [buf]
+      starting at [pos], and not using more than [len] characters.  [unpack_one] must
+      returns one the following:
 
-    `Ok (value, n) -- unpacking succeeded and consumed [n] bytes
-    `Not_enough_data (p, n) -- unpacking encountered a valid proper prefix of a packed
-    value, and consumed [n] bytes (0 <= n <= len).  [p] is a "partial unpack" that can
-    be supplied to a future call to [unpack_one] to continue unpacking
-    `Invalid_data -- unpacking encountered an invalidly packed value
+      `Ok (value, n) -- unpacking succeeded and consumed [n] bytes
+      `Not_enough_data (p, n) -- unpacking encountered a valid proper prefix of a packed
+      value, and consumed [n] bytes (0 <= n <= len).  [p] is a "partial unpack" that can
+      be supplied to a future call to [unpack_one] to continue unpacking
+      `Invalid_data -- unpacking encountered an invalidly packed value
 
-    A naive [unpack_one] that only succeeds on a fully packed value could lead to
-    quadratic behavior if a packed value's bytes are input using a linear number of
-    calls to [feed]. *)
+      A naive [unpack_one] that only succeeds on a fully packed value could lead to
+      quadratic behavior if a packed value's bytes are input using a linear number of
+      calls to [feed]. *)
 
   type ('value, 'partial_unpack) t =
     ?partial_unpack:'partial_unpack

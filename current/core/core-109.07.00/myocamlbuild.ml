@@ -1,7 +1,7 @@
 (* OASIS_START *)
 (* DO NOT EDIT (digest: 013a9e4f0a46e18064095b3711f84831) *)
 module OASISGettext = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISGettext.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISGettext.ml" *)
 
   let ns_ str =
     str
@@ -24,7 +24,7 @@ module OASISGettext = struct
 end
 
 module OASISExpr = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISExpr.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/OASISExpr.ml" *)
 
 
 
@@ -116,7 +116,7 @@ end
 
 # 117 "myocamlbuild.ml"
 module BaseEnvLight = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseEnvLight.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/base/BaseEnvLight.ml" *)
 
   module MapString = Map.Make(String)
 
@@ -214,7 +214,7 @@ end
 
 # 215 "myocamlbuild.ml"
 module MyOCamlbuildFindlib = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/ocamlbuild/MyOCamlbuildFindlib.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/ocamlbuild/MyOCamlbuildFindlib.ml" *)
 
   (** OCamlbuild extension, copied from 
     * http://brion.inria.fr/gallium/index.php/Using_ocamlfind_with_ocamlbuild
@@ -323,7 +323,7 @@ module MyOCamlbuildFindlib = struct
 end
 
 module MyOCamlbuildBase = struct
-(* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/ocamlbuild/MyOCamlbuildBase.ml" *)
+  (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/ocamlbuild/MyOCamlbuildBase.ml" *)
 
   (** Base functions for writing myocamlbuild.ml
       @author Sylvain Le Gall
@@ -399,17 +399,17 @@ module MyOCamlbuildBase = struct
       (* Declare OCaml libraries *)
       List.iter 
         (function
-        | nm, [] ->
-          ocaml_lib nm
-        | nm, dir :: tl ->
-          ocaml_lib ~dir:dir (dir^"/"^nm);
-          List.iter 
-            (fun dir -> 
-              List.iter
-                (fun str ->
-                  flag ["ocaml"; "use_"^nm; str] (S[A"-I"; P dir]))
-                ["compile"; "infer_interface"; "doc"])
-            tl)
+         | nm, [] ->
+           ocaml_lib nm
+         | nm, dir :: tl ->
+           ocaml_lib ~dir:dir (dir^"/"^nm);
+           List.iter 
+             (fun dir -> 
+               List.iter
+                 (fun str ->
+                   flag ["ocaml"; "use_"^nm; str] (S[A"-I"; P dir]))
+                 ["compile"; "infer_interface"; "doc"])
+             tl)
         t.lib_ocaml;
 
       (* Declare directories dependencies, replace "include" in _tags. *)

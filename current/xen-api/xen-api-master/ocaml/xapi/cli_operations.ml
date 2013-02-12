@@ -361,20 +361,20 @@ let string_of_task_status task = match task.API.task_status with
 
 let user_password_change _ rpc session_id params =
   let old_pwd = List.assoc_default "old" params ""
-  (* "new" must be in params here, since it is a required parameter. *)
+    (* "new" must be in params here, since it is a required parameter. *)
   and new_pwd = List.assoc "new" params in
   Client.Session.change_password rpc session_id old_pwd new_pwd
 
-  (** Low level CLI interface **)
+(** Low level CLI interface **)
 
-  (* Have a record for each class of the API, then accessor functions for it in a consistent way *)
-  (* e.g. vm-create vm-destroy vm-param-list vm-param-set vm-param-get vm-param-add vm-param-remove *)
-  (* create creates an instance of a class with a minimal set of required fields set on the cmd line *)
-  (* and the rest as optional params - e.g. *)
-  (* xe vm-create name-label=mynewvm name-description="a nice new vm" *)
-  (* and returns the uuid of the created object *)
-  (* vm-destroy takes the uuid and destroys the object *)
-  (* vm-param-list takes the uuid and lists either a default set of parameters, or those passed *)
+(* Have a record for each class of the API, then accessor functions for it in a consistent way *)
+(* e.g. vm-create vm-destroy vm-param-list vm-param-set vm-param-get vm-param-add vm-param-remove *)
+(* create creates an instance of a class with a minimal set of required fields set on the cmd line *)
+(* and the rest as optional params - e.g. *)
+(* xe vm-create name-label=mynewvm name-description="a nice new vm" *)
+(* and returns the uuid of the created object *)
+(* vm-destroy takes the uuid and destroys the object *)
+(* vm-param-list takes the uuid and lists either a default set of parameters, or those passed *)
 
 let alltrue l =
   List.fold_left (&&) true l
@@ -510,9 +510,9 @@ let filter_records_on_fields records (k,v) =
 
 let stdparams = ["server";"password";"port";"username"; "minimal"; "force"; "multiple"; "all"; "message-priority"]
 
-                (* This goes through the list of parameters, extracting any of the form map-name-key=value   *)
-                (* where map-name is the name of a map in the class. These will be used to set the key-value *)
-                (* pair in the map. Returns a list of params that didn't fit this form *)
+(* This goes through the list of parameters, extracting any of the form map-name-key=value   *)
+(* where map-name is the name of a map in the class. These will be used to set the key-value *)
+(* pair in the map. Returns a list of params that didn't fit this form *)
 
 
 let choose_params params defaults =
@@ -781,7 +781,7 @@ let gen_cmds rpc session_id =
     (make_param_funs (Client.Role.get_all) (fun ~rpc ~session_id ~expr -> Client.Role.get_all_records_where ~rpc ~session_id ~expr:Xapi_role.expr_no_permissions)
        (Client.Role.get_by_uuid) (role_record) "role" [] ["uuid";"name";"description";"subroles"] rpc session_id) @
     (make_param_funs (Client.VMPP.get_all) (Client.VMPP.get_all_records_where) (Client.VMPP.get_by_uuid) (vmpp_record) "vmpp" [] ["uuid";"name-label";"name-description";"is-policy-enabled";"backup-type";"backup-retention-value";"backup-frequency";"backup-schedule";"is-backup-running";"backup-last-run-time";"archive-target-type";"archive-target-config";"archive-frequency";"archive-schedule";"is-archive-running";"archive-last-run-time";"is-alarm-enabled";"alarm-config";"VMs"] rpc session_id) @
-    (*
+  (*
       (make_param_funs (Client.Blob.get_all) (Client.Blob.get_all_records_where) (Client.Blob.get_by_uuid) (blob_record) "blob" [] ["uuid";"mime-type"] rpc session_id) @
      *)
     (make_param_funs (Client.Message.get_all) (Client.Message.get_all_records_where) (Client.Message.get_by_uuid) (message_record) "message" [] [] rpc session_id) @
@@ -1238,7 +1238,7 @@ let print_assert_exception e =
   | Api_errors.Server_error(code, [key; v] ) when code=Api_errors.invalid_value ->
     Printf.sprintf "Field has invalid value: %s = %s" key v
 
-  (* Used by VM.assert_agile: *)
+(* Used by VM.assert_agile: *)
   | Api_errors.Server_error(code, [ sr ]) when code=Api_errors.ha_constraint_violation_sr_not_shared ->
     Printf.sprintf "VM requires access to non-shared SR: %s. SR must both be marked as shared and a properly configured PBD must be plugged-in on every host" (Cli_util.ref_convert sr)
   | Api_errors.Server_error(code, [ net]) when code = Api_errors.ha_constraint_violation_network_not_shared ->
@@ -1554,8 +1554,8 @@ let vm_destroy printer rpc session_id params =
   Client.VM.destroy rpc session_id vm
 
 
-  (* Event *)
-  (*
+(* Event *)
+(*
   let dodiff fd orig_values tbl reference =
   let (r,orig_tbl) = try List.find (fun (x,x_rec) -> x=reference) orig_values with _ -> ("",[]) in
   let changed = List.filter (fun (n,v) -> try v <> List.assoc n orig_tbl with _ -> true) tbl in
@@ -1617,7 +1617,7 @@ let event_wait_gen rpc session_id classname record_matches =
       | "role" -> List.map (fun x -> (role_record rpc session_id x).fields) (Client.Role.get_all rpc session_id)
       | "vmpp" -> List.map (fun x -> (vmpp_record rpc session_id x).fields) (Client.VMPP.get_all rpc session_id)
       | "secret" -> List.map (fun x -> (secret_record rpc session_id x).fields) (Client.Secret.get_all rpc session_id)
-      (*        | "alert" -> List.map (fun x -> (alert_record rpc session_id x).fields) (Client.Alert.get_all rpc session_id) *)
+                      (*        | "alert" -> List.map (fun x -> (alert_record rpc session_id x).fields) (Client.Alert.get_all rpc session_id) *)
       | _ -> failwith ("Cli listening for class '"^classname^"' not currently implemented")
     in
 
@@ -1698,8 +1698,8 @@ let event_wait printer rpc session_id params =
         if not(List.mem_assoc p record)
         then failwith (Printf.sprintf "key missing: %s" p);
         let v' = List.assoc p record () in match operator with
-          | `NotEquals -> v <> v'
-          | `Equals -> v = v') filter_params in
+        | `NotEquals -> v <> v'
+        | `Equals -> v = v') filter_params in
     alltrue matches
   in
   event_wait_gen rpc session_id classname record_matches
@@ -3097,13 +3097,13 @@ let vm_import fd printer rpc session_id params =
                       let counter = ref 0 in
                       let finished = ref false in
                       while not(!finished) do
-                      (* Nb.
-                       * The check for task cancelling is done here in the cli server. This is due to the fact that we've got
-                       * 3 parties talking to one another here: the thin cli, the cli server and the import handler. If the
-                       * import handler was checking, it would close its socket on task cancelling. This only happens after
-                       * each chunk is sent. Unfortunately the cli server wouldn't notice until it had already requested the
-                       * data from the thin cli, and would have to wait for it to finish sending its chunk before it could
-                       * alert it to the failure. *)
+                        (* Nb.
+                         * The check for task cancelling is done here in the cli server. This is due to the fact that we've got
+                         * 3 parties talking to one another here: the thin cli, the cli server and the import handler. If the
+                         * import handler was checking, it would close its socket on task cancelling. This only happens after
+                         * each chunk is sent. Unfortunately the cli server wouldn't notice until it had already requested the
+                         * data from the thin cli, and would have to wait for it to finish sending its chunk before it could
+                         * alert it to the failure. *)
 
                         (let l=Client.Task.get_current_operations rpc session_id importtask in
                          if List.exists (fun (_,x) -> x=`cancel) l then raise (Api_errors.Server_error(Api_errors.task_cancelled,[])));
@@ -3155,31 +3155,31 @@ let vm_import fd printer rpc session_id params =
 
               wait_for_task_complete rpc session_id importtask;
               (match Client.Task.get_status rpc session_id importtask with
-                | `success ->
-                  if stream_ok then
-                    let result = Client.Task.get_result rpc session_id importtask in
-                    let vmrefs = API.Legacy.From.ref_VM_set "" (Xml.parse_string result) in
-                    let uuids = List.map (fun vm -> Client.VM.get_uuid rpc session_id vm) vmrefs in
-                    marshal fd (Command (Print (String.concat "," uuids)))
-                  else
-                    begin
-                      marshal fd (Command (PrintStderr "Warning: Streaming failed, but task succeeded. Manual check required.\n"));
-                      raise (ExitWithError 1)
-                    end
-                | `failure ->
-                  let result = Client.Task.get_error_info rpc session_id importtask in
-                  if result = [] then
-                    begin
-                      marshal fd (Command (PrintStderr "Import failed, unknown error\n"));
-                      raise (ExitWithError 1)
-                    end
-                  else Cli_util.server_error (List.hd result) (List.tl result) fd
-                | `cancelled ->
-                  marshal fd (Command (PrintStderr "Import cancelled\n"));
-                  raise (ExitWithError 1)
-                | _ ->
-                  marshal fd (Command (PrintStderr "Internal error\n")); (* should never happen *)
-                  raise (ExitWithError 1))
+               | `success ->
+                 if stream_ok then
+                   let result = Client.Task.get_result rpc session_id importtask in
+                   let vmrefs = API.Legacy.From.ref_VM_set "" (Xml.parse_string result) in
+                   let uuids = List.map (fun vm -> Client.VM.get_uuid rpc session_id vm) vmrefs in
+                   marshal fd (Command (Print (String.concat "," uuids)))
+                 else
+                   begin
+                     marshal fd (Command (PrintStderr "Warning: Streaming failed, but task succeeded. Manual check required.\n"));
+                     raise (ExitWithError 1)
+                   end
+               | `failure ->
+                 let result = Client.Task.get_error_info rpc session_id importtask in
+                 if result = [] then
+                   begin
+                     marshal fd (Command (PrintStderr "Import failed, unknown error\n"));
+                     raise (ExitWithError 1)
+                   end
+                 else Cli_util.server_error (List.hd result) (List.tl result) fd
+               | `cancelled ->
+                 marshal fd (Command (PrintStderr "Import cancelled\n"));
+                 raise (ExitWithError 1)
+               | _ ->
+                 marshal fd (Command (PrintStderr "Internal error\n")); (* should never happen *)
+                 raise (ExitWithError 1))
             with e ->
               marshal fd (Command (Debug ("Caught exception: " ^ (Printexc.to_string e))));
               marshal fd (Command (PrintStderr "Failed to import directory-format XVA\n"));
@@ -3245,22 +3245,22 @@ let blob_get fd printer rpc session_id params =
 
       (* if the client thinks it's ok, check that the server does too *)
       (match Client.Task.get_status rpc session_id blobtask with
-        | `success ->
-          if ok
-          then (marshal fd (Command (Print "Blob get succeeded")))
-          else (marshal fd (Command (PrintStderr "Blob get failed, unknown error.\n"));
-            raise (ExitWithError 1))
-        | `failure ->
-          let result = Client.Task.get_error_info rpc session_id blobtask in
-          if result = []
-          then marshal fd (Command (PrintStderr "Blob get failed, unknown error\n"))
-          else raise (Api_errors.Server_error ((List.hd result),(List.tl result)))
-        | `cancelled ->
-          marshal fd (Command (PrintStderr "Blob get cancelled\n"));
-          raise (ExitWithError 1)
-        | _ ->
-          marshal fd (Command (PrintStderr "Internal error\n")); (* should never happen *)
-          raise (ExitWithError 1)
+       | `success ->
+         if ok
+         then (marshal fd (Command (Print "Blob get succeeded")))
+         else (marshal fd (Command (PrintStderr "Blob get failed, unknown error.\n"));
+           raise (ExitWithError 1))
+       | `failure ->
+         let result = Client.Task.get_error_info rpc session_id blobtask in
+         if result = []
+         then marshal fd (Command (PrintStderr "Blob get failed, unknown error\n"))
+         else raise (Api_errors.Server_error ((List.hd result),(List.tl result)))
+       | `cancelled ->
+         marshal fd (Command (PrintStderr "Blob get cancelled\n"));
+         raise (ExitWithError 1)
+       | _ ->
+         marshal fd (Command (PrintStderr "Internal error\n")); (* should never happen *)
+         raise (ExitWithError 1)
       ))
     (fun () -> Client.Task.destroy rpc session_id blobtask)
 
@@ -3294,22 +3294,22 @@ let blob_put fd printer rpc session_id params =
 
       (* if the client thinks it's ok, check that the server does too *)
       (match Client.Task.get_status rpc session_id blobtask with
-        | `success ->
-          if ok
-          then (marshal fd (Command (Print "Blob put succeeded")))
-          else (marshal fd (Command (PrintStderr "Blob put failed, unknown error.\n"));
-            raise (ExitWithError 1))
-        | `failure ->
-          let result = Client.Task.get_error_info rpc session_id blobtask in
-          if result = []
-          then marshal fd (Command (PrintStderr "Blob put failed, unknown error\n"))
-          else raise (Api_errors.Server_error ((List.hd result),(List.tl result)))
-        | `cancelled ->
-          marshal fd (Command (PrintStderr "Blob put cancelled\n"));
-          raise (ExitWithError 1)
-        | _ ->
-          marshal fd (Command (PrintStderr "Internal error\n")); (* should never happen *)
-          raise (ExitWithError 1)
+       | `success ->
+         if ok
+         then (marshal fd (Command (Print "Blob put succeeded")))
+         else (marshal fd (Command (PrintStderr "Blob put failed, unknown error.\n"));
+           raise (ExitWithError 1))
+       | `failure ->
+         let result = Client.Task.get_error_info rpc session_id blobtask in
+         if result = []
+         then marshal fd (Command (PrintStderr "Blob put failed, unknown error\n"))
+         else raise (Api_errors.Server_error ((List.hd result),(List.tl result)))
+       | `cancelled ->
+         marshal fd (Command (PrintStderr "Blob put cancelled\n"));
+         raise (ExitWithError 1)
+       | _ ->
+         marshal fd (Command (PrintStderr "Internal error\n")); (* should never happen *)
+         raise (ExitWithError 1)
       ))
     (fun () -> Client.Task.destroy rpc session_id blobtask)
 
@@ -3839,22 +3839,22 @@ let wait_for_task rpc session_id task __context fd op_str =
 
   (* if the client thinks it's ok, check that the server does too *)
   (match Client.Task.get_status rpc session_id task with
-    | `success ->
-      if ok
-      then (marshal fd (Command (Print (op_str ^ " succeeded"))))
-      else (marshal fd (Command (PrintStderr (op_str ^ " failed, unknown error.\n")));
-        raise (ExitWithError 1))
-    | `failure ->
-      let result = Client.Task.get_error_info rpc session_id task in
-      if result = []
-      then marshal fd (Command (PrintStderr (op_str ^ " failed, unknown error\n")))
-      else raise (Api_errors.Server_error ((List.hd result),(List.tl result)))
-    | `cancelled ->
-      marshal fd (Command (PrintStderr (op_str ^ " cancelled\n")));
-      raise (ExitWithError 1)
-    | _ ->
-      marshal fd (Command (PrintStderr "Internal error\n")); (* should never happen *)
-      raise (ExitWithError 1)
+   | `success ->
+     if ok
+     then (marshal fd (Command (Print (op_str ^ " succeeded"))))
+     else (marshal fd (Command (PrintStderr (op_str ^ " failed, unknown error.\n")));
+       raise (ExitWithError 1))
+   | `failure ->
+     let result = Client.Task.get_error_info rpc session_id task in
+     if result = []
+     then marshal fd (Command (PrintStderr (op_str ^ " failed, unknown error\n")))
+     else raise (Api_errors.Server_error ((List.hd result),(List.tl result)))
+   | `cancelled ->
+     marshal fd (Command (PrintStderr (op_str ^ " cancelled\n")));
+     raise (ExitWithError 1)
+   | _ ->
+     marshal fd (Command (PrintStderr "Internal error\n")); (* should never happen *)
+     raise (ExitWithError 1)
   )
 
 let host_get_system_status fd printer rpc session_id params =

@@ -757,10 +757,10 @@ module Vif = struct
     let extra_private_keys = extra_private_keys @
         (match mtu with | Some mtu when mtu > 0 -> [ "MTU", string_of_int mtu ] | _ -> []) @
         (match netty with
-          | Netman.Bridge b -> [ "bridge", b; "bridge-MAC", if(Xenctrl.is_fake ()) then "fe:fe:fe:fe:fe:fe" else "fe:ff:ff:ff:ff:ff"; ]
-          | Netman.Vswitch b -> [ "bridge", b; "bridge-MAC", if(Xenctrl.is_fake ()) then "fe:fe:fe:fe:fe:fe" else "fe:ff:ff:ff:ff:ff"; ]
-          | Netman.DriverDomain -> []
-          | Netman.Nat -> []) @
+         | Netman.Bridge b -> [ "bridge", b; "bridge-MAC", if(Xenctrl.is_fake ()) then "fe:fe:fe:fe:fe:fe" else "fe:ff:ff:ff:ff:ff"; ]
+         | Netman.Vswitch b -> [ "bridge", b; "bridge-MAC", if(Xenctrl.is_fake ()) then "fe:fe:fe:fe:fe:fe" else "fe:ff:ff:ff:ff:ff"; ]
+         | Netman.DriverDomain -> []
+         | Netman.Nat -> []) @
         (match rate with | None -> [] | Some(rate, timeslice) -> [ "rate", Int64.to_string rate; "timeslice", Int64.to_string timeslice ]) in
 
     Generic.add_device ~xs device back front extra_private_keys;
@@ -1077,53 +1077,53 @@ module PCI = struct
     Generic.add_device ~xs device (others @ xsdevs @ backendlist) frontendlist [];
     ()
 
-    (* comment out while we sort out libxenlight
-       let pci_info_of ~msitranslate ~pci_power_mgmt = function
-        | domain, bus, dev, func ->
-            {
-                (* XXX: I don't think we can guarantee how the C compiler will
-                   lay out bitfields.
-             unsigned int reserved1:2;
-             unsigned int reg:6;
-             unsigned int func:3;
-             unsigned int dev:5;
-             unsigned int bus:8;
-             unsigned int reserved2:7;
-             unsigned int enable:1;
-                *)
-                Xenlight.v = (func lsl 8) lor (dev lsl 11) lor (bus lsl 16);
-                domain = domain;
-                vdevfn = 0;
-                msitranslate = msitranslate = 1;
-                power_mgmt = pci_power_mgmt = 1;
-            }
-    *)
+  (* comment out while we sort out libxenlight
+     let pci_info_of ~msitranslate ~pci_power_mgmt = function
+      | domain, bus, dev, func ->
+          {
+              (* XXX: I don't think we can guarantee how the C compiler will
+                 lay out bitfields.
+           unsigned int reserved1:2;
+           unsigned int reg:6;
+           unsigned int func:3;
+           unsigned int dev:5;
+           unsigned int bus:8;
+           unsigned int reserved2:7;
+           unsigned int enable:1;
+              *)
+              Xenlight.v = (func lsl 8) lor (dev lsl 11) lor (bus lsl 16);
+              domain = domain;
+              vdevfn = 0;
+              msitranslate = msitranslate = 1;
+              power_mgmt = pci_power_mgmt = 1;
+          }
+  *)
 
 
-    (* XXX: this will crash because of the logging policy within the
-       Xenlight ocaml bindings.
-       let add_libxl ~msitranslate ~pci_power_mgmt pcidevs domid =
-       List.iter
-        (fun dev ->
-          try
-            Xenlight.pci_add (pci_info_of ~msitranslate ~pci_power_mgmt dev) domid
-          with e ->
-            debug "Xenlight.pci_add: %s" (Printexc.to_string e);
-            raise e
-        ) pcidevs
-    *)
-    (* XXX: this will crash because of the logging policy within the
-       Xenlight ocaml bindings.
-       let release_libxl ~msitranslate ~pci_power_mgmt pcidevs domid =
-       List.iter
-        (fun dev ->
-          try
-            Xenlight.pci_remove (pci_info_of ~msitranslate ~pci_power_mgmt dev) domid
-          with e ->
-            debug "Xenlight.pci_remove: %s" (Printexc.to_string e);
-            raise e
-        ) pcidevs
-    *)
+  (* XXX: this will crash because of the logging policy within the
+     Xenlight ocaml bindings.
+     let add_libxl ~msitranslate ~pci_power_mgmt pcidevs domid =
+     List.iter
+      (fun dev ->
+        try
+          Xenlight.pci_add (pci_info_of ~msitranslate ~pci_power_mgmt dev) domid
+        with e ->
+          debug "Xenlight.pci_add: %s" (Printexc.to_string e);
+          raise e
+      ) pcidevs
+  *)
+  (* XXX: this will crash because of the logging policy within the
+     Xenlight ocaml bindings.
+     let release_libxl ~msitranslate ~pci_power_mgmt pcidevs domid =
+     List.iter
+      (fun dev ->
+        try
+          Xenlight.pci_remove (pci_info_of ~msitranslate ~pci_power_mgmt dev) domid
+        with e ->
+          debug "Xenlight.pci_remove: %s" (Printexc.to_string e);
+          raise e
+      ) pcidevs
+  *)
 
   (* XXX: we don't want to use the 'xl' command here because the "interface"
      isn't considered as stable as the C API *)
@@ -1596,21 +1596,21 @@ module Dm = struct
 
   let xenclient_specific ~xs info ~qemu_domid domid =
     (match info.power_mgmt with 
-      | Some i -> begin
-          try 
-            if (Unix.stat "/proc/acpi/battery").Unix.st_kind == Unix.S_DIR then
-              xs.Xs.write (power_mgmt_path ~qemu_domid domid) (string_of_int i);
-          with _ -> ()
-        end
-      | None -> ());
+     | Some i -> begin
+         try 
+           if (Unix.stat "/proc/acpi/battery").Unix.st_kind == Unix.S_DIR then
+             xs.Xs.write (power_mgmt_path ~qemu_domid domid) (string_of_int i);
+         with _ -> ()
+       end
+     | None -> ());
 
     (match info.oem_features with 
-      | Some i -> xs.Xs.write (oem_features_path ~qemu_domid domid) (string_of_int i);
-      | None -> ());
+     | Some i -> xs.Xs.write (oem_features_path ~qemu_domid domid) (string_of_int i);
+     | None -> ());
 
     (match info.inject_sci with 
-      | Some i -> xs.Xs.write (inject_sci_path ~qemu_domid domid) (string_of_int i)
-      | None -> ());
+     | Some i -> xs.Xs.write (inject_sci_path ~qemu_domid domid) (string_of_int i)
+     | None -> ());
 
     let sound_options =
       match info.sound with

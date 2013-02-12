@@ -133,7 +133,7 @@ let roles_gte role =
   let rec gte = function []->failwith "invalid role"
                        |x::xs->if x=role then x::[] else x::gte xs in
   gte roles_all
-(* shortcuts to subsets of greater than or equal roles *)
+  (* shortcuts to subsets of greater than or equal roles *)
 let _R_LOCAL_ROOT_ONLY = Some([]) (* only local root, emergency and pool-secret *)
 let _R_POOL_ADMIN = Some(roles_gte role_pool_admin)
 let _R_POOL_OP = Some(roles_gte role_pool_operator)
@@ -281,10 +281,10 @@ let call ~name ?(doc="") ?(in_oss_since=Some "3.0.3") ?in_product_since ?interna
     msg_name = name;
     msg_params =
       (match versioned_params with
-        | None ->
-          List.map (fun (ptype, pname, pdoc) -> {param_type=ptype; param_name=pname;
-                                                 param_doc=pdoc; param_release=call_release; param_default=None}) params
-        | Some ps -> ps);
+       | None ->
+         List.map (fun (ptype, pname, pdoc) -> {param_type=ptype; param_name=pname;
+                                                param_doc=pdoc; param_release=call_release; param_default=None}) params
+       | Some ps -> ps);
     msg_result = result; msg_doc = doc;
     msg_session = List.mem `Session flags; msg_async = List.mem `Async flags;
     msg_db_only = db_only;
@@ -1633,8 +1633,8 @@ let vm_get_allowed_VIF_devices = call ~flags:[`Session] ~no_current_operations:t
     ~allowed_roles:_R_READ_ONLY
     ()
 
-    (* VM.atomic_set_resident_on *)
-    (* an internal call that sets resident_on and clears the scheduled_to_be_resident_on atomically *)
+(* VM.atomic_set_resident_on *)
+(* an internal call that sets resident_on and clears the scheduled_to_be_resident_on atomically *)
 
 let vm_atomic_set_resident_on = call
     ~in_product_since:rel_rio
@@ -1905,7 +1905,7 @@ let vm_suspend = call
     ~name:"suspend"
     ~doc:"Suspend the specified VM to disk.  This can only be called when the specified VM is in the Running state."
     ~params:[Ref _vm, "vm", "The VM to suspend"]
-    (*      Bool, "live", "If set to true, perform a live hibernate; otherwise suspend the VM before commencing hibernate" *)
+            (*      Bool, "live", "If set to true, perform a live hibernate; otherwise suspend the VM before commencing hibernate" *)
     ~errs:[Api_errors.vm_bad_power_state; Api_errors.other_operation_in_progress; Api_errors.operation_not_allowed;
            Api_errors.vm_is_template]
     ~allowed_roles:_R_VM_OP
@@ -2305,7 +2305,7 @@ let host_ha_wait_for_shutdown_via_statefile = call
     ~hide_from_docs:true
     ~allowed_roles:_R_LOCAL_ROOT_ONLY
     ()
-(*
+    (*
 let host_query_ha = call ~flags:[`Session]
   ~in_product_since:rel_miami
   ~name:"query_ha"
@@ -2983,8 +2983,8 @@ let vbd_assert_attachable = call
     ~allowed_roles:_R_VM_ADMIN
     ()
 
-    (******************************************************************************************************************)
-    (* Now define the objects themselves and their fields *)
+(******************************************************************************************************************)
+(* Now define the objects themselves and their fields *)
 
 
 (** Make an object field record *)
@@ -3088,9 +3088,9 @@ let create_obj ?lifecycle ~in_oss_since ?in_product_since ?(internal_deprecated_
   let get_field_writer_roles = function None->contents_default_writer_roles|r->r in
   let get_msg_allowed_roles = function None->messages_default_allowed_roles|r->r in
   let contents = List.map (function 
-    | Namespace(n,cs)->namespace ~get_field_writer_roles ~get_field_reader_roles ~name:n ~contents:cs ~idempotent:true ()
-    | Field f->Field{f with field_setter_roles=get_field_writer_roles f.field_setter_roles;
-                            field_getter_roles=get_field_reader_roles f.field_getter_roles}
+      | Namespace(n,cs)->namespace ~get_field_writer_roles ~get_field_reader_roles ~name:n ~contents:cs ~idempotent:true ()
+      | Field f->Field{f with field_setter_roles=get_field_writer_roles f.field_setter_roles;
+                              field_getter_roles=get_field_reader_roles f.field_getter_roles}
     ) contents in
   if lifecycle = None && in_product_since = None then
     failwith ("Lifecycle for class '" ^ name ^ "' not specified");
@@ -3370,7 +3370,7 @@ let task_destroy = call ~flags:[`Session]
     ~params:[Ref _task, "self", "Reference to the task object"]
     ~allowed_roles:_R_READ_ONLY (* POOL_OP can destroy any tasks, others can destroy only owned tasks *)
     ()
-(* this permission allows to destroy any task, instead of only the owned ones *)
+    (* this permission allows to destroy any task, instead of only the owned ones *)
 let extra_permission_task_destroy_any = "task.destroy/any"
 
 let task_allowed_operations =
@@ -6339,7 +6339,7 @@ let subject_get_permissions_name_label = call ~flags:[`Session]
     ~doc:"This call returns a list of permission names given a subject"
     ~allowed_roles:_R_READ_ONLY
     ()
-(* a subject is a user/group that can log in xapi *)
+    (* a subject is a user/group that can log in xapi *)
 let subject =
   create_obj ~in_db:true ~in_product_since:rel_george ~in_oss_since:None ~internal_deprecated_since:None ~persist:PersistEverything ~gen_constructor_destructor:true ~name:_subject ~descr:"A user or group that can log in xapi"
     ~gen_events:true
@@ -6431,7 +6431,7 @@ let role =
                     field ~in_product_since:rel_midnight_ride ~default_value:(Some (VString "")) ~qualifier:StaticRO ~ty:String "description" "what this role is for";
                   ]) ();
                 field ~in_product_since:rel_midnight_ride ~default_value:(Some (VSet [])) ~ignore_foreign_key:true ~qualifier:StaticRO ~ty:(Set(Ref _role)) "subroles" "a list of pointers to other roles or permissions";
-               (*RBAC2: field ~in_product_since:rel_midnight_ride ~default_value:(Some (VBool false)) ~qualifier:StaticRO ~ty:Bool "is_complete" "if this is a complete role, meant to be used by the end-user";*)
+                (*RBAC2: field ~in_product_since:rel_midnight_ride ~default_value:(Some (VBool false)) ~qualifier:StaticRO ~ty:Bool "is_complete" "if this is a complete role, meant to be used by the end-user";*)
                ]
     ()
 

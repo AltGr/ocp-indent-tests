@@ -112,7 +112,7 @@ class idealised_vm_with_limit
     || proposed_new_memory_actual > minimum_memory
     then delta
     else minimum_memory -* domain.memory_actual_kib
-(* this takes us to the minimum *)
+        (* this takes us to the minimum *)
 end
 
 (** Represents a VM which fails to allocate above a certain threshold *)
@@ -267,12 +267,12 @@ let scenario_f = {
   name = "f";
   should_succeed = false;
   fistpoints = [ Squeeze.DisableTwoPhaseTargetSets ];
-(* Since one domain is trying to allocate and the other free (but is stuck), the allocating
-   domain will try to allocate more memory than is free on the host IF we disable our two-phase
-   setting of the domain targets. In real life, xen allocates memory from the top down, keeping
-   memory < 4GiB until the end. This is important because some small structures can only be placed
-   in memory < 4GiB. If we give this memory to a guest then the balloon driver may well only release
-   memory > 4GiB resulting in a system with memory free but memory allocation failures on domain create. *)
+  (* Since one domain is trying to allocate and the other free (but is stuck), the allocating
+     domain will try to allocate more memory than is free on the host IF we disable our two-phase
+     setting of the domain targets. In real life, xen allocates memory from the top down, keeping
+     memory < 4GiB until the end. This is important because some small structures can only be placed
+     in memory < 4GiB. If we give this memory to a guest then the balloon driver may well only release
+     memory > 4GiB resulting in a system with memory free but memory allocation failures on domain create. *)
 }
 
 let scenario_g = {
@@ -280,8 +280,8 @@ let scenario_g = {
   name = "g";
   should_succeed = false;
   fistpoints = [ Squeeze.DisableInaccuracyCompensation ];
-(* The two domains are programmed to have an inaccuracy of 4KiB. We will conclude that the 
-   domains are both stuck if we don't take this into account. *)
+  (* The two domains are programmed to have an inaccuracy of 4KiB. We will conclude that the 
+     domains are both stuck if we don't take this into account. *)
 }
 
 let scenario_h = {

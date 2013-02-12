@@ -188,8 +188,8 @@ let rec parser_config =
                     "At most one <server> tag possible in config file. \
                      Ignoring trailing data."));
         parse_servers (n@[nouveau]) [] (* ll *)
-    (* Multiple server not supported any more *)
-    (* nouveau at the end *)
+                                    (* Multiple server not supported any more *)
+                                    (* nouveau at the end *)
     | _ -> raise (Config_file_error ("syntax error inside <ocsigen>"))
   in function
     | (Element ("ocsigen", [], l))::ll ->
@@ -330,22 +330,22 @@ let parse_server isreloading c =
         set_maxretries (int_of_string st (parse_string_tag st p));
         parse_server_aux ll
     | (Element ("timeout" as st, [], p))::ll
-    (*VVV timeout: backward compatibility with <= 0.99.4 *)
+      (*VVV timeout: backward compatibility with <= 0.99.4 *)
     | (Element ("clienttimeout" as st, [], p))::ll ->
         set_client_timeout (int_of_string st (parse_string_tag st p));
         parse_server_aux ll
     | (Element ("servertimeout" as st, [], p))::ll ->
         set_server_timeout (int_of_string st (parse_string_tag st p));
         parse_server_aux ll
-    (*VVV For now we use silentservertimeout and silentclienttimeout also
-       for keep alive :-(
-          | (Element ("keepalivetimeout" as st, [], p))::ll ->
-              set_keepalive_timeout (int_of_string st (parse_string_tag st p));
-              parse_server_aux ll
-          | (Element ("keepopentimeout" as st, [], p))::ll ->
-              set_keepopen_timeout (int_of_string st (parse_string_tag st p));
-              parse_server_aux ll
-    *)
+        (*VVV For now we use silentservertimeout and silentclienttimeout also
+           for keep alive :-(
+              | (Element ("keepalivetimeout" as st, [], p))::ll ->
+                  set_keepalive_timeout (int_of_string st (parse_string_tag st p));
+                  parse_server_aux ll
+              | (Element ("keepopentimeout" as st, [], p))::ll ->
+                  set_keepopen_timeout (int_of_string st (parse_string_tag st p));
+                  parse_server_aux ll
+        *)
     | (Element ("netbuffersize" as st, [], p))::ll ->
         set_netbuffersize (int_of_string st (parse_string_tag st p));
         parse_server_aux ll
@@ -590,14 +590,14 @@ let parse_port =
     match do_match all_ipv6 with
       | Some r -> IPv6 (Unix.inet6_addr_any), int_of_string "port" (get r 1)
       | None -> match do_match all_ipv4 with
-        | Some r -> IPv4 (Unix.inet_addr_any), int_of_string "port" (get r 1)
-        | None -> match do_match single_ipv6 with
-          | Some r -> IPv6 (Unix.inet_addr_of_string (get r 1)),
-              int_of_string "port" (get r 2)
-          | None -> match do_match single_ipv4 with
-            | Some r -> IPv4 (Unix.inet_addr_of_string (get r 1)),
-                int_of_string "port" (get r 2)
-            | None -> All, int_of_string "port" s
+          | Some r -> IPv4 (Unix.inet_addr_any), int_of_string "port" (get r 1)
+          | None -> match do_match single_ipv6 with
+              | Some r -> IPv6 (Unix.inet_addr_of_string (get r 1)),
+                  int_of_string "port" (get r 2)
+              | None -> match do_match single_ipv4 with
+                  | Some r -> IPv4 (Unix.inet_addr_of_string (get r 1)),
+                      int_of_string "port" (get r 2)
+                  | None -> All, int_of_string "port" s
 
 
 (* First parsing of config file *)

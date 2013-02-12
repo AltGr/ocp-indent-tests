@@ -138,12 +138,12 @@ let get_obj_names_of_refs (obj_ref_list : SExpr.t list) : SExpr.t list=
         get_sexpr_arg
           name
           (match (get_obj_name_of_ref ref_value) with 
-            | None -> "" (* ref_value is not a ref! *)
-            | Some obj_name -> obj_name (* the missing name *)
+           | None -> "" (* ref_value is not a ref! *)
+           | Some obj_name -> obj_name (* the missing name *)
           )
           (match (get_obj_uuid_of_ref ref_value) with 
-            | None -> "" (* ref_value is not a ref! *)
-            | Some obj_uuid -> obj_uuid (* the missing uuid *)
+           | None -> "" (* ref_value is not a ref! *)
+           | Some obj_uuid -> obj_uuid (* the missing uuid *)
           )
           ref_value
       |_->obj_ref (* do nothing if not a triplet *)
@@ -167,17 +167,17 @@ let populate_audit_record_with_obj_names_of_refs line =
         else
           let (args:SExpr.t) = List.hd (List.rev els) in
           (match List.partition (fun (e:SExpr.t) ->e<>args) els with
-            |prefix, ((SExpr.Node arg_list)::[]) ->
-              (* paste together the prefix of original audit record *) 
-              before_sexpr_str^" "^
-                (SExpr.string_of 
-                   (SExpr.Node (
-                      prefix@
-                        ((SExpr.Node (get_obj_names_of_refs arg_list))::
-                           [])
-                    ))
-                )
-            |prefix,_->line
+           |prefix, ((SExpr.Node arg_list)::[]) ->
+             (* paste together the prefix of original audit record *) 
+             before_sexpr_str^" "^
+               (SExpr.string_of 
+                  (SExpr.Node (
+                     prefix@
+                       ((SExpr.Node (get_obj_names_of_refs arg_list))::
+                          [])
+                   ))
+               )
+           |prefix,_->line
           )
       end
     |_->line
@@ -350,9 +350,9 @@ let rec sexpr_args_of __context name rpc_value action =
     |_-> None
 
 and
-(* Given an action and its parameters, *)
-(* return the marshalled uuid params and corresponding names *)
-(*let rec*) sexpr_of_parameters __context action args : SExpr.t list =
+  (* Given an action and its parameters, *)
+  (* return the marshalled uuid params and corresponding names *)
+  (*let rec*) sexpr_of_parameters __context action args : SExpr.t list =
   match args with
   | None -> []
   | Some (str_names,rpc_values) -> 
@@ -369,7 +369,7 @@ and
             if str_name = "session_id" 
             then params (* ignore session_id param *)
             else 
-            (* if it is a constructor structure, need to rewrap params *)
+              (* if it is a constructor structure, need to rewrap params *)
             if str_name = "__structure"
             then match rpc_value with 
               | Rpc.Dict d ->
@@ -456,7 +456,7 @@ let sexpr_of __context session_id allowed_denied ok_error result_error ?args ?se
       SExpr.String (allowed_denied)::    
       SExpr.String (ok_error ^ result_error)::
       SExpr.String (call_type_of action)::
-      (*SExpr.String (Helper_hostname.get_hostname ())::*)
+    (*SExpr.String (Helper_hostname.get_hostname ())::*)
       SExpr.String action::
       (SExpr.Node (
          match sexpr_of_args with

@@ -328,7 +328,7 @@ let ds_update rrd timestamp values transforms new_domid =
       if isnan value 
       then ds.ds_unknown_sec <- pre_int 
       else ds.ds_value <- ds.ds_value +. (pre_int *. value /. interval);
-    (*      debug "New ds value: %f (unknown=%f)\n" ds.ds_value ds.ds_unknown_sec*)) v2s;
+      (*      debug "New ds value: %f (unknown=%f)\n" ds.ds_value ds.ds_unknown_sec*)) v2s;
 
   (* If we've passed a PDP point, we need to update the RRAs *)
   if elapsed_pdp_st > 0 then
@@ -497,9 +497,9 @@ let query_named_ds rrd ds_name cf =
     let rras = find_best_rras rrd 0 (Some cf) (Int64.of_float (Unix.gettimeofday())) in
     Fring.peek (List.hd rras).rra_data.(n) 0
 
-    (******************************************************************************)
-    (* Marshalling/Unmarshalling functions                                        *)
-    (******************************************************************************)
+(******************************************************************************)
+(* Marshalling/Unmarshalling functions                                        *)
+(******************************************************************************)
 
 (** This is for making an in-memory representation of the xml tree *)
 exception Parse_error
@@ -685,12 +685,12 @@ let from_xml input =
 
       let data = Array.of_list 
           (List.map (function 
-           | El("row",cols) -> 
-             Array.of_list (List.map 
-                   (function 
-                   | El ("v",[D x]) -> x 
-                   | _ -> raise Parse_error) cols) 
-           | _ -> raise Parse_error) elts) in
+             | El("row",cols) -> 
+               Array.of_list (List.map 
+                     (function 
+                      | El ("v",[D x]) -> x 
+                      | _ -> raise Parse_error) cols) 
+             | _ -> raise Parse_error) elts) in
 
       for i=0 to cols-1 do
         for j=0 to rows-1 do

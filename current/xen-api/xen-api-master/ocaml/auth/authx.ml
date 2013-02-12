@@ -21,19 +21,19 @@ open D
 module AuthX : Auth_signature.AUTH_MODULE =
 struct
 
-(* 
+  (* 
  * External Authentication Plugin component
  * using Unix PAM/NSS as a backend
  * v1 22Oct08 marcusg@eu.citrix.com
  *
 *)
 
-(* This implementation is supposed to only use local names in the NSS and PAM databases *)
-(* => PAM: is used for authentication *)
-(* => NSS: is used as a database for groups, list of users etc *)
-(* Both, by default, use only local information from /etc/passwd and /etc/group *)
-(* PAM can be extended to use Kerberos by using xs-documents.hg/technical/howto/howto-dom0-ad-krb5.txt *)
-(* NSS can be extended to use LDAP by using xs-documents.hg/technical/howto/howto-dom0-ad-nss-ldap.txt *)
+  (* This implementation is supposed to only use local names in the NSS and PAM databases *)
+  (* => PAM: is used for authentication *)
+  (* => NSS: is used as a database for groups, list of users etc *)
+  (* Both, by default, use only local information from /etc/passwd and /etc/group *)
+  (* PAM can be extended to use Kerberos by using xs-documents.hg/technical/howto/howto-dom0-ad-krb5.txt *)
+  (* NSS can be extended to use LDAP by using xs-documents.hg/technical/howto/howto-dom0-ad-nss-ldap.txt *)
 
 
   let with_cmd cmd params_list fn =
@@ -58,15 +58,15 @@ struct
           (* getent passwd returns several lines *)
           let rec get_next_line lines =
             (match lines with
-              | [] -> raise Not_found
-              | line::lines ->
-                let recs = Stringext.String.split ':' line in 
-                let username = List.nth recs 0 in
-                let uid = List.nth recs 2 in
-                (match fn username uid recs with
-                  | None -> get_next_line lines
-                  | Some x -> x
-                )
+             | [] -> raise Not_found
+             | line::lines ->
+               let recs = Stringext.String.split ':' line in 
+               let username = List.nth recs 0 in
+               let uid = List.nth recs 2 in
+               (match fn username uid recs with
+                | None -> get_next_line lines
+                | Some x -> x
+               )
             )
           in
           get_next_line lines
@@ -169,7 +169,7 @@ struct
 
     match (String.get subject_identifier 0) with
     | 'u' -> begin  
-      (* 1. first look up the list of users *)
+        (* 1. first look up the list of users *)
 
         (* here we remove the prefix u or g *)
         let subject_identifier = String.sub subject_identifier 1 (String.length subject_identifier-1) in
@@ -209,7 +209,7 @@ struct
         ]
       end
     | 'g' -> begin
-      (* 2. only then we look up the list of groups *)
+        (* 2. only then we look up the list of groups *)
 
         (* here we remove the prefix u or g *)
         let subject_identifier = String.sub subject_identifier 1 (String.length subject_identifier-1) in
@@ -225,7 +225,7 @@ struct
            (*("contains-byname", List.nth infolist 3);*)
            (* fields required in xen_center: *)
            ("subject-is-group", "true");
-        (* fields required in xapi_session: *)
+           (* fields required in xapi_session: *)
         ]
       end
     | _ -> raise Not_found

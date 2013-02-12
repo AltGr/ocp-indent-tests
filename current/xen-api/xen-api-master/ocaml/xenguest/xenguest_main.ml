@@ -82,7 +82,7 @@ let string_of_message = function
 
 (** A mapping from param name -> string options *)
 let params = Hashtbl.create 10
-(** A mapping from param name -> docstring *)
+  (** A mapping from param name -> docstring *)
 let doc = Hashtbl.create 10
 
 let add_param (param: string) (docstring: string) =

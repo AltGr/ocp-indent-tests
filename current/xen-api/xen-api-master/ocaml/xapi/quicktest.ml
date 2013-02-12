@@ -264,8 +264,8 @@ let setup_export_test_vm session_id =
   let smallest : int64 option list = List.map (fun sr -> Quicktest_storage.find_smallest_disk_size session_id sr) all_srs in
   let sr_names = List.map (Quicktest_storage.name_of_sr session_id) all_srs in
   List.iter (function
-  | sr, Some size -> debug test (Printf.sprintf "SR %s has minimum disk size: %Ld" sr size)
-  | sr, None -> debug test (Printf.sprintf "SR %s has no minimum disk size!" sr)
+    | sr, Some size -> debug test (Printf.sprintf "SR %s has minimum disk size: %Ld" sr size)
+    | sr, None -> debug test (Printf.sprintf "SR %s has no minimum disk size!" sr)
   ) (List.combine sr_names smallest);
   let minimum = List.fold_left min (1L ** gib) (List.map (fun x -> Opt.default (1L ** gib) x) smallest) in
   let possible_srs = List.filter (fun (sr, size) -> size = Some minimum) (List.combine all_srs smallest) in
@@ -703,11 +703,11 @@ let async_test session_id =
   let status = Client.Task.get_status !rpc session_id task in
   debug test (Printf.sprintf "Status: %s  result: %s%!"
       (match status with
-        | `pending -> "pending"
-        | `success -> "success"
-        | `failure -> "failure"
-        | `cancelling -> "cancelling"
-        | `cancelled -> "cancelled")
+       | `pending -> "pending"
+       | `success -> "success"
+       | `failure -> "failure"
+       | `cancelling -> "cancelling"
+       | `cancelled -> "cancelled")
       (Client.Task.get_result !rpc session_id task));
   if status=`failure then 
     begin 

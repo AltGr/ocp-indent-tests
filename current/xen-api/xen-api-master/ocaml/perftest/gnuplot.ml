@@ -62,14 +62,14 @@ let render (x: t) output =
   let config = [
     Printf.sprintf "set terminal %s" 
       (match output with
-        | Ps _ -> "postscript eps enhanced color"
-        | Gif _ -> "gif"
-        | X11 -> "wxt 0");
+       | Ps _ -> "postscript eps enhanced color"
+       | Gif _ -> "gif"
+       | X11 -> "wxt 0");
     Printf.sprintf "set output %s"
       (match output with
-        | Ps filename -> "\"" ^ filename ^ "\""
-        | Gif filename -> "\"" ^ filename ^ "\""
-        | X11 -> ""
+       | Ps filename -> "\"" ^ filename ^ "\""
+       | Gif filename -> "\"" ^ filename ^ "\""
+       | X11 -> ""
       );
     Printf.sprintf "set xlabel \"%s\"" x.xlabel;
     Printf.sprintf "set ylabel \"%s\"" x.ylabel;
@@ -97,8 +97,8 @@ let render (x: t) output =
     @ [
       (if x.log_x_axis then "set logscale x" else "");
       (match x.xrange with
-        | None -> "set xrange [*:*]"
-        | Some(min, max) -> Printf.sprintf "set xrange [%f:%f]" min max);
+       | None -> "set xrange [*:*]"
+       | Some(min, max) -> Printf.sprintf "set xrange [%f:%f]" min max);
       Printf.sprintf "plot %s" (String.concat ", " (List.map line x.lines))
     ] in
 

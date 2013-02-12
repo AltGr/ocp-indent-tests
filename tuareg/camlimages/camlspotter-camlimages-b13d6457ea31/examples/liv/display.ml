@@ -267,7 +267,7 @@ let create_pixbuf (_id : int) image filters =
   let rec filter_pixbuf pixbuf = function
     | [] -> pixbuf
     | `SIZE (w, h, cond) :: _fs -> 
-  (* original pixbuf will be GC'ed automatically *)
+    (* original pixbuf will be GC'ed automatically *)
       resize w h cond pixbuf
   in
   filter_pixbuf pixbuf filters

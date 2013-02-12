@@ -222,7 +222,7 @@ and find_post_params_multipart_form_data body_gen ctparams filenames ci =
     | No_File (p_name, to_buf) ->
         return
           (params := !params @ [(p_name, Buffer.contents to_buf)])
-    (* à la fin ? *)
+          (* à la fin ? *)
     | A_File (p_name,fname,oname,wh, content_type) ->
         (* Ocsigen_messages.debug "closing file"; *)
         files :=
@@ -537,9 +537,9 @@ let handle_result_frame ri res send =
 
 
 let service receiver sender_slot request meth url port sockaddr =
-(* sender_slot is here for pipelining:
-   we must wait before sending the page,
-   because the previous one may not be sent *)
+  (* sender_slot is here for pipelining:
+     we must wait before sending the page,
+     because the previous one may not be sent *)
 
   let head = meth = Http_header.HEAD in
   let clientproto =
@@ -605,8 +605,8 @@ let service receiver sender_slot request meth url port sockaddr =
             (Lwt.catch
                (fun () ->
                  Ocsigen_stream.finalize f `Success
-               (* will consume the stream and unlock the mutex
-                  if not already done *)
+                 (* will consume the stream and unlock the mutex
+                    if not already done *)
                )
                (function
                  | e ->
@@ -913,7 +913,7 @@ let handle_connection port in_ch sockaddr =
           with
             | Http_header.Query a -> a
             | _                   -> assert false
-        (*XXX Should be checked in [get_http_frame] *)
+            (*XXX Should be checked in [get_http_frame] *)
         in
         Ocsigen_http_com.start_processing receiver (fun slot ->
           Lwt.catch
@@ -990,9 +990,9 @@ let rec wait_connection use_ssl port socket =
             Lwt_unix.set_close_on_exec s;
             Lwt_unix.setsockopt s Unix.TCP_NODELAY true;
             begin if use_ssl then
-                    Lwt_ssl.ssl_accept s !sslctx
-                  else
-                    Lwt.return (Lwt_ssl.plain s)
+                Lwt_ssl.ssl_accept s !sslctx
+              else
+                Lwt.return (Lwt_ssl.plain s)
             end >>= fun in_ch ->
             handle_connection port in_ch sockaddr)
           (fun e ->

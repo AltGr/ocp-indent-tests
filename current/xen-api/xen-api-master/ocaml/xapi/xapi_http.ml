@@ -99,11 +99,11 @@ let assert_credentials_ok realm ?(http_action=realm) ?(fn=Rbac.nofn) (req: Reque
   in
   let rbac_raise permission msg exc =
     (match task_id with
-      | None -> ()
-      | Some task_id ->
-        TaskHelper.failed
-          ~__context:(Context.from_forwarded_task task_id)
-          (Api_errors.rbac_permission_denied,[permission;msg])
+     | None -> ()
+     | Some task_id ->
+       TaskHelper.failed
+         ~__context:(Context.from_forwarded_task task_id)
+         (Api_errors.rbac_permission_denied,[permission;msg])
     );
     raise exc
   in

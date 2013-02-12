@@ -56,7 +56,7 @@ let gen dir = function
       Lwt.return Ocsigen_extensions.Ext_do_nothing
   | Ocsigen_extensions.Req_not_found (err, ri) ->
       catch
-        (* Is it a redirection? *)
+      (* Is it a redirection? *)
         (fun () ->
           Ocsigen_messages.debug2 "--Redirectmod: Is it a redirection?";
           let Regexp (regexp, dest, full, temp) = dir in

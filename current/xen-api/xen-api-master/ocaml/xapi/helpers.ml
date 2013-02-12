@@ -461,7 +461,7 @@ let get_my_pbds __context =
 (* Return the PBD for specified SR on a specific host *)
 (* Just say an SR is shared if it has more than one PBD *)
 let is_sr_shared ~__context ~self = List.length (Db.SR.get_PBDs ~__context ~self) > 1
-(* This fn is only executed by master *)
+  (* This fn is only executed by master *)
 let get_shared_srs ~__context =
   let srs = Db.SR.get_all ~__context in
   List.filter (fun self -> is_sr_shared ~__context ~self) srs

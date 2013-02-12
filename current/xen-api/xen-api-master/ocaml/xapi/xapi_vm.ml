@@ -878,12 +878,12 @@ let import_convert ~__context ~_type ~username ~password ~sr ~remote_config =
     let jobInstance = Vpx.jobInstance_of_rpc response.Rpc.contents in
     print_jobInstance jobInstance;
     (match jobInstance.state with
-      | Created
-      | Queued
-      | Running -> Thread.delay 1.; loop call vpx_ip
-      | Completed
-      | Aborted
-      | UserAborted -> ()) in
+     | Created
+     | Queued
+     | Running -> Thread.delay 1.; loop call vpx_ip
+     | Completed
+     | Aborted
+     | UserAborted -> ()) in
   debug "import_convert %s" (String.concat "; " (List.map (fun (k,v) -> (k ^ "," ^ v)) remote_config));
   let vpx_ip = Xapi_plugins.call_plugin (Context.get_session_id __context) "conversion" "main" [] in
   debug "import_convert %s" vpx_ip;

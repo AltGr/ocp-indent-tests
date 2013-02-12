@@ -73,7 +73,7 @@ module type S = sig
   (** [dequeue_all t ~f] dequeues every element of the queue and applies f to each
      one. *)
   val dequeue_all : 'a t -> f:('a -> unit) -> unit
-  (** [remove q k] removes the key-value pair with key k from the queue. *)
+    (** [remove q k] removes the key-value pair with key k from the queue. *)
   val remove : 'a t -> Key.t -> [ `Ok | `No_such_key ]
 
   val remove_exn : 'a t -> Key.t -> unit

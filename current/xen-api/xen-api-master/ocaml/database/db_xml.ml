@@ -34,11 +34,11 @@ module To = struct
   let pair (output: Xmlm.output) (key: string) (v: string) = 
     Xmlm.output output (`El_start (make_tag "pair" [ "key", key; "value", v ]));
     Xmlm.output output `El_end 
-  (* Write out a string *)
+    (* Write out a string *)
   let string (output: Xmlm.output) (key: string) (x: string) = pair output key x
-  (* Write out an int *)
+    (* Write out an int *)
   let int (output: Xmlm.output) (key: string) (x: int) = pair output key (string_of_int x)
-  (* Write out an int64 *)
+    (* Write out an int64 *)
   let int64 (output: Xmlm.output) (key: string) (x: Int64.t) = pair output key (Int64.to_string x)
 
   (* Marshal a whole database table to an Xmlm output abstraction *)
@@ -126,7 +126,7 @@ module From = struct
           | (_, name), _ -> 
             raise (Unmarshall_error (Printf.sprintf "Unexpected tag: %s" name))
         end
-      (* On reading an end tag... *)
+        (* On reading an end tag... *)
       | `El_end ->
         let tag = Stack.pop tags in
         begin match tag with

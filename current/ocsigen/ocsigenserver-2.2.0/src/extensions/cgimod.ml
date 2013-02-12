@@ -45,8 +45,8 @@ exception CGI_Error of exn
 let cgitimeout = ref 30
 
 
-  (*****************************************************************************)
-  (* The table of cgi pages for each virtual server                            *)
+(*****************************************************************************)
+(* The table of cgi pages for each virtual server                            *)
 
 type reg = {
   regexp:Regexp.regexp; (** regexp of the script url *)
@@ -90,10 +90,10 @@ let environment= ["CONTENT_LENGTH=%d";
 let string_conform s = match String.length s with
   | 0 -> "/"
   | n -> match  s.[0], s.[n - 1] with
-    | '/' ,'/' -> s
-    | _, '/' -> "/"^s
-    | '/', _ -> s^"/"
-    | _, _ -> "/"^s^"/"
+      | '/' ,'/' -> s
+      | _, '/' -> "/"^s
+      | '/', _ -> s^"/"
+      | _, _ -> "/"^s^"/"
 
 let string_conform0 s =
   try
@@ -113,10 +113,10 @@ let string_conform2 s =
   match String.length s with
     | 0 | 1 when s = "/" -> ""
     | n -> match s.[0], s.[n - 1] with
-      | '/', '/' -> String.sub s 1 (n-1)
-      | _, '/' -> s
-      | '/', _ -> (String.sub s 1 (n-1))^"/"
-      | _, _ -> s^"/"
+        | '/', '/' -> String.sub s 1 (n-1)
+        | _, '/' -> s
+        | '/', _ -> (String.sub s 1 (n-1))^"/"
+        | _, _ -> s^"/"
 
 (* split a string in two parts, according to a regexp *)
 let split_regexp r s =
@@ -179,8 +179,8 @@ let find_cgi_page request reg sub_path =
 
 
 
-                                                (*****************************************************************************)
-                                                (** permet de creer le tableau des variables d environnement *)
+(*****************************************************************************)
+(** permet de creer le tableau des variables d environnement *)
 
 (*XXX Is this documented anywhere?*)
 let suitable_header = Regexp.regexp "[a-zA-Z-]+"
@@ -193,7 +193,7 @@ let _ =
     (fun x ->
       Http_headers.NameHtbl.add exclude_headers (Http_headers.name x) ())
     ["Content-type"; "Authorization"; "Content-length";
-    (*"Referer"; "Host"; "Cookie"*) ]
+     (*"Referer"; "Host"; "Cookie"*) ]
 
 let array_environment filename re doc_root ri hostname =
   let header = ri.ri_http_frame.Ocsigen_http_frame.frame_header in
@@ -464,7 +464,7 @@ let gen reg = function
       Lwt.return Ocsigen_extensions.Ext_do_nothing
   | Ocsigen_extensions.Req_not_found (err, ri) ->
       catch
-        (* Is it a cgi page? *)
+      (* Is it a cgi page? *)
         (fun () ->
           Ocsigen_messages.debug2 "--Cgimod: Is it a cgi file?";
           let (filename, re, doc_root) =
@@ -563,8 +563,8 @@ let gen reg = function
 
 
 
-        (*****************************************************************************)
-        (** Parsing of config file *)
+(*****************************************************************************)
+(** Parsing of config file *)
 
 let rec set_env = function
   | [] -> []

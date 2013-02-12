@@ -31,9 +31,9 @@ let auth_type_PAM = "PAM"
 module Ext_auth =
 struct
 
-(* CP-781: Implement Ext_auth as a multiplexer for all the authentication plugins *)
-(* Will call the dispatch to the appropriate xapi-auth-module's functions,
-   depending on the 'auth_type' field of this host *)
+  (* CP-781: Implement Ext_auth as a multiplexer for all the authentication plugins *)
+  (* Will call the dispatch to the appropriate xapi-auth-module's functions,
+     depending on the 'auth_type' field of this host *)
 
   (* this 'named dispatcher' should not be used in general by other xapi modules, only during *)
   (* xapi_host.enable_extauth, when we do not yet have access here to the global variable host.external_auth_type *)
@@ -45,13 +45,13 @@ struct
         debug "External authentication is disabled.";
         raise Extauth_is_disabled
       end 
-    (* our "local" authentication plugin *)
+      (* our "local" authentication plugin *)
     | "PAM" -> (*pam/nss unix services*)
       Authx.AuthX.methods
-    (* the Likewise authentication plugin *)
+      (* the Likewise authentication plugin *)
     | "AD" -> (*windows active directory*)
       Extauth_plugin_ADlikewise.AuthADlw.methods
-    (* if no other auth_type fits, then we don't know what to do *) 
+      (* if no other auth_type fits, then we don't know what to do *) 
     | _ as uat -> (*error*)
       begin
         debug "Unknown external authentication type: %s" uat;
@@ -101,11 +101,11 @@ let can_execute_extauth_hook_script ~__context host event_name =
 (* this function should only be used directly by host.{enable,disable}_extauth *)
 (* use the generic call below to avoid concurrency problems between the script and host.{enable,disable}_extauth *)
 let call_extauth_hook_script_in_host_wrapper ~__context host event_name ~call_plugin_fn =
-(* CP-709: call extauth-hook-script *)
-(* Forkhelpers.execute_command_get_output hook-script "@PLUGINDIR@/extauth-hook" *)
-(* fork a new thread and call new xapi.host.call-subject-add-hook-script method *)
-(* see xapi_sync.ml *)
-(* host.call-plugins scriptname (calls @PLUGINDIR@/scriptname*)
+  (* CP-709: call extauth-hook-script *)
+  (* Forkhelpers.execute_command_get_output hook-script "@PLUGINDIR@/extauth-hook" *)
+  (* fork a new thread and call new xapi.host.call-subject-add-hook-script method *)
+  (* see xapi_sync.ml *)
+  (* host.call-plugins scriptname (calls @PLUGINDIR@/scriptname*)
 
   if can_execute_extauth_hook_script ~__context host event_name
   then begin
@@ -161,9 +161,9 @@ type hook_script_result =
 
 (* calls extauth_hook_script in all hosts of the pool *)
 let call_extauth_hook_script_in_pool ~__context event_name =
-(* CP-709: call extauth-hook-script *)
-(* we call the script for each host in the pool, using a best-effort attempt to call *)
-(* all hosts even if one fails *)
+  (* CP-709: call extauth-hook-script *)
+  (* we call the script for each host in the pool, using a best-effort attempt to call *)
+  (* all hosts even if one fails *)
 
   let host = Helpers.get_localhost ~__context in
   if can_execute_extauth_hook_script ~__context host event_name

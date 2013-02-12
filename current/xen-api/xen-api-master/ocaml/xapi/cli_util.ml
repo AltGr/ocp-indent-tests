@@ -45,8 +45,8 @@ let track callback rpc (session_id:API.ref_session) task =
             let events = Event_types.events_of_rpc (Client.Event.next ~rpc ~session_id) in
             let events = List.map Event_helper.record_of_event events in
             List.iter (function
-            | Event_helper.Task (t, Some t_rec) when t = task -> callback t_rec
-            | _ -> ()
+              | Event_helper.Task (t, Some t_rec) when t = task -> callback t_rec
+              | _ -> ()
             ) events;
             let matches = function
               | Event_helper.Task (t, Some t_rec) -> t = task && t_rec.API.task_status <> `pending

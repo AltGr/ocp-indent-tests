@@ -894,13 +894,13 @@ val utimes : string -> access:float -> modif:float -> unit
 type interval_timer =
     Unix.interval_timer =
     ITIMER_REAL
-  (** decrements in real time, and sends the signal [SIGALRM] when expired.*)
+    (** decrements in real time, and sends the signal [SIGALRM] when expired.*)
   | ITIMER_VIRTUAL
   (**  decrements in process virtual time, and sends [SIGVTALRM] when expired. *)
   | ITIMER_PROF
-(** (for profiling) decrements both when the process
-   is running and when the system is running on behalf of the
-   process; it sends [SIGPROF] when expired. *)
+  (** (for profiling) decrements both when the process
+     is running and when the system is running on behalf of the
+     process; it sends [SIGPROF] when expired. *)
 with sexp
 
 (** The type describing the status of an interval timer *)
@@ -976,8 +976,8 @@ module Passwd : sig
   val getpwents : unit -> t list
 
   module Low_level : sig
-  (* These functions may not be thread safe.
-     Use [getpwents], above, if possible. *)
+    (* These functions may not be thread safe.
+       Use [getpwents], above, if possible. *)
 
     val setpwent : unit -> unit
     val getpwent : unit -> t option

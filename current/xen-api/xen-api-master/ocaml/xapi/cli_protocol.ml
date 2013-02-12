@@ -57,8 +57,8 @@ type message =
   | Response of response
   | Blob of blob_header
 
-  (*****************************************************************************)
-  (* Pretty-print functions                                                    *)
+(*****************************************************************************)
+(* Pretty-print functions                                                    *)
 
 let string_of_command = function
   | Print x                  -> "Print " ^ x
@@ -86,8 +86,8 @@ let string_of_message = function
   | Response x -> "Response " ^ (string_of_response x)
   | Blob x     -> "Blob " ^ (string_of_blob_header x)
 
-    (*****************************************************************************)
-    (* Marshal/Unmarshal primitives                                              *)
+(*****************************************************************************)
+(* Marshal/Unmarshal primitives                                              *)
 
 let marshal_int32 x = 
   let (>>) a b = Int32.shift_right_logical a b
@@ -139,8 +139,8 @@ let unmarshal_list pos f =
   loop pos [] len
 
 
-  (*****************************************************************************)
-  (* Marshal/Unmarshal higher-level messages                                   *)
+(*****************************************************************************)
+(* Marshal/Unmarshal higher-level messages                                   *)
 
 (* Highest command id: 17 *)
 
@@ -160,28 +160,28 @@ exception Unknown_tag of string * int
 
 let unmarshal_command pos = 
   let tag, pos = unmarshal_int pos in match tag with
-    | 0 -> let body, pos = unmarshal_string pos in Print body, pos
-    | 15 -> let body, pos = unmarshal_string pos in Debug body, pos
-    | 1 -> let body, pos = unmarshal_string pos in Load body, pos
-    | 12 ->
-      let a, pos = unmarshal_string pos in
-      let b, pos = unmarshal_string pos in
-      HttpGet(a, b), pos
-    | 13 ->
-      let a, pos = unmarshal_string pos in
-      let b, pos = unmarshal_string pos in
-      HttpPut(a, b), pos
-    | 3 -> Prompt, pos
-    | 4 -> let body, pos = unmarshal_int pos in Exit body, pos
-    | 17 ->
-      let a, pos = unmarshal_string pos in
-      HttpConnect(a), pos
-    | 14 ->
-      let code, pos = unmarshal_string pos in
-      let params, pos = unmarshal_list pos unmarshal_string in
-      Error(code, params), pos
-    | 16 -> let body, pos = unmarshal_string pos in PrintStderr body, pos
-    | n -> raise (Unknown_tag("command", n))
+  | 0 -> let body, pos = unmarshal_string pos in Print body, pos
+  | 15 -> let body, pos = unmarshal_string pos in Debug body, pos
+  | 1 -> let body, pos = unmarshal_string pos in Load body, pos
+  | 12 ->
+    let a, pos = unmarshal_string pos in
+    let b, pos = unmarshal_string pos in
+    HttpGet(a, b), pos
+  | 13 ->
+    let a, pos = unmarshal_string pos in
+    let b, pos = unmarshal_string pos in
+    HttpPut(a, b), pos
+  | 3 -> Prompt, pos
+  | 4 -> let body, pos = unmarshal_int pos in Exit body, pos
+  | 17 ->
+    let a, pos = unmarshal_string pos in
+    HttpConnect(a), pos
+  | 14 ->
+    let code, pos = unmarshal_string pos in
+    let params, pos = unmarshal_list pos unmarshal_string in
+    Error(code, params), pos
+  | 16 -> let body, pos = unmarshal_string pos in PrintStderr body, pos
+  | n -> raise (Unknown_tag("command", n))
 
 let marshal_response = function
   | OK      -> marshal_int 5
@@ -190,10 +190,10 @@ let marshal_response = function
 
 let unmarshal_response pos = 
   let tag, pos = unmarshal_int pos in match tag with
-    | 5 -> OK, pos
-    | 18 -> Wait, pos
-    | 6 -> Failed, pos
-    | n -> raise (Unknown_tag("response", n))
+  | 5 -> OK, pos
+  | 18 -> Wait, pos
+  | 6 -> Failed, pos
+  | n -> raise (Unknown_tag("response", n))
 
 let marshal_blob_header = function
   | Chunk x -> marshal_int 7 ^ (marshal_int32 x)
@@ -201,9 +201,9 @@ let marshal_blob_header = function
 
 let unmarshal_blob_header pos = 
   let tag, pos = unmarshal_int pos in match tag with
-    | 7 -> let body, pos = unmarshal_int32 pos in Chunk body, pos
-    | 8 -> End, pos
-    | n -> raise (Unknown_tag("blob_header", n))
+  | 7 -> let body, pos = unmarshal_int32 pos in Chunk body, pos
+  | 8 -> End, pos
+  | n -> raise (Unknown_tag("blob_header", n))
 
 let marshal_message = function
   | Command x  -> marshal_int 9 ^ (marshal_command x)
@@ -223,10 +223,10 @@ exception Unmarshal_failure of exn * string
 
 let unmarshal_message pos = 
   let tag, pos = unmarshal_int pos in match tag with
-    | 9 -> let body, pos = unmarshal_command pos in Command body, pos
-    | 10 -> let body, pos = unmarshal_response pos in Response body, pos
-    | 11 -> let body, pos = unmarshal_blob_header pos in Blob body, pos
-    | n -> raise (Unknown_tag("blob_header", n))
+  | 9 -> let body, pos = unmarshal_command pos in Command body, pos
+  | 10 -> let body, pos = unmarshal_response pos in Response body, pos
+  | 11 -> let body, pos = unmarshal_blob_header pos in Blob body, pos
+  | n -> raise (Unknown_tag("blob_header", n))
 
 (** Unmarshal a message from a file descriptor *)
 let unmarshal (fd: Unix.file_descr) =
@@ -268,8 +268,8 @@ let unmarshal_protocol (fd: Unix.file_descr) =
   with e -> raise (Unmarshal_failure (e, Buffer.contents buf))
 
 
-              (*****************************************************************************)
-              (* Marshal/Unmarshal unit test                                               *)
+(*****************************************************************************)
+(* Marshal/Unmarshal unit test                                               *)
 
 let marshal_unmarshal (a: message) = 
   let x = marshal_message a in

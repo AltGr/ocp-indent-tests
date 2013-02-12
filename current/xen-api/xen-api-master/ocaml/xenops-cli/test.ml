@@ -90,8 +90,8 @@ let wait_for_tasks id =
     if List.length deltas = 0 then failwith (Printf.sprintf "no deltas, next_id = %d" next_id);
     event_id := Some next_id;
     List.iter (function
-    | Dynamic.Task id' -> if task_ended dbg id' then ids := StringSet.remove id' !ids
-    | _ -> ()
+      | Dynamic.Task id' -> if task_ended dbg id' then ids := StringSet.remove id' !ids
+      | _ -> ()
     ) deltas
   done
 
@@ -421,13 +421,13 @@ let vm_test_reboot _ =
       (* ... need to wait for the domain id to change *)
       event_wait
         (function
-        | Dynamic.Vm id' ->
-          id = id' && (match try Some (Client.VM.stat dbg id) with _ -> None with
-            | Some (_, vm_state) ->
-              vm_state.Vm.domids <> state.Vm.domids
-            | _ -> false
-          )
-        | _ -> false);
+         | Dynamic.Vm id' ->
+           id = id' && (match try Some (Client.VM.stat dbg id) with _ -> None with
+             | Some (_, vm_state) ->
+               vm_state.Vm.domids <> state.Vm.domids
+             | _ -> false
+           )
+         | _ -> false);
       Client.VM.shutdown dbg id None |> wait_for_task |> success_task;
     )
 
@@ -442,13 +442,13 @@ let vm_test_halt _ =
       (* ... need to wait for the domain ids to disappear *)
       event_wait
         (function
-        | Dynamic.Vm id' ->
-          id = id' && (match try Some (Client.VM.stat dbg id) with _ -> None with
-            | Some (_, vm_state) ->
-              vm_state.Vm.domids = []
-            | _ -> false
-          )
-        | _ -> false);
+         | Dynamic.Vm id' ->
+           id = id' && (match try Some (Client.VM.stat dbg id) with _ -> None with
+             | Some (_, vm_state) ->
+               vm_state.Vm.domids = []
+             | _ -> false
+           )
+         | _ -> false);
     )
 
 let vm_test_suspend _ =

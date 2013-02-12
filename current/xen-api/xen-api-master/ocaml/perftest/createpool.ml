@@ -229,10 +229,10 @@ let create_sdk_pool session_id sdkname pool_name key ipbase =
       (Array.to_list 
          (Array.mapi (fun i ping ->
             let boot = firstboot.(i) in match ping, boot with
-              | false, false -> '.'
-              | true, false -> 'P'
-              | true, true -> 'B'
-              | _, _ -> '?') pingable)) in
+            | false, false -> '.'
+            | true, false -> 'P'
+            | true, true -> 'B'
+            | _, _ -> '?') pingable)) in
 
   let has_guest_booted i vm =
     let ip = Printf.sprintf "192.168.%d.%d" pool.ipbase (i+1) in
@@ -309,10 +309,10 @@ let create_sdk_pool session_id sdkname pool_name key ipbase =
       (Array.to_list 
          (Array.mapi (fun i live ->
             let enabled = enabled.(i) in match live, enabled with
-              | false, false -> '.'
-              | true, false -> 'L'
-              | true, true -> 'E'
-              | _, _ -> '?') live)) in
+            | false, false -> '.'
+            | true, false -> 'L'
+            | true, true -> 'E'
+            | _, _ -> '?') live)) in
 
   let has_host_booted rpc session_id i host = 
     try

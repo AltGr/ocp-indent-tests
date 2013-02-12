@@ -18,11 +18,11 @@ let doit () =
         let reader = Reader.create (Socket.fd s) in
         let rec loop bytes_read =
           upon (Reader.read reader buf) (function
-          | `Eof -> printf "EOF\n"
-          | `Ok n ->
-            let bytes_read = bytes_read + n in
-            printf "read %d bytes in total.\n" bytes_read;
-            loop bytes_read)
+            | `Eof -> printf "EOF\n"
+            | `Ok n ->
+              let bytes_read = bytes_read + n in
+              printf "read %d bytes in total.\n" bytes_read;
+              loop bytes_read)
         in
         loop 0);
   upon (Clock.after (sec 2.)) (fun () ->

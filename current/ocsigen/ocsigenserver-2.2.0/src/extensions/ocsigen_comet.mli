@@ -22,7 +22,7 @@
     scheme. *)
 
 module Channels :
-(** A module with all the base primitive needed for server push. *)
+  (** A module with all the base primitive needed for server push. *)
 sig
 
   exception Too_many_virtual_channels
@@ -72,10 +72,10 @@ sig
 end
 
 module Security :
-(** This module is to be used carefully, it provides functions to interrupt and
-    restart Comet related connections. It is however useful to prevent Comet
-    based DOS attacks. These functions can also be called from the Ocsigen
-    command pipe. *)
+  (** This module is to be used carefully, it provides functions to interrupt and
+      restart Comet related connections. It is however useful to prevent Comet
+      based DOS attacks. These functions can also be called from the Ocsigen
+      command pipe. *)
 sig
 
   val set_timeout : ?reset:bool -> float -> unit

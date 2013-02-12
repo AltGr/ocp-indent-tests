@@ -128,7 +128,7 @@ let do_not_serve_to_regexp d =
       in
       let regexp =
         if l = [] then
-        (* This regexp should not never match *) "$^"
+          (* This regexp should not never match *) "$^"
         else
           Printf.sprintf "^(%s)$" (paren l)
       in
@@ -239,9 +239,9 @@ type request_info =
          the preflight request.
          http://www.w3.org/TR/cors/#access-control-request-method-request-he*)
      ri_access_control_request_headers : string list option Lazy.t;
-    (** Which headers will be used in the actual request as part of
-        the preflight request.
-        http://www.w3.org/TR/cors/#access-control-request-headers-request-h *)
+     (** Which headers will be used in the actual request as part of
+         the preflight request.
+         http://www.w3.org/TR/cors/#access-control-request-headers-request-h *)
 
      ri_accept: Http_headers.accept Lazy.t; (** Accept HTTP header. For example [(Some "text", None)] means ["text/*"]. The float is the "quality" value, if any. The last association list is for other extensions. *)
      ri_accept_charset: (string option * float option) list Lazy.t; (** Accept-Charset HTTP header. [None] for the first value means "*". The float is the "quality" value, if any. *)
@@ -277,17 +277,17 @@ type answer =
     | Ext_do_nothing
     (** I don't want to do anything *)
     | Ext_found of (unit -> Ocsigen_http_frame.result Lwt.t)
-    (** "OK stop! I will take the page.
-        You can start the following request of the same pipelined connection.
-        Here is the function to generate the page".
-        The extension must return Ext_found as soon as possible
-        when it is sure it is safe to start next request.
-        Usually immediately. But in some case, for example proxies,
-        you don't want the request of one connection to be handled in
-        different order. (for example revproxy.ml starts its requests
-        to another server before returning Ext_found, to ensure that all
-        requests are done in same order).
-    *)
+      (** "OK stop! I will take the page.
+          You can start the following request of the same pipelined connection.
+          Here is the function to generate the page".
+          The extension must return Ext_found as soon as possible
+          when it is sure it is safe to start next request.
+          Usually immediately. But in some case, for example proxies,
+          you don't want the request of one connection to be handled in
+          different order. (for example revproxy.ml starts its requests
+          to another server before returning Ext_found, to ensure that all
+          requests are done in same order).
+      *)
     | Ext_found_stop of (unit -> Ocsigen_http_frame.result Lwt.t)
     (** Found but do not try next extensions *)
     | Ext_next of int (** Page not found. Try next extension.
@@ -326,14 +326,14 @@ type answer =
         from preceding extension (but you may want to modify it).
     *)
     | Ext_retry_with of request * Ocsigen_cookies.cookieset
-    (** Used to retry all the extensions with a new request.
-        The extension returns the request (possibly modified)
-        and a set of cookies if it wants to set or cookies
-        ({!Ocsigen_cookies.Cookies.empty} for no cookies).
-        You must add these cookies yourself in request if you
-        want them to be seen by subsequent extensions,
-        for example using {!Ocsigen_http_frame.compute_new_ri_cookies}.
-    *)
+        (** Used to retry all the extensions with a new request.
+            The extension returns the request (possibly modified)
+            and a set of cookies if it wants to set or cookies
+            ({!Ocsigen_cookies.Cookies.empty} for no cookies).
+            You must add these cookies yourself in request if you
+            want them to be seen by subsequent extensions,
+            for example using {!Ocsigen_http_frame.compute_new_ri_cookies}.
+        *)
     | Ext_sub_result of extension2
     (** Used if your extension want to define option that may contain
         other options from other extensions.
@@ -343,7 +343,7 @@ type answer =
     *)
     | Ext_found_continue_with of 
       (unit -> (Ocsigen_http_frame.result * request) Lwt.t)
-    (** Same as [Ext_found] but may modify the request. *)
+      (** Same as [Ext_found] but may modify the request. *)
     | Ext_found_continue_with' of (Ocsigen_http_frame.result * request)
     (** Same as [Ext_found_continue_with] but does not allow to delay
         the computation of the page. You should probably not use it,
@@ -595,10 +595,10 @@ and make_parse_config path parse_host l : extension2 =
               Lwt.return
                 (Ext_continue_with
                    (ri, Ocsigen_cookies.Cookies.empty, e), cookies_to_set))
-    (* was Lwt.return (Ext_next e, cookies_to_set))
-       but to use make_parse_site with userconf,
-       we need to know current ri after parsing the sub-configuration.
-    *)
+        (* was Lwt.return (Ext_next e, cookies_to_set))
+           but to use make_parse_site with userconf,
+           we need to know current ri after parsing the sub-configuration.
+        *)
     | xmltag::ll ->
         try
           let genfun = f parse_config xmltag in
@@ -624,9 +624,9 @@ and make_parse_config path parse_host l : extension2 =
     try
       parse_config l
     with e -> !fun_end (); raise e
-  (*VVV May be we should avoid calling fun_end after parinf user config files
-     (with extension userconf) ... See eliommod.ml
-  *)
+        (*VVV May be we should avoid calling fun_end after parinf user config files
+           (with extension userconf) ... See eliommod.ml
+        *)
   in
   !fun_end ();
   r
@@ -909,8 +909,8 @@ let host_match ~(virtual_hosts : virtual_hosts) ~host ~port =
     | Some p -> p = port
   in match host with
     | None -> List.exists (fun (_, _, p) -> port_match p) virtual_hosts
-    (*VVV Warning! For HTTP/1.0, when host is absent,
-       we take the first one, even if it doesn't match!  *)
+                (*VVV Warning! For HTTP/1.0, when host is absent,
+                   we take the first one, even if it doesn't match!  *)
     | Some host ->
         let host_match regexp =
           (Netstring_pcre.string_match regexp host 0 <> None)
@@ -994,11 +994,11 @@ let compute_result
                   return (add_to_res_cookies r cookies_to_set)
               | Ext_next e ->
                   aux_host ri e cookies_to_set l
-              (* try next site *)
+                    (* try next site *)
               | Ext_stop_host (cook, e)
               | Ext_stop_site (cook, e) ->
                   aux_host ri e (Ocsigen_cookies.add_cookies cook cookies_to_set) l
-              (* try next site *)
+                    (* try next site *)
               | Ext_stop_all (cook, e) ->
                   fail (Ocsigen_http_error (cookies_to_set, e))
               | Ext_continue_with (_, cook, e) ->
@@ -1009,7 +1009,7 @@ let compute_result
                     (get_hosts ())
                     (Ocsigen_cookies.add_cookies cook cookies_to_set)
                     request2.request_info
-              (* retry all *)
+                    (* retry all *)
               | Ext_sub_result sr ->
                   assert false
             )
@@ -1135,8 +1135,8 @@ let get_port req =
           | None -> req.request_info.ri_server_port
 
 
-              (*****************************************************************************)
-              (* user directories *)
+(*****************************************************************************)
+(* user directories *)
 
 exception NoSuchUser
 
@@ -1171,8 +1171,8 @@ let replace_user_dir regexp dest pathstring =
             raise NoSuchUser
 
 
-            (*****************************************************************************)
-            (* Finding redirections *)
+(*****************************************************************************)
+(* Finding redirections *)
 
 exception Not_concerned
 

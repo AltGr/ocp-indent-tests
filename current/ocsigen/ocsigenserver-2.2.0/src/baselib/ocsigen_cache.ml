@@ -125,7 +125,7 @@ end = struct
        mutable maxsize : int;
        mutable finaliser_before : 'a node -> unit;
        mutable finaliser_after : 'a node -> unit;
-      (*   *) time_bound : time_bound option;
+       (*   *) time_bound : time_bound option;
       }
   and time_bound =
       { (*   *) timer : float;
@@ -244,14 +244,14 @@ end = struct
     | None (* Not time bounded dlist *)
     | Some {collector = Some _} -> () (* Already collecting *)
     | Some ({collector = None} as t) -> match r.oldest with
-      | None -> () (* Empty dlist *)
-      | Some n ->
-          t.collector <- Some (sleep_until n.collection >>= fun () ->
-              collect r n;
-              t.collector <- None;
-              update_collector r;
-              Lwt.return ()
-            )
+        | None -> () (* Empty dlist *)
+        | Some n ->
+            t.collector <- Some (sleep_until n.collection >>= fun () ->
+                collect r n;
+                t.collector <- None;
+                update_collector r;
+                Lwt.return ()
+              )
 
 
   (* Add a node that do not belong to any list to a list.

@@ -408,25 +408,25 @@ let _ =
         display_current true
       *)
         
-      |  "l" -> display_current true
+      |    "l" -> display_current true
 
       | " " | "n" | "f" -> next None
       | "p" | "b" -> prev None
       | "q" -> Main.quit ()
       (*
         | "v" -> 
-      (* liv visual shell *)
+        (* liv visual shell *)
         let rec func = fun file typ ->
         match typ with
         | "image", _ -> 
         display_image false file
-      (*
+        (*
         | "special", "dir" -> 
         new Livsh.livsh file func; ()
       *)
         | _ -> Gdk.X.beep ()
         in
-    (* where we should display ? *)
+      (* where we should display ? *)
         let dirname = 
         if Array.length files = 0 then Unix.getcwd ()
         else Filename.dirname files.(!cur) 

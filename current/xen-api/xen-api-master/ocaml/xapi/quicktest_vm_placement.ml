@@ -576,8 +576,8 @@ module Categorisation = struct
           (category_fn
              (mock_host a s_min d_min d_max s_max)))
       [
-      (* Varying these parameters SHOULD vary the result: *)
-      (* Σ available, Σ dynamic_mix, Σ dynamic_max        *)
+        (* Varying these parameters SHOULD vary the result: *)
+        (* Σ available, Σ dynamic_mix, Σ dynamic_max        *)
 
         (* Vary (Σ available) while (Σ dynamic_min = Σ dynamic_max) *)
         (0, x, 1, 1, x), -1L;

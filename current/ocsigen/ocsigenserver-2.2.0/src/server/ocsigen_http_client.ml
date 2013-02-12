@@ -94,7 +94,7 @@ let request_sender =
 module T = Hashtbl.Make(
   struct
     type t = int * (Unix.inet_addr * int * bool)
-    (* client ID, (IP, port, doing HEAD request) *)
+        (* client ID, (IP, port, doing HEAD request) *)
     let equal = (=)
     let hash = Hashtbl.hash
   end)

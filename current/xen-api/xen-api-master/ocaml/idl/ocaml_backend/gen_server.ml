@@ -170,11 +170,11 @@ let operation (obj: obj) (x: message) =
     (
       (* If we're a constructor then unmarshall all the fields from the constructor record, passed as a struct *)
       if is_ctor then [from_rpc Client.session; from_ctor_record]
-      (* Otherwise, go read non-default fields from pattern match; if we have default fields then we need to
-         get those from the 'default_fields' arg *)
+                      (* Otherwise, go read non-default fields from pattern match; if we have default fields then we need to
+                         get those from the 'default_fields' arg *)
       else  List.map from_rpc args_without_default_values)
 
-    (* and for every default value we try to get this from default_args or default it *)
+(* and for every default value we try to get this from default_args or default it *)
     @ (
       List.map
         (fun (param_count, default_param) ->
@@ -270,7 +270,7 @@ let gen_module api : O.Module.t =
       "module D = Debug.Debugger(struct let name = \"dispatcher\" end)";
       "module ApiLogRead = Debug.Debugger(struct let name = \"api_readonly\" end)";
       "module ApiLogSideEffect = Debug.Debugger(struct let name = \"api_effect\" end)"
-    (*      "exception Invalid_operation"; *)
+      (*      "exception Invalid_operation"; *)
     ]
     ~elements:[
       O.Module.Let (

@@ -161,7 +161,7 @@ exception C_malloc_exn of int * int
 
 (* Newly deprecated on 2012-04-03 *)
 val ( & )  : [ `Deprecated_use_two_ampersands ] -> [ `Deprecated_use_two_ampersands ] -> [ `Deprecated_use_two_ampersands ]
-(* val ( or ) : [ `Deprecated_use_pipe_pipe ] *)
+                                                                                         (* val ( or ) : [ `Deprecated_use_pipe_pipe ] *)
 val max_int : [ `Deprecated_use_int_module ]
 val min_int : [ `Deprecated_use_int_module ]
 

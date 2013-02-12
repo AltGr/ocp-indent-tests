@@ -109,8 +109,8 @@ module type S = sig
   include Gen
     with type 'a t := 'a t_
     with type 'a bound := 'a bound_
-  (* [create] has the same type as in [Gen], but adding it here prevents a type-checker
-     issue with nongeneralizable type variables. *)
+      (* [create] has the same type as in [Gen], but adding it here prevents a type-checker
+         issue with nongeneralizable type variables. *)
   val create : bound -> bound -> t
 
   type 'a poly_t

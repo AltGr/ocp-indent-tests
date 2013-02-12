@@ -101,16 +101,16 @@ let writer_permission name nperms =
   ^(Printf.sprintf "  }\n")
 
 let role_label role = replace_char (Printf.sprintf "role_%s" role) '-' '_'
-(*let subroles_label role = (Printf.sprintf "subroles_of_%s" (role_label role))*)
+  (*let subroles_label role = (Printf.sprintf "subroles_of_%s" (role_label role))*)
 let permissions_label role = (Printf.sprintf "permissions_of_%s" (role_label role))
 
 let role_index = ref 0
 let writer_role name nroles =
   let role_uuid = 
     if name = Datamodel.role_pool_admin
-    (* pool-admin role has a fixed uuid because it's the default role in Datamodel subject's roles field *)
+        (* pool-admin role has a fixed uuid because it's the default role in Datamodel subject's roles field *)
     then Constants.rbac_pool_admin_uuid 
-    (* all the other roles use a hash as uuid *)
+      (* all the other roles use a hash as uuid *)
     else role_uuid name
   in
   (*let role_ref = role_ref name in*)
@@ -170,16 +170,16 @@ let writer_stdout static_roles_permissions static_permissions_roles =
             perms
         )
         ^Printf.sprintf "]\n\n"
-      (*      (* role's list of permission refs *)
-            ^(Printf.sprintf "(* %i elements in %s *)\n" (List.length perms) subroles_label)
-            ^(Printf.sprintf "let %s = [" subroles_label)
-            ^(List.fold_left
-              (fun acc perm -> (Printf.sprintf "\"%s\"; " (role_ref perm))^acc)
-              ""
-              perms
-            )
-            ^Printf.sprintf "]\n\n"
-      *)
+          (*      (* role's list of permission refs *)
+                ^(Printf.sprintf "(* %i elements in %s *)\n" (List.length perms) subroles_label)
+                ^(Printf.sprintf "let %s = [" subroles_label)
+                ^(List.fold_left
+                  (fun acc perm -> (Printf.sprintf "\"%s\"; " (role_ref perm))^acc)
+                  ""
+                  perms
+                )
+                ^Printf.sprintf "]\n\n"
+          *)
       )
       ""
       static_roles_permissions

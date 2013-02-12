@@ -63,17 +63,17 @@ let modify_fc_paths_manual rpc session host remove =
     Printf.printf "Please %s all but one of the paths by logging into the FibreChannel switch, then press Enter\n> %!" verb;
     Scanf.scanf "%s\n" (fun _ -> ());
 
-  (* Don't do this because invoking 'scli -t' waits while the failover happens!
-      (* Check that a path has been removed *)
-      debug "Checking path change...";
-      let new_hba_state = get_hba_state rpc session host in
-      if check_paths new_hba_state then
-        debug "Manual path change was successful"
-      else begin
-        if remove then debug "Did not find an offline path. Try again!" else debug "At least one path is still offline. Try again!";
-        request_user_edit ()
-      end
-  *)
+    (* Don't do this because invoking 'scli -t' waits while the failover happens!
+        (* Check that a path has been removed *)
+        debug "Checking path change...";
+        let new_hba_state = get_hba_state rpc session host in
+        if check_paths new_hba_state then
+          debug "Manual path change was successful"
+        else begin
+          if remove then debug "Did not find an offline path. Try again!" else debug "At least one path is still offline. Try again!";
+          request_user_edit ()
+        end
+    *)
   in
 
   (* Commented out because this assumes Qlogic because it uses 'scli'
