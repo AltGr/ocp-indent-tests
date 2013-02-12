@@ -258,17 +258,17 @@ let array_environment filename re doc_root ri hostname =
 
       (* Additional headers, coming from the client *)
       [(* Document_root is defined by Apache but not in the CGI's spec *)
-       Printf.sprintf "DOCUMENT_ROOT=%s" doc_root;
+        Printf.sprintf "DOCUMENT_ROOT=%s" doc_root;
 
-       (* Should be retrieved from additionnal_headers
-          Printf.sprintf "HTTP_COOKIE=%s" (opt (Lazy.force ri.ri_cookies_string));
-          Printf.sprintf "HTTP_HOST=%s" (opt ri.ri_host);
-          Printf.sprintf "HTTP_REFERER=%s" (opt (Lazy.force ri.ri_referer)); *)
+        (* Should be retrieved from additionnal_headers
+           Printf.sprintf "HTTP_COOKIE=%s" (opt (Lazy.force ri.ri_cookies_string));
+           Printf.sprintf "HTTP_HOST=%s" (opt ri.ri_host);
+           Printf.sprintf "HTTP_REFERER=%s" (opt (Lazy.force ri.ri_referer)); *)
 
-       (* Neither in the CGI's spec nor in the HTTP headers but used, e.g., by PHP *)
-       Printf.sprintf "REMOTE_PORT=%d" ri.ri_remote_port;
-       Printf.sprintf "REQUEST_URI=%s" ri.ri_url_string ; (* FIXME: URI instead of URL ? *)
-       Printf.sprintf "SCRIPT_FILENAME=%s" filename ] ;
+        (* Neither in the CGI's spec nor in the HTTP headers but used, e.g., by PHP *)
+        Printf.sprintf "REMOTE_PORT=%d" ri.ri_remote_port;
+        Printf.sprintf "REQUEST_URI=%s" ri.ri_url_string ; (* FIXME: URI instead of URL ? *)
+        Printf.sprintf "SCRIPT_FILENAME=%s" filename ] ;
       additionnal_headers
     ]
 

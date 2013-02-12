@@ -662,81 +662,81 @@ let register_extension, parse_config_item, parse_user_site_item, get_beg_init, g
   let ref_user_fun_site = ref (fun (_ : userconf_info) -> default_parse_config) in
 
   ((* ********* register_extension ********* *)
-   (fun
-     ?fun_site
-     ?user_fun_site
-     ?begin_init
-     ?end_init
-     ?(exn_handler=raise)
-     ?(respect_pipeline=false)
-     ()
-     ->
+    (fun
+      ?fun_site
+      ?user_fun_site
+      ?begin_init
+      ?end_init
+      ?(exn_handler=raise)
+      ?(respect_pipeline=false)
+      ()
+      ->
 
-       if respect_pipeline then Ocsigen_config.set_respect_pipeline ();
+        if respect_pipeline then Ocsigen_config.set_respect_pipeline ();
 
-       (match fun_site with
-         | None -> ()
-         | Some fun_site ->
-             let old_fun_site = !ref_fun_site in
-             ref_fun_site :=
-               (fun host conf_info ->
-                 let oldf = old_fun_site host conf_info in
-                 let newf = fun_site host conf_info in
-                 fun path parse_host ->
-                   let oldf = oldf path parse_host in
-                   let newf = newf path parse_host in
-                   fun parse_config config_tag ->
-                     try
-                       oldf parse_config config_tag
-                     with
-                       | Bad_config_tag_for_extension c -> 
-                           newf parse_config config_tag
-               ));
+        (match fun_site with
+          | None -> ()
+          | Some fun_site ->
+              let old_fun_site = !ref_fun_site in
+              ref_fun_site :=
+                (fun host conf_info ->
+                  let oldf = old_fun_site host conf_info in
+                  let newf = fun_site host conf_info in
+                  fun path parse_host ->
+                    let oldf = oldf path parse_host in
+                    let newf = newf path parse_host in
+                    fun parse_config config_tag ->
+                      try
+                        oldf parse_config config_tag
+                      with
+                        | Bad_config_tag_for_extension c -> 
+                            newf parse_config config_tag
+                ));
 
-       (match user_fun_site with
-         | None -> ()
-         | Some user_fun_site ->
-             let old_fun_site = !ref_user_fun_site in
-             ref_user_fun_site :=
-               (fun path host conf_info ->
-                 let oldf = old_fun_site path host conf_info in
-                 let newf = user_fun_site path host conf_info in
-                 fun path parse_host ->
-                   let oldf = oldf path parse_host in
-                   let newf = newf path parse_host in
-                   fun parse_config config_tag ->
-                     try
-                       oldf parse_config config_tag
-                     with
-                       | Bad_config_tag_for_extension c -> 
-                           newf parse_config config_tag
-               ));
-
-
-       (match begin_init with
-         | Some begin_init -> fun_beg := comp begin_init !fun_beg
-         | None -> ());
-       (match end_init with
-         | Some end_init -> fun_end := comp end_init !fun_end;
-         | None -> ());
-       let curexnfun = !fun_exn in
-       fun_exn := fun e -> try curexnfun e with e -> exn_handler e),
+        (match user_fun_site with
+          | None -> ()
+          | Some user_fun_site ->
+              let old_fun_site = !ref_user_fun_site in
+              ref_user_fun_site :=
+                (fun path host conf_info ->
+                  let oldf = old_fun_site path host conf_info in
+                  let newf = user_fun_site path host conf_info in
+                  fun path parse_host ->
+                    let oldf = oldf path parse_host in
+                    let newf = newf path parse_host in
+                    fun parse_config config_tag ->
+                      try
+                        oldf parse_config config_tag
+                      with
+                        | Bad_config_tag_for_extension c -> 
+                            newf parse_config config_tag
+                ));
 
 
-   (* ********* parse_config_item ********* *)
-   (fun host conf -> !ref_fun_site host conf),
+        (match begin_init with
+          | Some begin_init -> fun_beg := comp begin_init !fun_beg
+          | None -> ());
+        (match end_init with
+          | Some end_init -> fun_end := comp end_init !fun_end;
+          | None -> ());
+        let curexnfun = !fun_exn in
+        fun_exn := fun e -> try curexnfun e with e -> exn_handler e),
 
-   (* ********* parse_user_site_item ********* *)
-   (fun host conf -> !ref_user_fun_site host conf),
 
-   (* ********* get_beg_init ********* *)
-   (fun () -> !fun_beg),
+    (* ********* parse_config_item ********* *)
+    (fun host conf -> !ref_fun_site host conf),
 
-   (* ********* get_end_init ********* *)
-   (fun () -> !fun_end),
+    (* ********* parse_user_site_item ********* *)
+    (fun host conf -> !ref_user_fun_site host conf),
 
-   (* ********* get_init_exn_handler ********* *)
-   (fun () -> !fun_exn)
+    (* ********* get_beg_init ********* *)
+    (fun () -> !fun_beg),
+
+    (* ********* get_end_init ********* *)
+    (fun () -> !fun_end),
+
+    (* ********* get_init_exn_handler ********* *)
+    (fun () -> !fun_exn)
   )
 
 let default_parse_extension ext_name = function
