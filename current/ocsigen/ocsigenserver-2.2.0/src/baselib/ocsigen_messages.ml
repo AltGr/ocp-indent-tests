@@ -41,55 +41,55 @@ let open_files ?(user = Ocsigen_config.get_user ()) ?(group = Ocsigen_config.get
     let path = full_path path in
     try_lwt
       Lwt_log.file path ()
-with
-| Unix.Unix_error(error,_,_) ->
-  raise_lwt (Ocsigen_config.Config_file_error (
-      Printf.sprintf "can't open log file %s: %s"
-        path (Unix.error_message error)))
-in
+    with
+      | Unix.Unix_error(error,_,_) ->
+          raise_lwt (Ocsigen_config.Config_file_error (
+                Printf.sprintf "can't open log file %s: %s"
+                  path (Unix.error_message error)))
+  in
 
-lwt acc = open_log access_file in
-lwt war = open_log  warning_file in
-lwt err = open_log  error_file in
-loggers := [acc; war; err];
+  lwt acc = open_log access_file in
+  lwt war = open_log  warning_file in
+  lwt err = open_log  error_file in
+  loggers := [acc; war; err];
 
-Lwt_log.default :=
-  Lwt_log.broadcast
-    [Lwt_log.dispatch
-       (fun sect lev ->
-         if Lwt_log.Section.name sect = "access" then acc else
-           match lev with
-                 Lwt_log.Error | Lwt_log.Fatal -> err
-             | _                             -> war);
-     Lwt_log.dispatch
-       (fun sect lev ->
-         let show =
-           match lev with
-                 Lwt_log.Error | Lwt_log.Fatal ->
-                 not (Ocsigen_config.get_silent ())
-             | _ ->
-                 Ocsigen_config.get_verbose ()
-         in
-         if show then stderr else Lwt_log.null)];
+  Lwt_log.default :=
+    Lwt_log.broadcast
+      [Lwt_log.dispatch
+         (fun sect lev ->
+           if Lwt_log.Section.name sect = "access" then acc else
+             match lev with
+                   Lwt_log.Error | Lwt_log.Fatal -> err
+               | _                             -> war);
+       Lwt_log.dispatch
+         (fun sect lev ->
+           let show =
+             match lev with
+                   Lwt_log.Error | Lwt_log.Fatal ->
+                   not (Ocsigen_config.get_silent ())
+               | _ ->
+                   Ocsigen_config.get_verbose ()
+           in
+           if show then stderr else Lwt_log.null)];
 
-let gid = match group with
-  | None -> Unix.getgid ()
-  | Some group -> (try
-      (Unix.getgrnam group).Unix.gr_gid
-    with Not_found as e -> ignore (Lwt_log.error "Error: Wrong group"); raise e)
-in
+  let gid = match group with
+    | None -> Unix.getgid ()
+    | Some group -> (try
+        (Unix.getgrnam group).Unix.gr_gid
+      with Not_found as e -> ignore (Lwt_log.error "Error: Wrong group"); raise e)
+  in
 
-let uid = match user with
-  | None -> Unix.getuid ()
-  | Some user -> (try
-      (Unix.getpwnam user).Unix.pw_uid
-    with Not_found as e -> ignore (Lwt_log.error "Error: Wrong user"); raise e)
-in
-lwt () = Lwt_unix.chown (full_path access_file) uid gid in
-lwt () = Lwt_unix.chown (full_path warning_file) uid gid in
-lwt () = Lwt_unix.chown (full_path error_file) uid gid in
+  let uid = match user with
+    | None -> Unix.getuid ()
+    | Some user -> (try
+        (Unix.getpwnam user).Unix.pw_uid
+      with Not_found as e -> ignore (Lwt_log.error "Error: Wrong user"); raise e)
+  in
+  lwt () = Lwt_unix.chown (full_path access_file) uid gid in
+  lwt () = Lwt_unix.chown (full_path warning_file) uid gid in
+  lwt () = Lwt_unix.chown (full_path error_file) uid gid in
 
-Lwt.return ()
+  Lwt.return ()
 
 (****)
 
