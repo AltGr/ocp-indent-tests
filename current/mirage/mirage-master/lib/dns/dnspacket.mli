@@ -122,7 +122,7 @@ type rr_rdata =
   | `RP of domain_name * domain_name
   | `RT of int16 * domain_name
   | `SOA of
-    domain_name * domain_name * int32 * int32 * int32 * int32 * int32
+      domain_name * domain_name * int32 * int32 * int32 * int32 * int32
   | `SRV of int16 * int16 * int16 * domain_name
   | `TXT of string list
   | `UNKNOWN of int * bytes

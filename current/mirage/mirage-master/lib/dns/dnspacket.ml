@@ -84,7 +84,7 @@ let parse_label base bits =
     name: (length*8): string; data: -1: bitstring } 
   -> (L (name, offset), data)
 | { 0b0_11: 2; ptr: 14; bits: -1: bitstring } 
-  -> (P (ptr, offset), bits)
+-> (P (ptr, offset), bits)
 | { 0: 8; bits: -1: bitstring } 
 -> (Z offset, bits)
 | { _ } -> raise(Unparsable ("parse_label", bits))
@@ -308,7 +308,7 @@ type rr_rdata = [
   | `MF of domain_name
   | `CNAME of domain_name
   | `SOA of 
-    domain_name * domain_name * int32 * int32 * int32 * int32 * int32 
+      domain_name * domain_name * int32 * int32 * int32 * int32 * int32 
   | `HINFO of string * string
   | `MB of domain_name
   | `MG of domain_name
@@ -357,13 +357,13 @@ let parse_rdata names base t bits =
 )
 | `PTR -> `PTR (bits |> parse_name names base |> stop)
 | `HINFO -> let cpu, bits = parse_charstr bits in
-  let os = bits |> parse_charstr |> stop in
-  `HINFO (cpu, os)
+let os = bits |> parse_charstr |> stop in
+`HINFO (cpu, os)
 | `MINFO -> let rm, bits = parse_name names base bits in
-  let em = bits |> parse_name names base |> stop in
-  `MINFO (rm, em)
+let em = bits |> parse_name names base |> stop in
+`MINFO (rm, em)
 | `MX -> (
-    bitmatch bits with
+  bitmatch bits with
 | { preference: 16; bits: -1: bitstring } 
   -> `MX ((preference, bits |> parse_name names base |> stop))
 )

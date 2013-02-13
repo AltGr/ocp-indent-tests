@@ -91,7 +91,7 @@ module Entry = struct
     | DROP
     (** Optional actions *)
     | ENQUEUE of OP.Queue.h
-      (** Modify field actions *)
+        (** Modify field actions *)
     | SET_VLAN_ID of uint16
     | SET_VLAN_PRIO of uint16
     | STRIP_VLAN_HDR

@@ -497,8 +497,8 @@ module Anon = struct
       | Done of 'a
       | Test of (more:bool -> 'a t)
       | More of string (* name of the expected argument *)
-        * (string -> (Env.t -> Env.t) * 'a t)
-        * Completer.t
+          * (string -> (Env.t -> Env.t) * 'a t)
+          * Completer.t
 
     let return a = Done a
 

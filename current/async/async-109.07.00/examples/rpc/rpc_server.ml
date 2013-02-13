@@ -20,20 +20,20 @@ let implementations =
       )
 
   ; Rpc.Pipe_rpc.implement Rpc_intf.counter_values
-    (fun ctr () ~aborted ->
-      let (r,w) = Pipe.create () in
-      let last_value = ref !ctr in
-      let send () =
-        last_value := !ctr;
-        Pipe.write w !ctr
-      in
-      don't_wait_for (send ());
-      Clock.every' ~stop:aborted (sec 0.1) (fun () ->
-        if !last_value <> !ctr
-        then send () else return ()
-      );
-      return (Ok r)
-    )
+      (fun ctr () ~aborted ->
+        let (r,w) = Pipe.create () in
+        let last_value = ref !ctr in
+        let send () =
+          last_value := !ctr;
+          Pipe.write w !ctr
+        in
+        don't_wait_for (send ());
+        Clock.every' ~stop:aborted (sec 0.1) (fun () ->
+          if !last_value <> !ctr
+          then send () else return ()
+        );
+        return (Ok r)
+      )
   ]
 
 let main () =

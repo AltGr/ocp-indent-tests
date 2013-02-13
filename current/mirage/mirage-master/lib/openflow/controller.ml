@@ -36,15 +36,15 @@ module Event = struct
     | Datapath_leave of OP.datapath_id
     | Packet_in of OP.Port.t * int32 * Bitstring.t * OP.datapath_id
     | Flow_removed of
-      OP.Match.t * OP.Flow_removed.reason * int32 * int32 * int64 * int64
-      * OP.datapath_id 
+        OP.Match.t * OP.Flow_removed.reason * int32 * int32 * int64 * int64
+        * OP.datapath_id 
     | Flow_stats_reply of int32 * bool * OP.Flow.stats list * OP.datapath_id
     | Aggr_flow_stats_reply of int32 * int64 * int64 * int32 * OP.datapath_id
     | Port_stats_reply of int32 * OP.Port.stats list *  OP.datapath_id
     | Table_stats_reply of int32 * OP.Stats.table list * OP.datapath_id 
     | Desc_stats_reply of
-      string * string * string * string * string
-      * OP.datapath_id
+        string * string * string * string * string
+        * OP.datapath_id
     | Port_status of OP.Port.reason * OP.Port.phy * OP.datapath_id
 
   let string_of_event = function

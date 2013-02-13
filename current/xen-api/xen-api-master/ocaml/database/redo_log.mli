@@ -85,8 +85,8 @@ type t =
       (** [DeleteRow (tblname, objref)]
           represents the deletion of a row in table [tblname] with key [objref]. *)
   | WriteField of string * string * string * string
-    (** [WriteField (tblname, objref, fldname, newval)]
-        represents the write to the field with name [fldname] of a row in table [tblname] with key [objref], overwriting its value with [newval]. *)
+      (** [WriteField (tblname, objref, fldname, newval)]
+          represents the write to the field with name [fldname] of a row in table [tblname] with key [objref], overwriting its value with [newval]. *)
 
 val write_db : Generation.t -> (Unix.file_descr -> unit) -> redo_log -> unit
   (** Write a database.

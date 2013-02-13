@@ -44,9 +44,9 @@ type 'a thread_state =
     (* [Fail exn] a terminated thread which has failed with the
        exception [exn] *)
   | Sleep of 'a sleeper
-    (* [Sleep sleeper] is a sleeping thread *)
+      (* [Sleep sleeper] is a sleeping thread *)
   | Repr of 'a thread_repr
-    (* [Repr t] a thread which behaves the same as [t] *)
+      (* [Repr t] a thread which behaves the same as [t] *)
 
 and 'a thread_repr = {
   mutable state : 'a thread_state;

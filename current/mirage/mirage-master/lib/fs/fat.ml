@@ -624,33 +624,33 @@ module Dir_entry = struct
     start_cluster: 16: littleendian;
     file_size: 32: littleendian
   } ->
-  let x = int_of_char filename.[0] in
-  if x = 0
+let x = int_of_char filename.[0] in
+if x = 0
+then End
+else
+  let deleted = x = 0xe5 in
+  filename.[0] <- char_of_int (if x = 0x05 then 0xe5 else x);
+  Dos {
+    filename = remove_padding filename;
+    ext = remove_padding ext;
+    read_only = read_only;
+    deleted = deleted;
+    hidden = hidden;
+    system = system;
+    volume = volume;
+    subdir = subdir;
+    archive = archive;
+    create = time_of_int create_date create_time create_time_ms;
+    access = time_of_int last_access_date 0 0;
+    modify = time_of_int last_modify_date last_modify_time 0;
+    start_cluster = start_cluster;
+    file_size = file_size
+  }
+| { _ } ->
+  let (s, off, len) = bits in
+  if len = 0
   then End
-  else
-    let deleted = x = 0xe5 in
-    filename.[0] <- char_of_int (if x = 0x05 then 0xe5 else x);
-    Dos {
-      filename = remove_padding filename;
-      ext = remove_padding ext;
-      read_only = read_only;
-      deleted = deleted;
-      hidden = hidden;
-      system = system;
-      volume = volume;
-      subdir = subdir;
-      archive = archive;
-      create = time_of_int create_date create_time create_time_ms;
-      access = time_of_int last_access_date 0 0;
-      modify = time_of_int last_modify_date last_modify_time 0;
-      start_cluster = start_cluster;
-      file_size = file_size
-    }
-  | { _ } ->
-    let (s, off, len) = bits in
-    if len = 0
-    then End
-    else failwith (Printf.sprintf "Not a dir entry off=%d len=%d" off len)
+  else failwith (Printf.sprintf "Not a dir entry off=%d len=%d" off len)
 
 let to_bitstring = function
   | End ->

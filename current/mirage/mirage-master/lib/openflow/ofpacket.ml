@@ -423,7 +423,7 @@ let rec parse_port_stats_reply data =
                 rx_frame_err; rx_over_err; rx_crc_err; collisions;}] 
     (parse_port_stats_reply data_left)
 | {_} ->
-  []
+[]
 
 let rec string_of_port_stats_reply ports = 
   match ports with 
@@ -520,11 +520,11 @@ let parse_actions bits =
     set_dl_src:1; set_dl_dst:1; set_nw_src:1; set_nw_dst:1; 
     set_nw_tos:1; set_tp_src:1; set_tp_dst:1; enqueue:1
   }
-  -> { output; set_vlan_id; set_vlan_pcp; strip_vlan;
-       set_dl_src; set_dl_dst; set_nw_src; set_nw_dst;
-       set_nw_tos; set_tp_src; set_tp_dst; enqueue; 
-       vendor=false
-     } 
+-> { output; set_vlan_id; set_vlan_pcp; strip_vlan;
+     set_dl_src; set_dl_dst; set_nw_src; set_nw_dst;
+     set_nw_tos; set_tp_src; set_tp_dst; enqueue; 
+     vendor=false
+   } 
 )                   
 
 type features = {
@@ -761,12 +761,12 @@ let parse_from_raw_packet in_port bits =
    _:56; 17:8; _:16; 
    nw_src:32; nw_dst:32; _:(ihl-5)*32; tp_src:16; tp_dst:16; 
    _:-1:bitstring } 
-  -> { wildcards =Wildcards.exact_match; in_port=in_port;
-       dl_src=smac; dl_dst=dmac; dl_vlan=0xffff;
-       dl_vlan_pcp=(char_of_int 0);dl_type=0x0800; nw_src=nw_src; 
-       nw_dst=nw_dst; nw_tos=(char_of_int tos); 
-       nw_proto=(char_of_int 17); tp_src=tp_src; tp_dst=tp_dst
-     }
+-> { wildcards =Wildcards.exact_match; in_port=in_port;
+     dl_src=smac; dl_dst=dmac; dl_vlan=0xffff;
+     dl_vlan_pcp=(char_of_int 0);dl_type=0x0800; nw_src=nw_src; 
+     nw_dst=nw_dst; nw_tos=(char_of_int tos); 
+     nw_proto=(char_of_int 17); tp_src=tp_src; tp_dst=tp_dst
+   }
 
 (* IP *)
 | {dmac:48:string; smac:48:string; 0x0800:16; 4:4; ihl:4; tos:8; 
@@ -1363,7 +1363,7 @@ let parse_stats bits =
   Desc_resp({st_ty=DESC; more_to_follow=false;}, {imfr_desc; hw_desc;
                                                   sw_desc; serial_num; dp_desc;})
 | {1:16; _:15; more_to_follow:1; flows:-1:bitstring}
-  -> Flow_resp({st_ty=FLOW; more_to_follow;}, (Flow.parse_flow_stats flows))
+-> Flow_resp({st_ty=FLOW; more_to_follow;}, (Flow.parse_flow_stats flows))
 | {2:16; _:15; more_to_follow:1; data:-1:bitstring} ->
 ( bitmatch data with 
 | { packet_count:64; byte_count:64; flow_count:32 } ->
@@ -1374,8 +1374,8 @@ let parse_stats bits =
   Table_resp({st_ty=TABLE; more_to_follow},
     (parse_table_stats_reply data) )
 | {4:16; more_to_follow:1; data:-1:bitstring} ->
-  Port_resp({st_ty=PORT;more_to_follow},
-    (Port.parse_port_stats_reply data)) 
+Port_resp({st_ty=PORT;more_to_follow},
+  (Port.parse_port_stats_reply data)) 
 | {ty:16; 0:15; more_to_follow:1} -> 
 Vendor_resp({st_ty=(stats_type_of_int ty);
              more_to_follow;}))

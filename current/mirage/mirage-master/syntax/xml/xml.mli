@@ -94,17 +94,17 @@ type error = [
   | `Malformed_char_stream 
   (** Malformed underlying character stream. *)
   | `Unknown_encoding of string 
-  (** Unknown encoding. *)
+    (** Unknown encoding. *)
   | `Unknown_entity_ref of string 
-  (** Unknown entity reference, {{:#inentity} details}. *)
+    (** Unknown entity reference, {{:#inentity} details}. *)
   | `Unknown_ns_prefix of string 
-  (** Unknown namespace prefix {{:#inns} details} *)
+    (** Unknown namespace prefix {{:#inns} details} *)
   | `Illegal_char_ref of string 
-  (** Illegal character reference. *)
+    (** Illegal character reference. *)
   | `Illegal_char_seq of string 
-  (** Illegal character sequence. *)
+    (** Illegal character sequence. *)
   | `Expected_char_seqs of string list * string
-    (** Expected one of the character sequences in the list but found another. *)
+      (** Expected one of the character sequences in the list but found another. *)
   | `Expected_root_element 
   (** Expected the document's root element. *) ]
 

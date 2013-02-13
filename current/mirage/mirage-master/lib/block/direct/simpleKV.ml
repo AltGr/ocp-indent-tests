@@ -46,8 +46,8 @@ let create ~(id:string) ~(vbd:OS.Devices.blkif) : OS.Devices.kv_ro Lwt.t =
       parse_page (num+1)
   end
 | { _ } ->
-  (*          printf "SimpleKV: %s init done (%d files)\n%!" id (Hashtbl.length files); *)
-  return ()
+(*          printf "SimpleKV: %s init done (%d files)\n%!" id (Hashtbl.length files); *)
+return ()
 in
 parse_page 0 in
 read_page 0L >>

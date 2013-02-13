@@ -151,7 +151,7 @@ type result =
       (** we have run out of options: all domains are either
          fully-ballooned or are stuck (stuck domids returned) *)
   | AdjustTargets of action list
-    (** we want to change the targets of some domains *)
+      (** we want to change the targets of some domains *)
 
 type direction = Up | Down
 
