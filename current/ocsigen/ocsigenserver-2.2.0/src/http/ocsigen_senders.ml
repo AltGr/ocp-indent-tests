@@ -164,7 +164,7 @@ struct
       Lwt.try_bind (fun () -> Ocsigen_stream.next stream)
         (fun s ->
           match s with
-                Ocsigen_stream.Finished None ->
+              Ocsigen_stream.Finished None ->
                 finalize `Success >>= fun () ->
                 next_stream l
             | Ocsigen_stream.Finished (Some stream) ->
@@ -176,7 +176,7 @@ struct
             exnhandler e l)
     and next_stream l =
       match l with
-            [] -> Ocsigen_stream.empty None
+          [] -> Ocsigen_stream.empty None
         | f :: l ->
             Lwt.try_bind f
               (fun stream ->
@@ -388,7 +388,7 @@ struct
           else aux d
         with _ (* Unix.stat can fail for a lot of reasons *) -> aux d
       with
-            End_of_file -> Unix.closedir d;[]
+          End_of_file -> Unix.closedir d;[]
 
     in
     let trie li =

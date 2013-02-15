@@ -664,8 +664,6 @@ module Xenopsd_metadata = struct
         delete_nolock ~__context id
       )
 
-  let counter = ref 0
-
   let update ~__context ~self =
     let id = id_of_vm ~__context ~self in
     Mutex.execute metadata_m
@@ -674,15 +672,6 @@ module Xenopsd_metadata = struct
         if vm_exists_in_xenopsd dbg id
         then
           let txt = create_metadata ~__context ~upgrade:false ~self |> Metadata.rpc_of_t |> Jsonrpc.to_string in
-          begin match Xapi_cache.find_nolock id with
-          | Some old ->
-            if old <> txt then begin
-              Unixext.write_string_to_file (Printf.sprintf "/tmp/metadata.old.%d" !counter) old;
-              Unixext.write_string_to_file (Printf.sprintf "/tmp/metadata.new.%d" !counter) txt;
-              incr counter
-            end
-          | None -> ()
-          end;
           begin match Xapi_cache.find_nolock id with
           | Some old when old = txt -> ()
           | _ ->
@@ -840,7 +829,8 @@ let update_vm ~__context id =
                   error "Suspended VM has no domain-specific metadata"
                 | Some x ->
                   Db.VM.set_last_booted_record ~__context ~self ~value:x;
-                  debug "VM %s last_booted_record set to %s" (Ref.string_of self) x
+                  debug "VM %s last_booted_record set to %s" (Ref.string_of self) x;
+                  Xenopsd_metadata.delete ~__context id
               end;
               if power_state = `Halted
               then !trigger_xenapi_reregister ();

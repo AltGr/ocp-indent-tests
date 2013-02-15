@@ -92,14 +92,14 @@ let find_all n h = List.rev (Map.find n h)
    Should we fail if there is more than one? *)
 let find n h =
   match Map.find n h with
-        v :: _ -> v
+      v :: _ -> v
     | _      -> assert false
 
 let replace n v h = Map.add n [v] h
 
 let replace_opt n v h =
   match v with
-        None   -> Map.remove n h
+      None   -> Map.remove n h
     | Some v -> replace n v h
 
 let add n v h =
@@ -110,7 +110,7 @@ let iter f h =
   Map.iter
     (fun n vl ->
       match vl with
-            [v] -> f n v
+          [v] -> f n v
         | _   -> List.iter (fun v -> f n v) (List.rev vl))
     h
 

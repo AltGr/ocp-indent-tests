@@ -64,7 +64,7 @@ let request_too_large max =
 
 let convert_io_error e =
   match e with
-        Unix.Unix_error(Unix.ECONNRESET,_,_)
+      Unix.Unix_error(Unix.ECONNRESET,_,_)
     | Ssl.Read_error (Ssl.Error_syscall | Ssl.Error_ssl)
     | End_of_file
     | Ssl.Write_error (Ssl.Error_zero_return | Ssl.Error_syscall | Ssl.Error_ssl)
@@ -218,14 +218,14 @@ let rec extract_aux receiver pos bound cont =
       (fun () -> extract_aux receiver pos bound cont)
       (fun e ->
         match e, bound with
-              End_of_file, Bounded _ ->
+            End_of_file, Bounded _ ->
               Ocsigen_stream.empty None
           | _ ->
               Lwt.fail (convert_io_error e))
   else
     let pos' = Int64.add pos (Int64.of_int avail) in
     match bound with
-          Exact l when pos' >= l ->
+        Exact l when pos' >= l ->
           let len = Int64.to_int (Int64.sub l pos) in
           let s = buf_get_string receiver len in
           Ocsigen_stream.cont s cont
@@ -250,7 +250,7 @@ let rec wait_pattern find_pattern receiver cur_pos =
   let read_pos = receiver.read_pos in
   let avail = receiver.write_pos - (cur_pos + read_pos) in
   match find_pattern receiver.buf (cur_pos + read_pos) avail with
-        Found end_pos ->
+      Found end_pos ->
         Lwt.return (end_pos - read_pos)
     | Retry retry_pos ->
         let pos = max 0 (retry_pos - read_pos) in
@@ -281,7 +281,7 @@ let wait_http_header receiver =
     (fun e ->
       Lwt.fail
         (match e with
-              Buffer_full ->
+            Buffer_full ->
               Ocsigen_http_frame.Http_error.Http_exception
                 (413, Some "header too long", None)
           | End_of_file when buf_used receiver = 0 ->
@@ -455,7 +455,7 @@ let get_http_frame ?(head = false) receiver =
                   else
                     let max = get_maxsize receiver.r_mode in
                     begin match max with
-                          Some m when cl > m ->
+                        Some m when cl > m ->
                           Lwt.fail (request_too_large m)
                       | _ ->
                           Lwt.return (Some (extract receiver (Exact cl)))
@@ -476,7 +476,7 @@ let get_http_frame ?(head = false) receiver =
                      would leave no possibility for the server to send back a response.)
                   *)
                   match header.Ocsigen_http_frame.Http_header.mode with
-                        Ocsigen_http_frame.Http_header.Query (_, s) ->
+                      Ocsigen_http_frame.Http_header.Query (_, s) ->
                         return_with_no_body receiver
                     | _ ->
                         let st =
@@ -890,10 +890,10 @@ let send
     (* il faut récupérer la date de dernière modification *)
       (Http_headers.last_modified,
        match res.res_lastmodified with
-             None    -> None (* We do not put last modified for dynamically
-                                generated pages, otherwise it is not possible
-                                to cache them.  Without Last-Modified, ETag is
-                                taken into account by proxies/browsers *)
+           None    -> None (* We do not put last modified for dynamically
+                              generated pages, otherwise it is not possible
+                              to cache them.  Without Last-Modified, ETag is
+                              taken into account by proxies/browsers *)
          | Some l  -> Some (gmtdate l))
   in
   let mode =

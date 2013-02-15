@@ -82,8 +82,8 @@ let make_sockets addr port =
         let ipv6_socket =
           try [make_ipv6_socket Unix.inet6_addr_any port]
           with Unix.Unix_error
-                ((Unix.EAFNOSUPPORT | Unix.EPROTONOSUPPORT),
-                 _, _) -> []
+              ((Unix.EAFNOSUPPORT | Unix.EPROTONOSUPPORT),
+               _, _) -> []
         in
         (make_ipv4_socket Unix.inet_addr_any port)::ipv6_socket
     | IPv4 addr ->
@@ -774,7 +774,7 @@ let linger in_ch receiver =
             if len > 0 then linger_aux () else Lwt.return ())
           (fun e ->
             begin match e with
-                  Unix.Unix_error(Unix.ECONNRESET,_,_)
+                Unix.Unix_error(Unix.ECONNRESET,_,_)
               | Ssl.Read_error (Ssl.Error_syscall | Ssl.Error_ssl)
               | Exit ->
                   Lwt.return ()
@@ -1071,7 +1071,7 @@ let errmsg = function
         ((Ocsigen_extensions.get_init_exn_handler () exn),
          20)
       with
-            exn ->
+          exn ->
             (("Fatal - Uncaught exception: "^Printexc.to_string exn),
              100)
 
@@ -1358,7 +1358,7 @@ let start_server () = try
 
   let write_pid pid =
     match Ocsigen_config.get_pidfile () with
-          None -> ()
+        None -> ()
       | Some p ->
           let spid = (string_of_int pid)^"\n" in
           let len = String.length spid in

@@ -38,7 +38,7 @@ let scan_header ?(downcase=true)
     if unfold || strip then header_stripped_re else header_unstripped_re in
   let rec parse_header i l =
     match S.string_match header_re parstr i with
-          Some r ->
+        Some r ->
           let i' = S.match_end r in
           if i' > i1 then
             raise (Multipart_error "Mimestring.scan_header");
@@ -60,7 +60,7 @@ let scan_header ?(downcase=true)
       | None ->
           (* The header must end with an empty line *)
           begin match S.string_match empty_line_re parstr i with
-                Some r' ->
+              Some r' ->
                 List.rev l, S.match_end r'
             | None ->
                 raise (Multipart_error "Mimestring.scan_header")
@@ -79,7 +79,7 @@ let read_header ?downcase ?unfold ?strip s =
          * right at the beginning
         *)
         match S.string_match empty_line_re b 0 with
-              Some r ->
+            Some r ->
               return (s, (S.match_end r))
           | None ->
               (* Search the empty line: *)
@@ -90,7 +90,7 @@ let read_header ?downcase ?unfold ?strip s =
         | Not_found ->
             Ocsigen_stream.enlarge_stream s >>=
             (function
-                  Finished _ -> fail Stream_too_small
+                Finished _ -> fail Stream_too_small
               | Cont (stri, _) as s -> find_end_of_header s)
         | e -> fail e)
   in
@@ -113,7 +113,7 @@ let read_multipart_body decode_part boundary s =
     try
       return (s, snd (S.search_forward re (Ocsigen_stream.current_buffer s) start))
     with
-          Not_found ->
+        Not_found ->
           Ocsigen_stream.enlarge_stream s >>=
           (function
             | Finished _ -> fail Stream_too_small
@@ -233,7 +233,7 @@ let scan_multipart_body_from_stream s ~boundary ~create ~add ~stop ~maxsize=
             let size2 = Int64.add size (Int64.of_int long) in
             if
               (match maxsize with
-                    None -> false
+                  None -> false
                 | Some m ->
                     (Int64.compare size2 m) > 0)
             then
@@ -255,7 +255,7 @@ let scan_multipart_body_from_stream s ~boundary ~create ~add ~stop ~maxsize=
         (fun () -> while_stream Int64.zero s >>=
           (fun (size, s) -> stop size p >>= fun r -> return (r, s)))
         (function
-              error -> stop Int64.zero p >>= fun _ -> fail error))
+            error -> stop Int64.zero p >>= fun _ -> fail error))
   in
   catch
     (fun () ->

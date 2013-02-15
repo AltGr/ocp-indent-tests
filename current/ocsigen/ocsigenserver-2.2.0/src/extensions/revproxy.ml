@@ -205,7 +205,7 @@ let gen dir = function
                          (fst empty_result.Ocsigen_http_frame.res_stream)
                          (fun outcome ->
                            match outcome with
-                                 `Failure ->
+                               `Failure ->
                                  http_frame.Ocsigen_http_frame.frame_abort ()
                              | `Success ->
                                  Lwt.return ());
@@ -225,7 +225,7 @@ let gen dir = function
                        Ocsigen_stream.add_finalizer stream
                          (fun outcome ->
                            match outcome with
-                                 `Failure ->
+                               `Failure ->
                                  http_frame.Ocsigen_http_frame.frame_abort ()
                              | `Success ->
                                  Lwt.return ());

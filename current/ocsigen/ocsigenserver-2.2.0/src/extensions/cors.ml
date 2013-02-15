@@ -77,7 +77,7 @@ let add_headers config rq response =
           let req_method = Lazy.force
               rq.OX.request_info.OX.ri_access_control_request_method in
           match req_method with
-                None -> res_headers
+              None -> res_headers
             | Some request_method ->
                 let allowed_method =
                   match config.allowed_method with
@@ -99,7 +99,7 @@ let add_headers config rq response =
           let req_headers = Lazy.force
               rq.OX.request_info.OX.ri_access_control_request_headers in
           match req_headers with
-                None -> res_headers
+              None -> res_headers
             | Some request_headers ->
                 Http_headers.add Http_headers.access_control_allow_headers
                   (String.concat ", " request_headers) res_headers in

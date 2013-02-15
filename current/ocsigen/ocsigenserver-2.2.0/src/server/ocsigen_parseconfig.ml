@@ -603,16 +603,16 @@ let parse_port =
 (* First parsing of config file *)
 let extract_info c =
   let rec parse_ssl certificate privatekey = function
-        [] -> Some (certificate,privatekey)
+      [] -> Some (certificate,privatekey)
     | (Element ("certificate" as st, [], p))::l ->
         (match certificate with
-              None ->
+            None ->
               parse_ssl (Some (parse_string_tag st p)) privatekey l
           | _ -> raise (Config_file_error
                        "Two certificates inside <ssl>"))
     | (Element ("privatekey" as st, [], p))::l ->
         (match privatekey with
-              None ->
+            None ->
               parse_ssl certificate (Some (parse_string_tag st p)) l
           | _ -> raise (Config_file_error
                        "Two private keys inside <ssl>"))
@@ -621,13 +621,13 @@ let extract_info c =
     | _ -> raise (Config_file_error ("Unexpected content inside <ssl>"))
   in
   let rec aux user group ssl ports sslports minthreads maxthreads = function
-        [] -> ((user, group), (ssl, ports,sslports), (minthreads, maxthreads))
+      [] -> ((user, group), (ssl, ports,sslports), (minthreads, maxthreads))
     | (Element ("logdir" as st, [], p))::ll ->
         set_logdir (parse_string_tag st p);
         aux user group ssl ports sslports minthreads maxthreads ll
     | (Element ("port" as st, atts, p))::ll ->
         (match atts with
-              []
+            []
           | [("protocol", "HTTP")] ->
               let po = try
                 parse_port (parse_string_tag st p)
@@ -650,7 +650,7 @@ let extract_info c =
           (Some (int_of_string st (parse_string_tag st p))) ll
     | (Element ("ssl", [], p))::ll ->
         (match ssl with
-              None ->
+            None ->
               aux user group (parse_ssl None None p) ports sslports
                 minthreads maxthreads ll
           | _ ->
@@ -659,14 +659,14 @@ let extract_info c =
                    "Only one ssl certificate for each server supported for now"))
     | (Element ("user" as st, [], p))::ll ->
         (match user with
-              None ->
+            None ->
               aux (Some (parse_string_tag st p)) group ssl ports sslports
                 minthreads maxthreads ll
           | _ -> raise (Config_file_error
                        "Only one <user> tag for each server allowed"))
     | (Element ("group" as st, [], p))::ll ->
         (match group with
-              None ->
+            None ->
               aux user (Some (parse_string_tag st p)) ssl ports sslports
                 minthreads maxthreads ll
           | _ -> raise (Config_file_error
@@ -681,11 +681,11 @@ let extract_info c =
   in
   let (user, group), si, (mint, maxt) = aux None None None [] [] None None c in
   let user = match user with
-        None -> None (* Some (get_default_user ()) *)
+      None -> None (* Some (get_default_user ()) *)
     | Some s -> if s = "" then None else Some s
   in
   let group = match group with
-        None -> None (* Some (get_default_group ()) *)
+      None -> None (* Some (get_default_group ()) *)
     | Some s -> if s = "" then None else Some s
   in
   let mint = match mint with

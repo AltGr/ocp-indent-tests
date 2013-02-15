@@ -156,7 +156,7 @@ let compress deflate stream =
       Zlib.deflate_end zstream
     with
       (* ignore errors, deflate_end cleans everything anyway *)
-          Zlib.Error _ -> ());
+        Zlib.Error _ -> ());
     return (Ocsigen_messages.debug2 "--Deflatemod: Zlib stream closed") in
   let oz =
     { stream = zstream ;

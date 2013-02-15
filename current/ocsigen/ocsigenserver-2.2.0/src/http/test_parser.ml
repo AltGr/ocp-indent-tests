@@ -23,7 +23,7 @@ let parse_file f =
   try
     Http_parser.header Http_lexer.token lexbuf
   with
-        Parsing.Parse_error -> failwith ("erreur vers "^ (Lexing.lexeme lexbuf))
+      Parsing.Parse_error -> failwith ("erreur vers "^ (Lexing.lexeme lexbuf))
     |e -> Ocsigen_http_frame.Http_error.display_http_exception e;failwith "erreur"
 
 let _ =

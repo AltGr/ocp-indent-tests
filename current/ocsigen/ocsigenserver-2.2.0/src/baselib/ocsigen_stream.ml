@@ -39,7 +39,7 @@ type 'a t =
 
 let empty follow =
   match follow with
-        None    -> Lwt.return (Finished None)
+      None    -> Lwt.return (Finished None)
     | Some st -> Lwt.return (Finished (Some (Lazy.lazy_from_fun st)))
 
 let cont stri f =
@@ -57,7 +57,7 @@ let rec get_aux st =
        (fun e ->
          Lwt.return
            (match e with
-                 Cont (s, rem) -> st.stream <- rem; Cont (s, get_aux st)
+               Cont (s, rem) -> st.stream <- rem; Cont (s, get_aux st)
              | _             -> e))
        (fun e ->
          st.stream <- lazy (Lwt.fail e);

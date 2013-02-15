@@ -534,7 +534,7 @@ let gen reg = function
                            Ocsigen_stream.add_finalizer content
                              (fun outcome ->
                                match outcome with
-                                     `Failure ->
+                                   `Failure ->
                                      frame.Ocsigen_http_frame.frame_abort ()
                                  | `Success ->
                                      Lwt.return ());

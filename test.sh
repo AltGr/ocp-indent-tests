@@ -131,7 +131,7 @@ indent-all() {
         time ( for f in $(find orig/$name ! -type d); do
             local dest=$destdir/${f#orig/}
             mkdir -p $(dirname $dest)
-            $indent "$f" $config > "$dest"
+            $indent "$f" $config > "$dest" 2>/dev/null
         done ) 2>"$destdir/$name.time"
         printf "done in %.2fs\n" "$(cat "$destdir/$name.time")" >&2
     done

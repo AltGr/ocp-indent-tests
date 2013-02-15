@@ -59,13 +59,13 @@ let open_files ?(user = Ocsigen_config.get_user ()) ?(group = Ocsigen_config.get
          (fun sect lev ->
            if Lwt_log.Section.name sect = "access" then acc else
              match lev with
-                   Lwt_log.Error | Lwt_log.Fatal -> err
+                 Lwt_log.Error | Lwt_log.Fatal -> err
                | _                             -> war);
        Lwt_log.dispatch
          (fun sect lev ->
            let show =
              match lev with
-                   Lwt_log.Error | Lwt_log.Fatal ->
+                 Lwt_log.Error | Lwt_log.Fatal ->
                    not (Ocsigen_config.get_silent ())
                | _ ->
                    Ocsigen_config.get_verbose ()
