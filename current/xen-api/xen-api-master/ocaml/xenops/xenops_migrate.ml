@@ -105,7 +105,7 @@ let http_post url length body =
 *)
 let http_put ?(cookie=[]) url =
   Http.Request.make ~version:"1.1" ~keep_alive:false ?auth:(Http.Url.auth_of url) ~user_agent:"xenopsd" ~query:(Http.Url.get_query_params url) ~cookie Http.Put (Http.Url.get_uri url)
-  (*
+(*
 let remote_rpc url rpc fd =
   let body = rpc |> Jsonrpc.string_of_call in
   let length = body |> String.length |> Int64.of_int in

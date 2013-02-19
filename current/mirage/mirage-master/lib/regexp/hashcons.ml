@@ -126,7 +126,7 @@ sig
   type key
   type t
   val create : int -> t
-    (*
+  (*
     val clear : t -> unit
 *)
   val hashcons : t -> key -> key hash_consed

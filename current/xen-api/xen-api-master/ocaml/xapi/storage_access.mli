@@ -16,8 +16,8 @@
 *)
 
 val start: unit -> unit
-  (** once [start ()] returns the storage service is listening for requests on
-      its unix domain socket. *)
+(** once [start ()] returns the storage service is listening for requests on
+    its unix domain socket. *)
 
 (** [find_vdi __context sr vdi] returns the XenAPI VDI ref associated
    with (sr, vdi) *)

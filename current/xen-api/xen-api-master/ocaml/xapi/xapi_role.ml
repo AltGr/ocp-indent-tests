@@ -53,8 +53,8 @@ let find_role_by_name_label name_label = Hashtbl.find static_role_by_name_label_
 (*    val get_all : __context:Context.t -> ref_role_set*)
 let get_all ~__context = 
   List.map (fun r -> ref_of_role r) get_all_static_roles
-  (*@ (* concatenate with Db table *)
-     Db.Role.get_all ~__context*)
+(*@ (* concatenate with Db table *)
+   Db.Role.get_all ~__context*)
 
 let is_valid_role ~__context ~role =
   Hashtbl.mem static_role_by_ref_tbl role
@@ -98,9 +98,9 @@ let get_all_records_where ~__context ~expr =
     List.map 
       (fun r -> ((ref_of_role r),(get_api_record ~static_record:r)))
       get_all_static_roles
-      (*@ (* concatenate with Db table *)
-         (* TODO: this line is crashing for some unknown reason, but not needed in RBAC 1 *)
-         Db.Role.get_all_records_where ~__context ~expr*)
+(*@ (* concatenate with Db table *)
+   (* TODO: this line is crashing for some unknown reason, but not needed in RBAC 1 *)
+   Db.Role.get_all_records_where ~__context ~expr*)
 
 (*    val get_all_records : __context:Context.t -> ref_role_to_role_t_map*)
 let get_all_records ~__context =

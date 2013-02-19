@@ -20,7 +20,7 @@ open Threadext
 
 module Statefile_latency = struct
   open Rrd.Statefile_latency
-    (* There will be more than one statefile at some point *)
+  (* There will be more than one statefile at some point *)
   let all = ref []
 
   let get_one t =

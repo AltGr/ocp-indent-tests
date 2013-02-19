@@ -588,7 +588,7 @@ let monitor_loop () =
         Thread.delay 10.
     done
   )
-  (* Monitoring code --- END. *)
+(* Monitoring code --- END. *)
 
 (* Read the xcp-rrdd.conf. *)
 let read_config () =

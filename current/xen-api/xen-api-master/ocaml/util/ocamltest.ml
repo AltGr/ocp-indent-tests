@@ -172,7 +172,7 @@ let run test =
     | Suite (name, description, tests) ->
       run_suite (name_prefix ^ name, description, tests)
 
-(** Runs the given test case. *)
+        (** Runs the given test case. *)
   and run_case (name, description, fn) =
 
     let pre_status_padding =
@@ -223,7 +223,7 @@ let run test =
         (Printexc.get_backtrace ());
       singleton_fail
 
-(** Runs the given test suite. *)
+      (** Runs the given test suite. *)
   and run_suite (name, description, tests) =
     flush stdout;
     let result = List.fold_left (

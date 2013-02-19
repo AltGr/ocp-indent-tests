@@ -78,34 +78,34 @@ type t
 (** Type of switches. *)
 
 val create : unit -> t
-  (** [create ()] creates a new switch. *)
+(** [create ()] creates a new switch. *)
 
 val is_on : t -> bool
-  (** [is_on switch] returns [true] if the switch is currently on, and
-      [false] otherwise. *)
+(** [is_on switch] returns [true] if the switch is currently on, and
+    [false] otherwise. *)
 
 val turn_off : t -> unit Lwt.t
-    (** [turn_off switch] turns off the switch. It calls all registered
-        hooks, waits for all of them to terminates, and the returns. If
-        one of the hook failed, then it will fail with one of the
-        exception raised by hooks. If the switch is already off, then it
-        does nothing. *)
+(** [turn_off switch] turns off the switch. It calls all registered
+    hooks, waits for all of them to terminates, and the returns. If
+    one of the hook failed, then it will fail with one of the
+    exception raised by hooks. If the switch is already off, then it
+    does nothing. *)
 
 exception Off
 (** Exception raised when trying to add a hook to a switch that is
     already off. *)
 
 val check : t option -> unit
-  (** [check switch] does nothing if [switch] is [None] or contains an
-      switch that is currently on, and raise {!Off} otherwise. *)
+(** [check switch] does nothing if [switch] is [None] or contains an
+    switch that is currently on, and raise {!Off} otherwise. *)
 
 val add_hook : t option -> (unit -> unit Lwt.t) -> unit
-  (** [add_hook switch f] registers [f] so it will be called when
-      {!turn_off} is invoked. It does nothing if [switch] is
-      [None]. If [switch] contains an switch that is already off then
-      {!Off} is raised. *)
+(** [add_hook switch f] registers [f] so it will be called when
+    {!turn_off} is invoked. It does nothing if [switch] is
+    [None]. If [switch] contains an switch that is already off then
+    {!Off} is raised. *)
 
 val add_hook_or_exec : t option -> (unit -> unit Lwt.t) -> unit Lwt.t
-    (** [add_hook_or_exec switch f] is the same as {!add_hook} except
-        that if the switch is already off, then [f] is called
-        immediatly. *)
+(** [add_hook_or_exec switch f] is the same as {!add_hook} except
+    that if the switch is already off, then [f] is called
+    immediatly. *)

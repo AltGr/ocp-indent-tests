@@ -59,13 +59,13 @@ external rem : int32 -> int32 -> int32 = "%int32_mod"
    If [y = 0], [Int32.rem x y] raises [Division_by_zero]. *)
 
 val succ : int32 -> int32
-  (** Successor.  [Int32.succ x] is [Int32.add x Int32.one]. *)
+(** Successor.  [Int32.succ x] is [Int32.add x Int32.one]. *)
 
 val pred : int32 -> int32
-  (** Predecessor.  [Int32.pred x] is [Int32.sub x Int32.one]. *)
+(** Predecessor.  [Int32.pred x] is [Int32.sub x Int32.one]. *)
 
 val abs : int32 -> int32
-  (** Return the absolute value of its argument. *)
+(** Return the absolute value of its argument. *)
 
 val max_int : int32
 (** The greatest representable 32-bit integer, 2{^31} - 1. *)
@@ -84,7 +84,7 @@ external logxor : int32 -> int32 -> int32 = "%int32_xor"
 (** Bitwise logical exclusive or. *)
 
 val lognot : int32 -> int32
-  (** Bitwise logical negation *)
+(** Bitwise logical negation *)
 
 external shift_left : int32 -> int -> int32 = "%int32_lsl"
 (** [Int32.shift_left x y] shifts [x] to the left by [y] bits.
@@ -132,7 +132,7 @@ external of_string : string -> int32 = "caml_int32_of_string"
    exceeds the range of integers representable in type [int32]. *)
 
 val to_string : int32 -> string
-  (** Return the string representation of its argument, in signed decimal. *)
+(** Return the string representation of its argument, in signed decimal. *)
 
 external bits_of_float : float -> int32 = "caml_int32_bits_of_float"
 (** Return the internal representation of the given float according
@@ -150,10 +150,10 @@ type t = int32
 (** An alias for the type of 32-bit integers. *)
 
 val compare: t -> t -> int
-  (** The comparison function for 32-bit integers, with the same specification as
-      {!Pervasives.compare}.  Along with the type [t], this function [compare]
-      allows the module [Int32] to be passed as argument to the functors
-      {!Set.Make} and {!Map.Make}. *)
+(** The comparison function for 32-bit integers, with the same specification as
+    {!Pervasives.compare}.  Along with the type [t], this function [compare]
+    allows the module [Int32] to be passed as argument to the functors
+    {!Set.Make} and {!Map.Make}. *)
 
 (**/**)
 

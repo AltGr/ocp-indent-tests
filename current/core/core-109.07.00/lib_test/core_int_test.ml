@@ -19,7 +19,7 @@ let rand () =
     - aval
   else
     aval
-    (* Random with a distribution favouring small ones*)
+(* Random with a distribution favouring small ones*)
 
 let test =
   "core_int" >:::

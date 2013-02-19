@@ -55,8 +55,8 @@ type spec = Arg.spec =
           call the function with the symbol *)
   | Rest of (string -> unit)   (** Stop interpreting keywords and call the
                                    function with each remaining argument *)
-    (** The concrete type describing the behavior associated
-       with a keyword. *)
+(** The concrete type describing the behavior associated
+   with a keyword. *)
 
 type key = string
 type doc = string
@@ -65,61 +65,61 @@ type anon_fun = (string -> unit)
 
 val parse :
   (key * spec * doc) list -> anon_fun -> usage_msg -> unit
-  (** [Arg.parse speclist anon_fun usage_msg] parses the command line.
-      [speclist] is a list of triples [(key, spec, doc)].
-      [key] is the option keyword, it must start with a ['-'] character.
-      [spec] gives the option type and the function to call when this option
-      is found on the command line.
-      [doc] is a one-line description of this option.
-      [anon_fun] is called on anonymous arguments.
-      The functions in [spec] and [anon_fun] are called in the same order
-      as their arguments appear on the command line.
+(** [Arg.parse speclist anon_fun usage_msg] parses the command line.
+    [speclist] is a list of triples [(key, spec, doc)].
+    [key] is the option keyword, it must start with a ['-'] character.
+    [spec] gives the option type and the function to call when this option
+    is found on the command line.
+    [doc] is a one-line description of this option.
+    [anon_fun] is called on anonymous arguments.
+    The functions in [spec] and [anon_fun] are called in the same order
+    as their arguments appear on the command line.
 
-      If an error occurs, [Arg.parse] exits the program, after printing
-      to standard error an error message as follows:
-     -   The reason for the error: unknown option, invalid or missing argument, etc.
-     -   [usage_msg]
-     -   The list of options, each followed by the corresponding [doc] string.
+    If an error occurs, [Arg.parse] exits the program, after printing
+    to standard error an error message as follows:
+   -   The reason for the error: unknown option, invalid or missing argument, etc.
+   -   [usage_msg]
+   -   The list of options, each followed by the corresponding [doc] string.
 
-      For the user to be able to specify anonymous arguments starting with a
-      [-], include for example [("-", String anon_fun, doc)] in [speclist].
+    For the user to be able to specify anonymous arguments starting with a
+    [-], include for example [("-", String anon_fun, doc)] in [speclist].
 
-      By default, [parse] recognizes two unit options, [-help] and [--help],
-      which will print to standard output [usage_msg] and the list of
-      options, and exit the program.  You can override this behaviour
-      by specifying your own [-help] and [--help] options in [speclist].
-  *)
+    By default, [parse] recognizes two unit options, [-help] and [--help],
+    which will print to standard output [usage_msg] and the list of
+    options, and exit the program.  You can override this behaviour
+    by specifying your own [-help] and [--help] options in [speclist].
+*)
 
 val parse_argv : ?current: int ref -> string array ->
   (key * spec * doc) list -> anon_fun -> usage_msg -> unit
-  (** [Arg.parse_argv ~current args speclist anon_fun usage_msg] parses
-     the array [args] as if it were the command line.  It uses and updates
-     the value of [~current] (if given), or [Arg.current].  You must set
-     it before calling [parse_argv].  The initial value of [current]
-     is the index of the program name (argument 0) in the array.
-     If an error occurs, [Arg.parse_argv] raises [Arg.Bad] with
-     the error message as argument.  If option [-help] or [--help] is
-     given, [Arg.parse_argv] raises [Arg.Help] with the help message
-     as argument.
-  *)
+(** [Arg.parse_argv ~current args speclist anon_fun usage_msg] parses
+   the array [args] as if it were the command line.  It uses and updates
+   the value of [~current] (if given), or [Arg.current].  You must set
+   it before calling [parse_argv].  The initial value of [current]
+   is the index of the program name (argument 0) in the array.
+   If an error occurs, [Arg.parse_argv] raises [Arg.Bad] with
+   the error message as argument.  If option [-help] or [--help] is
+   given, [Arg.parse_argv] raises [Arg.Help] with the help message
+   as argument.
+*)
 
 exception Help of string
-  (** Raised by [Arg.parse_argv] when the user asks for help. *)
+(** Raised by [Arg.parse_argv] when the user asks for help. *)
 
 exception Bad of string
-  (** Functions in [spec] or [anon_fun] can raise [Arg.Bad] with an error
-      message to reject invalid arguments.
-      [Arg.Bad] is also raised by [Arg.parse_argv] in case of an error. *)
+(** Functions in [spec] or [anon_fun] can raise [Arg.Bad] with an error
+    message to reject invalid arguments.
+    [Arg.Bad] is also raised by [Arg.parse_argv] in case of an error. *)
 
 val usage : (key * spec * doc) list -> usage_msg -> unit
-  (** [Arg.usage speclist usage_msg] prints to standard error
-      an error message that includes the list of valid options.  This is
-      the same message that {!Arg.parse} prints in case of error.
-      [speclist] and [usage_msg] are the same as for [Arg.parse]. *)
+(** [Arg.usage speclist usage_msg] prints to standard error
+    an error message that includes the list of valid options.  This is
+    the same message that {!Arg.parse} prints in case of error.
+    [speclist] and [usage_msg] are the same as for [Arg.parse]. *)
 
 val usage_string : (key * spec * doc) list -> usage_msg -> string
-  (** Returns the message that would have been printed by {!Arg.usage},
-      if provided with the same parameters. *)
+(** Returns the message that would have been printed by {!Arg.usage},
+    if provided with the same parameters. *)
 
 val align: (key * spec * doc) list -> (key * spec * doc) list;;
 (** Align the documentation strings by inserting spaces at the first
@@ -129,11 +129,11 @@ val align: (key * spec * doc) list -> (key * spec * doc) list;;
     [Symbol] arguments are aligned on the next line. *)
 
 val current : int ref
-  (** Position (in {!Sys.argv}) of the argument being processed.  You can
-      change this value, e.g. to force {!Arg.parse} to skip some arguments.
-      {!Arg.parse} uses the initial value of {!Arg.current} as the index of
-      argument 0 (the program name) and starts parsing arguments
-      at the next element. *)
+(** Position (in {!Sys.argv}) of the argument being processed.  You can
+    change this value, e.g. to force {!Arg.parse} to skip some arguments.
+    {!Arg.parse} uses the initial value of {!Arg.current} as the index of
+    argument 0 (the program name) and starts parsing arguments
+    at the next element. *)
 
 (* Core extensions below *)
 

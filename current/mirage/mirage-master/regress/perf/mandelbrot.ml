@@ -60,7 +60,7 @@ let calc size =
       (fun _ -> let y'= !y + dy in let r = (!y, y') in y := y'+1; r) in
   let _ = Array.map (invoke mandelbrot) (Array.append rs [|!y, h-1|]) in
   w, h
-  (* Array.iter (fun w -> output_string stdout (w ())) workers *)
+(* Array.iter (fun w -> output_string stdout (w ())) workers *)
 
 open Lwt
 

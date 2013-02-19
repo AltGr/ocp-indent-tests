@@ -166,8 +166,8 @@ let db_length t =
         | e -> fail e)
   in
   aux Dbm.firstkey 0
-  (* Because of Dbm implementation, the result may be less than the expected
-     result in some case *)
+(* Because of Dbm implementation, the result may be less than the expected
+   result in some case *)
 
 (*****************************************************************************)
 (* signals *)

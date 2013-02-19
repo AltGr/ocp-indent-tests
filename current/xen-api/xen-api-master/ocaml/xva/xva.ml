@@ -189,10 +189,10 @@ let parse_appliance attrs children =
         memory = Int64.of_string memory;
         vcpus = int_of_string vcpus;
         is_hvm = (String.lowercase is_hvm) = "true";
-        kernel_boot_cmdline = cmdline;
-        vbds = vbds;
-        distrib = distrib;
-        distrib_version = distrib_version
+          kernel_boot_cmdline = cmdline;
+          vbds = vbds;
+          distrib = distrib;
+          distrib_version = distrib_version
       }
     | _ -> raise (Parse_failure "expected VM")
   in

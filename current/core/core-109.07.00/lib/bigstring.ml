@@ -640,16 +640,16 @@ TEST = test_accessor ~buf
      0x789A_BCDE_F012_3456L;
      0x7FFF_FFFF_FFFF_FFFFL]
 
-(* Test 63/64-bit precision boundary.
+    (* Test 63/64-bit precision boundary.
 
-   Seen on a data stream the constant 0x4000_0000_0000_0000 is supposed to
-   represent a 64-bit positive integer (2^62).
+       Seen on a data stream the constant 0x4000_0000_0000_0000 is supposed to
+       represent a 64-bit positive integer (2^62).
 
-   Whilst this bit pattern does fit inside an OCaml value of type [int] on a
-   64-bit machine, it is the representation of a negative number (the most negative
-   number representable in type [int]), and in particular is not the representation
-   of 2^62.  It is thus suitable for this test.
-*)
+       Whilst this bit pattern does fit inside an OCaml value of type [int] on a
+       64-bit machine, it is the representation of a negative number (the most negative
+       number representable in type [int]), and in particular is not the representation
+       of 2^62.  It is thus suitable for this test.
+    *)
 TEST = let too_big = 0x4000_0000_0000_0000L in
   unsafe_set_int64_t_le buf ~pos:0 too_big;
   try

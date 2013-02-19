@@ -39,9 +39,9 @@ type 'a t = private
   | If of 'a t * 'a t * 'a t
   | Base of 'a
 with bin_io, compare, sexp
-  (** Note that the sexps are not directly inferred from the type above -- there are lots of
-      fancy shortcuts.  Also, the sexps for ['a] must not look anything like blang sexps.
-      Otherwise [t_of_sexp] will fail. *)
+(** Note that the sexps are not directly inferred from the type above -- there are lots of
+    fancy shortcuts.  Also, the sexps for ['a] must not look anything like blang sexps.
+    Otherwise [t_of_sexp] will fail. *)
 
 (* smart constructors that simplify away constants whenever possible *)
 val base     : 'a -> 'a t

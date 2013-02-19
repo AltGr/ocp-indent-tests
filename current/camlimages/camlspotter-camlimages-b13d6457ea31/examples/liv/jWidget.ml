@@ -45,7 +45,7 @@ class status_bar ?packing ?show () =
     method get_fraction = progress#fraction
 
     method event = progress#event
-      (*
+    (*
   method set_activity_blocks = progress#set_activity_blocks
   method set_activity_step = progress#set_activity_step
   method set_bar_style = progress#set_bar_style

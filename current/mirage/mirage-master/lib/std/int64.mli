@@ -60,13 +60,13 @@ external rem : int64 -> int64 -> int64 = "%int64_mod"
    If [y = 0], [Int64.rem x y] raises [Division_by_zero]. *)
 
 val succ : int64 -> int64
-  (** Successor.  [Int64.succ x] is [Int64.add x Int64.one]. *)
+(** Successor.  [Int64.succ x] is [Int64.add x Int64.one]. *)
 
 val pred : int64 -> int64
-  (** Predecessor.  [Int64.pred x] is [Int64.sub x Int64.one]. *)
+(** Predecessor.  [Int64.pred x] is [Int64.sub x Int64.one]. *)
 
 val abs : int64 -> int64
-  (** Return the absolute value of its argument. *)
+(** Return the absolute value of its argument. *)
 
 val max_int : int64
 (** The greatest representable 64-bit integer, 2{^63} - 1. *)
@@ -84,7 +84,7 @@ external logxor : int64 -> int64 -> int64 = "%int64_xor"
 (** Bitwise logical exclusive or. *)
 
 val lognot : int64 -> int64
-  (** Bitwise logical negation *)
+(** Bitwise logical negation *)
 
 external shift_left : int64 -> int -> int64 = "%int64_lsl"
 (** [Int64.shift_left x y] shifts [x] to the left by [y] bits.
@@ -154,7 +154,7 @@ external of_string : string -> int64 = "caml_int64_of_string"
    exceeds the range of integers representable in type [int64]. *)
 
 val to_string : int64 -> string
-  (** Return the string representation of its argument, in decimal. *)
+(** Return the string representation of its argument, in decimal. *)
 
 external bits_of_float : float -> int64 = "caml_int64_bits_of_float"
 (** Return the internal representation of the given float according
@@ -172,10 +172,10 @@ type t = int64
 (** An alias for the type of 64-bit integers. *)
 
 val compare: t -> t -> int
-  (** The comparison function for 64-bit integers, with the same specification as
-      {!Pervasives.compare}.  Along with the type [t], this function [compare]
-      allows the module [Int64] to be passed as argument to the functors
-      {!Set.Make} and {!Map.Make}. *)
+(** The comparison function for 64-bit integers, with the same specification as
+    {!Pervasives.compare}.  Along with the type [t], this function [compare]
+    allows the module [Int64] to be passed as argument to the functors
+    {!Set.Make} and {!Map.Make}. *)
 
 (**/**)
 

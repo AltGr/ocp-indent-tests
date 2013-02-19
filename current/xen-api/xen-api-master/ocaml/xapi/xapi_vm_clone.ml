@@ -333,8 +333,8 @@ let copy_vm_record ?(snapshot_info_record) ~__context ~vm ~disk_op ~new_name ~ne
     ~version:0L
 ;
 
-(* update the VM's parent field in case of snapshot. Note this must be done after "ref"
-   has been created, so that its "children" field can be updated by the database layer *)
+  (* update the VM's parent field in case of snapshot. Note this must be done after "ref"
+     has been created, so that its "children" field can be updated by the database layer *)
   begin match disk_op with
     | Disk_op_clone | Disk_op_copy _-> ()
     | Disk_op_snapshot | Disk_op_checkpoint -> Db.VM.set_parent ~__context ~self:vm ~value:ref

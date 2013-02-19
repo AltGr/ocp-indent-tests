@@ -221,13 +221,13 @@ module type Accessors = sig
     : ('k, 'comparator,
       ('k, 'v, 'comparator) t -> 'k key -> ('k key * 'v) option
     ) options
-    (** [next_key t k] returns the smallest (key, value) pair in t with key greater than k *)
+  (** [next_key t k] returns the smallest (key, value) pair in t with key greater than k *)
   val next_key
     : ('k, 'comparator,
       ('k, 'v, 'comparator) t -> 'k key -> ('k key * 'v) option
     ) options
-    (** [rank t k] if k is in t, returns the number of keys strictly less than k in t,
-        otherwise None *)
+  (** [rank t k] if k is in t, returns the number of keys strictly less than k in t,
+      otherwise None *)
   val rank
     : ('k, 'comparator,
       ('k, 'v, 'comparator) t -> 'k key -> int option

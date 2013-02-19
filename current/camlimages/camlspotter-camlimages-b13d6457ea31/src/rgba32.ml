@@ -20,9 +20,9 @@ module E = struct
   let bytes_per_pixel = 4
   let get str pos =
     { color =
-        { r = int_of_char str.[pos    ];
-          g = int_of_char str.[pos + 1];
-          b = int_of_char str.[pos + 2] };
+      { r = int_of_char str.[pos    ];
+        g = int_of_char str.[pos + 1];
+        b = int_of_char str.[pos + 2] };
       alpha = int_of_char str.[pos + 3] }
   let set str pos t =
     str.[pos    ] <- char_of_int t.color.r;

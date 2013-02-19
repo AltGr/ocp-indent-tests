@@ -1,16 +1,16 @@
 open Pervasives
-  (***********************************************************************)
-  (*                                                                     *)
-  (*                           Objective Caml                            *)
-  (*                                                                     *)
-  (*            Pierre Weis, projet Cristal, INRIA Rocquencourt          *)
-  (*                                                                     *)
-  (*  Copyright 2002 Institut National de Recherche en Informatique et   *)
-  (*  en Automatique.  All rights reserved.  This file is distributed    *)
-  (*  under the terms of the GNU Library General Public License, with    *)
-  (*  the special exception on linking described in file ../LICENSE.     *)
-  (*                                                                     *)
-  (***********************************************************************)
+(***********************************************************************)
+(*                                                                     *)
+(*                           Objective Caml                            *)
+(*                                                                     *)
+(*            Pierre Weis, projet Cristal, INRIA Rocquencourt          *)
+(*                                                                     *)
+(*  Copyright 2002 Institut National de Recherche en Informatique et   *)
+(*  en Automatique.  All rights reserved.  This file is distributed    *)
+(*  under the terms of the GNU Library General Public License, with    *)
+(*  the special exception on linking described in file ../LICENSE.     *)
+(*                                                                     *)
+(***********************************************************************)
 
 (* $Id: scanf.ml 10377 2010-05-05 17:49:19Z weis $ *)
 
@@ -24,86 +24,86 @@ module type SCANNING = sig
   type scanbuf = in_channel;;
 
   val stdin : in_channel;;
-(* The scanning buffer reading from [Pervasives.stdin].
-    [stdib] is equivalent to [Scanning.from_channel Pervasives.stdin]. *)
+  (* The scanning buffer reading from [Pervasives.stdin].
+      [stdib] is equivalent to [Scanning.from_channel Pervasives.stdin]. *)
 
   val stdib : in_channel;;
-(* An alias for [Scanf.stdin], the scanning buffer reading from
-   [Pervasives.stdin]. *)
+  (* An alias for [Scanf.stdin], the scanning buffer reading from
+     [Pervasives.stdin]. *)
 
   val next_char : scanbuf -> char;;
-(* [Scanning.next_char ib] advance the scanning buffer for
-    one character.
-    If no more character can be read, sets a end of file condition and
-    returns '\000'. *)
+  (* [Scanning.next_char ib] advance the scanning buffer for
+      one character.
+      If no more character can be read, sets a end of file condition and
+      returns '\000'. *)
 
   val invalidate_current_char : scanbuf -> unit;;
-(* [Scanning.invalidate_current_char ib] mark the current_char as already
-    scanned. *)
+  (* [Scanning.invalidate_current_char ib] mark the current_char as already
+      scanned. *)
 
   val peek_char : scanbuf -> char;;
-(* [Scanning.peek_char ib] returns the current char available in
-    the buffer or reads one if necessary (when the current character is
-    already scanned).
-    If no character can be read, sets an end of file condition and
-    returns '\000'. *)
+  (* [Scanning.peek_char ib] returns the current char available in
+      the buffer or reads one if necessary (when the current character is
+      already scanned).
+      If no character can be read, sets an end of file condition and
+      returns '\000'. *)
 
   val checked_peek_char : scanbuf -> char;;
-(* Same as above but always returns a valid char or fails:
-    instead of returning a null char when the reading method of the
-    input buffer has reached an end of file, the function raises exception
-    [End_of_file]. *)
+  (* Same as above but always returns a valid char or fails:
+      instead of returning a null char when the reading method of the
+      input buffer has reached an end of file, the function raises exception
+      [End_of_file]. *)
 
   val store_char : int -> scanbuf -> char -> int;;
-(* [Scanning.store_char lim ib c] adds [c] to the token buffer
-    of the scanning buffer. It also advances the scanning buffer for one
-    character and returns [lim - 1], indicating the new limit
-    for the length of the current token. *)
+  (* [Scanning.store_char lim ib c] adds [c] to the token buffer
+      of the scanning buffer. It also advances the scanning buffer for one
+      character and returns [lim - 1], indicating the new limit
+      for the length of the current token. *)
 
   val skip_char : int -> scanbuf -> int;;
-(* [Scanning.skip_char lim ib] ignores the current character. *)
+  (* [Scanning.skip_char lim ib] ignores the current character. *)
 
   val ignore_char : int -> scanbuf -> int;;
-(* [Scanning.ignore_char ib lim] ignores the current character and
-   decrements the limit. *)
+  (* [Scanning.ignore_char ib lim] ignores the current character and
+     decrements the limit. *)
 
   val token : scanbuf -> string;;
-(* [Scanning.token ib] returns the string stored into the token
-    buffer of the scanning buffer: it returns the token matched by the
-    format. *)
+  (* [Scanning.token ib] returns the string stored into the token
+      buffer of the scanning buffer: it returns the token matched by the
+      format. *)
 
   val reset_token : scanbuf -> unit;;
-(* [Scanning.reset_token ib] resets the token buffer of
-    the given scanning buffer. *)
+  (* [Scanning.reset_token ib] resets the token buffer of
+      the given scanning buffer. *)
 
   val char_count : scanbuf -> int;;
-(* [Scanning.char_count ib] returns the number of characters
-    read so far from the given buffer. *)
+  (* [Scanning.char_count ib] returns the number of characters
+      read so far from the given buffer. *)
 
   val line_count : scanbuf -> int;;
-(* [Scanning.line_count ib] returns the number of new line
-    characters read so far from the given buffer. *)
+  (* [Scanning.line_count ib] returns the number of new line
+      characters read so far from the given buffer. *)
 
   val token_count : scanbuf -> int;;
-(* [Scanning.token_count ib] returns the number of tokens read
-    so far from [ib]. *)
+  (* [Scanning.token_count ib] returns the number of tokens read
+      so far from [ib]. *)
 
   val eof : scanbuf -> bool;;
-(* [Scanning.eof ib] returns the end of input condition
-    of the given buffer. *)
+  (* [Scanning.eof ib] returns the end of input condition
+      of the given buffer. *)
 
   val end_of_input : scanbuf -> bool;;
-(* [Scanning.end_of_input ib] tests the end of input condition
-    of the given buffer (if no char has ever been read, an attempt to
-    read one is performed). *)
+  (* [Scanning.end_of_input ib] tests the end of input condition
+      of the given buffer (if no char has ever been read, an attempt to
+      read one is performed). *)
 
   val beginning_of_input : scanbuf -> bool;;
-(* [Scanning.beginning_of_input ib] tests the beginning of input
-    condition of the given buffer. *)
+  (* [Scanning.beginning_of_input ib] tests the beginning of input
+      condition of the given buffer. *)
 
   val name_of_input : scanbuf -> string;;
-(* [Scanning.name_of_input ib] returns the name of the character
-    source for input buffer [ib]. *)
+  (* [Scanning.name_of_input ib] returns the name of the character
+      source for input buffer [ib]. *)
 
   val open_in : string -> scanbuf;;
   val open_in_bin : string -> scanbuf;;

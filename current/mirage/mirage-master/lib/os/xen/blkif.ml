@@ -67,7 +67,7 @@ module Req = struct
       (match t.op with Some x -> string_of_op x | None -> "None")
       t.handle t.id t.sector (string_of_segs t.segs)
 
-  (* The segment looks the same in both 32-bit and 64-bit versions *)
+    (* The segment looks the same in both 32-bit and 64-bit versions *)
       cstruct segment {
       uint32_t       gref;
       uint8_t        first_sector;

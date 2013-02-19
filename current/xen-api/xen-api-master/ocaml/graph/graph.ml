@@ -174,7 +174,7 @@ let _ =
       acc) edges false in
   let nodes = NodeSet.filter (fun x -> !singleton || is_connected !edges !nodes x) !nodes in
   output_dot nodes !edges stdout
-  (*
+(*
 
   Client.Event.register ~rpc ~session_id ~classes:["*"];
   while true do

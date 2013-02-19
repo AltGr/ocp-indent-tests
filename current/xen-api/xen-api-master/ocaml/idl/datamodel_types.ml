@@ -63,7 +63,7 @@ let release_order =
   ]
 
 exception Unknown_release of string
-  (* ordering function on releases *)
+(* ordering function on releases *)
 let release_leq x y =
   let rec posn_in_list i x l =
     match l with
@@ -138,7 +138,7 @@ and obj_op = Make | Delete | GetByUuid | GetByLabel | GetRecord | GetAll | GetAl
 
 and param = {param_type:ty; param_name:string; param_doc:string; param_release: release; param_default: api_value option}
 
-(** Types of RPC messages; in addition to those generated for object fields *)
+            (** Types of RPC messages; in addition to those generated for object fields *)
 and message = { 
   msg_name: string;
   msg_params: param list;

@@ -28,7 +28,7 @@ open Odoc_info.Module
 (* some stuff from stdext; should not be here *)
 
 module String = struct include String
-(** find all occurences of needle in haystack and return all their respective index *)
+  (** find all occurences of needle in haystack and return all their respective index *)
   let find_all needle haystack =
     let m = String.length needle and n = String.length haystack in
 

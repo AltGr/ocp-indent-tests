@@ -28,134 +28,134 @@
 (** {2 Dealing with [null] and [undefined] values.} *)
 
 type +'a opt
-  (** Type of possibly null values. *)
+(** Type of possibly null values. *)
 type +'a optdef
-  (** Type of possibly undefined values. *)
+(** Type of possibly undefined values. *)
 
 val null : 'a opt
-  (** The [null] value. *)
+(** The [null] value. *)
 val some : 'a -> 'a opt
-  (** Consider a value into a possibly null value. *)
+(** Consider a value into a possibly null value. *)
 val undefined : 'a optdef
-  (** The [undefined] value *)
+(** The [undefined] value *)
 val def : 'a -> 'a optdef
-  (** Consider a value into a possibly undefined value. *)
+(** Consider a value into a possibly undefined value. *)
 
 (** Signatures of a set of standard functions for manipulating
     optional values. *)
 module type OPT = sig
   type 'a t
   val empty : 'a t
-    (** No value. *)
+  (** No value. *)
   val return : 'a -> 'a t
-    (** Consider a value as an optional value. *)
+  (** Consider a value as an optional value. *)
   val map : 'a t -> ('a -> 'b) -> 'b t
-    (** Apply a function to an optional value if it is available.
-        Returns the result of the application. *)
+  (** Apply a function to an optional value if it is available.
+      Returns the result of the application. *)
   val bind : 'a t -> ('a -> 'b t) -> 'b t
-    (** Apply a function returning an optional value to an optional value *)
+  (** Apply a function returning an optional value to an optional value *)
   val test : 'a t -> bool
-    (** Returns [true] if a value is available, [false] otherwise. *)
+  (** Returns [true] if a value is available, [false] otherwise. *)
   val iter : 'a t -> ('a -> unit) -> unit
-    (** Apply a function to an optional value if it is available. *)
+  (** Apply a function to an optional value if it is available. *)
   val case : 'a t -> (unit -> 'b) -> ('a -> 'b) -> 'b
-    (** Pattern matching on optional values. *)
+  (** Pattern matching on optional values. *)
   val get : 'a t -> (unit -> 'a) -> 'a
-    (** Get the value.  If no value available, an alternative function
-        is called to get a default value. *)
+  (** Get the value.  If no value available, an alternative function
+      is called to get a default value. *)
   val option : 'a option -> 'a t
-    (** Convert option type. *)
+  (** Convert option type. *)
   val to_option : 'a t -> 'a option
     (** Convert to option type. *)
 end
 
 module Opt : OPT with type 'a t = 'a opt
-  (** Standard functions for manipulating possibly null values. *)
+(** Standard functions for manipulating possibly null values. *)
 module Optdef : OPT with type 'a t = 'a optdef
-  (** Standard functions for manipulating possibly undefined values. *)
+(** Standard functions for manipulating possibly undefined values. *)
 
 (** {2 Types for specifying method and properties of Javascript objects} *)
 
 type +'a t
-  (** Type of Javascript objects.  The type parameter is used to
-      specify more precisely an object.  *)
+(** Type of Javascript objects.  The type parameter is used to
+    specify more precisely an object.  *)
 type +'a meth
-  (** Type used to specify method types:
-      a Javascript object
-        [<m : t1 -> t2 -> ... -> tn -> t Js.meth> Js.t]
-      has a Javascript method [m] expecting {i n} arguments
-      of types [t1] to [tn] and returns a value of type [t]. *)
+(** Type used to specify method types:
+    a Javascript object
+      [<m : t1 -> t2 -> ... -> tn -> t Js.meth> Js.t]
+    has a Javascript method [m] expecting {i n} arguments
+    of types [t1] to [tn] and returns a value of type [t]. *)
 type +'a gen_prop
-  (** Type used to specify the properties of Javascript
-      objects.  In practice you should rarely need this type directly,
-      but should rather use the type abbreviations below instead. *)
+(** Type used to specify the properties of Javascript
+    objects.  In practice you should rarely need this type directly,
+    but should rather use the type abbreviations below instead. *)
 type 'a readonly_prop = <get : 'a> gen_prop
-                           (** Type of read-only properties:
-                               a Javascript object
-                                 [<p : t Js.readonly_prop> Js.t]
-                               has a read-only property [p] of type [t]. *)
+(** Type of read-only properties:
+    a Javascript object
+      [<p : t Js.readonly_prop> Js.t]
+    has a read-only property [p] of type [t]. *)
 type 'a writeonly_prop = <set : 'a -> unit> gen_prop
-                            (** Type of write-only properties:
-                                a Javascript object
-                                  [<p : t Js.writeonly_prop> Js.t]
-                                has a write-only property [p] of type [t]. *)
+(** Type of write-only properties:
+    a Javascript object
+      [<p : t Js.writeonly_prop> Js.t]
+    has a write-only property [p] of type [t]. *)
 type 'a prop = <get : 'a; set : 'a -> unit> gen_prop
-                  (** Type of read/write properties:
-                      a Javascript object
-                        [<p : t Js.writeonly_prop> Js.t]
-                      has a read/write property [p] of type [t]. *)
+(** Type of read/write properties:
+    a Javascript object
+      [<p : t Js.writeonly_prop> Js.t]
+    has a read/write property [p] of type [t]. *)
 type 'a optdef_prop = <get : 'a optdef; set : 'a -> unit> gen_prop
-                         (** Type of read/write properties that may be undefined:
-                             you can set them to a value of some type [t], but if you read
-                             them, you will get a value of type [t optdef] (that may be
-                             [undefined]). *)
+(** Type of read/write properties that may be undefined:
+    you can set them to a value of some type [t], but if you read
+    them, you will get a value of type [t optdef] (that may be
+    [undefined]). *)
 type float_prop = <get : float t; set : float -> unit> gen_prop
-                     (** Type of float properties:
-                         you can set them to an OCaml [float], but you will get back a
-                         native Javascript number of type [float t]. *)
+(** Type of float properties:
+    you can set them to an OCaml [float], but you will get back a
+    native Javascript number of type [float t]. *)
 
 (** {2 Object constructors} *)
 
 type +'a constr
-  (** A value of type [(t1 -> ... -> tn -> t Js.t) Js.constr] is a
-      Javascript constructor expecting {i n} arguments of types [t1]
-      to [tn] and returning a Javascript object of type [t Js.t].  Use
-      the syntax extension [jsnew c (e1, ..., en)] to build an object
-      using constructor [c] and arguments [e1] to [en]. *)
+(** A value of type [(t1 -> ... -> tn -> t Js.t) Js.constr] is a
+    Javascript constructor expecting {i n} arguments of types [t1]
+    to [tn] and returning a Javascript object of type [t Js.t].  Use
+    the syntax extension [jsnew c (e1, ..., en)] to build an object
+    using constructor [c] and arguments [e1] to [en]. *)
 
 (** {2 Callbacks to OCaml} *)
 
 type (-'a, +'b) meth_callback
-  (** Type of callback functions.  A function of type
-      [(u, t1 -> ... -> tn -> t) meth_callback] can be called
-      from Javascript with [this] bound to a value of type [u]
-      and up to {i n} arguments of types [t1] to [tn].  The system
-      takes care of currification, so less than {i n} arguments can
-      be provided.  As a special case, a callback of type
-      [(t, unit -> t) meth_callback] can be called from Javascript
-      with no argument.  It will behave as if it was called with a
-      single argument of type [unit]. *)
+(** Type of callback functions.  A function of type
+    [(u, t1 -> ... -> tn -> t) meth_callback] can be called
+    from Javascript with [this] bound to a value of type [u]
+    and up to {i n} arguments of types [t1] to [tn].  The system
+    takes care of currification, so less than {i n} arguments can
+    be provided.  As a special case, a callback of type
+    [(t, unit -> t) meth_callback] can be called from Javascript
+    with no argument.  It will behave as if it was called with a
+    single argument of type [unit]. *)
 type 'a callback = (unit, 'a) meth_callback
-  (** Type of callback functions intended to be called without a
-      meaningful [this] implicit parameter. *)
+(** Type of callback functions intended to be called without a
+    meaningful [this] implicit parameter. *)
 
 external wrap_callback : ('a -> 'b) -> ('c, 'a -> 'b) meth_callback =
   "caml_js_wrap_callback"
-  (** Wrap an OCaml function so that it can be invoked from
-      Javascript. *)
+(** Wrap an OCaml function so that it can be invoked from
+    Javascript. *)
 external wrap_meth_callback :
   ('c -> 'a -> 'b) -> ('c, 'a -> 'b) meth_callback =
   "caml_js_wrap_meth_callback"
-  (** Wrap an OCaml function so that it can be invoked from
-      Javascript.  The first parameter of the function will be bound
-      to the value of the [this] implicit parameter. *)
+(** Wrap an OCaml function so that it can be invoked from
+    Javascript.  The first parameter of the function will be bound
+    to the value of the [this] implicit parameter. *)
 
 (** {2 Javascript standard objects} *)
 
 val _true : bool t
-  (** Javascript [true] boolean. *)
+(** Javascript [true] boolean. *)
 val _false : bool t
-  (** Javascript [false] boolean. *)
+(** Javascript [false] boolean. *)
 
 type match_result_handle
 (** A handle to a match result.  Use function [Js.match_result]
@@ -188,7 +188,7 @@ class type js_string = object
   method localeCompare : js_string t -> float t meth
   method _match : regExp t -> match_result_handle t opt meth
   method replace : regExp t -> js_string t -> js_string t meth
-    (* FIX: version of replace taking a function... *)
+  (* FIX: version of replace taking a function... *)
   method replace_string : js_string t -> js_string t -> js_string t meth
   method search : regExp t -> match_result_handle t opt meth
   method slice : int -> int -> js_string t meth
@@ -219,15 +219,15 @@ and regExp = object
 end
 
 val regExp : (js_string t -> regExp t) constr
-  (** Constructor of [RegExp] objects.  The expression [jsnew regExp (s)]
-      builds the regular expression specified by string [s]. *)
+(** Constructor of [RegExp] objects.  The expression [jsnew regExp (s)]
+    builds the regular expression specified by string [s]. *)
 val regExp_withFlags : (js_string t -> js_string t -> regExp t) constr
-  (** Constructor of [RegExp] objects.  The expression
-      [jsnew regExp (s, f)] builds the regular expression specified by
-      string [s] using flags [f]. *)
+(** Constructor of [RegExp] objects.  The expression
+    [jsnew regExp (s, f)] builds the regular expression specified by
+    string [s] using flags [f]. *)
 val regExp_copy : (regExp t -> regExp t) constr
-  (** Constructor of [RegExp] objects.  The expression
-      [jsnew regExp (r)] builds a copy of regular expression [r]. *)
+(** Constructor of [RegExp] objects.  The expression
+    [jsnew regExp (r)] builds a copy of regular expression [r]. *)
 
 (** Specification of Javascript regular arrays. *)
 class type ['a] js_array = object
@@ -259,19 +259,19 @@ class type ['a] js_array = object
 end
 
 val array_empty : 'a js_array t constr
-  (** Constructor of [Array] objects.  The expression
-      [jsnew array_empty ()] returns an empty array. *)
+(** Constructor of [Array] objects.  The expression
+    [jsnew array_empty ()] returns an empty array. *)
 val array_length : (int -> 'a js_array t) constr
-  (** Constructor of [Array] objects.  The expression
-      [jsnew array_empty (l)] returns an array of length [l]. *)
+(** Constructor of [Array] objects.  The expression
+    [jsnew array_empty (l)] returns an array of length [l]. *)
 
 val array_get : 'a #js_array t -> int -> 'a optdef
-  (** Array access: [array_get a i] returns the element at index [i]
-      of array [a].  Returns [undefined] if there is no element at
-      this index. *)
+(** Array access: [array_get a i] returns the element at index [i]
+    of array [a].  Returns [undefined] if there is no element at
+    this index. *)
 val array_set : 'a #js_array t -> int -> 'a -> unit
-  (** Array update: [array_set a i v] puts [v] at index [i] in
-      array [a]. *)
+(** Array update: [array_set a i v] puts [v] at index [i] in
+    array [a]. *)
 
 (** Specification of match result objects *)
 class type match_result = object
@@ -281,13 +281,13 @@ class type match_result = object
 end
 
 val str_array : string_array t -> js_string t js_array t
-  (** Convert an opaque [string_array t] object into an array of
-      string.  (Used to resolved the mutual dependency between string
-      and array type definitions.) *)
+(** Convert an opaque [string_array t] object into an array of
+    string.  (Used to resolved the mutual dependency between string
+    and array type definitions.) *)
 val match_result : match_result_handle t -> match_result t
-  (** Convert a match result handle into a [MatchResult] object.
-      (Used to resolved the mutual dependency between string
-      and array type definitions.) *)
+(** Convert a match result handle into a [MatchResult] object.
+    (Used to resolved the mutual dependency between string
+    and array type definitions.) *)
 
 (** Specification of Javascript number objects. *)
 class type number = object
@@ -355,33 +355,33 @@ class type date = object
 end
 
 val date_now : date t constr
-  (** Constructor of [Date] objects: [new date_now ()] returns a
-      [Date] object initialized with the current date. *)
+(** Constructor of [Date] objects: [new date_now ()] returns a
+    [Date] object initialized with the current date. *)
 val date_fromTimeValue : (float -> date t) constr
-  (** Constructor of [Date] objects: [new date_fromTimeValue (t)] returns a
-      [Date] object initialized with the time value [t]. *)
+(** Constructor of [Date] objects: [new date_fromTimeValue (t)] returns a
+    [Date] object initialized with the time value [t]. *)
 val date_month : (int -> int -> date t) constr
-  (** Constructor of [Date] objects: [new date_fromTimeValue (y, m)]
-      returns a [Date] object corresponding to year [y] and month [m]. *)
+(** Constructor of [Date] objects: [new date_fromTimeValue (y, m)]
+    returns a [Date] object corresponding to year [y] and month [m]. *)
 val date_day : (int -> int -> int -> date t) constr
-  (** Constructor of [Date] objects: [new date_fromTimeValue (y, m, d)]
-      returns a [Date] object corresponding to year [y], month [m] and
-      day [d]. *)
+(** Constructor of [Date] objects: [new date_fromTimeValue (y, m, d)]
+    returns a [Date] object corresponding to year [y], month [m] and
+    day [d]. *)
 val date_hour : (int -> int -> int -> int -> date t) constr
-  (** Constructor of [Date] objects: [new date_fromTimeValue (y, m, d, h)]
-      returns a [Date] object corresponding to year [y] to hour [h]. *)
+(** Constructor of [Date] objects: [new date_fromTimeValue (y, m, d, h)]
+    returns a [Date] object corresponding to year [y] to hour [h]. *)
 val date_min : (int -> int -> int -> int -> int -> date t) constr
-  (** Constructor of [Date] objects: [new date_fromTimeValue (y, m, d, h, m')]
-      returns a [Date] object corresponding to year [y] to minute [m']. *)
+(** Constructor of [Date] objects: [new date_fromTimeValue (y, m, d, h, m')]
+    returns a [Date] object corresponding to year [y] to minute [m']. *)
 val date_sec : (int -> int -> int -> int -> int -> int -> date t) constr
-  (** Constructor of [Date] objects:
-      [new date_fromTimeValue (y, m, d, h, m', s)]
-      returns a [Date] object corresponding to year [y] to second [s]. *)
+(** Constructor of [Date] objects:
+    [new date_fromTimeValue (y, m, d, h, m', s)]
+    returns a [Date] object corresponding to year [y] to second [s]. *)
 val date_ms : (int -> int -> int -> int -> int -> int -> int -> date t) constr
-  (** Constructor of [Date] objects:
-      [new date_fromTimeValue (y, m, d, h, m', s, ms)]
-      returns a [Date] object corresponding to year [y]
-      to millisecond [ms]. *)
+(** Constructor of [Date] objects:
+    [new date_fromTimeValue (y, m, d, h, m', s, ms)]
+    returns a [Date] object corresponding to year [y]
+    to millisecond [ms]. *)
 
 (** Specification of the date constructor, considered as an object. *)
 class type date_constr = object
@@ -397,7 +397,7 @@ class type date_constr = object
 end
 
 val date : date_constr t
-  (** The date constructor, as an object. *)
+(** The date constructor, as an object. *)
 
 (** Specification of Javascript math object. *)
 class type math = object
@@ -405,29 +405,29 @@ class type math = object
 end
 
 val math : math t
-  (** The Math object *)
+(** The Math object *)
 
 (** {2 Standard Javascript functions} *)
 
 val decodeURI : js_string t -> js_string t
-  (** Decode a URI: replace by the corresponding byte all escape
-      sequences but the ones corresponding to a URI reserved character
-      and convert the string from UTF-8 to UTF-16. *)
+(** Decode a URI: replace by the corresponding byte all escape
+    sequences but the ones corresponding to a URI reserved character
+    and convert the string from UTF-8 to UTF-16. *)
 val decodeURIComponent : js_string t -> js_string t
-  (** Decode a URIComponent: replace all escape sequences by the
-      corresponding byte and convert the string from UTF-8 to
-      UTF-16. *)
+(** Decode a URIComponent: replace all escape sequences by the
+    corresponding byte and convert the string from UTF-8 to
+    UTF-16. *)
 val encodeURI : js_string t -> js_string t
-  (** Encode a URI: convert the string to UTF-8 and replace all unsafe
-      bytes by the corresponding escape sequence. *)
+(** Encode a URI: convert the string to UTF-8 and replace all unsafe
+    bytes by the corresponding escape sequence. *)
 val encodeURIComponent : js_string t -> js_string t
-  (** Same as [encodeURI], but also encode URI reserved characters. *)
+(** Same as [encodeURI], but also encode URI reserved characters. *)
 val escape : js_string t -> js_string t
-  (** Escape a string: unsafe UTF-16 code points are replaced by
-      2-digit and 4-digit escape sequences. *)
+(** Escape a string: unsafe UTF-16 code points are replaced by
+    2-digit and 4-digit escape sequences. *)
 val unescape : js_string t -> js_string t
-  (** Unescape a string: 2-digit and 4-digit escape sequences are
-      replaced by the corresponding UTF-16 code point. *)
+(** Unescape a string: 2-digit and 4-digit escape sequences are
+    replaced by the corresponding UTF-16 code point. *)
 
 (** {2 Conversion functions between Javascript and OCaml types} *)
 
@@ -460,17 +460,17 @@ external to_bytestring : js_string t -> string = "caml_js_to_byte_string"
 (** {2 Convenience coercion functions} *)
 
 val coerce : 'a -> ('a -> 'b Opt.t) -> ('a -> 'b) -> 'b
-  (** Apply a possibly failing coercion function.
-      [coerce v c f] attempts to apply coercion [c] to value [v].
-      If the coercion returns [null], function [f] is called. *)
+(** Apply a possibly failing coercion function.
+    [coerce v c f] attempts to apply coercion [c] to value [v].
+    If the coercion returns [null], function [f] is called. *)
 val coerce_opt : 'a Opt.t -> ('a -> 'b Opt.t) -> ('a -> 'b) -> 'b
-  (** Apply a possibly failing coercion function.
-      [coerce_opt v c f] attempts to apply coercion [c] to value [v].
-      If [v] is [null] or the coercion returns [null], function [f] is
-      called.
-      Typical usage is the following:
-      {[Js.coerce_opt (Dom_html.getElementById id)
-      Dom_html.CoerceTo.div (fun _ -> assert false)]} *)
+(** Apply a possibly failing coercion function.
+    [coerce_opt v c f] attempts to apply coercion [c] to value [v].
+    If [v] is [null] or the coercion returns [null], function [f] is
+    called.
+    Typical usage is the following:
+    {[Js.coerce_opt (Dom_html.getElementById id)
+    Dom_html.CoerceTo.div (fun _ -> assert false)]} *)
 
 (** {2 Type checking operators.} *)
 

@@ -46,8 +46,8 @@ let force_connection_reset () =
 (* whenever a call is made that involves read/write to the master connection, a timestamp is
    written into this global: *)
 let last_master_connection_call : float option ref = ref None
-  (* the master_connection_watchdog uses this time to determine whether the master connection
-     should be reset *)
+(* the master_connection_watchdog uses this time to determine whether the master connection
+   should be reset *)
 
 (* Set and unset the timestamp global. (No locking required since we are operating under
    mutual exclusion provided by the database lock here anyway) *)

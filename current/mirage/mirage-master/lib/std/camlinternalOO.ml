@@ -1,16 +1,16 @@
 open Pervasives
-  (***********************************************************************)
-  (*                                                                     *)
-  (*                           Objective Caml                            *)
-  (*                                                                     *)
-  (*         Jerome Vouillon, projet Cristal, INRIA Rocquencourt         *)
-  (*                                                                     *)
-  (*  Copyright 2002 Institut National de Recherche en Informatique et   *)
-  (*  en Automatique.  All rights reserved.  This file is distributed    *)
-  (*  under the terms of the GNU Library General Public License, with    *)
-  (*  the special exception on linking described in file ../LICENSE.     *)
-  (*                                                                     *)
-  (***********************************************************************)
+(***********************************************************************)
+(*                                                                     *)
+(*                           Objective Caml                            *)
+(*                                                                     *)
+(*         Jerome Vouillon, projet Cristal, INRIA Rocquencourt         *)
+(*                                                                     *)
+(*  Copyright 2002 Institut National de Recherche en Informatique et   *)
+(*  en Automatique.  All rights reserved.  This file is distributed    *)
+(*  under the terms of the GNU Library General Public License, with    *)
+(*  the special exception on linking described in file ../LICENSE.     *)
+(*                                                                     *)
+(***********************************************************************)
 
 (* $Id: camlinternalOO.ml 8768 2008-01-11 16:13:18Z doligez $ *)
 
@@ -123,8 +123,8 @@ let table_count = ref 0
 
 (* dummy_met should be a pointer, so use an atom *)
 let dummy_met : item = obj (Obj.new_block 0 0)
-  (* if debugging is needed, this could be a good idea: *)
-  (* let dummy_met () = failwith "Undefined method" *)
+(* if debugging is needed, this could be a good idea: *)
+(* let dummy_met () = failwith "Undefined method" *)
 
 let rec fit_size n =
   if n <= 2 then n else

@@ -1,7 +1,7 @@
 include Bin_prot.Std
-  (* Constrain Sexplib.Std to remove the Hashtbl module (and some other modules we don't
-     care about, e.g. Ratio), which would later conflict with Hashtbl in
-     Stable_containers. *)
+(* Constrain Sexplib.Std to remove the Hashtbl module (and some other modules we don't
+   care about, e.g. Ratio), which would later conflict with Hashtbl in
+   Stable_containers. *)
 include (Sexplib.Std : sig
     val sexp_of_array : ('a -> Sexplib.Sexp.t) -> 'a array -> Sexplib.Sexp.t
     val array_of_sexp : (Sexplib.Sexp.t -> 'a) -> Sexplib.Sexp.t -> 'a array

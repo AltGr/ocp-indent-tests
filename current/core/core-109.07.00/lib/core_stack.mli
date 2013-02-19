@@ -13,8 +13,8 @@ exception Empty
 type 'a t with bin_io, sexp
 
 include Container.S1 with type 'a t := 'a t
-  (** [to_list] and [to_array] returns the elements in order from the top of
-      the stack to the bottom. *)
+(** [to_list] and [to_array] returns the elements in order from the top of
+    the stack to the bottom. *)
 
 (** [of_list l] returns a stack whose top is the first element of [l] and
  * bottom is the last element of [l].

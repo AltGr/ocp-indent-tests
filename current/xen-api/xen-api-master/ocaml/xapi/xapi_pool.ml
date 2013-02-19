@@ -1120,7 +1120,7 @@ let create_VLAN_from_PIF ~__context ~pif ~network ~vLAN =
 
 let slave_network_report ~__context ~phydevs ~dev_to_mac ~dev_to_mtu ~slave_host =
   []
-  (*
+(*
   Dbsync_slave.create_physical_networks ~__context phydevs dev_to_mac dev_to_mtu slave_host
 *)
 
@@ -1333,7 +1333,7 @@ let enable_external_auth ~__context ~pool ~config ~service_name ~auth_type =
       end
     with Not_found -> () (* that's expected, no host had external_auth enabled*)
                       ;
-                      (* 1b. assert that there are no duplicate hostnames in the pool *)
+                        (* 1b. assert that there are no duplicate hostnames in the pool *)
                         if (List.length hosts)
                           <>
                             (List.length

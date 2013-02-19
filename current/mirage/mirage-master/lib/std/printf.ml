@@ -1,16 +1,16 @@
 open Pervasives
-  (***********************************************************************)
-  (*                                                                     *)
-  (*                           Objective Caml                            *)
-  (*                                                                     *)
-  (*  Xavier Leroy and Pierre Weis, projet Cristal, INRIA Rocquencourt   *)
-  (*                                                                     *)
-  (*  Copyright 1996 Institut National de Recherche en Informatique et   *)
-  (*  en Automatique.  All rights reserved.  This file is distributed    *)
-  (*  under the terms of the GNU Library General Public License, with    *)
-  (*  the special exception on linking described in file ../LICENSE.     *)
-  (*                                                                     *)
-  (***********************************************************************)
+(***********************************************************************)
+(*                                                                     *)
+(*                           Objective Caml                            *)
+(*                                                                     *)
+(*  Xavier Leroy and Pierre Weis, projet Cristal, INRIA Rocquencourt   *)
+(*                                                                     *)
+(*  Copyright 1996 Institut National de Recherche en Informatique et   *)
+(*  en Automatique.  All rights reserved.  This file is distributed    *)
+(*  under the terms of the GNU Library General Public License, with    *)
+(*  the special exception on linking described in file ../LICENSE.     *)
+(*                                                                     *)
+(***********************************************************************)
 
 (* $Id: printf.ml 9463 2009-12-09 08:28:59Z weis $ *)
 
@@ -40,7 +40,7 @@ module Sformat = struct
 
   let add_int_index i idx = index_of_int (i + int_of_index idx);;
   let succ_index = add_int_index 1;;
-(* Literal position are one-based (hence pred p instead of p). *)
+  (* Literal position are one-based (hence pred p instead of p). *)
   let index_of_literal_position p = index_of_int (pred p);;
 
   external length : ('a, 'b, 'c, 'd, 'e, 'f) format6 -> int

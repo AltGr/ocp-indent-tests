@@ -1,16 +1,16 @@
 open Pervasives
-  (***********************************************************************)
-  (*                                                                     *)
-  (*                           Objective Caml                            *)
-  (*                                                                     *)
-  (*              Damien Doligez, projet Para, INRIA Rocquencourt        *)
-  (*                                                                     *)
-  (*  Copyright 1996 Institut National de Recherche en Informatique et   *)
-  (*  en Automatique.  All rights reserved.  This file is distributed    *)
-  (*  under the terms of the GNU Library General Public License, with    *)
-  (*  the special exception on linking described in file ../LICENSE.     *)
-  (*                                                                     *)
-  (***********************************************************************)
+(***********************************************************************)
+(*                                                                     *)
+(*                           Objective Caml                            *)
+(*                                                                     *)
+(*              Damien Doligez, projet Para, INRIA Rocquencourt        *)
+(*                                                                     *)
+(*  Copyright 1996 Institut National de Recherche en Informatique et   *)
+(*  en Automatique.  All rights reserved.  This file is distributed    *)
+(*  under the terms of the GNU Library General Public License, with    *)
+(*  the special exception on linking described in file ../LICENSE.     *)
+(*                                                                     *)
+(***********************************************************************)
 
 (* $Id: random.ml 9621 2010-02-05 17:34:14Z doligez $ *)
 
@@ -148,17 +148,17 @@ end;;
 (* This is the state you get with [init 27182818]. *)
 let default = {
   State.st = [|
-    0x7ae2522b; 0x5d8d4634; 0x15b4fad0; 0x18b14ace; 0x12f8a3c4; 0x7b086c47;
-    0x16d467d6; 0x501d91c7; 0x321df177; 0x4176c193; 0x1ff72bf1; 0x5e889109;
-    0x0b464b18; 0x6b86b97c; 0x4891da48; 0x03137463; 0x485ac5a1; 0x15d61f2f;
-    0x7bced359; 0x69c1c132; 0x7a86766e; 0x366d8c86; 0x1f5b6222; 0x7ce1b59f;
-    0x2ebf78e1; 0x67cd1b86; 0x658f3dc3; 0x789a8194; 0x42e4c44c; 0x58c43f7d;
-    0x0f6e534f; 0x1e7df359; 0x455d0b7e; 0x10e84e7e; 0x126198e4; 0x4e7722cb;
-    0x5cbede28; 0x7391b964; 0x7d40e92a; 0x4c59933d; 0x0b8cd0b7; 0x64efff1c;
-    0x2803fdaa; 0x08ebc72e; 0x4f522e32; 0x45398edc; 0x2144a04c; 0x4aef3cbd;
-    0x41ad4719; 0x75b93cd6; 0x2a559d4f; 0x5e6fd768; 0x66e27f36; 0x186f18c3;
-    0x2fbf967a;
-  |];
+  0x7ae2522b; 0x5d8d4634; 0x15b4fad0; 0x18b14ace; 0x12f8a3c4; 0x7b086c47;
+  0x16d467d6; 0x501d91c7; 0x321df177; 0x4176c193; 0x1ff72bf1; 0x5e889109;
+  0x0b464b18; 0x6b86b97c; 0x4891da48; 0x03137463; 0x485ac5a1; 0x15d61f2f;
+  0x7bced359; 0x69c1c132; 0x7a86766e; 0x366d8c86; 0x1f5b6222; 0x7ce1b59f;
+  0x2ebf78e1; 0x67cd1b86; 0x658f3dc3; 0x789a8194; 0x42e4c44c; 0x58c43f7d;
+  0x0f6e534f; 0x1e7df359; 0x455d0b7e; 0x10e84e7e; 0x126198e4; 0x4e7722cb;
+  0x5cbede28; 0x7391b964; 0x7d40e92a; 0x4c59933d; 0x0b8cd0b7; 0x64efff1c;
+  0x2803fdaa; 0x08ebc72e; 0x4f522e32; 0x45398edc; 0x2144a04c; 0x4aef3cbd;
+  0x41ad4719; 0x75b93cd6; 0x2a559d4f; 0x5e6fd768; 0x66e27f36; 0x186f18c3;
+  0x2fbf967a;
+|];
   State.idx = 0;
 };;
 

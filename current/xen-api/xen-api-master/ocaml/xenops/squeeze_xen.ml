@@ -67,8 +67,8 @@ module Domain = struct
   let cache = Hashtbl.create 10
 
   let m = Mutex.create ()
-    (* get_per_domain can return None if the domain is deleted by
-       someone else while we are processing some other event handlers *)
+  (* get_per_domain can return None if the domain is deleted by
+     someone else while we are processing some other event handlers *)
   let get_per_domain (xc, xs) domid = 
     if Hashtbl.mem cache domid
     then Some (Hashtbl.find cache domid)

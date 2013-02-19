@@ -79,7 +79,7 @@ ENDIF
 module Epoll_flags(Flag_values : sig
       val in_     : Int63.t
       val out     : Int63.t
-        (* val rdhup   : Int63.t *)
+      (* val rdhup   : Int63.t *)
       val pri     : Int63.t
       val err     : Int63.t
       val hup     : Int63.t
@@ -356,7 +356,7 @@ module Epoll = struct
   module Flags = Epoll_flags(struct
       let in_     = flag_epollin ()
       let out     = flag_epollout ()
-        (* let rdhup   = flag_epollrdhup () *)
+      (* let rdhup   = flag_epollrdhup () *)
       let pri     = flag_epollpri ()
       let err     = flag_epollerr ()
       let hup     = flag_epollhup ()
@@ -705,7 +705,7 @@ module Epoll = struct
   module Flags = Epoll_flags(struct
       let in_     = Int63.of_int (1 lsl 0)
       let out     = Int63.of_int (1 lsl 1)
-        (* let rdhup   = Int63.of_int (1 lsl 2) *)
+      (* let rdhup   = Int63.of_int (1 lsl 2) *)
       let pri     = Int63.of_int (1 lsl 3)
       let err     = Int63.of_int (1 lsl 4)
       let hup     = Int63.of_int (1 lsl 5)

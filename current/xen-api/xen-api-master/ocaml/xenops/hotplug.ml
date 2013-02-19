@@ -26,15 +26,15 @@ open D
 
 (** If we can't execute the losetup program (for example) *)
 exception External_command_failure of string
-  (** Timeout waiting for the backend hotplug scripts *)
+(** Timeout waiting for the backend hotplug scripts *)
 exception Device_timeout of device
-  (** Timeout waiting for the frontend hotplug scripts (in the case of dom0) *)
+(** Timeout waiting for the frontend hotplug scripts (in the case of dom0) *)
 exception Frontend_device_timeout of device
-  (** An explicit failure waiting for the frontend hotplug scripts (in the case of dom0) *)
+(** An explicit failure waiting for the frontend hotplug scripts (in the case of dom0) *)
 exception Frontend_device_error of string
-  (** Ff we can't find the file we're trying to losetup *)
+(** Ff we can't find the file we're trying to losetup *)
 exception Loopdev_error of string
-  (** we can't delete a loop device *)
+(** we can't delete a loop device *)
 exception Loopdev_delete_error
 (** If all the loopback devices are busy *)
 exception Loopdev_all_busy

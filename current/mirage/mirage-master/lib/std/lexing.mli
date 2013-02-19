@@ -57,34 +57,34 @@ type lexbuf =
     mutable lex_start_p : position;
     mutable lex_curr_p : position;
   }
-  (** The type of lexer buffers. A lexer buffer is the argument passed
-     to the scanning functions defined by the generated scanners.
-     The lexer buffer holds the current state of the scanner, plus
-     a function to refill the buffer from the input.
+(** The type of lexer buffers. A lexer buffer is the argument passed
+   to the scanning functions defined by the generated scanners.
+   The lexer buffer holds the current state of the scanner, plus
+   a function to refill the buffer from the input.
 
-     At each token, the lexing engine will copy [lex_curr_p] to
-     [lex_start_p], then change the [pos_cnum] field
-     of [lex_curr_p] by updating it with the number of characters read
-     since the start of the [lexbuf].  The other fields are left
-     unchanged by the lexing engine.  In order to keep them
-     accurate, they must be initialised before the first use of the
-     lexbuf, and updated by the relevant lexer actions (i.e. at each
-     end of line -- see also [new_line]).
-  *)
+   At each token, the lexing engine will copy [lex_curr_p] to
+   [lex_start_p], then change the [pos_cnum] field
+   of [lex_curr_p] by updating it with the number of characters read
+   since the start of the [lexbuf].  The other fields are left
+   unchanged by the lexing engine.  In order to keep them
+   accurate, they must be initialised before the first use of the
+   lexbuf, and updated by the relevant lexer actions (i.e. at each
+   end of line -- see also [new_line]).
+*)
 
 val from_string : string -> lexbuf
-  (** Create a lexer buffer which reads from
-     the given string. Reading starts from the first character in
-     the string. An end-of-input condition is generated when the
-     end of the string is reached. *)
+(** Create a lexer buffer which reads from
+   the given string. Reading starts from the first character in
+   the string. An end-of-input condition is generated when the
+   end of the string is reached. *)
 
 val from_function : (string -> int -> int) -> lexbuf
-  (** Create a lexer buffer with the given function as its reading method.
-     When the scanner needs more characters, it will call the given
-     function, giving it a character string [s] and a character
-     count [n]. The function should put [n] characters or less in [s],
-     starting at character number 0, and return the number of characters
-     provided. A return value of 0 means end of input. *)
+(** Create a lexer buffer with the given function as its reading method.
+   When the scanner needs more characters, it will call the given
+   function, giving it a character string [s] and a character
+   count [n]. The function should put [n] characters or less in [s],
+   starting at character number 0, and return the number of characters
+   provided. A return value of 0 means end of input. *)
 
 
 (** {6 Functions for lexer semantic actions} *)
@@ -100,44 +100,44 @@ val from_function : (string -> int -> int) -> lexbuf
    function. *)
 
 val lexeme : lexbuf -> string
-  (** [Lexing.lexeme lexbuf] returns the string matched by
-             the regular expression. *)
+(** [Lexing.lexeme lexbuf] returns the string matched by
+           the regular expression. *)
 
 val lexeme_char : lexbuf -> int -> char
-  (** [Lexing.lexeme_char lexbuf i] returns character number [i] in
-     the matched string. *)
+(** [Lexing.lexeme_char lexbuf i] returns character number [i] in
+   the matched string. *)
 
 val lexeme_start : lexbuf -> int
-  (** [Lexing.lexeme_start lexbuf] returns the offset in the
-     input stream of the first character of the matched string.
-     The first character of the stream has offset 0. *)
+(** [Lexing.lexeme_start lexbuf] returns the offset in the
+   input stream of the first character of the matched string.
+   The first character of the stream has offset 0. *)
 
 val lexeme_end : lexbuf -> int
-  (** [Lexing.lexeme_end lexbuf] returns the offset in the input stream
-     of the character following the last character of the matched
-     string. The first character of the stream has offset 0. *)
+(** [Lexing.lexeme_end lexbuf] returns the offset in the input stream
+   of the character following the last character of the matched
+   string. The first character of the stream has offset 0. *)
 
 val lexeme_start_p : lexbuf -> position
-  (** Like [lexeme_start], but return a complete [position] instead
-      of an offset. *)
+(** Like [lexeme_start], but return a complete [position] instead
+    of an offset. *)
 
 val lexeme_end_p : lexbuf -> position
-  (** Like [lexeme_end], but return a complete [position] instead
-      of an offset. *)
+(** Like [lexeme_end], but return a complete [position] instead
+    of an offset. *)
 
 val new_line : lexbuf -> unit
-  (** Update the [lex_curr_p] field of the lexbuf to reflect the start
-      of a new line.  You can call this function in the semantic action
-      of the rule that matches the end-of-line character.
-      @since 3.11.0
-  *)
+(** Update the [lex_curr_p] field of the lexbuf to reflect the start
+    of a new line.  You can call this function in the semantic action
+    of the rule that matches the end-of-line character.
+    @since 3.11.0
+*)
 
 (** {6 Miscellaneous functions} *)
 
 val flush_input : lexbuf -> unit
-  (** Discard the contents of the buffer and reset the current
-      position to 0.  The next use of the lexbuf will trigger a
-      refill. *)
+(** Discard the contents of the buffer and reset the current
+    position to 0.  The next use of the lexbuf will trigger a
+    refill. *)
 
 (**/**)
 

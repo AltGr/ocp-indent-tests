@@ -23,7 +23,7 @@ val create
 
 (* number of elements in the dequeue, i.e. back_index - front_index + 1 *)
 val length : 'a t -> int
-  (* same as Dequeue.length = 0 *)
+(* same as Dequeue.length = 0 *)
 val is_empty : 'a t -> bool
 
 (* minimum and maximum valid indices (inclusive) *)
@@ -69,7 +69,7 @@ val clear : _ t -> unit
 
 (* drops n elements (default 1) at front *)
 val drop_front_exn : ?n:int -> 'a t -> unit
-  (* drops n elements (default 1) at back *)
+(* drops n elements (default 1) at back *)
 val drop_back_exn : ?n:int -> 'a t -> unit
 
 (* drop the front and return it *)
@@ -80,7 +80,7 @@ val take_back_exn : 'a t -> 'a
 
 (* drops index j iff j < i *)
 val drop_indices_less_than_exn : _ t -> int -> unit
-  (* drops index j iff j > i *)
+(* drops index j iff j > i *)
 val drop_indices_greater_than_exn : _ t -> int -> unit
 
 val invariant : _ t -> unit

@@ -350,7 +350,7 @@ let iter_block a b = failwith "iter_block not implemented for DBM. Please use Oc
 
 let length table =
   db_length table
-  (* Because of Dbm implementation, the result may be less thann the expected
-     result in some case (with a version of ocsipersist based on Dbm) *)
+(* Because of Dbm implementation, the result may be less thann the expected
+   result in some case (with a version of ocsipersist based on Dbm) *)
 
 let _ = Ocsigen_extensions.register_extension ~name:"ocsipersist" ~init_fun ()

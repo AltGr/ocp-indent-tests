@@ -101,7 +101,7 @@ let writer_permission name nperms =
   ^(Printf.sprintf "  }\n")
 
 let role_label role = replace_char (Printf.sprintf "role_%s" role) '-' '_'
-  (*let subroles_label role = (Printf.sprintf "subroles_of_%s" (role_label role))*)
+(*let subroles_label role = (Printf.sprintf "subroles_of_%s" (role_label role))*)
 let permissions_label role = (Printf.sprintf "permissions_of_%s" (role_label role))
 
 let role_index = ref 0

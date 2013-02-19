@@ -350,7 +350,7 @@ module PropList = struct
     let clear t =
       Hashtbl.clear t
 
-    (* # 71 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/PropList.ml" *)
+      (* # 71 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/oasis/PropList.ml" *)
   end
 
   module Schema =
@@ -2035,7 +2035,7 @@ module OASISFileUtil = struct
       dn
 
   let q = Filename.quote
-    (**/**)
+  (**/**)
 
   let cp ~ctxt ?(recurse=false) src tgt =
     if recurse then
@@ -3107,7 +3107,7 @@ module BaseStandardVar = struct
     else
       OASISUtils.failwithf (f_ "Cannot handle os_type %s filename concat")
         (os_type ())
-        (**/**)
+  (**/**)
 
   let prefix =
     p "prefix"
@@ -5702,7 +5702,7 @@ let setup_t =
          CustomPlugin.Test.main
            {
              CustomPlugin.cmd_main =
-               [(OASISExpr.EBool true, ("$test_runner", []))];
+             [(OASISExpr.EBool true, ("$test_runner", []))];
              cmd_clean = [(OASISExpr.EBool true, None)];
              cmd_distclean = [(OASISExpr.EBool true, None)];
            })
@@ -5717,7 +5717,7 @@ let setup_t =
          CustomPlugin.Test.clean
            {
              CustomPlugin.cmd_main =
-               [(OASISExpr.EBool true, ("$test_runner", []))];
+             [(OASISExpr.EBool true, ("$test_runner", []))];
              cmd_clean = [(OASISExpr.EBool true, None)];
              cmd_distclean = [(OASISExpr.EBool true, None)];
            })
@@ -5730,7 +5730,7 @@ let setup_t =
          CustomPlugin.Test.distclean
            {
              CustomPlugin.cmd_main =
-               [(OASISExpr.EBool true, ("$test_runner", []))];
+             [(OASISExpr.EBool true, ("$test_runner", []))];
              cmd_clean = [(OASISExpr.EBool true, None)];
              cmd_distclean = [(OASISExpr.EBool true, None)];
            })

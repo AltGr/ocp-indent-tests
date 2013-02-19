@@ -185,9 +185,9 @@ module type Accessors = sig
 
   (** Returns the list of all keys for given hashtable. *)
   val keys : ('a, _) t -> 'a key list
-    (** Returns the list of all data for given hashtable. *)
+  (** Returns the list of all data for given hashtable. *)
   val data : (_, 'b) t -> 'b list
-    (** [filter_inplace t ~f] removes all the elements from [t] that don't satisfy [f]. *)
+  (** [filter_inplace t ~f] removes all the elements from [t] that don't satisfy [f]. *)
   val filter_inplace : (_, 'b) t -> f:('b -> bool) -> unit
   val filteri_inplace : ('a, 'b) t -> f:('a key -> 'b -> bool) -> unit
 

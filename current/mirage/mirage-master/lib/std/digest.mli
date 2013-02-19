@@ -25,15 +25,15 @@ type t = string
 (** The type of digests: 16-character strings. *)
 
 val string : string -> t
-  (** Return the digest of the given string. *)
+(** Return the digest of the given string. *)
 
 val substring : string -> int -> int -> t
-  (** [Digest.substring s ofs len] returns the digest of the substring
-     of [s] starting at character number [ofs] and containing [len]
-     characters. *)
+(** [Digest.substring s ofs len] returns the digest of the substring
+   of [s] starting at character number [ofs] and containing [len]
+   characters. *)
 
 val file : string -> t
-  (** Return the digest of the file whose name is given. *)
+(** Return the digest of the file whose name is given. *)
 
 val to_hex : t -> string
-  (** Return the printable hexadecimal representation of the given digest. *)
+(** Return the printable hexadecimal representation of the given digest. *)

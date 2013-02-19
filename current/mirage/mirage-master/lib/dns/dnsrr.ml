@@ -57,7 +57,7 @@ type serial = int32
 and ipv4 = int32
 and cstr = string Hashcons.hash_consed
 
-(* DNS node: everything we know about a domain name *)
+    (* DNS node: everything we know about a domain name *)
 and dnsnode = {
   owner: string list Hashcons.hash_consed;
   mutable rrsets: rrset list;

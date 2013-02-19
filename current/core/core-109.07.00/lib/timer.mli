@@ -19,7 +19,7 @@ type event
 
 (** Type of intervals for repeated events *)
 type interval = private
-(** No repetition of events *)
+  (** No repetition of events *)
   | INone
   (** Regular repetition of events.  [span] is greater than zero.
       Note that this interval will be added to the wakeup time of

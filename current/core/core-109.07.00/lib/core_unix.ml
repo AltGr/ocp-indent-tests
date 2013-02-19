@@ -1183,9 +1183,9 @@ type dir_handle = Unix.dir_handle
 let opendir ?restart = unary_dirname ?restart Unix.opendir
 let readdir = unary_dir_handle Unix.readdir (* Non-intr *)
 let rewinddir = unary_dir_handle Unix.rewinddir (* Non-intr *)
-    (* if closedir is passed an already closed file handle it will try to call
-       dirfd on it to get a file descriptor for the error message, which will fail
-       with invalid argument because closedir sets the fd to null *)
+(* if closedir is passed an already closed file handle it will try to call
+   dirfd on it to get a file descriptor for the error message, which will fail
+   with invalid argument because closedir sets the fd to null *)
 let closedir = (* Non-intr *)
   unary_dir_handle (fun dh ->
     try Unix.closedir dh with | Invalid_argument _ -> ())

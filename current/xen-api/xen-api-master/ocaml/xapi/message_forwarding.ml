@@ -271,7 +271,7 @@ let map_with_drop ?(doc = "performing unknown operation") f xs =
     with e ->
       debug "Caught exception while %s in message forwarder: %s" (ExnHelper.string_of_exn e) doc; [] in
   List.concat (List.map one xs)
-  (* Iterate a function across a list, ignoring applications which throw an exception *)
+(* Iterate a function across a list, ignoring applications which throw an exception *)
 let iter_with_drop ?(doc = "performing unknown operation") f xs =
   let one x =
     try f x
@@ -578,8 +578,8 @@ module Forward = functor(Local: Custom_actions.CUSTOM_ACTIONS) -> struct
   module VMPP = Local.VMPP
   module VM_appliance = struct
     include Local.VM_appliance
-      (* Add to the VM_appliance's current operations, call a function and then remove from the *)
-      (* current operations. Ensure the allowed_operations are kept up to date. *)
+    (* Add to the VM_appliance's current operations, call a function and then remove from the *)
+    (* current operations. Ensure the allowed_operations are kept up to date. *)
     let with_vm_appliance_operation ~__context ~self ~doc ~op f =
       let task_id = Ref.string_of (Context.get_task_id __context) in
       retry_with_global_lock ~__context ~doc
@@ -631,7 +631,7 @@ module Forward = functor(Local: Custom_actions.CUSTOM_ACTIONS) -> struct
       Local.VM_appliance.recover ~__context ~self ~session_to ~force
   end
   module DR_task = Local.DR_task
-    (* module Alert = Local.Alert *)
+  (* module Alert = Local.Alert *)
 
   module Pool = struct
     include Local.Pool
@@ -1024,7 +1024,7 @@ module Forward = functor(Local: Custom_actions.CUSTOM_ACTIONS) -> struct
           (fun () ->
             Local.VM.set_is_a_template ~__context ~self ~value:true)
       else Local.VM.set_is_a_template ~__context ~self ~value
-        (*
+    (*
           else raise (Api_errors.Server_error(Api_errors.operation_not_allowed, [ "Must use VM.provision" ]))
         *)
 
@@ -2295,1375 +2295,1375 @@ module Forward = functor(Local: Custom_actions.CUSTOM_ACTIONS) -> struct
 
     let get_servertime ~__context ~host =
       (* info "Host.get_servertime"; *) (* suppressed because the GUI calls this frequently and it isn't interesting for debugging *)
-      let local_fn = Local.Host.get_servertime ~host in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.Host.get_servertime rpc session_id host)
-
-    let get_server_localtime ~__context ~host =
-      (* info "Host.get_servertime"; *) (* suppressed because the GUI calls this frequently and it isn't interesting for debugging *)
-      let local_fn = Local.Host.get_server_localtime ~host in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.Host.get_server_localtime rpc session_id host)
-
-    let enable_binary_storage ~__context ~host =
-      info "Host.enable_binary_storage: host = '%s'" (host_uuid ~__context host);
-      let local_fn = Local.Host.enable_binary_storage ~host in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.Host.enable_binary_storage rpc session_id host)
-
-    let disable_binary_storage ~__context ~host =
-      info "Host.disable_binary_storage: host = '%s'" (host_uuid ~__context host);
-      let local_fn = Local.Host.disable_binary_storage ~host in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.Host.disable_binary_storage rpc session_id host)
-
-    let enable_external_auth ~__context ~host ~config ~service_name ~auth_type =
-      info "Host.enable_external_auth: host = '%s'; service_name = '%s'; auth_type = '%s'" (host_uuid ~__context host) service_name auth_type;
-      let local_fn = Local.Host.enable_external_auth ~host ~config ~service_name ~auth_type in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.Host.enable_external_auth rpc session_id host config service_name auth_type)
-
-    let disable_external_auth ~__context ~host ~config =
-      info "Host.disable_external_auth: host = '%s'" (host_uuid ~__context host);
-      let local_fn = Local.Host.disable_external_auth ~host ~config in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.Host.disable_external_auth rpc session_id host config)
-
-    let certificate_install ~__context ~host ~name ~cert =
-      let local_fn = Local.Host.certificate_install ~host ~name ~cert in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.Host.certificate_install rpc session_id host name cert)
-
-    let certificate_uninstall ~__context ~host ~name =
-      let local_fn = Local.Host.certificate_uninstall ~host ~name in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.Host.certificate_uninstall rpc session_id host name)
-
-    let certificate_list ~__context ~host =
-      let local_fn = Local.Host.certificate_list ~host in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.Host.certificate_list rpc session_id host)
-
-    let crl_install ~__context ~host ~name ~crl =
-      let local_fn = Local.Host.crl_install ~host ~name ~crl in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.Host.crl_install rpc session_id host name crl)
-
-    let crl_uninstall ~__context ~host ~name =
-      let local_fn = Local.Host.crl_uninstall ~host ~name in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.Host.crl_uninstall rpc session_id host name)
-
-    let crl_list ~__context ~host =
-      let local_fn = Local.Host.crl_list ~host in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.Host.crl_list rpc session_id host)
-
-    let certificate_sync ~__context ~host =
-      let local_fn = Local.Host.certificate_sync ~host in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.Host.certificate_sync rpc session_id host)
-
-    let get_server_certificate ~__context ~host =
-      let local_fn = Local.Host.get_server_certificate ~host in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc ->
-          Client.Host.get_server_certificate rpc session_id host)
-
-    let attach_static_vdis ~__context ~host ~vdi_reason_map =
-      info "Host.attach_static_vdis: host = '%s'; vdi/reason pairs = [ %s ]" (host_uuid ~__context host)
-        (String.concat "; " (List.map (fun (a, b) ->  Ref.string_of a ^ "/" ^ b) vdi_reason_map));
-      let local_fn = Local.Host.attach_static_vdis ~host ~vdi_reason_map in
-      do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.attach_static_vdis rpc session_id host vdi_reason_map)
-
-    let detach_static_vdis ~__context ~host ~vdis =
-      info "Host.detach_static_vdis: host = '%s'; vdis =[ %s ]" (host_uuid ~__context host) (String.concat "; " (List.map Ref.string_of vdis));
-      let local_fn = Local.Host.detach_static_vdis ~host ~vdis in
-      do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.detach_static_vdis rpc session_id host vdis)
-
-    let set_localdb_key ~__context ~host ~key ~value =
-      info "Host.set_localdb_key: host = '%s'; key = '%s'; value = '%s'" (host_uuid ~__context host) key value;
-      let local_fn = Local.Host.set_localdb_key ~host ~key ~value in
-      do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.set_localdb_key rpc session_id host key value)
-
-    let apply_edition ~__context ~host ~edition =
-      info "Host.apply_edition: host = '%s'; edition = '%s'" (host_uuid ~__context host) edition;
-      let local_fn = Local.Host.apply_edition ~host ~edition in
-      do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.apply_edition rpc session_id host edition)
-
-    let refresh_pack_info ~__context ~host =
-      info "Host.refresh_pack_info: host = '%s'" (host_uuid ~__context host);
-      let local_fn = Local.Host.refresh_pack_info ~host in
-      do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.refresh_pack_info rpc session_id host)
-
-    let set_cpu_features ~__context ~host ~features =
-      info "Host.set_cpu_features: host = '%s'; features = '%s'" (host_uuid ~__context host) features;
-      let local_fn = Local.Host.set_cpu_features ~host ~features in
-      do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.set_cpu_features rpc session_id host features)
-
-    let reset_cpu_features ~__context ~host =
-      info "Host.reset_cpu_features: host = '%s'" (host_uuid ~__context host);
-      let local_fn = Local.Host.reset_cpu_features ~host in
-      do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.reset_cpu_features rpc session_id host)
-
-    let reset_networking ~__context ~host =
-      info "Host.reset_networking: host = '%s'" (host_uuid ~__context host);
-      Local.Host.reset_networking ~__context ~host
-
-    let enable_local_storage_caching ~__context ~host ~sr =
-      let local_fn = Local.Host.enable_local_storage_caching ~host ~sr in
-      do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.enable_local_storage_caching rpc session_id host sr)
-
-    let disable_local_storage_caching ~__context ~host =
-      let local_fn = Local.Host.disable_local_storage_caching ~host in
-      do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.disable_local_storage_caching rpc session_id host)
-
-    let get_sm_diagnostics ~__context ~host =
-      let local_fn = Local.Host.get_sm_diagnostics ~host in
-      do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.get_sm_diagnostics rpc session_id host)
-
-    let get_thread_diagnostics ~__context ~host =
-      let local_fn = Local.Host.get_thread_diagnostics ~host in
-      do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.get_thread_diagnostics rpc session_id host)
-
-    let sm_dp_destroy ~__context ~host ~dp ~allow_leak =
-      let local_fn = Local.Host.sm_dp_destroy ~host ~dp ~allow_leak in
-      do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.sm_dp_destroy rpc session_id host dp allow_leak)
-
-    let sync_vlans ~__context ~host =
-      info "Host.sync_vlans: host = '%s'" (host_uuid ~__context host);
-      Local.Host.sync_vlans ~__context ~host
-
-    let sync_tunnels ~__context ~host =
-      info "Host.sync_tunnels: host = '%s'" (host_uuid ~__context host);
-      Local.Host.sync_tunnels ~__context ~host
-
-    let sync_pif_currently_attached ~__context ~host ~bridges =
-      info "Host.sync_pif_currently_attached: host = '%s'" (host_uuid ~__context host);
-      Local.Host.sync_pif_currently_attached ~__context ~host ~bridges
-
-    let migrate_receive ~__context ~host ~network ~options =
-      info "Host.migrate_receive: host = '%s'; network = '%s'" (host_uuid ~__context host) (network_uuid ~__context network);
-      Local.Host.migrate_receive ~__context ~host ~network ~options
-  end
-
-  module Host_crashdump = struct
-    let destroy ~__context ~self =
-      info "Host_crashdump.destroy: host crashdump = '%s'" (host_crashdump_uuid ~__context self);
-      let local_fn = Local.Host_crashdump.destroy ~self in
-      do_op_on ~local_fn ~__context ~host:(Db.Host_crashdump.get_host ~__context ~self)
-        (fun session_id rpc -> Client.Host_crashdump.destroy rpc session_id self)
-
-    let upload ~__context ~self ~url ~options =
-      info "Host_crashdump.upload: host crashdump = '%s'; url = '%s'" (host_crashdump_uuid ~__context self) url;
-      let local_fn = Local.Host_crashdump.upload ~self ~url ~options in
-      do_op_on ~local_fn ~__context ~host:(Db.Host_crashdump.get_host ~__context ~self)
-        (fun session_id rpc -> Client.Host_crashdump.upload rpc session_id self url options)
-  end
-
-  module Host_patch = struct
-    let destroy ~__context ~self =
-      info "Host_patch.destroy: host patch = '%s'" (host_patch_uuid ~__context self);
-      Xapi_host_patch.destroy ~__context ~self
-
-    let apply ~__context ~self =
-      info "Host_patch.apply: host patch = '%s'" (host_patch_uuid ~__context self);
-      let local_fn = Local.Host_patch.apply ~self in
-      do_op_on ~local_fn ~__context ~host:(Db.Host_patch.get_host ~__context ~self)
-        (fun session_id rpc -> Client.Host_patch.apply rpc session_id self)
-  end
-
-  module Pool_patch = struct
-    let apply ~__context ~self ~host =
-      info "Pool_patch.apply: pool patch = '%s'; host = '%s'" (pool_patch_uuid ~__context self) (host_uuid ~__context host);
-      let local_fn = Local.Pool_patch.apply ~self ~host in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.Pool_patch.apply rpc session_id self host)
-
-    let precheck ~__context ~self ~host =
-      info "Pool_patch.precheck: pool patch = '%s'; host = '%s'" (pool_patch_uuid ~__context self) (host_uuid ~__context host);
-      let local_fn = Local.Pool_patch.precheck ~self ~host in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.Pool_patch.precheck rpc session_id self host)
-
-    let pool_apply ~__context ~self =
-      info "Pool_patch.pool_apply: pool patch = '%s'" (pool_patch_uuid ~__context self);
-      Xapi_pool_patch.pool_apply ~__context ~self
-
-    let clean ~__context ~self =
-      info "Pool_patch.clean: pool patch = '%s'" (pool_patch_uuid ~__context self);
-      Xapi_pool_patch.clean ~__context ~self
-
-    let clean_on_host ~__context ~self ~host =
-      info "Pool_patch.clean_on_host: pool patch = '%s'" (pool_patch_uuid ~__context self);
-      let local_fn = Local.Pool_patch.clean ~self in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.Pool_patch.clean rpc session_id self)
-
-    let pool_clean ~__context ~self =
-      info "Pool_patch.pool_clean: pool patch = '%s'" (pool_patch_uuid ~__context self);
-      Xapi_pool_patch.pool_clean ~__context ~self
-
-    let destroy ~__context ~self =
-      info "Pool_patch.destroy: pool patch = '%s'" (pool_patch_uuid ~__context self);
-      Xapi_pool_patch.destroy ~__context ~self
-  end
-
-  module Host_metrics = struct
-  end
-
-  module Host_cpu = struct
-  end
-
-  module Network = struct
-
-    (* Don't forward. These are just db operations. Networks are "attached" when required by hosts that read db entries.
-       Bridges corresponding to networks are removed by per-host GC threads that read from db. *)
-    let create ~__context ~name_label ~name_description ~mTU ~other_config ~tags =
-      info "Network.create: name_label = '%s'" name_label;
-      Local.Network.create ~__context ~name_label ~name_description ~mTU ~other_config ~tags
-
-    let attach ~__context ~network ~host =
-      info "Network.attach: network = '%s'; host = '%s'" (network_uuid ~__context network) (host_uuid ~__context host);
-      let local_fn = Local.Network.attach ~network ~host in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.Network.attach rpc session_id network host)
-
-    let pool_introduce ~__context ~name_label ~name_description ~mTU ~other_config ~bridge =
-      Local.Network.pool_introduce ~__context ~name_label ~name_description ~mTU ~other_config ~bridge
-
-    let destroy ~__context ~self =
-      info "Network.destroy: network = '%s'" (network_uuid ~__context self);
-      (* WARNING WARNING WARNING: directly call Network.destroy with the global lock since it does
-         only database operations *)
-      with_global_lock
-        (fun () ->
-          Local.Network.destroy ~__context ~self)
-
-    let create_new_blob ~__context ~network ~name ~mime_type ~public =
-      info "Network.create_new_blob: network = '%s'; name = %s; MIME type = '%s' public = %b" (network_uuid ~__context network) name mime_type public;
-      Local.Network.create_new_blob ~__context ~network ~name ~mime_type ~public
-
-    let set_default_locking_mode ~__context ~network ~value =
-      info "Network.set_default_locking_mode: network = '%s'; value = %s" (network_uuid ~__context network) (Record_util.network_default_locking_mode_to_string value);
-      Local.Network.set_default_locking_mode ~__context ~network ~value
-
-    let attach_for_vm ~__context ~host ~vm =
-      info "Network.attach_for_vm: host = '%s'; VM = '%s'" (host_uuid ~__context host) (vm_uuid ~__context vm);
-      let local_fn = Local.Network.attach_for_vm ~host ~vm in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.Network.attach_for_vm rpc session_id host vm)
-
-    let detach_for_vm ~__context ~host ~vm =
-      info "Network.detach_for_vm: host = '%s'; VM = '%s'" (host_uuid ~__context host) (vm_uuid ~__context vm);
-      let local_fn = Local.Network.detach_for_vm ~host ~vm in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.Network.detach_for_vm rpc session_id host vm)
-  end
-
-  module VIF = struct
-
-    let unmark_vif ~__context ~vif ~doc ~op =
-      let task_id = Ref.string_of (Context.get_task_id __context) in
-      log_exn ~doc:("unmarking VIF after " ^ doc)
-        (fun self ->
-          if Db.is_valid_ref __context self then begin
-            Db.VIF.remove_from_current_operations ~__context ~self ~key:task_id;
-            Xapi_vif_helpers.update_allowed_operations ~__context ~self;
-            Early_wakeup.broadcast (Datamodel._vif, Ref.string_of self);
-          end)
-        vif
-
-    let mark_vif ~__context ~vif ~doc ~op =
-      let task_id = Ref.string_of (Context.get_task_id __context) in
-      log_exn ~doc:("marking VIF for " ^ doc)
-        (fun self ->
-          Xapi_vif_helpers.assert_operation_valid ~__context ~self ~op;
-          Db.VIF.add_to_current_operations ~__context ~self ~key:task_id ~value:op;
-          Xapi_vif_helpers.update_allowed_operations ~__context ~self) vif
-
-    let with_vif_marked ~__context ~vif ~doc ~op f =
-      retry_with_global_lock ~__context ~doc (fun () -> mark_vif ~__context ~vif ~doc ~op);
-      finally
-        (fun () -> f ())
-        (fun () -> with_global_lock (fun () -> unmark_vif ~__context ~vif ~doc ~op))
-
-    (* -------- Forwarding helper functions: ------------------------------------ *)
-
-    let forward_vif_op ~local_fn ~__context ~self op =
-      let vm = Db.VIF.get_VM ~__context ~self in
-      let host_resident_on = Db.VM.get_resident_on ~__context ~self:vm in
-      if host_resident_on = Ref.null
-      then local_fn ~__context
-      else do_op_on ~local_fn ~__context ~host:host_resident_on op
-
-    (* -------------------------------------------------------------------------- *)
-
-    let create ~__context ~device ~network ~vM ~mAC ~mTU ~other_config ~qos_algorithm_type ~qos_algorithm_params =
-      info "VIF.create: VM = '%s'; network = '%s'" (vm_uuid ~__context vM) (network_uuid ~__context network);
-      Local.VIF.create ~__context ~device ~network ~vM ~mAC ~mTU ~other_config ~qos_algorithm_type ~qos_algorithm_params
-
-    let destroy ~__context ~self =
-      info "VIF.destroy: VIF = '%s'" (vif_uuid ~__context self);
-      Local.VIF.destroy ~__context ~self
-
-    let plug ~__context ~self =
-      info "VIF.plug: VIF = '%s'" (vif_uuid ~__context self);
-      let local_fn = Local.VIF.plug ~self in
-      with_vif_marked ~__context ~vif:self ~doc:"VIF.plug" ~op:`plug
-        (fun () ->
-          forward_vif_op ~local_fn ~__context ~self (fun session_id rpc -> Client.VIF.plug rpc session_id self))
-
-    let unplug_common ~__context  ~self ~force =
-      let op = `unplug in
-      let name = "VIF." ^ (Record_util.vif_operation_to_string op) in
-      info "%s: VIF = '%s'" name (vif_uuid ~__context self);
-      let local_fn, remote_fn =
-        if force then Local.VIF.unplug_force, Client.VIF.unplug_force
-        else Local.VIF.unplug, Client.VIF.unplug in
-      let local_fn = local_fn ~self in
-      with_vif_marked ~__context ~vif:self ~doc:name ~op
-        (fun () ->
-          forward_vif_op ~local_fn ~__context ~self (fun session_id rpc -> remote_fn rpc session_id self))
-
-    let unplug ~__context ~self = unplug_common ~__context ~self ~force:false
-    let unplug_force ~__context ~self = unplug_common ~__context ~self ~force:true
-
-    let set_locking_mode ~__context ~self ~value =
-      info "VIF.set_locking_mode: VIF = '%s'; value = '%s'" (vif_uuid ~__context self) (Record_util.vif_locking_mode_to_string value);
-      let local_fn = Local.VIF.set_locking_mode ~self ~value in
-      let remote_fn = (fun session_id rpc -> Client.VIF.set_locking_mode rpc session_id self value) in
-      forward_vif_op ~local_fn ~__context ~self remote_fn
-
-    let set_ipv4_allowed ~__context ~self ~value =
-      info "VIF.set_ipv4_allowed: VIF = '%s'; value = '%s'" (vif_uuid ~__context self) (String.concat "," value);
-      let local_fn = Local.VIF.set_ipv4_allowed ~self ~value in
-      let remote_fn = (fun session_id rpc -> Client.VIF.set_ipv4_allowed rpc session_id self value) in
-      forward_vif_op ~local_fn ~__context ~self remote_fn
-
-    let add_ipv4_allowed ~__context ~self ~value =
-      info "VIF.add_ipv4_allowed: VIF = '%s'; value = '%s'" (vif_uuid ~__context self) value;
-      let local_fn = Local.VIF.add_ipv4_allowed ~self ~value in
-      let remote_fn = (fun session_id rpc -> Client.VIF.add_ipv4_allowed rpc session_id self value) in
-      forward_vif_op ~local_fn ~__context ~self remote_fn
-
-    let remove_ipv4_allowed ~__context ~self ~value =
-      info "VIF.remove_ipv4_allowed: VIF = '%s'; value = '%s'" (vif_uuid ~__context self) value;
-      let local_fn = Local.VIF.remove_ipv4_allowed ~self ~value in
-      let remote_fn = (fun session_id rpc -> Client.VIF.remove_ipv4_allowed rpc session_id self value) in
-      forward_vif_op ~local_fn ~__context ~self remote_fn
-
-    let set_ipv6_allowed ~__context ~self ~value =
-      info "VIF.set_ipv6_allowed: VIF = '%s'; value = '%s'" (vif_uuid ~__context self) (String.concat "," value);
-      let local_fn = Local.VIF.set_ipv6_allowed ~self ~value in
-      let remote_fn = (fun session_id rpc -> Client.VIF.set_ipv6_allowed rpc session_id self value) in
-      forward_vif_op ~local_fn ~__context ~self remote_fn
-
-    let add_ipv6_allowed ~__context ~self ~value =
-      info "VIF.add_ipv6_allowed: VIF = '%s'; value = '%s'" (vif_uuid ~__context self) value;
-      let local_fn = Local.VIF.add_ipv6_allowed ~self ~value in
-      let remote_fn = (fun session_id rpc -> Client.VIF.add_ipv6_allowed rpc session_id self value) in
-      forward_vif_op ~local_fn ~__context ~self remote_fn
-
-    let remove_ipv6_allowed ~__context ~self ~value =
-      info "VIF.remove_ipv6_allowed: VIF = '%s'; value = '%s'" (vif_uuid ~__context self) value;
-      let local_fn = Local.VIF.remove_ipv6_allowed ~self ~value in
-      let remote_fn = (fun session_id rpc -> Client.VIF.remove_ipv6_allowed rpc session_id self value) in
-      forward_vif_op ~local_fn ~__context ~self remote_fn
-
-  end
-
-  module VIF_metrics = struct
-  end
-
-  module VLAN = struct
-    let create ~__context ~tagged_PIF ~tag ~network =
-      info "VLAN.create: network = '%s'; VLAN tag = %Ld" (network_uuid ~__context network) tag;
-      let local_fn = Local.VLAN.create ~tagged_PIF ~tag ~network in
-      do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context ~self:tagged_PIF) (fun session_id rpc -> Client.VLAN.create rpc session_id tagged_PIF tag network)
-    let destroy ~__context ~self =
-      info "VLAN.destroy: VLAN = '%s'" (vlan_uuid ~__context self);
-      let local_fn = Local.VLAN.destroy ~self in
-      do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context ~self:(Db.VLAN.get_tagged_PIF ~__context ~self)) (fun session_id rpc -> Client.VLAN.destroy rpc session_id self)
-  end
-
-  module Tunnel = struct
-    let create ~__context ~transport_PIF ~network =
-      info "Tunnel.create: network = '%s'" (network_uuid ~__context network);
-      let local_fn = Local.Tunnel.create ~transport_PIF ~network in
-      do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context ~self:transport_PIF)
-        (fun session_id rpc -> Client.Tunnel.create rpc session_id transport_PIF network)
-
-    let destroy ~__context ~self =
-      info "Tunnel.destroy: tunnel = '%s'" (tunnel_uuid ~__context self);
-      let local_fn = Local.Tunnel.destroy ~self in
-      do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context
-          ~self:(Db.Tunnel.get_transport_PIF ~__context ~self))
-        (fun session_id rpc -> Client.Tunnel.destroy rpc session_id self)
-  end
-
-  module Bond = struct
-    let create ~__context ~network ~members ~mAC ~mode ~properties =
-      info "Bond.create: network = '%s'; members = [ %s ]"
-        (network_uuid ~__context network) (String.concat "; " (List.map (pif_uuid ~__context) members));
-      if List.length members = 0
-      then raise (Api_errors.Server_error(Api_errors.pif_bond_needs_more_members, []));
-      let host = Db.PIF.get_host ~__context ~self:(List.hd members) in
-      let local_fn = Local.Bond.create ~network ~members ~mAC ~mode ~properties in
-      (* The management interface on the slave may change during this operation, so expect connection loss.
-       * Consider the operation successful if task progress is set to 1.0. *)
-      let task = Context.get_task_id __context in
-      let success () =
-        let progress = Db.Task.get_progress ~__context ~self:task in
-        debug "Task progress %.1f" progress;
-        if progress = 1.0 then
-          Some (Db.PIF.get_bond_slave_of ~__context ~self:(List.hd members))
-        else
-          None
-      in
-      let fn () =
-        do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Bond.create rpc session_id network members mAC mode properties) in
-      tolerate_connection_loss fn success 30.
-
-    let destroy ~__context ~self =
-      info "Bond.destroy: bond = '%s'" (bond_uuid ~__context self);
-      let host = Db.PIF.get_host ~__context ~self:(Db.Bond.get_master ~__context ~self) in
-      (* The management interface on the slave may change during this operation, so expect connection loss.
-       * Consider the operation successful if task progress is set to 1.0. *)
-      let task = Context.get_task_id __context in
-      let success () =
-        let progress = Db.Task.get_progress ~__context ~self:task in
-        debug "Task progress %.1f" progress;
-        if progress = 1.0 then
-          Some ()
-        else
-          None
-      in
-      let local_fn = Local.Bond.destroy ~self in
-      let fn () = do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Bond.destroy rpc session_id self) in
-      tolerate_connection_loss fn success 30.
-
-    let set_mode ~__context ~self ~value =
-      info "Bond.set_mode: bond = '%s'; value = '%s'" (bond_uuid ~__context self) (Record_util.bond_mode_to_string value);
-      let host = Db.PIF.get_host ~__context ~self:(Db.Bond.get_master ~__context ~self) in
-      let local_fn = Local.Bond.set_mode ~self ~value in
-      do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Bond.set_mode rpc session_id self value)
-
-    let set_property ~__context ~self ~name ~value =
-      info "Bond.set_property: bond = '%s'; name = '%s'; value = '%s'" (bond_uuid ~__context self) name value;
-      let host = Db.PIF.get_host ~__context ~self:(Db.Bond.get_master ~__context ~self) in
-      let local_fn = Local.Bond.set_property ~self ~name ~value in
-      do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Bond.set_property rpc session_id self name value)
-  end
-
-  module PIF = struct
-
-    let pool_introduce ~__context
-        ~device ~network ~host ~mAC ~mTU ~vLAN ~physical ~ip_configuration_mode ~iP
-        ~netmask ~gateway ~dNS ~bond_slave_of ~vLAN_master_of ~management ~other_config ~disallow_unplug =
-      Local.PIF.pool_introduce ~__context
-        ~device ~network ~host ~mAC ~mTU ~vLAN ~physical ~ip_configuration_mode ~iP
-        ~netmask ~gateway ~dNS ~bond_slave_of ~vLAN_master_of ~management ~other_config ~disallow_unplug
-
-    let db_introduce = Local.PIF.db_introduce
-    let db_forget ~__context ~self =
-      info "PIF.db_forget: PIF = '%s'" (pif_uuid ~__context self);
-      Local.PIF.db_forget ~__context ~self
-
-    let create_VLAN ~__context ~device ~network ~host ~vLAN =
-      info "PIF.create_VLAN: network = '%s'; VLAN tag = %Ld" (network_uuid ~__context network) vLAN;
-      let local_fn = Local.PIF.create_VLAN ~device ~network ~host ~vLAN in
-      do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.PIF.create_VLAN rpc session_id device network host vLAN)
-
-    let destroy ~__context ~self =
-      info "PIF.destroy: PIF = '%s'" (pif_uuid ~__context self);
-      let local_fn = Local.PIF.destroy ~self in
-      do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context ~self) (fun session_id rpc -> Client.PIF.destroy rpc session_id self)
-
-    let unplug ~__context ~self =
-      info "PIF.unplug: PIF = '%s'" (pif_uuid ~__context self);
-      let local_fn = Local.PIF.unplug ~self in
-      do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context ~self) (fun session_id rpc -> Client.PIF.unplug rpc session_id self)
-
-    let plug ~__context ~self =
-      info "PIF.plug: PIF = '%s'" (pif_uuid ~__context self);
-      let local_fn = Local.PIF.plug ~self in
-      do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context ~self) (fun session_id rpc -> Client.PIF.plug rpc session_id self)
-
-    let reconfigure_ip ~__context ~self ~mode ~iP ~netmask ~gateway ~dNS =
-      info "PIF.reconfigure_ip: PIF = '%s'; mode = '%s'; IP = '%s'; netmask = '%s'; gateway = '%s'; DNS = %s"
-        (pif_uuid ~__context self)
-        (Record_util.ip_configuration_mode_to_string mode) iP netmask gateway dNS;
-
-      (*      let host = Db.PIF.get_host ~__context ~self in
-              let pbds = Db.Host.get_PBDs ~__context ~self:host in
-
-              if Db.Host.get_enabled ~__context ~self then
-              raise (Api_errors.Server_error (Api_errors.host_not_disabled, [host]));
-
-              List.iter (fun pbd -> if Db.PBD.get_currently_attached ~__context ~self:pbd then
-              raise (Api_errors.Server_error (Api_errors.sr_attached, [Db.PBD.get_SR ~__context ~self:pbd]))) pbds;
-
-              if List.length (Db.Host.get_resident_VMs ~__context ~self:host) > 1 then
-              raise (Api_errors.Server_error (Api_errors.host_in_use, ["VM",""]));*)
-
-      let local_fn = Local.PIF.reconfigure_ip ~self ~mode ~iP ~netmask ~gateway ~dNS in
-      do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context ~self)
-        (fun session_id rpc ->
-          (* Reconfiguring the IP will potentially kill the connection without causing
-             this end to die quickly. To get around this, we spawn a new thread to do the
-             work and monitor the status of the task, which will be completed on the slave.
-             We ignore errors at the moment (only on slaves) *)
-          let (_: Thread.t) = Thread.create (fun () ->
-              Client.PIF.reconfigure_ip rpc session_id self mode iP netmask gateway dNS) () in
-          let task_id = Context.get_task_id __context in
-          let start_time = Unix.gettimeofday () in
-          let progress = ref 0.0 in
-          while !progress = 0.0 do
-            if Unix.gettimeofday () -. start_time > !Xapi_globs.pif_reconfigure_ip_timeout then
-              failwith "Failed to see host on network after timeout expired";
-            Thread.delay 1.0;
-            progress := Db.Task.get_progress ~__context ~self:task_id;
-            debug "Polling task %s progress" (Ref.string_of task_id)
-          done)
-
-    let reconfigure_ipv6 ~__context ~self ~mode ~iPv6 ~gateway ~dNS =
-      info "PIF.reconfigure_ipv6: PIF = '%s'; mode = '%s'; IPv6 = '%s'; gateway = '%s'; DNS = %s"
-        (pif_uuid ~__context self)
-        (Record_util.ipv6_configuration_mode_to_string mode) iPv6 gateway dNS;
-      let host = Db.PIF.get_host ~__context ~self in
-      let local_fn = Local.PIF.reconfigure_ipv6 ~self ~mode ~iPv6 ~gateway ~dNS in
-      let task = Context.get_task_id __context in
-      let success () =
-        let status = Db.Task.get_status ~__context ~self:task in
-        if status <> `pending then
-          Some ()
-        else
-          None
-      in
-      let fn () =
-        do_op_on ~local_fn ~__context ~host (fun session_id rpc ->
-          Client.PIF.reconfigure_ipv6 rpc session_id self mode iPv6 gateway dNS) in
-      tolerate_connection_loss fn success !Xapi_globs.pif_reconfigure_ip_timeout
-
-    let set_primary_address_type ~__context ~self ~primary_address_type = 
-      info "PIF.set_primary_address_type: PIF = '%s'; primary_address_type = '%s'"
-        (pif_uuid ~__context self)
-        (Record_util.primary_address_type_to_string primary_address_type);
-      let local_fn = Local.PIF.set_primary_address_type ~self ~primary_address_type in
-      do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context ~self)
-        (fun session_id rpc -> Client.PIF.set_primary_address_type rpc session_id self primary_address_type)
-
-    let scan ~__context ~host =
-      info "PIF.scan: host = '%s'" (host_uuid ~__context host);
-      let local_fn = Local.PIF.scan ~host in
-      do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.PIF.scan rpc session_id host)
-
-    let introduce ~__context ~host ~mAC ~device =
-      info "PIF.introduce: host = '%s'; MAC address = '%s'; device = '%s'" (host_uuid ~__context host) mAC device;
-      let local_fn = Local.PIF.introduce ~host ~mAC ~device in
-      do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.PIF.introduce rpc session_id host mAC device)
-
-    let forget ~__context ~self=
-      info "PIF.forget: PIF = '%s'" (pif_uuid ~__context self);
-      let local_fn = Local.PIF.forget ~self in
-      do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context ~self) (fun session_id rpc -> Client.PIF.forget rpc session_id self)
-  end
-  module PIF_metrics = struct
-  end
-  module SM = struct end
-  module SR = struct
-
-    let unmark_sr ~__context ~sr ~doc ~op =
-      let task_id = Ref.string_of (Context.get_task_id __context) in
-      debug "Unmarking SR after %s (task=%s)" doc task_id;
-      log_exn_ignore ~doc:("unmarking SR after " ^ doc)
-        (fun self ->
-          if Db.is_valid_ref __context self then begin
-            Db.SR.remove_from_current_operations ~__context ~self ~key:task_id;
-            Xapi_sr_operations.update_allowed_operations ~__context ~self;
-            Early_wakeup.broadcast (Datamodel._sr, Ref.string_of self);
-          end)
-        sr
-
-    let mark_sr ~__context ~sr ~doc ~op =
-      let task_id = Ref.string_of (Context.get_task_id __context) in
-      debug "Marking SR for %s (task=%s)" doc task_id;
-      log_exn ~doc:("marking SR for " ^ doc)
-        (fun self ->
-          Xapi_sr_operations.assert_operation_valid ~__context ~self ~op;
-          Db.SR.add_to_current_operations ~__context ~self ~key:task_id ~value:op;
-          Xapi_sr_operations.update_allowed_operations ~__context ~self) sr
-
-    let with_sr_marked ~__context ~sr ~doc ~op f =
-      retry_with_global_lock ~__context ~doc (fun () -> mark_sr ~__context ~sr ~doc ~op);
-      finally
-        (fun () -> f ())
-        (fun () -> with_global_lock (fun () -> unmark_sr ~__context ~sr ~doc ~op))
-
-    (* -------- Forwarding helper functions: ------------------------------------ *)
-
-    (* Forward SR operation to host that has a suitable plugged (or unplugged) PBD  *)
-    let forward_sr_op ?consider_unplugged_pbds ~local_fn ~__context ~self op =
-      let pbd = choose_pbd_for_sr ?consider_unplugged_pbds ~__context ~self () in
-      let host = Db.PBD.get_host ~__context ~self:pbd in
-      do_op_on ~local_fn ~__context ~host op
-
-    (* do op on a host that can view multiple SRs, if none is found, an
-       exception of Not_found will be raised *)
-    let forward_sr_multiple_op ~local_fn ~__context ~srs ?(prefer_slaves=false) op =
-      let choose_fn ~host =
-        Xapi_vm_helpers.assert_can_see_specified_SRs ~__context ~reqd_srs:srs ~host in
-      let host =
-        try Xapi_vm_helpers.choose_host ~__context ~choose_fn ~prefer_slaves ()
-        with _ -> raise Not_found in
-      do_op_on ~local_fn ~__context ~host op
-
-    let set_virtual_allocation ~__context ~self ~value =
-      Sm.assert_session_has_internal_sr_access ~__context ~sr:self;
-      Local.SR.set_virtual_allocation ~__context ~self ~value
-
-    let set_physical_size ~__context ~self ~value =
-      Sm.assert_session_has_internal_sr_access ~__context ~sr:self;
-      Local.SR.set_physical_size ~__context ~self ~value
-
-    let set_physical_utilisation ~__context ~self ~value =
-      Sm.assert_session_has_internal_sr_access ~__context ~sr:self;
-      Local.SR.set_physical_utilisation ~__context ~self ~value
-
-    let create ~__context ~host ~device_config ~physical_size ~name_label ~name_description  ~_type ~content_type ~shared ~sm_config =
-      info "SR.create: name label = '%s'" name_label;
-      let local_fn = Local.SR.create ~host ~device_config ~physical_size ~name_label ~name_description  ~_type ~content_type ~shared ~sm_config in
-      (* if shared, then ignore host parameter and do create on the master.. *)
-      if shared then
-        local_fn ~__context
+let local_fn = Local.Host.get_servertime ~host in
+do_op_on ~local_fn ~__context ~host
+  (fun session_id rpc -> Client.Host.get_servertime rpc session_id host)
+
+let get_server_localtime ~__context ~host =
+  (* info "Host.get_servertime"; *) (* suppressed because the GUI calls this frequently and it isn't interesting for debugging *)
+let local_fn = Local.Host.get_server_localtime ~host in
+do_op_on ~local_fn ~__context ~host
+  (fun session_id rpc -> Client.Host.get_server_localtime rpc session_id host)
+
+let enable_binary_storage ~__context ~host =
+  info "Host.enable_binary_storage: host = '%s'" (host_uuid ~__context host);
+  let local_fn = Local.Host.enable_binary_storage ~host in
+  do_op_on ~local_fn ~__context ~host
+    (fun session_id rpc -> Client.Host.enable_binary_storage rpc session_id host)
+
+let disable_binary_storage ~__context ~host =
+  info "Host.disable_binary_storage: host = '%s'" (host_uuid ~__context host);
+  let local_fn = Local.Host.disable_binary_storage ~host in
+  do_op_on ~local_fn ~__context ~host
+    (fun session_id rpc -> Client.Host.disable_binary_storage rpc session_id host)
+
+let enable_external_auth ~__context ~host ~config ~service_name ~auth_type =
+  info "Host.enable_external_auth: host = '%s'; service_name = '%s'; auth_type = '%s'" (host_uuid ~__context host) service_name auth_type;
+  let local_fn = Local.Host.enable_external_auth ~host ~config ~service_name ~auth_type in
+  do_op_on ~local_fn ~__context ~host
+    (fun session_id rpc -> Client.Host.enable_external_auth rpc session_id host config service_name auth_type)
+
+let disable_external_auth ~__context ~host ~config =
+  info "Host.disable_external_auth: host = '%s'" (host_uuid ~__context host);
+  let local_fn = Local.Host.disable_external_auth ~host ~config in
+  do_op_on ~local_fn ~__context ~host
+    (fun session_id rpc -> Client.Host.disable_external_auth rpc session_id host config)
+
+let certificate_install ~__context ~host ~name ~cert =
+  let local_fn = Local.Host.certificate_install ~host ~name ~cert in
+  do_op_on ~local_fn ~__context ~host
+    (fun session_id rpc -> Client.Host.certificate_install rpc session_id host name cert)
+
+let certificate_uninstall ~__context ~host ~name =
+  let local_fn = Local.Host.certificate_uninstall ~host ~name in
+  do_op_on ~local_fn ~__context ~host
+    (fun session_id rpc -> Client.Host.certificate_uninstall rpc session_id host name)
+
+let certificate_list ~__context ~host =
+  let local_fn = Local.Host.certificate_list ~host in
+  do_op_on ~local_fn ~__context ~host
+    (fun session_id rpc -> Client.Host.certificate_list rpc session_id host)
+
+let crl_install ~__context ~host ~name ~crl =
+  let local_fn = Local.Host.crl_install ~host ~name ~crl in
+  do_op_on ~local_fn ~__context ~host
+    (fun session_id rpc -> Client.Host.crl_install rpc session_id host name crl)
+
+let crl_uninstall ~__context ~host ~name =
+  let local_fn = Local.Host.crl_uninstall ~host ~name in
+  do_op_on ~local_fn ~__context ~host
+    (fun session_id rpc -> Client.Host.crl_uninstall rpc session_id host name)
+
+let crl_list ~__context ~host =
+  let local_fn = Local.Host.crl_list ~host in
+  do_op_on ~local_fn ~__context ~host
+    (fun session_id rpc -> Client.Host.crl_list rpc session_id host)
+
+let certificate_sync ~__context ~host =
+  let local_fn = Local.Host.certificate_sync ~host in
+  do_op_on ~local_fn ~__context ~host
+    (fun session_id rpc -> Client.Host.certificate_sync rpc session_id host)
+
+let get_server_certificate ~__context ~host =
+  let local_fn = Local.Host.get_server_certificate ~host in
+  do_op_on ~local_fn ~__context ~host
+    (fun session_id rpc ->
+      Client.Host.get_server_certificate rpc session_id host)
+
+let attach_static_vdis ~__context ~host ~vdi_reason_map =
+  info "Host.attach_static_vdis: host = '%s'; vdi/reason pairs = [ %s ]" (host_uuid ~__context host)
+    (String.concat "; " (List.map (fun (a, b) ->  Ref.string_of a ^ "/" ^ b) vdi_reason_map));
+  let local_fn = Local.Host.attach_static_vdis ~host ~vdi_reason_map in
+  do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.attach_static_vdis rpc session_id host vdi_reason_map)
+
+let detach_static_vdis ~__context ~host ~vdis =
+  info "Host.detach_static_vdis: host = '%s'; vdis =[ %s ]" (host_uuid ~__context host) (String.concat "; " (List.map Ref.string_of vdis));
+  let local_fn = Local.Host.detach_static_vdis ~host ~vdis in
+  do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.detach_static_vdis rpc session_id host vdis)
+
+let set_localdb_key ~__context ~host ~key ~value =
+  info "Host.set_localdb_key: host = '%s'; key = '%s'; value = '%s'" (host_uuid ~__context host) key value;
+  let local_fn = Local.Host.set_localdb_key ~host ~key ~value in
+  do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.set_localdb_key rpc session_id host key value)
+
+let apply_edition ~__context ~host ~edition =
+  info "Host.apply_edition: host = '%s'; edition = '%s'" (host_uuid ~__context host) edition;
+  let local_fn = Local.Host.apply_edition ~host ~edition in
+  do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.apply_edition rpc session_id host edition)
+
+let refresh_pack_info ~__context ~host =
+  info "Host.refresh_pack_info: host = '%s'" (host_uuid ~__context host);
+  let local_fn = Local.Host.refresh_pack_info ~host in
+  do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.refresh_pack_info rpc session_id host)
+
+let set_cpu_features ~__context ~host ~features =
+  info "Host.set_cpu_features: host = '%s'; features = '%s'" (host_uuid ~__context host) features;
+  let local_fn = Local.Host.set_cpu_features ~host ~features in
+  do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.set_cpu_features rpc session_id host features)
+
+let reset_cpu_features ~__context ~host =
+  info "Host.reset_cpu_features: host = '%s'" (host_uuid ~__context host);
+  let local_fn = Local.Host.reset_cpu_features ~host in
+  do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.reset_cpu_features rpc session_id host)
+
+let reset_networking ~__context ~host =
+  info "Host.reset_networking: host = '%s'" (host_uuid ~__context host);
+  Local.Host.reset_networking ~__context ~host
+
+let enable_local_storage_caching ~__context ~host ~sr =
+  let local_fn = Local.Host.enable_local_storage_caching ~host ~sr in
+  do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.enable_local_storage_caching rpc session_id host sr)
+
+let disable_local_storage_caching ~__context ~host =
+  let local_fn = Local.Host.disable_local_storage_caching ~host in
+  do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.disable_local_storage_caching rpc session_id host)
+
+let get_sm_diagnostics ~__context ~host =
+  let local_fn = Local.Host.get_sm_diagnostics ~host in
+  do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.get_sm_diagnostics rpc session_id host)
+
+let get_thread_diagnostics ~__context ~host =
+  let local_fn = Local.Host.get_thread_diagnostics ~host in
+  do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.get_thread_diagnostics rpc session_id host)
+
+let sm_dp_destroy ~__context ~host ~dp ~allow_leak =
+  let local_fn = Local.Host.sm_dp_destroy ~host ~dp ~allow_leak in
+  do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Host.sm_dp_destroy rpc session_id host dp allow_leak)
+
+let sync_vlans ~__context ~host =
+  info "Host.sync_vlans: host = '%s'" (host_uuid ~__context host);
+  Local.Host.sync_vlans ~__context ~host
+
+let sync_tunnels ~__context ~host =
+  info "Host.sync_tunnels: host = '%s'" (host_uuid ~__context host);
+  Local.Host.sync_tunnels ~__context ~host
+
+let sync_pif_currently_attached ~__context ~host ~bridges =
+  info "Host.sync_pif_currently_attached: host = '%s'" (host_uuid ~__context host);
+  Local.Host.sync_pif_currently_attached ~__context ~host ~bridges
+
+let migrate_receive ~__context ~host ~network ~options =
+  info "Host.migrate_receive: host = '%s'; network = '%s'" (host_uuid ~__context host) (network_uuid ~__context network);
+  Local.Host.migrate_receive ~__context ~host ~network ~options
+end
+
+module Host_crashdump = struct
+  let destroy ~__context ~self =
+    info "Host_crashdump.destroy: host crashdump = '%s'" (host_crashdump_uuid ~__context self);
+    let local_fn = Local.Host_crashdump.destroy ~self in
+    do_op_on ~local_fn ~__context ~host:(Db.Host_crashdump.get_host ~__context ~self)
+      (fun session_id rpc -> Client.Host_crashdump.destroy rpc session_id self)
+
+  let upload ~__context ~self ~url ~options =
+    info "Host_crashdump.upload: host crashdump = '%s'; url = '%s'" (host_crashdump_uuid ~__context self) url;
+    let local_fn = Local.Host_crashdump.upload ~self ~url ~options in
+    do_op_on ~local_fn ~__context ~host:(Db.Host_crashdump.get_host ~__context ~self)
+      (fun session_id rpc -> Client.Host_crashdump.upload rpc session_id self url options)
+end
+
+module Host_patch = struct
+  let destroy ~__context ~self =
+    info "Host_patch.destroy: host patch = '%s'" (host_patch_uuid ~__context self);
+    Xapi_host_patch.destroy ~__context ~self
+
+  let apply ~__context ~self =
+    info "Host_patch.apply: host patch = '%s'" (host_patch_uuid ~__context self);
+    let local_fn = Local.Host_patch.apply ~self in
+    do_op_on ~local_fn ~__context ~host:(Db.Host_patch.get_host ~__context ~self)
+      (fun session_id rpc -> Client.Host_patch.apply rpc session_id self)
+end
+
+module Pool_patch = struct
+  let apply ~__context ~self ~host =
+    info "Pool_patch.apply: pool patch = '%s'; host = '%s'" (pool_patch_uuid ~__context self) (host_uuid ~__context host);
+    let local_fn = Local.Pool_patch.apply ~self ~host in
+    do_op_on ~local_fn ~__context ~host
+      (fun session_id rpc -> Client.Pool_patch.apply rpc session_id self host)
+
+  let precheck ~__context ~self ~host =
+    info "Pool_patch.precheck: pool patch = '%s'; host = '%s'" (pool_patch_uuid ~__context self) (host_uuid ~__context host);
+    let local_fn = Local.Pool_patch.precheck ~self ~host in
+    do_op_on ~local_fn ~__context ~host
+      (fun session_id rpc -> Client.Pool_patch.precheck rpc session_id self host)
+
+  let pool_apply ~__context ~self =
+    info "Pool_patch.pool_apply: pool patch = '%s'" (pool_patch_uuid ~__context self);
+    Xapi_pool_patch.pool_apply ~__context ~self
+
+  let clean ~__context ~self =
+    info "Pool_patch.clean: pool patch = '%s'" (pool_patch_uuid ~__context self);
+    Xapi_pool_patch.clean ~__context ~self
+
+  let clean_on_host ~__context ~self ~host =
+    info "Pool_patch.clean_on_host: pool patch = '%s'" (pool_patch_uuid ~__context self);
+    let local_fn = Local.Pool_patch.clean ~self in
+    do_op_on ~local_fn ~__context ~host
+      (fun session_id rpc -> Client.Pool_patch.clean rpc session_id self)
+
+  let pool_clean ~__context ~self =
+    info "Pool_patch.pool_clean: pool patch = '%s'" (pool_patch_uuid ~__context self);
+    Xapi_pool_patch.pool_clean ~__context ~self
+
+  let destroy ~__context ~self =
+    info "Pool_patch.destroy: pool patch = '%s'" (pool_patch_uuid ~__context self);
+    Xapi_pool_patch.destroy ~__context ~self
+end
+
+module Host_metrics = struct
+end
+
+module Host_cpu = struct
+end
+
+module Network = struct
+
+  (* Don't forward. These are just db operations. Networks are "attached" when required by hosts that read db entries.
+     Bridges corresponding to networks are removed by per-host GC threads that read from db. *)
+  let create ~__context ~name_label ~name_description ~mTU ~other_config ~tags =
+    info "Network.create: name_label = '%s'" name_label;
+    Local.Network.create ~__context ~name_label ~name_description ~mTU ~other_config ~tags
+
+  let attach ~__context ~network ~host =
+    info "Network.attach: network = '%s'; host = '%s'" (network_uuid ~__context network) (host_uuid ~__context host);
+    let local_fn = Local.Network.attach ~network ~host in
+    do_op_on ~local_fn ~__context ~host
+      (fun session_id rpc -> Client.Network.attach rpc session_id network host)
+
+  let pool_introduce ~__context ~name_label ~name_description ~mTU ~other_config ~bridge =
+    Local.Network.pool_introduce ~__context ~name_label ~name_description ~mTU ~other_config ~bridge
+
+  let destroy ~__context ~self =
+    info "Network.destroy: network = '%s'" (network_uuid ~__context self);
+    (* WARNING WARNING WARNING: directly call Network.destroy with the global lock since it does
+       only database operations *)
+    with_global_lock
+      (fun () ->
+        Local.Network.destroy ~__context ~self)
+
+  let create_new_blob ~__context ~network ~name ~mime_type ~public =
+    info "Network.create_new_blob: network = '%s'; name = %s; MIME type = '%s' public = %b" (network_uuid ~__context network) name mime_type public;
+    Local.Network.create_new_blob ~__context ~network ~name ~mime_type ~public
+
+  let set_default_locking_mode ~__context ~network ~value =
+    info "Network.set_default_locking_mode: network = '%s'; value = %s" (network_uuid ~__context network) (Record_util.network_default_locking_mode_to_string value);
+    Local.Network.set_default_locking_mode ~__context ~network ~value
+
+  let attach_for_vm ~__context ~host ~vm =
+    info "Network.attach_for_vm: host = '%s'; VM = '%s'" (host_uuid ~__context host) (vm_uuid ~__context vm);
+    let local_fn = Local.Network.attach_for_vm ~host ~vm in
+    do_op_on ~local_fn ~__context ~host
+      (fun session_id rpc -> Client.Network.attach_for_vm rpc session_id host vm)
+
+  let detach_for_vm ~__context ~host ~vm =
+    info "Network.detach_for_vm: host = '%s'; VM = '%s'" (host_uuid ~__context host) (vm_uuid ~__context vm);
+    let local_fn = Local.Network.detach_for_vm ~host ~vm in
+    do_op_on ~local_fn ~__context ~host
+      (fun session_id rpc -> Client.Network.detach_for_vm rpc session_id host vm)
+end
+
+module VIF = struct
+
+  let unmark_vif ~__context ~vif ~doc ~op =
+    let task_id = Ref.string_of (Context.get_task_id __context) in
+    log_exn ~doc:("unmarking VIF after " ^ doc)
+      (fun self ->
+        if Db.is_valid_ref __context self then begin
+          Db.VIF.remove_from_current_operations ~__context ~self ~key:task_id;
+          Xapi_vif_helpers.update_allowed_operations ~__context ~self;
+          Early_wakeup.broadcast (Datamodel._vif, Ref.string_of self);
+        end)
+      vif
+
+  let mark_vif ~__context ~vif ~doc ~op =
+    let task_id = Ref.string_of (Context.get_task_id __context) in
+    log_exn ~doc:("marking VIF for " ^ doc)
+      (fun self ->
+        Xapi_vif_helpers.assert_operation_valid ~__context ~self ~op;
+        Db.VIF.add_to_current_operations ~__context ~self ~key:task_id ~value:op;
+        Xapi_vif_helpers.update_allowed_operations ~__context ~self) vif
+
+  let with_vif_marked ~__context ~vif ~doc ~op f =
+    retry_with_global_lock ~__context ~doc (fun () -> mark_vif ~__context ~vif ~doc ~op);
+    finally
+      (fun () -> f ())
+      (fun () -> with_global_lock (fun () -> unmark_vif ~__context ~vif ~doc ~op))
+
+  (* -------- Forwarding helper functions: ------------------------------------ *)
+
+  let forward_vif_op ~local_fn ~__context ~self op =
+    let vm = Db.VIF.get_VM ~__context ~self in
+    let host_resident_on = Db.VM.get_resident_on ~__context ~self:vm in
+    if host_resident_on = Ref.null
+    then local_fn ~__context
+    else do_op_on ~local_fn ~__context ~host:host_resident_on op
+
+  (* -------------------------------------------------------------------------- *)
+
+  let create ~__context ~device ~network ~vM ~mAC ~mTU ~other_config ~qos_algorithm_type ~qos_algorithm_params =
+    info "VIF.create: VM = '%s'; network = '%s'" (vm_uuid ~__context vM) (network_uuid ~__context network);
+    Local.VIF.create ~__context ~device ~network ~vM ~mAC ~mTU ~other_config ~qos_algorithm_type ~qos_algorithm_params
+
+  let destroy ~__context ~self =
+    info "VIF.destroy: VIF = '%s'" (vif_uuid ~__context self);
+    Local.VIF.destroy ~__context ~self
+
+  let plug ~__context ~self =
+    info "VIF.plug: VIF = '%s'" (vif_uuid ~__context self);
+    let local_fn = Local.VIF.plug ~self in
+    with_vif_marked ~__context ~vif:self ~doc:"VIF.plug" ~op:`plug
+      (fun () ->
+        forward_vif_op ~local_fn ~__context ~self (fun session_id rpc -> Client.VIF.plug rpc session_id self))
+
+  let unplug_common ~__context  ~self ~force =
+    let op = `unplug in
+    let name = "VIF." ^ (Record_util.vif_operation_to_string op) in
+    info "%s: VIF = '%s'" name (vif_uuid ~__context self);
+    let local_fn, remote_fn =
+      if force then Local.VIF.unplug_force, Client.VIF.unplug_force
+      else Local.VIF.unplug, Client.VIF.unplug in
+    let local_fn = local_fn ~self in
+    with_vif_marked ~__context ~vif:self ~doc:name ~op
+      (fun () ->
+        forward_vif_op ~local_fn ~__context ~self (fun session_id rpc -> remote_fn rpc session_id self))
+
+  let unplug ~__context ~self = unplug_common ~__context ~self ~force:false
+  let unplug_force ~__context ~self = unplug_common ~__context ~self ~force:true
+
+  let set_locking_mode ~__context ~self ~value =
+    info "VIF.set_locking_mode: VIF = '%s'; value = '%s'" (vif_uuid ~__context self) (Record_util.vif_locking_mode_to_string value);
+    let local_fn = Local.VIF.set_locking_mode ~self ~value in
+    let remote_fn = (fun session_id rpc -> Client.VIF.set_locking_mode rpc session_id self value) in
+    forward_vif_op ~local_fn ~__context ~self remote_fn
+
+  let set_ipv4_allowed ~__context ~self ~value =
+    info "VIF.set_ipv4_allowed: VIF = '%s'; value = '%s'" (vif_uuid ~__context self) (String.concat "," value);
+    let local_fn = Local.VIF.set_ipv4_allowed ~self ~value in
+    let remote_fn = (fun session_id rpc -> Client.VIF.set_ipv4_allowed rpc session_id self value) in
+    forward_vif_op ~local_fn ~__context ~self remote_fn
+
+  let add_ipv4_allowed ~__context ~self ~value =
+    info "VIF.add_ipv4_allowed: VIF = '%s'; value = '%s'" (vif_uuid ~__context self) value;
+    let local_fn = Local.VIF.add_ipv4_allowed ~self ~value in
+    let remote_fn = (fun session_id rpc -> Client.VIF.add_ipv4_allowed rpc session_id self value) in
+    forward_vif_op ~local_fn ~__context ~self remote_fn
+
+  let remove_ipv4_allowed ~__context ~self ~value =
+    info "VIF.remove_ipv4_allowed: VIF = '%s'; value = '%s'" (vif_uuid ~__context self) value;
+    let local_fn = Local.VIF.remove_ipv4_allowed ~self ~value in
+    let remote_fn = (fun session_id rpc -> Client.VIF.remove_ipv4_allowed rpc session_id self value) in
+    forward_vif_op ~local_fn ~__context ~self remote_fn
+
+  let set_ipv6_allowed ~__context ~self ~value =
+    info "VIF.set_ipv6_allowed: VIF = '%s'; value = '%s'" (vif_uuid ~__context self) (String.concat "," value);
+    let local_fn = Local.VIF.set_ipv6_allowed ~self ~value in
+    let remote_fn = (fun session_id rpc -> Client.VIF.set_ipv6_allowed rpc session_id self value) in
+    forward_vif_op ~local_fn ~__context ~self remote_fn
+
+  let add_ipv6_allowed ~__context ~self ~value =
+    info "VIF.add_ipv6_allowed: VIF = '%s'; value = '%s'" (vif_uuid ~__context self) value;
+    let local_fn = Local.VIF.add_ipv6_allowed ~self ~value in
+    let remote_fn = (fun session_id rpc -> Client.VIF.add_ipv6_allowed rpc session_id self value) in
+    forward_vif_op ~local_fn ~__context ~self remote_fn
+
+  let remove_ipv6_allowed ~__context ~self ~value =
+    info "VIF.remove_ipv6_allowed: VIF = '%s'; value = '%s'" (vif_uuid ~__context self) value;
+    let local_fn = Local.VIF.remove_ipv6_allowed ~self ~value in
+    let remote_fn = (fun session_id rpc -> Client.VIF.remove_ipv6_allowed rpc session_id self value) in
+    forward_vif_op ~local_fn ~__context ~self remote_fn
+
+end
+
+module VIF_metrics = struct
+end
+
+module VLAN = struct
+  let create ~__context ~tagged_PIF ~tag ~network =
+    info "VLAN.create: network = '%s'; VLAN tag = %Ld" (network_uuid ~__context network) tag;
+    let local_fn = Local.VLAN.create ~tagged_PIF ~tag ~network in
+    do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context ~self:tagged_PIF) (fun session_id rpc -> Client.VLAN.create rpc session_id tagged_PIF tag network)
+  let destroy ~__context ~self =
+    info "VLAN.destroy: VLAN = '%s'" (vlan_uuid ~__context self);
+    let local_fn = Local.VLAN.destroy ~self in
+    do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context ~self:(Db.VLAN.get_tagged_PIF ~__context ~self)) (fun session_id rpc -> Client.VLAN.destroy rpc session_id self)
+end
+
+module Tunnel = struct
+  let create ~__context ~transport_PIF ~network =
+    info "Tunnel.create: network = '%s'" (network_uuid ~__context network);
+    let local_fn = Local.Tunnel.create ~transport_PIF ~network in
+    do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context ~self:transport_PIF)
+      (fun session_id rpc -> Client.Tunnel.create rpc session_id transport_PIF network)
+
+  let destroy ~__context ~self =
+    info "Tunnel.destroy: tunnel = '%s'" (tunnel_uuid ~__context self);
+    let local_fn = Local.Tunnel.destroy ~self in
+    do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context
+        ~self:(Db.Tunnel.get_transport_PIF ~__context ~self))
+      (fun session_id rpc -> Client.Tunnel.destroy rpc session_id self)
+end
+
+module Bond = struct
+  let create ~__context ~network ~members ~mAC ~mode ~properties =
+    info "Bond.create: network = '%s'; members = [ %s ]"
+      (network_uuid ~__context network) (String.concat "; " (List.map (pif_uuid ~__context) members));
+    if List.length members = 0
+    then raise (Api_errors.Server_error(Api_errors.pif_bond_needs_more_members, []));
+    let host = Db.PIF.get_host ~__context ~self:(List.hd members) in
+    let local_fn = Local.Bond.create ~network ~members ~mAC ~mode ~properties in
+    (* The management interface on the slave may change during this operation, so expect connection loss.
+     * Consider the operation successful if task progress is set to 1.0. *)
+    let task = Context.get_task_id __context in
+    let success () =
+      let progress = Db.Task.get_progress ~__context ~self:task in
+      debug "Task progress %.1f" progress;
+      if progress = 1.0 then
+        Some (Db.PIF.get_bond_slave_of ~__context ~self:(List.hd members))
       else
-        (* otherwise forward to specified host *)
-        do_op_on ~local_fn ~__context ~host
-          (fun session_id rpc -> Client.SR.create ~rpc ~session_id ~host ~device_config ~physical_size ~name_label ~name_description ~_type ~content_type ~shared ~sm_config)
+        None
+    in
+    let fn () =
+      do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Bond.create rpc session_id network members mAC mode properties) in
+    tolerate_connection_loss fn success 30.
 
-    (* -------------------------------------------------------------------------- *)
+  let destroy ~__context ~self =
+    info "Bond.destroy: bond = '%s'" (bond_uuid ~__context self);
+    let host = Db.PIF.get_host ~__context ~self:(Db.Bond.get_master ~__context ~self) in
+    (* The management interface on the slave may change during this operation, so expect connection loss.
+     * Consider the operation successful if task progress is set to 1.0. *)
+    let task = Context.get_task_id __context in
+    let success () =
+      let progress = Db.Task.get_progress ~__context ~self:task in
+      debug "Task progress %.1f" progress;
+      if progress = 1.0 then
+        Some ()
+      else
+        None
+    in
+    let local_fn = Local.Bond.destroy ~self in
+    let fn () = do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Bond.destroy rpc session_id self) in
+    tolerate_connection_loss fn success 30.
 
-    (* don't forward. this is just a db call *)
-    let introduce ~__context ~uuid ~name_label ~name_description ~_type ~content_type =
-      info "SR.introduce: uuid = '%s'; name label = '%s'" uuid name_label;
-      Local.SR.introduce ~__context ~uuid ~name_label ~name_description ~_type ~content_type
+  let set_mode ~__context ~self ~value =
+    info "Bond.set_mode: bond = '%s'; value = '%s'" (bond_uuid ~__context self) (Record_util.bond_mode_to_string value);
+    let host = Db.PIF.get_host ~__context ~self:(Db.Bond.get_master ~__context ~self) in
+    let local_fn = Local.Bond.set_mode ~self ~value in
+    do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Bond.set_mode rpc session_id self value)
 
-    let make ~__context ~host ~device_config ~physical_size ~name_label ~name_description ~_type ~content_type ~sm_config =
-      info "SR.make: host = '%s'; name label = '%s'" (host_uuid ~__context host) name_label;
-      let local_fn = Local.SR.make ~host ~device_config ~physical_size ~name_label ~name_description ~_type ~content_type ~sm_config in
+  let set_property ~__context ~self ~name ~value =
+    info "Bond.set_property: bond = '%s'; name = '%s'; value = '%s'" (bond_uuid ~__context self) name value;
+    let host = Db.PIF.get_host ~__context ~self:(Db.Bond.get_master ~__context ~self) in
+    let local_fn = Local.Bond.set_property ~self ~name ~value in
+    do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.Bond.set_property rpc session_id self name value)
+end
+
+module PIF = struct
+
+  let pool_introduce ~__context
+      ~device ~network ~host ~mAC ~mTU ~vLAN ~physical ~ip_configuration_mode ~iP
+      ~netmask ~gateway ~dNS ~bond_slave_of ~vLAN_master_of ~management ~other_config ~disallow_unplug =
+    Local.PIF.pool_introduce ~__context
+      ~device ~network ~host ~mAC ~mTU ~vLAN ~physical ~ip_configuration_mode ~iP
+      ~netmask ~gateway ~dNS ~bond_slave_of ~vLAN_master_of ~management ~other_config ~disallow_unplug
+
+  let db_introduce = Local.PIF.db_introduce
+  let db_forget ~__context ~self =
+    info "PIF.db_forget: PIF = '%s'" (pif_uuid ~__context self);
+    Local.PIF.db_forget ~__context ~self
+
+  let create_VLAN ~__context ~device ~network ~host ~vLAN =
+    info "PIF.create_VLAN: network = '%s'; VLAN tag = %Ld" (network_uuid ~__context network) vLAN;
+    let local_fn = Local.PIF.create_VLAN ~device ~network ~host ~vLAN in
+    do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.PIF.create_VLAN rpc session_id device network host vLAN)
+
+  let destroy ~__context ~self =
+    info "PIF.destroy: PIF = '%s'" (pif_uuid ~__context self);
+    let local_fn = Local.PIF.destroy ~self in
+    do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context ~self) (fun session_id rpc -> Client.PIF.destroy rpc session_id self)
+
+  let unplug ~__context ~self =
+    info "PIF.unplug: PIF = '%s'" (pif_uuid ~__context self);
+    let local_fn = Local.PIF.unplug ~self in
+    do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context ~self) (fun session_id rpc -> Client.PIF.unplug rpc session_id self)
+
+  let plug ~__context ~self =
+    info "PIF.plug: PIF = '%s'" (pif_uuid ~__context self);
+    let local_fn = Local.PIF.plug ~self in
+    do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context ~self) (fun session_id rpc -> Client.PIF.plug rpc session_id self)
+
+  let reconfigure_ip ~__context ~self ~mode ~iP ~netmask ~gateway ~dNS =
+    info "PIF.reconfigure_ip: PIF = '%s'; mode = '%s'; IP = '%s'; netmask = '%s'; gateway = '%s'; DNS = %s"
+      (pif_uuid ~__context self)
+      (Record_util.ip_configuration_mode_to_string mode) iP netmask gateway dNS;
+
+    (*      let host = Db.PIF.get_host ~__context ~self in
+            let pbds = Db.Host.get_PBDs ~__context ~self:host in
+
+            if Db.Host.get_enabled ~__context ~self then
+            raise (Api_errors.Server_error (Api_errors.host_not_disabled, [host]));
+
+            List.iter (fun pbd -> if Db.PBD.get_currently_attached ~__context ~self:pbd then
+            raise (Api_errors.Server_error (Api_errors.sr_attached, [Db.PBD.get_SR ~__context ~self:pbd]))) pbds;
+
+            if List.length (Db.Host.get_resident_VMs ~__context ~self:host) > 1 then
+            raise (Api_errors.Server_error (Api_errors.host_in_use, ["VM",""]));*)
+
+    let local_fn = Local.PIF.reconfigure_ip ~self ~mode ~iP ~netmask ~gateway ~dNS in
+    do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context ~self)
+      (fun session_id rpc ->
+        (* Reconfiguring the IP will potentially kill the connection without causing
+           this end to die quickly. To get around this, we spawn a new thread to do the
+           work and monitor the status of the task, which will be completed on the slave.
+           We ignore errors at the moment (only on slaves) *)
+        let (_: Thread.t) = Thread.create (fun () ->
+            Client.PIF.reconfigure_ip rpc session_id self mode iP netmask gateway dNS) () in
+        let task_id = Context.get_task_id __context in
+        let start_time = Unix.gettimeofday () in
+        let progress = ref 0.0 in
+        while !progress = 0.0 do
+          if Unix.gettimeofday () -. start_time > !Xapi_globs.pif_reconfigure_ip_timeout then
+            failwith "Failed to see host on network after timeout expired";
+          Thread.delay 1.0;
+          progress := Db.Task.get_progress ~__context ~self:task_id;
+          debug "Polling task %s progress" (Ref.string_of task_id)
+        done)
+
+  let reconfigure_ipv6 ~__context ~self ~mode ~iPv6 ~gateway ~dNS =
+    info "PIF.reconfigure_ipv6: PIF = '%s'; mode = '%s'; IPv6 = '%s'; gateway = '%s'; DNS = %s"
+      (pif_uuid ~__context self)
+      (Record_util.ipv6_configuration_mode_to_string mode) iPv6 gateway dNS;
+    let host = Db.PIF.get_host ~__context ~self in
+    let local_fn = Local.PIF.reconfigure_ipv6 ~self ~mode ~iPv6 ~gateway ~dNS in
+    let task = Context.get_task_id __context in
+    let success () =
+      let status = Db.Task.get_status ~__context ~self:task in
+      if status <> `pending then
+        Some ()
+      else
+        None
+    in
+    let fn () =
+      do_op_on ~local_fn ~__context ~host (fun session_id rpc ->
+        Client.PIF.reconfigure_ipv6 rpc session_id self mode iPv6 gateway dNS) in
+    tolerate_connection_loss fn success !Xapi_globs.pif_reconfigure_ip_timeout
+
+  let set_primary_address_type ~__context ~self ~primary_address_type = 
+    info "PIF.set_primary_address_type: PIF = '%s'; primary_address_type = '%s'"
+      (pif_uuid ~__context self)
+      (Record_util.primary_address_type_to_string primary_address_type);
+    let local_fn = Local.PIF.set_primary_address_type ~self ~primary_address_type in
+    do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context ~self)
+      (fun session_id rpc -> Client.PIF.set_primary_address_type rpc session_id self primary_address_type)
+
+  let scan ~__context ~host =
+    info "PIF.scan: host = '%s'" (host_uuid ~__context host);
+    let local_fn = Local.PIF.scan ~host in
+    do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.PIF.scan rpc session_id host)
+
+  let introduce ~__context ~host ~mAC ~device =
+    info "PIF.introduce: host = '%s'; MAC address = '%s'; device = '%s'" (host_uuid ~__context host) mAC device;
+    let local_fn = Local.PIF.introduce ~host ~mAC ~device in
+    do_op_on ~local_fn ~__context ~host (fun session_id rpc -> Client.PIF.introduce rpc session_id host mAC device)
+
+  let forget ~__context ~self=
+    info "PIF.forget: PIF = '%s'" (pif_uuid ~__context self);
+    let local_fn = Local.PIF.forget ~self in
+    do_op_on ~local_fn ~__context ~host:(Db.PIF.get_host ~__context ~self) (fun session_id rpc -> Client.PIF.forget rpc session_id self)
+end
+module PIF_metrics = struct
+end
+module SM = struct end
+module SR = struct
+
+  let unmark_sr ~__context ~sr ~doc ~op =
+    let task_id = Ref.string_of (Context.get_task_id __context) in
+    debug "Unmarking SR after %s (task=%s)" doc task_id;
+    log_exn_ignore ~doc:("unmarking SR after " ^ doc)
+      (fun self ->
+        if Db.is_valid_ref __context self then begin
+          Db.SR.remove_from_current_operations ~__context ~self ~key:task_id;
+          Xapi_sr_operations.update_allowed_operations ~__context ~self;
+          Early_wakeup.broadcast (Datamodel._sr, Ref.string_of self);
+        end)
+      sr
+
+  let mark_sr ~__context ~sr ~doc ~op =
+    let task_id = Ref.string_of (Context.get_task_id __context) in
+    debug "Marking SR for %s (task=%s)" doc task_id;
+    log_exn ~doc:("marking SR for " ^ doc)
+      (fun self ->
+        Xapi_sr_operations.assert_operation_valid ~__context ~self ~op;
+        Db.SR.add_to_current_operations ~__context ~self ~key:task_id ~value:op;
+        Xapi_sr_operations.update_allowed_operations ~__context ~self) sr
+
+  let with_sr_marked ~__context ~sr ~doc ~op f =
+    retry_with_global_lock ~__context ~doc (fun () -> mark_sr ~__context ~sr ~doc ~op);
+    finally
+      (fun () -> f ())
+      (fun () -> with_global_lock (fun () -> unmark_sr ~__context ~sr ~doc ~op))
+
+  (* -------- Forwarding helper functions: ------------------------------------ *)
+
+  (* Forward SR operation to host that has a suitable plugged (or unplugged) PBD  *)
+  let forward_sr_op ?consider_unplugged_pbds ~local_fn ~__context ~self op =
+    let pbd = choose_pbd_for_sr ?consider_unplugged_pbds ~__context ~self () in
+    let host = Db.PBD.get_host ~__context ~self:pbd in
+    do_op_on ~local_fn ~__context ~host op
+
+  (* do op on a host that can view multiple SRs, if none is found, an
+     exception of Not_found will be raised *)
+  let forward_sr_multiple_op ~local_fn ~__context ~srs ?(prefer_slaves=false) op =
+    let choose_fn ~host =
+      Xapi_vm_helpers.assert_can_see_specified_SRs ~__context ~reqd_srs:srs ~host in
+    let host =
+      try Xapi_vm_helpers.choose_host ~__context ~choose_fn ~prefer_slaves ()
+      with _ -> raise Not_found in
+    do_op_on ~local_fn ~__context ~host op
+
+  let set_virtual_allocation ~__context ~self ~value =
+    Sm.assert_session_has_internal_sr_access ~__context ~sr:self;
+    Local.SR.set_virtual_allocation ~__context ~self ~value
+
+  let set_physical_size ~__context ~self ~value =
+    Sm.assert_session_has_internal_sr_access ~__context ~sr:self;
+    Local.SR.set_physical_size ~__context ~self ~value
+
+  let set_physical_utilisation ~__context ~self ~value =
+    Sm.assert_session_has_internal_sr_access ~__context ~sr:self;
+    Local.SR.set_physical_utilisation ~__context ~self ~value
+
+  let create ~__context ~host ~device_config ~physical_size ~name_label ~name_description  ~_type ~content_type ~shared ~sm_config =
+    info "SR.create: name label = '%s'" name_label;
+    let local_fn = Local.SR.create ~host ~device_config ~physical_size ~name_label ~name_description  ~_type ~content_type ~shared ~sm_config in
+    (* if shared, then ignore host parameter and do create on the master.. *)
+    if shared then
+      local_fn ~__context
+    else
+      (* otherwise forward to specified host *)
       do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.SR.make rpc session_id host device_config physical_size name_label
-            name_description _type content_type sm_config)
-
-    let destroy ~__context ~sr =
-      info "SR.destroy: SR = '%s'" (sr_uuid ~__context sr);
-      let local_fn = Local.SR.destroy ~sr in
-      with_sr_marked ~__context ~sr ~doc:"SR.destroy" ~op:`destroy
-        (fun () ->
-          forward_sr_op ~consider_unplugged_pbds:true ~local_fn ~__context ~self:sr
-            (fun session_id rpc -> Client.SR.destroy rpc session_id sr))
-
-    (* don't forward this is just a db call *)
-    let forget ~__context ~sr =
-      info "SR.forget: SR = '%s'" (sr_uuid ~__context sr);
-      with_sr_marked ~__context ~sr ~doc:"SR.forget" ~op:`forget
-        (fun () ->
-          Local.SR.forget ~__context ~sr)
-
-    let update ~__context ~sr =
-      info "SR.update: SR = '%s'" (sr_uuid ~__context sr);
-      let local_fn = Local.SR.update ~sr in
-      (* SR.update made lock free as of CA-27630 *)
-      forward_sr_op ~local_fn ~__context ~self:sr
-        (fun session_id rpc -> Client.SR.update rpc session_id sr)
-
-    let get_supported_types ~__context =
-      info "SR.get_supported_types";
-      Local.SR.get_supported_types ~__context
-
-    let scan ~__context ~sr =
-      (* since we periodically sr_scan, only log those that aren't internal ones.. otherwise logs just get spammed *)
-      let is_internal_scan = Db.Session.get_pool ~__context ~self:(Context.get_session_id __context) in
-      (if is_internal_scan then debug else info) "SR.scan: SR = '%s'" (sr_uuid ~__context sr);
-      let local_fn = Local.SR.scan ~sr in
-      with_sr_marked ~__context ~sr ~doc:"SR.scan" ~op:`scan
-        (fun () ->
-          forward_sr_op ~local_fn ~__context ~self:sr
-            (fun session_id rpc -> Client.SR.scan rpc session_id sr))
-
-    let probe ~__context ~host ~device_config ~_type ~sm_config =
-      info "SR.probe: host = '%s'" (host_uuid ~__context host);
-      let local_fn = Local.SR.probe ~host ~device_config ~_type ~sm_config in
-      do_op_on ~local_fn ~__context ~host
-        (fun session_id rpc -> Client.SR.probe ~rpc ~session_id ~host ~device_config ~_type ~sm_config)
-
-    let set_shared ~__context ~sr ~value =
-      Local.SR.set_shared ~__context ~sr ~value
-
-    let set_name_label ~__context ~sr ~value =
-      info "SR.set_name_label: SR = '%s' name-label = '%s'"
-        (sr_uuid ~__context sr) value;
-      Local.SR.set_name_label ~__context ~sr ~value
-
-    let set_name_description ~__context ~sr ~value =
-      info "SR.set_name_description: SR = '%s' name-description = '%s'"
-        (sr_uuid ~__context sr) value;
-      Local.SR.set_name_description ~__context ~sr ~value
-
-    let assert_can_host_ha_statefile ~__context ~sr =
-      info "SR.assert_can_host_ha_statefile: SR = '%s'" (sr_uuid ~__context sr);
-      Local.SR.assert_can_host_ha_statefile ~__context ~sr
-
-    let assert_supports_database_replication ~__context ~sr =
-      info "SR.assert_supports_database_replication: SR '%s'" (sr_uuid ~__context sr);
-      Local.SR.assert_supports_database_replication ~__context ~sr
-
-    let enable_database_replication ~__context ~sr =
-      info "SR.enable_database_replication: SR = '%s'" (sr_uuid ~__context sr);
-      Local.SR.enable_database_replication ~__context ~sr
-
-    let disable_database_replication ~__context ~sr =
-      info "SR.disable_database_replication: SR = '%s'" (sr_uuid ~__context sr);
-      Local.SR.disable_database_replication ~__context ~sr
-
-    let create_new_blob ~__context ~sr ~name ~mime_type ~public =
-      info "SR.create_new_blob: SR = '%s'" (sr_uuid ~__context sr);
-      Local.SR.create_new_blob ~__context ~sr ~name ~mime_type ~public
-
-  end
-  module VDI = struct
-
-    let unmark_vdi ~__context ~vdi ~doc ~op =
-      let task_id = Ref.string_of (Context.get_task_id __context) in
-      log_exn_ignore ~doc:("unmarking VDI after " ^ doc)
-        (fun self ->
-          if Db.is_valid_ref __context self then begin
-            Db.VDI.remove_from_current_operations ~__context ~self ~key:task_id;
-            Xapi_vdi.update_allowed_operations ~__context ~self;
-            Early_wakeup.broadcast (Datamodel._vdi, Ref.string_of self);
-          end)
-        vdi
-
-    let mark_vdi ~__context ~vdi ~doc ~op =
-      let task_id = Ref.string_of (Context.get_task_id __context) in
-      log_exn ~doc:("marking VDI for " ^ doc)
-        (fun self ->
-          Xapi_vdi.assert_operation_valid ~__context ~self ~op;
-          Db.VDI.add_to_current_operations ~__context ~self ~key:task_id ~value:op;
-          Xapi_vdi.update_allowed_operations ~__context ~self) vdi
-
-    (** Use this function to mark the SR and/or the individual VDI *)
-    let with_sr_andor_vdi ~__context ?sr ?vdi ~doc f =
-      retry_with_global_lock ~__context ~doc
-        (fun () ->
-          maybe (fun (sr, op) -> SR.mark_sr ~__context ~sr ~doc ~op) sr;
-          (* If we fail to acquire the VDI lock, unlock the SR *)
-          try
-            maybe (fun (vdi, op) -> mark_vdi ~__context ~vdi ~doc ~op) vdi
-          with e ->
-            maybe (fun (sr, op) -> SR.unmark_sr ~__context ~sr ~doc ~op) sr;
-            raise e
-        );
-      finally
-        (fun () -> f ())
-        (fun () ->
-          with_global_lock
-            (fun () ->
-              maybe (fun (sr, op) -> SR.unmark_sr ~__context ~sr ~doc ~op) sr;
-              maybe (fun (vdi, op) -> unmark_vdi ~__context ~vdi ~doc ~op) vdi))
-
-
-    (* -------- Forwarding helper functions: ------------------------------------ *)
-
-    (* Read SR from VDI and use same forwarding mechanism as SR *)
-    let forward_vdi_op ~local_fn ~__context ~self op =
-      let sr = Db.VDI.get_SR ~__context ~self in
-      SR.forward_sr_op ~local_fn ~__context ~self:sr op
-
-    (* -------------------------------------------------------------------------- *)
-
-    let set_sharable ~__context ~self ~value =
-      if not (Mtc.is_vdi_accessed_by_protected_VM ~__context ~vdi:self) then begin
-        let sr = Db.VDI.get_SR ~__context ~self in
-        Sm.assert_session_has_internal_sr_access ~__context ~sr;
-      end;
-      Local.VDI.set_sharable ~__context ~self ~value
-
-    let set_managed ~__context ~self ~value =
-      let sr = Db.VDI.get_SR ~__context ~self in
-      Sm.assert_session_has_internal_sr_access ~__context ~sr;
-      Local.VDI.set_managed ~__context ~self ~value
-
-    let set_read_only ~__context ~self ~value =
-      let sr = Db.VDI.get_SR ~__context ~self in
-      Sm.assert_session_has_internal_sr_access ~__context ~sr;
-      Local.VDI.set_read_only ~__context ~self ~value
-
-    let set_missing ~__context ~self ~value =
-      let sr = Db.VDI.get_SR ~__context ~self in
-      Sm.assert_session_has_internal_sr_access ~__context ~sr;
-      Local.VDI.set_missing ~__context ~self ~value
-
-    let set_virtual_size ~__context ~self ~value =
-      let sr = Db.VDI.get_SR ~__context ~self in
-      Sm.assert_session_has_internal_sr_access ~__context ~sr;
-      Local.VDI.set_virtual_size ~__context ~self ~value
-
-    let set_physical_utilisation ~__context ~self ~value =
-      let sr = Db.VDI.get_SR ~__context ~self in
-      Sm.assert_session_has_internal_sr_access ~__context ~sr;
-      Local.VDI.set_physical_utilisation ~__context ~self ~value
-
-    let set_is_a_snapshot ~__context ~self ~value =
-      let sr = Db.VDI.get_SR ~__context ~self in
-      Sm.assert_session_has_internal_sr_access ~__context ~sr;
-      Local.VDI.set_is_a_snapshot ~__context ~self ~value
-
-    let set_snapshot_of ~__context ~self ~value =
-      let sr = Db.VDI.get_SR ~__context ~self in
-      Sm.assert_session_has_internal_sr_access ~__context ~sr;
-      Local.VDI.set_snapshot_of ~__context ~self ~value
-
-    let set_snapshot_time ~__context ~self ~value =
-      let sr = Db.VDI.get_SR ~__context ~self in
-      Sm.assert_session_has_internal_sr_access ~__context ~sr;
-      Local.VDI.set_snapshot_time ~__context ~self ~value
-
-    let set_metadata_of_pool ~__context ~self ~value =
-      let sr = Db.VDI.get_SR ~__context ~self in
-      Sm.assert_session_has_internal_sr_access ~__context ~sr;
-      Local.VDI.set_metadata_of_pool ~__context ~self ~value
-
-    let set_name_label ~__context ~self ~value =
-      info "VDI.set_name_label: VDI = '%s' name-label = '%s'"
-        (vdi_uuid ~__context self) value;
-      Local.VDI.set_name_label ~__context ~self ~value
-
-    let set_name_description ~__context ~self ~value =
-      info "VDI.set_name_description: VDI = '%s' name-description = '%s'"
-        (vdi_uuid ~__context self) value;
-      Local.VDI.set_name_description ~__context ~self ~value
-
-    let ensure_vdi_not_on_running_vm ~__context ~self =
-      let vbds = Db.VDI.get_VBDs ~__context ~self in
-      List.iter (fun vbd ->
-        let vm = Db.VBD.get_VM ~__context ~self:vbd in
-        let state = Db.VM.get_power_state ~__context ~self:vm in
-        match state with
-        | `Halted -> ()
-        | _ -> raise (Api_errors.Server_error(Api_errors.vm_bad_power_state,
-                     [Ref.string_of vm; "halted"; Record_util.power_to_string state]))) vbds
-
-    let set_on_boot ~__context ~self ~value =
-      ensure_vdi_not_on_running_vm ~__context ~self;
-      Local.VDI.set_on_boot ~__context ~self ~value
-
-    let set_allow_caching ~__context ~self ~value =
-      ensure_vdi_not_on_running_vm ~__context ~self;
-      Local.VDI.set_allow_caching ~__context ~self ~value
-
-    let open_database ~__context ~self =
-      Local.VDI.open_database ~__context ~self
-
-    let read_database_pool_uuid ~__context ~self =
-      Local.VDI.read_database_pool_uuid ~__context ~self
-
-    (* know sr so just use SR forwarding policy direct here *)
-    let create ~__context ~name_label ~name_description ~sR ~virtual_size ~_type ~sharable ~read_only ~other_config ~xenstore_data ~sm_config ~tags =
-      info "VDI.create: SR = '%s'; name label = '%s'" (sr_uuid ~__context sR) name_label;
-      let local_fn = Local.VDI.create ~name_label ~name_description ~sR ~virtual_size ~_type ~sharable ~read_only ~other_config ~xenstore_data ~sm_config ~tags in
-      with_sr_andor_vdi ~__context ~sr:(sR, `vdi_create) ~doc:"VDI.create"
-        (fun () ->
-          SR.forward_sr_op ~local_fn ~__context ~self:sR
-            (fun session_id rpc -> Client.VDI.create ~rpc ~session_id ~name_label ~name_description ~sR ~virtual_size ~_type ~sharable ~read_only ~other_config ~xenstore_data ~sm_config ~tags))
-
-    (* Hidden call used in pool join only *)
-    let pool_introduce ~__context ~uuid ~name_label ~name_description ~sR ~_type ~sharable ~read_only ~other_config ~location =
-      Local.VDI.pool_introduce ~__context ~uuid ~name_label ~name_description ~sR ~_type ~sharable ~read_only ~other_config ~location
-
-    (* Called from the SM backend *)
-    let db_introduce ~__context ~uuid ~name_label ~name_description ~sR ~_type ~sharable ~read_only ~other_config ~location =
-      Sm.assert_session_has_internal_sr_access ~__context ~sr:sR;
-      Local.VDI.db_introduce ~__context ~uuid ~name_label ~name_description ~sR ~_type ~sharable ~read_only ~other_config ~location
-
-    (* Called from the SM backend *)
-    let db_forget ~__context ~vdi =
-      let sr = Db.VDI.get_SR ~__context ~self:vdi in
-      Sm.assert_session_has_internal_sr_access ~__context ~sr;
-      Local.VDI.db_forget ~__context ~vdi
-
-    let introduce ~__context ~uuid ~name_label ~name_description ~sR ~_type ~sharable ~read_only ~other_config ~location ~xenstore_data ~sm_config  ~managed ~virtual_size ~physical_utilisation ~metadata_of_pool ~is_a_snapshot ~snapshot_time ~snapshot_of=
-      info "VDI.introduce: SR = '%s'; name label = '%s'" (sr_uuid ~__context sR) name_label;
-      let local_fn = Local.VDI.introduce ~uuid ~name_label ~name_description ~sR ~_type ~sharable ~read_only ~other_config ~location ~xenstore_data ~sm_config ~managed ~virtual_size ~physical_utilisation ~metadata_of_pool ~is_a_snapshot ~snapshot_time ~snapshot_of in
-      with_sr_andor_vdi ~__context ~sr:(sR, `vdi_introduce) ~doc:"VDI.introduce"
-        (fun () ->
-          SR.forward_sr_op ~local_fn ~__context ~self:sR
-            (fun session_id rpc ->
-              Client.VDI.introduce ~rpc ~session_id  ~uuid ~name_label ~name_description ~sR ~_type ~sharable ~read_only ~other_config ~location ~xenstore_data ~sm_config  ~managed ~virtual_size ~physical_utilisation ~metadata_of_pool ~is_a_snapshot ~snapshot_time ~snapshot_of))
-
-    let update ~__context ~vdi =
-      let local_fn = Local.VDI.update ~vdi in
-      let sr = Db.VDI.get_SR ~__context ~self:vdi in
-      with_sr_andor_vdi ~__context ~vdi:(vdi, `update) ~doc:"VDI.update"
-        (fun () ->
-          SR.forward_sr_op ~local_fn ~__context ~self:sr
-            (fun session_id rpc ->
-              Client.VDI.update ~rpc ~session_id ~vdi))
-
-    let forget ~__context ~vdi =
-      with_sr_andor_vdi ~__context ~vdi:(vdi, `forget) ~doc:"VDI.forget"
-        (fun () ->
-          Local.VDI.forget ~__context ~vdi)
-
-    let destroy ~__context ~self =
-      info "VDI.destroy: VDI = '%s'" (vdi_uuid ~__context self);
-      let local_fn = Local.VDI.destroy ~self in
-      let sR = Db.VDI.get_SR ~__context ~self in
-      with_sr_andor_vdi ~__context ~sr:(sR, `vdi_destroy) ~vdi:(self, `destroy) ~doc:"VDI.destroy"
-        (fun () ->
-          forward_vdi_op ~local_fn ~__context ~self
-            (fun session_id rpc -> Client.VDI.destroy rpc session_id self))
-
-    (* !! FIXME - Depends on what we're doing here... *)
-    let snapshot ~__context ~vdi ~driver_params =
-      info "VDI.snapshot: VDI = '%s'" (vdi_uuid ~__context vdi);
-      let local_fn = Local.VDI.snapshot ~vdi ~driver_params in
-      let sR = Db.VDI.get_SR ~__context ~self:vdi in
-      with_sr_andor_vdi ~__context ~sr:(sR, `vdi_snapshot) ~vdi:(vdi, `snapshot) ~doc:"VDI.snapshot"
-        (fun () ->
-          forward_vdi_op ~local_fn ~__context ~self:vdi
-            (fun session_id rpc -> Client.VDI.snapshot rpc session_id vdi driver_params))
-
-    let clone ~__context ~vdi ~driver_params =
-      info "VDI.clone: VDI = '%s'" (vdi_uuid ~__context vdi);
-      let local_fn = Local.VDI.clone ~vdi ~driver_params in
-      let sR = Db.VDI.get_SR ~__context ~self:vdi in
-      with_sr_andor_vdi ~__context ~sr:(sR, `vdi_clone) ~vdi:(vdi, `clone) ~doc:"VDI.clone"
-        (fun () ->
-          forward_vdi_op ~local_fn ~__context ~self:vdi
-            (fun session_id rpc -> Client.VDI.clone rpc session_id vdi driver_params))
-
-    let copy ~__context ~vdi ~sr =
-      info "VDI.copy: VDI = '%s'; SR = '%s'" (vdi_uuid ~__context vdi) (sr_uuid ~__context sr);
-      Xapi_vdi.assert_operation_valid ~__context ~self:vdi ~op:`copy;
-      let local_fn = Local.VDI.copy ~vdi ~sr in
-      let src_sr = Db.VDI.get_SR ~__context ~self:vdi in
-      (* No need to lock the VDI because the VBD.plug will do that for us *)
-      (* Try forward the request to a host which can have access to both source
-         and destination SR. *)
-      let op session_id rpc = Client.VDI.copy rpc session_id vdi sr in
-      try
-        SR.forward_sr_multiple_op ~local_fn ~__context ~srs:[src_sr; sr] ~prefer_slaves:true op
-      with Not_found ->
-        SR.forward_sr_multiple_op ~local_fn ~__context ~srs:[src_sr] ~prefer_slaves:true op
-
-    let pool_migrate ~__context ~vdi ~sr ~options =
-      let vbds = Db.VBD.get_records_where ~__context
-          ~expr:(Db_filter_types.Eq(Db_filter_types.Field "VDI",
-              Db_filter_types.Literal (Ref.string_of vdi))) in
-      let vbds = List.filter (fun (_,vbd) -> vbd.API.vBD_currently_attached) vbds in
-      if List.length vbds <> 1
-      then raise (Api_errors.Server_error(Api_errors.vdi_needs_vm_for_migrate,[Ref.string_of vdi]));
-
-      let vm = (snd (List.hd vbds)).API.vBD_VM in
-      let vmr = Db.VM.get_record ~__context ~self:vm in
-      if vmr.API.vM_power_state <> `Running
-      then raise (Api_errors.Server_error(Api_errors.vdi_needs_vm_for_migrate,[Ref.string_of vdi]));
-      (* hackity hack *)
-      let options = ("__internal__vm",Ref.string_of vm) :: (List.remove_assoc "__internal__vm" options) in
-      let local_fn = Local.VDI.pool_migrate ~vdi ~sr ~options in
-
-      info "VDI.pool_migrate: VDI = '%s'; SR = '%s'; VM = '%s'"
-        (vdi_uuid ~__context vdi) (sr_uuid ~__context sr) (vm_uuid ~__context vm);
-
-      VM.with_vm_operation ~__context ~self:vm ~doc:"VDI.pool_migrate" ~op:`migrate_send
-        (fun () ->
-          let host = Db.VM.get_resident_on ~__context ~self:vm in
-          do_op_on ~local_fn ~__context ~host
-            (fun session_id rpc -> Client.VDI.pool_migrate ~rpc ~session_id ~vdi ~sr ~options))
-
-    let resize ~__context ~vdi ~size =
-      info "VDI.resize: VDI = '%s'; size = %Ld" (vdi_uuid ~__context vdi) size;
-      let local_fn = Local.VDI.resize ~vdi ~size in
-      let sR = Db.VDI.get_SR ~__context ~self:vdi in
-      with_sr_andor_vdi ~__context ~sr:(sR, `vdi_resize) ~vdi:(vdi, `resize) ~doc:"VDI.resize"
-        (fun () ->
-          forward_vdi_op ~local_fn ~__context ~self:vdi
-            (fun session_id rpc -> Client.VDI.resize rpc session_id vdi size))
-
-    let resize_online ~__context ~vdi ~size =
-      info "VDI.resize_online: VDI = '%s'; size = %Ld" (vdi_uuid ~__context vdi) size;
-      let local_fn = Local.VDI.resize_online ~vdi ~size in
-      let sR = Db.VDI.get_SR ~__context ~self:vdi in
-      with_sr_andor_vdi ~__context ~sr:(sR, `vdi_resize) ~vdi:(vdi, `resize_online) ~doc:"VDI.resize_online"
-        (fun () ->
-          forward_vdi_op ~local_fn ~__context ~self:vdi
-            (fun session_id rpc -> Client.VDI.resize_online rpc session_id vdi size))
-
-    let generate_config ~__context ~host ~vdi =
-      info "VDI.generate_config: VDI = '%s'; host = '%s'" (vdi_uuid ~__context vdi) (host_uuid ~__context host);
-      let local_fn = Local.VDI.generate_config ~host ~vdi in
-      with_sr_andor_vdi ~__context ~vdi:(vdi, `generate_config) ~doc:"VDI.generate_config"
-        (fun () ->
-          do_op_on ~local_fn ~__context ~host
-            (fun session_id rpc -> Client.VDI.generate_config rpc session_id host vdi)
-        )
-
-    let force_unlock ~__context ~vdi =
-      info "VDI.force_unlock: VDI = '%s'" (vdi_uuid ~__context vdi);
-      let local_fn = Local.VDI.force_unlock ~vdi in
-      with_sr_andor_vdi ~__context ~vdi:(vdi, `force_unlock) ~doc:"VDI.force_unlock"
-        (fun () ->
-          forward_vdi_op ~local_fn ~__context ~self:vdi
-            (fun session_id rpc -> Client.VDI.force_unlock rpc session_id vdi))
-
-    let checksum ~__context ~self =
-      VM.forward_to_access_srs_and ~local_fn:(Local.VDI.checksum ~self) ~__context
-        ~extra_sr:(Db.VDI.get_SR ~__context ~self)
-        (fun session_id rpc -> Client.VDI.checksum rpc session_id self)
-
-  end
-  module VBD = struct
-
-    let update_vbd_and_vdi_operations ~__context ~vbd =
-      with_global_lock
-        (fun () ->
-          try
-            Xapi_vbd_helpers.update_allowed_operations ~__context ~self:vbd;
-            if not (Db.VBD.get_empty ~__context ~self:vbd) then
-              let vdi = Db.VBD.get_VDI ~__context ~self:vbd in
-              Xapi_vdi.update_allowed_operations ~__context ~self:vdi
-          with _ -> ())
-
-    let unmark_vbd ~__context ~vbd ~doc ~op =
-      let task_id = Ref.string_of (Context.get_task_id __context) in
-      log_exn ~doc:("unmarking VBD after " ^ doc)
-        (fun self ->
-          if Db.is_valid_ref __context self then begin
-            Db.VBD.remove_from_current_operations ~__context ~self ~key:task_id;
-            Xapi_vbd_helpers.update_allowed_operations ~__context ~self;
-            Early_wakeup.broadcast (Datamodel._vbd, Ref.string_of vbd)
-          end)
-        vbd
-
-    let mark_vbd ~__context ~vbd ~doc ~op =
-      let task_id = Ref.string_of (Context.get_task_id __context) in
-      log_exn ~doc:("marking VBD for " ^ doc)
-        (fun self ->
-          Xapi_vbd_helpers.assert_operation_valid ~__context ~self ~op;
-          Db.VBD.add_to_current_operations ~__context ~self ~key:task_id ~value:op;
-          Xapi_vbd_helpers.update_allowed_operations ~__context ~self) vbd
-
-    let with_vbd_marked ~__context ~vbd ~doc ~op f =
-      retry_with_global_lock ~__context ~doc (fun () -> mark_vbd ~__context ~vbd ~doc ~op);
-      finally
-        (fun () -> f ())
-        (fun () -> with_global_lock (fun () -> unmark_vbd ~__context ~vbd ~doc ~op))
-
-
-
-    (* -------- Forwarding helper functions: ------------------------------------ *)
-
-    (* Forward to host that has resident VM that this VBD references *)
-    let forward_vbd_op ~local_fn ~__context ~self op =
-      let vm = Db.VBD.get_VM ~__context ~self in
-      let host_resident_on = Db.VM.get_resident_on ~__context ~self:vm in
-      if host_resident_on = Ref.null
-      then local_fn ~__context
-      else do_op_on ~local_fn ~__context ~host:host_resident_on op
-
-    (* -------------------------------------------------------------------------- *)
-
-
-    (* these are db functions *)
-    let create ~__context ~vM ~vDI ~userdevice ~bootable ~mode ~_type ~unpluggable ~empty ~other_config ~qos_algorithm_type ~qos_algorithm_params =
-      info "VBD.create: VM = '%s'; VDI = '%s'" (vm_uuid ~__context vM) (vdi_uuid ~__context vDI);
-      (* NB must always execute this on the master because of the autodetect_mutex *)
-      Local.VBD.create ~__context ~vM ~vDI ~userdevice ~bootable ~mode ~_type ~unpluggable ~empty ~other_config ~qos_algorithm_type ~qos_algorithm_params
-
-    let set_mode ~__context ~self ~value =
-      info "VBD.set_mode: VBD = '%s'; value = %s" (vbd_uuid ~__context self) (Record_util.vbd_mode_to_string value);
-      Local.VBD.set_mode ~__context ~self ~value
-
-    let destroy ~__context ~self =
-      info "VBD.destroy: VBD = '%s'" (vbd_uuid ~__context self);
-      Local.VBD.destroy ~__context ~self
-
-    let insert ~__context ~vbd ~vdi =
-      info "VBD.insert: VBD = '%s'; VDI = '%s'" (vbd_uuid ~__context vbd) (vdi_uuid ~__context vdi);
-      let local_fn = Local.VBD.insert ~vbd ~vdi in
-      with_vbd_marked ~__context ~vbd ~doc:"VBD.insert" ~op:`insert
-        (fun () ->
-          let vm = Db.VBD.get_VM ~__context ~self:vbd in
-          if Db.VM.get_power_state ~__context ~self:vm = `Halted then begin
-            Xapi_vbd.assert_ok_to_insert ~__context ~vbd ~vdi;
-            Db.VBD.set_VDI ~__context ~self:vbd ~value:vdi;
-            Db.VBD.set_empty ~__context ~self:vbd ~value:false
-          end
-          else forward_vbd_op ~local_fn ~__context ~self:vbd
-              (fun session_id rpc -> Client.VBD.insert rpc session_id vbd vdi));
-      update_vbd_and_vdi_operations ~__context ~vbd
-
-    let eject ~__context ~vbd =
-      info "VBD.eject: VBD = '%s'" (vbd_uuid ~__context vbd);
-      let local_fn = Local.VBD.eject ~vbd in
-      with_vbd_marked ~__context ~vbd ~doc:"VBD.eject" ~op:`eject
-        (fun () ->
-          let vm = Db.VBD.get_VM ~__context ~self:vbd in
-          if Db.VM.get_power_state ~__context ~self:vm = `Halted then begin
-            Xapi_vbd.assert_ok_to_eject ~__context ~vbd;
-            Db.VBD.set_empty ~__context ~self:vbd ~value:true;
-            Db.VBD.set_VDI ~__context ~self:vbd ~value:Ref.null;
-          end
-          else forward_vbd_op ~local_fn ~__context ~self:vbd
-              (fun session_id rpc -> Client.VBD.eject rpc session_id vbd));
-      update_vbd_and_vdi_operations ~__context ~vbd
-
-    let plug ~__context ~self =
-      info "VBD.plug: VBD = '%s'" (vbd_uuid ~__context self);
-      let local_fn = Local.VBD.plug ~self in
-      with_vbd_marked ~__context ~vbd:self ~doc:"VBD.plug" ~op:`plug
-        (fun () ->
-          forward_vbd_op ~local_fn ~__context ~self
-            (fun session_id rpc -> Client.VBD.plug rpc session_id self));
-      update_vbd_and_vdi_operations ~__context ~vbd:self
-
-    let unplug ~__context ~self =
-      info "VBD.unplug: VBD = '%s'" (vbd_uuid ~__context self);
-      let local_fn = Local.VBD.unplug ~self in
-      with_vbd_marked ~__context ~vbd:self ~doc:"VBD.unplug" ~op:`unplug
-        (fun () ->
-          forward_vbd_op ~local_fn ~__context ~self
-            (fun session_id rpc -> Client.VBD.unplug rpc session_id self));
-      update_vbd_and_vdi_operations ~__context ~vbd:self
-
-    let unplug_force ~__context ~self =
-      info "VBD.unplug_force: VBD = '%s'" (vbd_uuid ~__context self);
-      let local_fn = Local.VBD.unplug_force ~self in
-      with_vbd_marked ~__context ~vbd:self ~doc:"VBD.unplug_force" ~op:`unplug_force
-        (fun () ->
-          forward_vbd_op ~local_fn ~__context ~self (fun session_id rpc -> Client.VBD.unplug_force rpc session_id self));
-      update_vbd_and_vdi_operations ~__context ~vbd:self
-
-    let unplug_force_no_safety_check ~__context ~self =
-      warn "VBD.unplug_force_no_safety_check: VBD = '%s'" (vbd_uuid ~__context self);
-      let local_fn = Local.VBD.unplug_force_no_safety_check ~self in
-      with_vbd_marked ~__context ~vbd:self ~doc:"VBD.unplug_force_no_safety_check" ~op:`unplug_force
-        (fun () ->
-          forward_vbd_op ~local_fn ~__context ~self (fun session_id rpc -> Client.VBD.unplug_force_no_safety_check rpc session_id self));
-      update_vbd_and_vdi_operations ~__context ~vbd:self
-
-    let pause ~__context ~self =
-      info "VBD.pause: VBD = '%s'" (vbd_uuid ~__context self);
-      let local_fn = Local.VBD.pause ~self in
-      let result = with_vbd_marked ~__context ~vbd:self ~doc:"VBD.pause" ~op:`pause
+        (fun session_id rpc -> Client.SR.create ~rpc ~session_id ~host ~device_config ~physical_size ~name_label ~name_description ~_type ~content_type ~shared ~sm_config)
+
+  (* -------------------------------------------------------------------------- *)
+
+  (* don't forward. this is just a db call *)
+  let introduce ~__context ~uuid ~name_label ~name_description ~_type ~content_type =
+    info "SR.introduce: uuid = '%s'; name label = '%s'" uuid name_label;
+    Local.SR.introduce ~__context ~uuid ~name_label ~name_description ~_type ~content_type
+
+  let make ~__context ~host ~device_config ~physical_size ~name_label ~name_description ~_type ~content_type ~sm_config =
+    info "SR.make: host = '%s'; name label = '%s'" (host_uuid ~__context host) name_label;
+    let local_fn = Local.SR.make ~host ~device_config ~physical_size ~name_label ~name_description ~_type ~content_type ~sm_config in
+    do_op_on ~local_fn ~__context ~host
+      (fun session_id rpc -> Client.SR.make rpc session_id host device_config physical_size name_label
+          name_description _type content_type sm_config)
+
+  let destroy ~__context ~sr =
+    info "SR.destroy: SR = '%s'" (sr_uuid ~__context sr);
+    let local_fn = Local.SR.destroy ~sr in
+    with_sr_marked ~__context ~sr ~doc:"SR.destroy" ~op:`destroy
+      (fun () ->
+        forward_sr_op ~consider_unplugged_pbds:true ~local_fn ~__context ~self:sr
+          (fun session_id rpc -> Client.SR.destroy rpc session_id sr))
+
+  (* don't forward this is just a db call *)
+  let forget ~__context ~sr =
+    info "SR.forget: SR = '%s'" (sr_uuid ~__context sr);
+    with_sr_marked ~__context ~sr ~doc:"SR.forget" ~op:`forget
+      (fun () ->
+        Local.SR.forget ~__context ~sr)
+
+  let update ~__context ~sr =
+    info "SR.update: SR = '%s'" (sr_uuid ~__context sr);
+    let local_fn = Local.SR.update ~sr in
+    (* SR.update made lock free as of CA-27630 *)
+    forward_sr_op ~local_fn ~__context ~self:sr
+      (fun session_id rpc -> Client.SR.update rpc session_id sr)
+
+  let get_supported_types ~__context =
+    info "SR.get_supported_types";
+    Local.SR.get_supported_types ~__context
+
+  let scan ~__context ~sr =
+    (* since we periodically sr_scan, only log those that aren't internal ones.. otherwise logs just get spammed *)
+    let is_internal_scan = Db.Session.get_pool ~__context ~self:(Context.get_session_id __context) in
+    (if is_internal_scan then debug else info) "SR.scan: SR = '%s'" (sr_uuid ~__context sr);
+    let local_fn = Local.SR.scan ~sr in
+    with_sr_marked ~__context ~sr ~doc:"SR.scan" ~op:`scan
+      (fun () ->
+        forward_sr_op ~local_fn ~__context ~self:sr
+          (fun session_id rpc -> Client.SR.scan rpc session_id sr))
+
+  let probe ~__context ~host ~device_config ~_type ~sm_config =
+    info "SR.probe: host = '%s'" (host_uuid ~__context host);
+    let local_fn = Local.SR.probe ~host ~device_config ~_type ~sm_config in
+    do_op_on ~local_fn ~__context ~host
+      (fun session_id rpc -> Client.SR.probe ~rpc ~session_id ~host ~device_config ~_type ~sm_config)
+
+  let set_shared ~__context ~sr ~value =
+    Local.SR.set_shared ~__context ~sr ~value
+
+  let set_name_label ~__context ~sr ~value =
+    info "SR.set_name_label: SR = '%s' name-label = '%s'"
+      (sr_uuid ~__context sr) value;
+    Local.SR.set_name_label ~__context ~sr ~value
+
+  let set_name_description ~__context ~sr ~value =
+    info "SR.set_name_description: SR = '%s' name-description = '%s'"
+      (sr_uuid ~__context sr) value;
+    Local.SR.set_name_description ~__context ~sr ~value
+
+  let assert_can_host_ha_statefile ~__context ~sr =
+    info "SR.assert_can_host_ha_statefile: SR = '%s'" (sr_uuid ~__context sr);
+    Local.SR.assert_can_host_ha_statefile ~__context ~sr
+
+  let assert_supports_database_replication ~__context ~sr =
+    info "SR.assert_supports_database_replication: SR '%s'" (sr_uuid ~__context sr);
+    Local.SR.assert_supports_database_replication ~__context ~sr
+
+  let enable_database_replication ~__context ~sr =
+    info "SR.enable_database_replication: SR = '%s'" (sr_uuid ~__context sr);
+    Local.SR.enable_database_replication ~__context ~sr
+
+  let disable_database_replication ~__context ~sr =
+    info "SR.disable_database_replication: SR = '%s'" (sr_uuid ~__context sr);
+    Local.SR.disable_database_replication ~__context ~sr
+
+  let create_new_blob ~__context ~sr ~name ~mime_type ~public =
+    info "SR.create_new_blob: SR = '%s'" (sr_uuid ~__context sr);
+    Local.SR.create_new_blob ~__context ~sr ~name ~mime_type ~public
+
+end
+module VDI = struct
+
+  let unmark_vdi ~__context ~vdi ~doc ~op =
+    let task_id = Ref.string_of (Context.get_task_id __context) in
+    log_exn_ignore ~doc:("unmarking VDI after " ^ doc)
+      (fun self ->
+        if Db.is_valid_ref __context self then begin
+          Db.VDI.remove_from_current_operations ~__context ~self ~key:task_id;
+          Xapi_vdi.update_allowed_operations ~__context ~self;
+          Early_wakeup.broadcast (Datamodel._vdi, Ref.string_of self);
+        end)
+      vdi
+
+  let mark_vdi ~__context ~vdi ~doc ~op =
+    let task_id = Ref.string_of (Context.get_task_id __context) in
+    log_exn ~doc:("marking VDI for " ^ doc)
+      (fun self ->
+        Xapi_vdi.assert_operation_valid ~__context ~self ~op;
+        Db.VDI.add_to_current_operations ~__context ~self ~key:task_id ~value:op;
+        Xapi_vdi.update_allowed_operations ~__context ~self) vdi
+
+  (** Use this function to mark the SR and/or the individual VDI *)
+  let with_sr_andor_vdi ~__context ?sr ?vdi ~doc f =
+    retry_with_global_lock ~__context ~doc
+      (fun () ->
+        maybe (fun (sr, op) -> SR.mark_sr ~__context ~sr ~doc ~op) sr;
+        (* If we fail to acquire the VDI lock, unlock the SR *)
+        try
+          maybe (fun (vdi, op) -> mark_vdi ~__context ~vdi ~doc ~op) vdi
+        with e ->
+          maybe (fun (sr, op) -> SR.unmark_sr ~__context ~sr ~doc ~op) sr;
+          raise e
+      );
+    finally
+      (fun () -> f ())
+      (fun () ->
+        with_global_lock
           (fun () ->
-            forward_vbd_op ~local_fn ~__context ~self (fun session_id rpc -> Client.VBD.pause rpc session_id self)
-          ) in
-      update_vbd_and_vdi_operations ~__context ~vbd:self;
-      result
+            maybe (fun (sr, op) -> SR.unmark_sr ~__context ~sr ~doc ~op) sr;
+            maybe (fun (vdi, op) -> unmark_vdi ~__context ~vdi ~doc ~op) vdi))
 
-    let unpause ~__context ~self ~token =
-      info "VBD.unpause: VBD = '%s'; token = '%s'" (vbd_uuid ~__context self) token;
-      let local_fn = Local.VBD.unpause ~self ~token in
-      with_vbd_marked ~__context ~vbd:self ~doc:"VBD.unpause" ~op:`unpause
-        (fun () ->
-          forward_vbd_op ~local_fn ~__context ~self (fun session_id rpc -> Client.VBD.unpause rpc session_id self token);
-        );
-      update_vbd_and_vdi_operations ~__context ~vbd:self
 
-    let assert_attachable ~__context ~self =
-      info "VBD.assert_attachable: VBD = '%s'" (vbd_uuid ~__context self);
-      Local.VBD.assert_attachable ~__context ~self
-  end
+  (* -------- Forwarding helper functions: ------------------------------------ *)
 
-  module VBD_metrics = struct
-  end
+  (* Read SR from VDI and use same forwarding mechanism as SR *)
+  let forward_vdi_op ~local_fn ~__context ~self op =
+    let sr = Db.VDI.get_SR ~__context ~self in
+    SR.forward_sr_op ~local_fn ~__context ~self:sr op
 
-  module PBD = struct
+  (* -------------------------------------------------------------------------- *)
 
-    (* Create and destroy are just db operations, no need to forward; *)
-    (* however, they can affect whether SR.destroy is allowed, so update SR.allowed_operations. *)
-    let create ~__context ~host ~sR ~device_config ~other_config =
-      info "PBD.create: SR = '%s'; host '%s'" (sr_uuid ~__context sR) (host_uuid ~__context host);
-      SR.with_sr_marked ~__context ~sr:sR ~doc:"PBD.create" ~op:`pbd_create
-        (fun () -> Local.PBD.create ~__context ~host ~sR ~device_config ~other_config)
-
-    let destroy ~__context ~self =
-      info "PBD.destroy: PBD '%s'" (pbd_uuid ~__context self);
-      let sr = Db.PBD.get_SR ~__context ~self in
-      SR.with_sr_marked ~__context ~sr ~doc:"PBD.destroy" ~op:`pbd_destroy
-        (fun () -> Local.PBD.destroy ~__context ~self)
-
-    (* -------- Forwarding helper functions: ------------------------------------ *)
-
-    let forward_pbd_op ~local_fn ~__context ~self op =
-      do_op_on ~local_fn ~__context ~host:(Db.PBD.get_host ~__context ~self) op
-
-    (* -------------------------------------------------------------------------- *)
-
-    let sanitize (k, v) =
-      if String.endswith "transformed" k then
-        k ^ "=undisclosed"
-      else
-        k ^ "=" ^ v
-
-    let set_device_config ~__context ~self ~value =
-      info "PBD.set_device_config: PBD = '%s'; device_config = [ %s ]"
-        (pbd_uuid ~__context self) (String.concat "; " (List.map sanitize value));
-      let sr = Db.PBD.get_SR ~__context ~self in
+  let set_sharable ~__context ~self ~value =
+    if not (Mtc.is_vdi_accessed_by_protected_VM ~__context ~vdi:self) then begin
+      let sr = Db.VDI.get_SR ~__context ~self in
       Sm.assert_session_has_internal_sr_access ~__context ~sr;
+    end;
+    Local.VDI.set_sharable ~__context ~self ~value
 
-      let local_fn = Local.PBD.set_device_config ~self ~value in
-      forward_pbd_op ~local_fn ~__context ~self
-        (fun session_id rpc -> Client.PBD.set_device_config rpc session_id self value)
+  let set_managed ~__context ~self ~value =
+    let sr = Db.VDI.get_SR ~__context ~self in
+    Sm.assert_session_has_internal_sr_access ~__context ~sr;
+    Local.VDI.set_managed ~__context ~self ~value
 
-    (* Mark the SR and check, if we are the 'SRmaster' that no VDI
-       current_operations are present (eg snapshot, clone) since these are all
-       done on the SR master. *)
-    let with_unplug_locks ~__context ~pbd ~sr f =
-      let doc = "PBD.unplug" and op = `unplug in
-      retry_with_global_lock ~__context ~doc
+  let set_read_only ~__context ~self ~value =
+    let sr = Db.VDI.get_SR ~__context ~self in
+    Sm.assert_session_has_internal_sr_access ~__context ~sr;
+    Local.VDI.set_read_only ~__context ~self ~value
+
+  let set_missing ~__context ~self ~value =
+    let sr = Db.VDI.get_SR ~__context ~self in
+    Sm.assert_session_has_internal_sr_access ~__context ~sr;
+    Local.VDI.set_missing ~__context ~self ~value
+
+  let set_virtual_size ~__context ~self ~value =
+    let sr = Db.VDI.get_SR ~__context ~self in
+    Sm.assert_session_has_internal_sr_access ~__context ~sr;
+    Local.VDI.set_virtual_size ~__context ~self ~value
+
+  let set_physical_utilisation ~__context ~self ~value =
+    let sr = Db.VDI.get_SR ~__context ~self in
+    Sm.assert_session_has_internal_sr_access ~__context ~sr;
+    Local.VDI.set_physical_utilisation ~__context ~self ~value
+
+  let set_is_a_snapshot ~__context ~self ~value =
+    let sr = Db.VDI.get_SR ~__context ~self in
+    Sm.assert_session_has_internal_sr_access ~__context ~sr;
+    Local.VDI.set_is_a_snapshot ~__context ~self ~value
+
+  let set_snapshot_of ~__context ~self ~value =
+    let sr = Db.VDI.get_SR ~__context ~self in
+    Sm.assert_session_has_internal_sr_access ~__context ~sr;
+    Local.VDI.set_snapshot_of ~__context ~self ~value
+
+  let set_snapshot_time ~__context ~self ~value =
+    let sr = Db.VDI.get_SR ~__context ~self in
+    Sm.assert_session_has_internal_sr_access ~__context ~sr;
+    Local.VDI.set_snapshot_time ~__context ~self ~value
+
+  let set_metadata_of_pool ~__context ~self ~value =
+    let sr = Db.VDI.get_SR ~__context ~self in
+    Sm.assert_session_has_internal_sr_access ~__context ~sr;
+    Local.VDI.set_metadata_of_pool ~__context ~self ~value
+
+  let set_name_label ~__context ~self ~value =
+    info "VDI.set_name_label: VDI = '%s' name-label = '%s'"
+      (vdi_uuid ~__context self) value;
+    Local.VDI.set_name_label ~__context ~self ~value
+
+  let set_name_description ~__context ~self ~value =
+    info "VDI.set_name_description: VDI = '%s' name-description = '%s'"
+      (vdi_uuid ~__context self) value;
+    Local.VDI.set_name_description ~__context ~self ~value
+
+  let ensure_vdi_not_on_running_vm ~__context ~self =
+    let vbds = Db.VDI.get_VBDs ~__context ~self in
+    List.iter (fun vbd ->
+      let vm = Db.VBD.get_VM ~__context ~self:vbd in
+      let state = Db.VM.get_power_state ~__context ~self:vm in
+      match state with
+      | `Halted -> ()
+      | _ -> raise (Api_errors.Server_error(Api_errors.vm_bad_power_state,
+                   [Ref.string_of vm; "halted"; Record_util.power_to_string state]))) vbds
+
+  let set_on_boot ~__context ~self ~value =
+    ensure_vdi_not_on_running_vm ~__context ~self;
+    Local.VDI.set_on_boot ~__context ~self ~value
+
+  let set_allow_caching ~__context ~self ~value =
+    ensure_vdi_not_on_running_vm ~__context ~self;
+    Local.VDI.set_allow_caching ~__context ~self ~value
+
+  let open_database ~__context ~self =
+    Local.VDI.open_database ~__context ~self
+
+  let read_database_pool_uuid ~__context ~self =
+    Local.VDI.read_database_pool_uuid ~__context ~self
+
+  (* know sr so just use SR forwarding policy direct here *)
+  let create ~__context ~name_label ~name_description ~sR ~virtual_size ~_type ~sharable ~read_only ~other_config ~xenstore_data ~sm_config ~tags =
+    info "VDI.create: SR = '%s'; name label = '%s'" (sr_uuid ~__context sR) name_label;
+    let local_fn = Local.VDI.create ~name_label ~name_description ~sR ~virtual_size ~_type ~sharable ~read_only ~other_config ~xenstore_data ~sm_config ~tags in
+    with_sr_andor_vdi ~__context ~sr:(sR, `vdi_create) ~doc:"VDI.create"
+      (fun () ->
+        SR.forward_sr_op ~local_fn ~__context ~self:sR
+          (fun session_id rpc -> Client.VDI.create ~rpc ~session_id ~name_label ~name_description ~sR ~virtual_size ~_type ~sharable ~read_only ~other_config ~xenstore_data ~sm_config ~tags))
+
+  (* Hidden call used in pool join only *)
+  let pool_introduce ~__context ~uuid ~name_label ~name_description ~sR ~_type ~sharable ~read_only ~other_config ~location =
+    Local.VDI.pool_introduce ~__context ~uuid ~name_label ~name_description ~sR ~_type ~sharable ~read_only ~other_config ~location
+
+  (* Called from the SM backend *)
+  let db_introduce ~__context ~uuid ~name_label ~name_description ~sR ~_type ~sharable ~read_only ~other_config ~location =
+    Sm.assert_session_has_internal_sr_access ~__context ~sr:sR;
+    Local.VDI.db_introduce ~__context ~uuid ~name_label ~name_description ~sR ~_type ~sharable ~read_only ~other_config ~location
+
+  (* Called from the SM backend *)
+  let db_forget ~__context ~vdi =
+    let sr = Db.VDI.get_SR ~__context ~self:vdi in
+    Sm.assert_session_has_internal_sr_access ~__context ~sr;
+    Local.VDI.db_forget ~__context ~vdi
+
+  let introduce ~__context ~uuid ~name_label ~name_description ~sR ~_type ~sharable ~read_only ~other_config ~location ~xenstore_data ~sm_config  ~managed ~virtual_size ~physical_utilisation ~metadata_of_pool ~is_a_snapshot ~snapshot_time ~snapshot_of=
+    info "VDI.introduce: SR = '%s'; name label = '%s'" (sr_uuid ~__context sR) name_label;
+    let local_fn = Local.VDI.introduce ~uuid ~name_label ~name_description ~sR ~_type ~sharable ~read_only ~other_config ~location ~xenstore_data ~sm_config ~managed ~virtual_size ~physical_utilisation ~metadata_of_pool ~is_a_snapshot ~snapshot_time ~snapshot_of in
+    with_sr_andor_vdi ~__context ~sr:(sR, `vdi_introduce) ~doc:"VDI.introduce"
+      (fun () ->
+        SR.forward_sr_op ~local_fn ~__context ~self:sR
+          (fun session_id rpc ->
+            Client.VDI.introduce ~rpc ~session_id  ~uuid ~name_label ~name_description ~sR ~_type ~sharable ~read_only ~other_config ~location ~xenstore_data ~sm_config  ~managed ~virtual_size ~physical_utilisation ~metadata_of_pool ~is_a_snapshot ~snapshot_time ~snapshot_of))
+
+  let update ~__context ~vdi =
+    let local_fn = Local.VDI.update ~vdi in
+    let sr = Db.VDI.get_SR ~__context ~self:vdi in
+    with_sr_andor_vdi ~__context ~vdi:(vdi, `update) ~doc:"VDI.update"
+      (fun () ->
+        SR.forward_sr_op ~local_fn ~__context ~self:sr
+          (fun session_id rpc ->
+            Client.VDI.update ~rpc ~session_id ~vdi))
+
+  let forget ~__context ~vdi =
+    with_sr_andor_vdi ~__context ~vdi:(vdi, `forget) ~doc:"VDI.forget"
+      (fun () ->
+        Local.VDI.forget ~__context ~vdi)
+
+  let destroy ~__context ~self =
+    info "VDI.destroy: VDI = '%s'" (vdi_uuid ~__context self);
+    let local_fn = Local.VDI.destroy ~self in
+    let sR = Db.VDI.get_SR ~__context ~self in
+    with_sr_andor_vdi ~__context ~sr:(sR, `vdi_destroy) ~vdi:(self, `destroy) ~doc:"VDI.destroy"
+      (fun () ->
+        forward_vdi_op ~local_fn ~__context ~self
+          (fun session_id rpc -> Client.VDI.destroy rpc session_id self))
+
+  (* !! FIXME - Depends on what we're doing here... *)
+  let snapshot ~__context ~vdi ~driver_params =
+    info "VDI.snapshot: VDI = '%s'" (vdi_uuid ~__context vdi);
+    let local_fn = Local.VDI.snapshot ~vdi ~driver_params in
+    let sR = Db.VDI.get_SR ~__context ~self:vdi in
+    with_sr_andor_vdi ~__context ~sr:(sR, `vdi_snapshot) ~vdi:(vdi, `snapshot) ~doc:"VDI.snapshot"
+      (fun () ->
+        forward_vdi_op ~local_fn ~__context ~self:vdi
+          (fun session_id rpc -> Client.VDI.snapshot rpc session_id vdi driver_params))
+
+  let clone ~__context ~vdi ~driver_params =
+    info "VDI.clone: VDI = '%s'" (vdi_uuid ~__context vdi);
+    let local_fn = Local.VDI.clone ~vdi ~driver_params in
+    let sR = Db.VDI.get_SR ~__context ~self:vdi in
+    with_sr_andor_vdi ~__context ~sr:(sR, `vdi_clone) ~vdi:(vdi, `clone) ~doc:"VDI.clone"
+      (fun () ->
+        forward_vdi_op ~local_fn ~__context ~self:vdi
+          (fun session_id rpc -> Client.VDI.clone rpc session_id vdi driver_params))
+
+  let copy ~__context ~vdi ~sr =
+    info "VDI.copy: VDI = '%s'; SR = '%s'" (vdi_uuid ~__context vdi) (sr_uuid ~__context sr);
+    Xapi_vdi.assert_operation_valid ~__context ~self:vdi ~op:`copy;
+    let local_fn = Local.VDI.copy ~vdi ~sr in
+    let src_sr = Db.VDI.get_SR ~__context ~self:vdi in
+    (* No need to lock the VDI because the VBD.plug will do that for us *)
+    (* Try forward the request to a host which can have access to both source
+       and destination SR. *)
+    let op session_id rpc = Client.VDI.copy rpc session_id vdi sr in
+    try
+      SR.forward_sr_multiple_op ~local_fn ~__context ~srs:[src_sr; sr] ~prefer_slaves:true op
+    with Not_found ->
+      SR.forward_sr_multiple_op ~local_fn ~__context ~srs:[src_sr] ~prefer_slaves:true op
+
+  let pool_migrate ~__context ~vdi ~sr ~options =
+    let vbds = Db.VBD.get_records_where ~__context
+        ~expr:(Db_filter_types.Eq(Db_filter_types.Field "VDI",
+            Db_filter_types.Literal (Ref.string_of vdi))) in
+    let vbds = List.filter (fun (_,vbd) -> vbd.API.vBD_currently_attached) vbds in
+    if List.length vbds <> 1
+    then raise (Api_errors.Server_error(Api_errors.vdi_needs_vm_for_migrate,[Ref.string_of vdi]));
+
+    let vm = (snd (List.hd vbds)).API.vBD_VM in
+    let vmr = Db.VM.get_record ~__context ~self:vm in
+    if vmr.API.vM_power_state <> `Running
+    then raise (Api_errors.Server_error(Api_errors.vdi_needs_vm_for_migrate,[Ref.string_of vdi]));
+    (* hackity hack *)
+    let options = ("__internal__vm",Ref.string_of vm) :: (List.remove_assoc "__internal__vm" options) in
+    let local_fn = Local.VDI.pool_migrate ~vdi ~sr ~options in
+
+    info "VDI.pool_migrate: VDI = '%s'; SR = '%s'; VM = '%s'"
+      (vdi_uuid ~__context vdi) (sr_uuid ~__context sr) (vm_uuid ~__context vm);
+
+    VM.with_vm_operation ~__context ~self:vm ~doc:"VDI.pool_migrate" ~op:`migrate_send
+      (fun () ->
+        let host = Db.VM.get_resident_on ~__context ~self:vm in
+        do_op_on ~local_fn ~__context ~host
+          (fun session_id rpc -> Client.VDI.pool_migrate ~rpc ~session_id ~vdi ~sr ~options))
+
+  let resize ~__context ~vdi ~size =
+    info "VDI.resize: VDI = '%s'; size = %Ld" (vdi_uuid ~__context vdi) size;
+    let local_fn = Local.VDI.resize ~vdi ~size in
+    let sR = Db.VDI.get_SR ~__context ~self:vdi in
+    with_sr_andor_vdi ~__context ~sr:(sR, `vdi_resize) ~vdi:(vdi, `resize) ~doc:"VDI.resize"
+      (fun () ->
+        forward_vdi_op ~local_fn ~__context ~self:vdi
+          (fun session_id rpc -> Client.VDI.resize rpc session_id vdi size))
+
+  let resize_online ~__context ~vdi ~size =
+    info "VDI.resize_online: VDI = '%s'; size = %Ld" (vdi_uuid ~__context vdi) size;
+    let local_fn = Local.VDI.resize_online ~vdi ~size in
+    let sR = Db.VDI.get_SR ~__context ~self:vdi in
+    with_sr_andor_vdi ~__context ~sr:(sR, `vdi_resize) ~vdi:(vdi, `resize_online) ~doc:"VDI.resize_online"
+      (fun () ->
+        forward_vdi_op ~local_fn ~__context ~self:vdi
+          (fun session_id rpc -> Client.VDI.resize_online rpc session_id vdi size))
+
+  let generate_config ~__context ~host ~vdi =
+    info "VDI.generate_config: VDI = '%s'; host = '%s'" (vdi_uuid ~__context vdi) (host_uuid ~__context host);
+    let local_fn = Local.VDI.generate_config ~host ~vdi in
+    with_sr_andor_vdi ~__context ~vdi:(vdi, `generate_config) ~doc:"VDI.generate_config"
+      (fun () ->
+        do_op_on ~local_fn ~__context ~host
+          (fun session_id rpc -> Client.VDI.generate_config rpc session_id host vdi)
+      )
+
+  let force_unlock ~__context ~vdi =
+    info "VDI.force_unlock: VDI = '%s'" (vdi_uuid ~__context vdi);
+    let local_fn = Local.VDI.force_unlock ~vdi in
+    with_sr_andor_vdi ~__context ~vdi:(vdi, `force_unlock) ~doc:"VDI.force_unlock"
+      (fun () ->
+        forward_vdi_op ~local_fn ~__context ~self:vdi
+          (fun session_id rpc -> Client.VDI.force_unlock rpc session_id vdi))
+
+  let checksum ~__context ~self =
+    VM.forward_to_access_srs_and ~local_fn:(Local.VDI.checksum ~self) ~__context
+      ~extra_sr:(Db.VDI.get_SR ~__context ~self)
+      (fun session_id rpc -> Client.VDI.checksum rpc session_id self)
+
+end
+module VBD = struct
+
+  let update_vbd_and_vdi_operations ~__context ~vbd =
+    with_global_lock
+      (fun () ->
+        try
+          Xapi_vbd_helpers.update_allowed_operations ~__context ~self:vbd;
+          if not (Db.VBD.get_empty ~__context ~self:vbd) then
+            let vdi = Db.VBD.get_VDI ~__context ~self:vbd in
+            Xapi_vdi.update_allowed_operations ~__context ~self:vdi
+        with _ -> ())
+
+  let unmark_vbd ~__context ~vbd ~doc ~op =
+    let task_id = Ref.string_of (Context.get_task_id __context) in
+    log_exn ~doc:("unmarking VBD after " ^ doc)
+      (fun self ->
+        if Db.is_valid_ref __context self then begin
+          Db.VBD.remove_from_current_operations ~__context ~self ~key:task_id;
+          Xapi_vbd_helpers.update_allowed_operations ~__context ~self;
+          Early_wakeup.broadcast (Datamodel._vbd, Ref.string_of vbd)
+        end)
+      vbd
+
+  let mark_vbd ~__context ~vbd ~doc ~op =
+    let task_id = Ref.string_of (Context.get_task_id __context) in
+    log_exn ~doc:("marking VBD for " ^ doc)
+      (fun self ->
+        Xapi_vbd_helpers.assert_operation_valid ~__context ~self ~op;
+        Db.VBD.add_to_current_operations ~__context ~self ~key:task_id ~value:op;
+        Xapi_vbd_helpers.update_allowed_operations ~__context ~self) vbd
+
+  let with_vbd_marked ~__context ~vbd ~doc ~op f =
+    retry_with_global_lock ~__context ~doc (fun () -> mark_vbd ~__context ~vbd ~doc ~op);
+    finally
+      (fun () -> f ())
+      (fun () -> with_global_lock (fun () -> unmark_vbd ~__context ~vbd ~doc ~op))
+
+
+
+  (* -------- Forwarding helper functions: ------------------------------------ *)
+
+  (* Forward to host that has resident VM that this VBD references *)
+  let forward_vbd_op ~local_fn ~__context ~self op =
+    let vm = Db.VBD.get_VM ~__context ~self in
+    let host_resident_on = Db.VM.get_resident_on ~__context ~self:vm in
+    if host_resident_on = Ref.null
+    then local_fn ~__context
+    else do_op_on ~local_fn ~__context ~host:host_resident_on op
+
+  (* -------------------------------------------------------------------------- *)
+
+
+  (* these are db functions *)
+  let create ~__context ~vM ~vDI ~userdevice ~bootable ~mode ~_type ~unpluggable ~empty ~other_config ~qos_algorithm_type ~qos_algorithm_params =
+    info "VBD.create: VM = '%s'; VDI = '%s'" (vm_uuid ~__context vM) (vdi_uuid ~__context vDI);
+    (* NB must always execute this on the master because of the autodetect_mutex *)
+    Local.VBD.create ~__context ~vM ~vDI ~userdevice ~bootable ~mode ~_type ~unpluggable ~empty ~other_config ~qos_algorithm_type ~qos_algorithm_params
+
+  let set_mode ~__context ~self ~value =
+    info "VBD.set_mode: VBD = '%s'; value = %s" (vbd_uuid ~__context self) (Record_util.vbd_mode_to_string value);
+    Local.VBD.set_mode ~__context ~self ~value
+
+  let destroy ~__context ~self =
+    info "VBD.destroy: VBD = '%s'" (vbd_uuid ~__context self);
+    Local.VBD.destroy ~__context ~self
+
+  let insert ~__context ~vbd ~vdi =
+    info "VBD.insert: VBD = '%s'; VDI = '%s'" (vbd_uuid ~__context vbd) (vdi_uuid ~__context vdi);
+    let local_fn = Local.VBD.insert ~vbd ~vdi in
+    with_vbd_marked ~__context ~vbd ~doc:"VBD.insert" ~op:`insert
+      (fun () ->
+        let vm = Db.VBD.get_VM ~__context ~self:vbd in
+        if Db.VM.get_power_state ~__context ~self:vm = `Halted then begin
+          Xapi_vbd.assert_ok_to_insert ~__context ~vbd ~vdi;
+          Db.VBD.set_VDI ~__context ~self:vbd ~value:vdi;
+          Db.VBD.set_empty ~__context ~self:vbd ~value:false
+        end
+        else forward_vbd_op ~local_fn ~__context ~self:vbd
+            (fun session_id rpc -> Client.VBD.insert rpc session_id vbd vdi));
+    update_vbd_and_vdi_operations ~__context ~vbd
+
+  let eject ~__context ~vbd =
+    info "VBD.eject: VBD = '%s'" (vbd_uuid ~__context vbd);
+    let local_fn = Local.VBD.eject ~vbd in
+    with_vbd_marked ~__context ~vbd ~doc:"VBD.eject" ~op:`eject
+      (fun () ->
+        let vm = Db.VBD.get_VM ~__context ~self:vbd in
+        if Db.VM.get_power_state ~__context ~self:vm = `Halted then begin
+          Xapi_vbd.assert_ok_to_eject ~__context ~vbd;
+          Db.VBD.set_empty ~__context ~self:vbd ~value:true;
+          Db.VBD.set_VDI ~__context ~self:vbd ~value:Ref.null;
+        end
+        else forward_vbd_op ~local_fn ~__context ~self:vbd
+            (fun session_id rpc -> Client.VBD.eject rpc session_id vbd));
+    update_vbd_and_vdi_operations ~__context ~vbd
+
+  let plug ~__context ~self =
+    info "VBD.plug: VBD = '%s'" (vbd_uuid ~__context self);
+    let local_fn = Local.VBD.plug ~self in
+    with_vbd_marked ~__context ~vbd:self ~doc:"VBD.plug" ~op:`plug
+      (fun () ->
+        forward_vbd_op ~local_fn ~__context ~self
+          (fun session_id rpc -> Client.VBD.plug rpc session_id self));
+    update_vbd_and_vdi_operations ~__context ~vbd:self
+
+  let unplug ~__context ~self =
+    info "VBD.unplug: VBD = '%s'" (vbd_uuid ~__context self);
+    let local_fn = Local.VBD.unplug ~self in
+    with_vbd_marked ~__context ~vbd:self ~doc:"VBD.unplug" ~op:`unplug
+      (fun () ->
+        forward_vbd_op ~local_fn ~__context ~self
+          (fun session_id rpc -> Client.VBD.unplug rpc session_id self));
+    update_vbd_and_vdi_operations ~__context ~vbd:self
+
+  let unplug_force ~__context ~self =
+    info "VBD.unplug_force: VBD = '%s'" (vbd_uuid ~__context self);
+    let local_fn = Local.VBD.unplug_force ~self in
+    with_vbd_marked ~__context ~vbd:self ~doc:"VBD.unplug_force" ~op:`unplug_force
+      (fun () ->
+        forward_vbd_op ~local_fn ~__context ~self (fun session_id rpc -> Client.VBD.unplug_force rpc session_id self));
+    update_vbd_and_vdi_operations ~__context ~vbd:self
+
+  let unplug_force_no_safety_check ~__context ~self =
+    warn "VBD.unplug_force_no_safety_check: VBD = '%s'" (vbd_uuid ~__context self);
+    let local_fn = Local.VBD.unplug_force_no_safety_check ~self in
+    with_vbd_marked ~__context ~vbd:self ~doc:"VBD.unplug_force_no_safety_check" ~op:`unplug_force
+      (fun () ->
+        forward_vbd_op ~local_fn ~__context ~self (fun session_id rpc -> Client.VBD.unplug_force_no_safety_check rpc session_id self));
+    update_vbd_and_vdi_operations ~__context ~vbd:self
+
+  let pause ~__context ~self =
+    info "VBD.pause: VBD = '%s'" (vbd_uuid ~__context self);
+    let local_fn = Local.VBD.pause ~self in
+    let result = with_vbd_marked ~__context ~vbd:self ~doc:"VBD.pause" ~op:`pause
         (fun () ->
-          if Helpers.i_am_srmaster ~__context ~sr
-          then
-            List.iter (fun vdi ->
-              if Db.VDI.get_current_operations ~__context ~self:vdi <> []
-              then raise (Api_errors.Server_error(Api_errors.other_operation_in_progress, [ Datamodel._vdi; Ref.string_of vdi ])))
-              (Db.SR.get_VDIs ~__context ~self:sr);
-          SR.mark_sr ~__context ~sr ~doc ~op
-        );
-      finally
-        (fun () -> f ())
-        (fun () -> with_global_lock (fun () -> SR.unmark_sr ~__context ~sr ~doc ~op))
+          forward_vbd_op ~local_fn ~__context ~self (fun session_id rpc -> Client.VBD.pause rpc session_id self)
+        ) in
+    update_vbd_and_vdi_operations ~__context ~vbd:self;
+    result
 
-    (* plug and unplug need to be executed on the host that the pbd is related to *)
-    let plug ~__context ~self =
-      info "PBD.plug: PBD = '%s'" (pbd_uuid ~__context self);
-      let local_fn = Local.PBD.plug ~self in
-      let sr = Db.PBD.get_SR ~__context ~self in
+  let unpause ~__context ~self ~token =
+    info "VBD.unpause: VBD = '%s'; token = '%s'" (vbd_uuid ~__context self) token;
+    let local_fn = Local.VBD.unpause ~self ~token in
+    with_vbd_marked ~__context ~vbd:self ~doc:"VBD.unpause" ~op:`unpause
+      (fun () ->
+        forward_vbd_op ~local_fn ~__context ~self (fun session_id rpc -> Client.VBD.unpause rpc session_id self token);
+      );
+    update_vbd_and_vdi_operations ~__context ~vbd:self
 
-      SR.with_sr_marked ~__context ~sr ~doc:"PBD.plug" ~op:`plug
-        (fun () ->
-          forward_pbd_op ~local_fn ~__context ~self
-            (fun session_id rpc -> Client.PBD.plug rpc session_id self));
-      (* Consider scanning the SR now. Note:
-         1. the current context contains a completed real task and we should not reuse it for what is
-         effectively another call.
-         2. the SR should still be locked by the current PBD.plug operation so it is safe to use
-         the internal scan function directly.
-      *)
-      Server_helpers.exec_with_new_task "PBD.plug initial SR scan" (fun __scan_context ->
-        (* Only handle metadata VDIs when attaching shared storage to the master. *)
-        let should_handle_metadata_vdis =
-          let pbd_host = Db.PBD.get_host ~__context:__scan_context ~self in
-          let master = Db.Pool.get_master ~__context:__scan_context ~self:(Helpers.get_pool ~__context:__scan_context) in
-          (pbd_host = master) && (Db.SR.get_shared ~__context:__scan_context ~self:sr)
-        in
-        let handle_metadata_vdis () =
-          if should_handle_metadata_vdis then begin
-            debug "Shared SR %s is being plugged to master - handling metadata VDIs." (sr_uuid ~__context sr);
-            let metadata_vdis = List.filter
-                (fun vdi -> Db.VDI.get_type ~__context:__scan_context ~self:vdi = `metadata)
-                (Db.SR.get_VDIs ~__context:__scan_context ~self:sr)
-            in
-            let pool = Helpers.get_pool ~__context:__scan_context in
-            let (vdis_of_this_pool, vdis_of_foreign_pool) = List.partition
-                (fun vdi -> Db.VDI.get_metadata_of_pool ~__context:__scan_context ~self:vdi = pool)
-                metadata_vdis
-            in
-            debug "Adding foreign pool metadata VDIs to cache: [%s]"
-              (String.concat ";" (List.map (fun vdi -> Db.VDI.get_uuid ~__context:__scan_context ~self:vdi) vdis_of_foreign_pool));
-            Xapi_dr.add_vdis_to_cache ~__context:__scan_context ~vdis:vdis_of_foreign_pool;
-            debug "Found metadata VDIs created by this pool: [%s]"
-              (String.concat ";" (List.map (fun vdi -> Db.VDI.get_uuid ~__context:__scan_context ~self:vdi) vdis_of_this_pool));
-            if vdis_of_this_pool <> [] then begin
-              let target_vdi = List.hd vdis_of_this_pool in
-              let vdi_uuid = Db.VDI.get_uuid ~__context:__scan_context ~self:target_vdi in
-              try
-                Xapi_vdi_helpers.enable_database_replication ~__context:__scan_context ~get_vdi_callback:(fun () -> target_vdi);
-                debug "Re-enabled database replication to VDI %s" vdi_uuid
-              with e ->
-                debug "Could not re-enable database replication to VDI %s - caught %s"
-                  vdi_uuid (Printexc.to_string e)
-            end;
-            Xapi_dr.signal_sr_is_ready ~__context:__scan_context ~sr
-          end else
-            debug "SR %s is not shared or is being plugged to a slave - not handling metadata VDIs at this point." (sr_uuid ~__context sr)
-        in
-        if should_handle_metadata_vdis then
-          Xapi_dr.signal_sr_is_processing ~__context:__scan_context ~sr;
-        Xapi_sr.scan_one ~__context:__scan_context ~callback:handle_metadata_vdis sr)
+  let assert_attachable ~__context ~self =
+    info "VBD.assert_attachable: VBD = '%s'" (vbd_uuid ~__context self);
+    Local.VBD.assert_attachable ~__context ~self
+end
 
-    let unplug ~__context ~self =
-      info "PBD.unplug: PBD = '%s'" (pbd_uuid ~__context self);
-      let local_fn = Local.PBD.unplug ~self in
-      let sr = Db.PBD.get_SR ~__context ~self in
+module VBD_metrics = struct
+end
 
-      with_unplug_locks ~__context ~sr ~pbd:self
-        (fun () ->
-          forward_pbd_op ~local_fn ~__context ~self
-            (fun session_id rpc -> Client.PBD.unplug rpc session_id self))
-  end
+module PBD = struct
 
-  module Crashdump = struct
+  (* Create and destroy are just db operations, no need to forward; *)
+  (* however, they can affect whether SR.destroy is allowed, so update SR.allowed_operations. *)
+  let create ~__context ~host ~sR ~device_config ~other_config =
+    info "PBD.create: SR = '%s'; host '%s'" (sr_uuid ~__context sR) (host_uuid ~__context host);
+    SR.with_sr_marked ~__context ~sr:sR ~doc:"PBD.create" ~op:`pbd_create
+      (fun () -> Local.PBD.create ~__context ~host ~sR ~device_config ~other_config)
 
-    (* -------- Forwarding helper functions: ------------------------------------ *)
+  let destroy ~__context ~self =
+    info "PBD.destroy: PBD '%s'" (pbd_uuid ~__context self);
+    let sr = Db.PBD.get_SR ~__context ~self in
+    SR.with_sr_marked ~__context ~sr ~doc:"PBD.destroy" ~op:`pbd_destroy
+      (fun () -> Local.PBD.destroy ~__context ~self)
 
-    (* Read VDI and then re-use VDI forwarding policy *)
-    let forward_crashdump_op ~local_fn ~__context ~self op =
-      let vdi = Db.Crashdump.get_VDI ~__context ~self in
-      VDI.forward_vdi_op ~local_fn ~__context ~self:vdi op
+  (* -------- Forwarding helper functions: ------------------------------------ *)
 
-    (* -------------------------------------------------------------------------- *)
+  let forward_pbd_op ~local_fn ~__context ~self op =
+    do_op_on ~local_fn ~__context ~host:(Db.PBD.get_host ~__context ~self) op
 
-    let destroy ~__context ~self =
-      info "Crashdump.destroy: crashdump = '%s'" (crashdump_uuid ~__context self);
-      let local_fn = Local.Crashdump.destroy ~self in
-      forward_crashdump_op ~local_fn ~__context ~self (fun session_id rpc -> Client.Crashdump.destroy rpc session_id self)
-  end
+  (* -------------------------------------------------------------------------- *)
 
-  (* whatever *)
-  module VTPM = Local.VTPM
+  let sanitize (k, v) =
+    if String.endswith "transformed" k then
+      k ^ "=undisclosed"
+    else
+      k ^ "=" ^ v
 
-  module Console = Local.Console
+  let set_device_config ~__context ~self ~value =
+    info "PBD.set_device_config: PBD = '%s'; device_config = [ %s ]"
+      (pbd_uuid ~__context self) (String.concat "; " (List.map sanitize value));
+    let sr = Db.PBD.get_SR ~__context ~self in
+    Sm.assert_session_has_internal_sr_access ~__context ~sr;
 
-  module User = Local.User
+    let local_fn = Local.PBD.set_device_config ~self ~value in
+    forward_pbd_op ~local_fn ~__context ~self
+      (fun session_id rpc -> Client.PBD.set_device_config rpc session_id self value)
 
-  module Blob = Local.Blob
+  (* Mark the SR and check, if we are the 'SRmaster' that no VDI
+     current_operations are present (eg snapshot, clone) since these are all
+     done on the SR master. *)
+  let with_unplug_locks ~__context ~pbd ~sr f =
+    let doc = "PBD.unplug" and op = `unplug in
+    retry_with_global_lock ~__context ~doc
+      (fun () ->
+        if Helpers.i_am_srmaster ~__context ~sr
+        then
+          List.iter (fun vdi ->
+            if Db.VDI.get_current_operations ~__context ~self:vdi <> []
+            then raise (Api_errors.Server_error(Api_errors.other_operation_in_progress, [ Datamodel._vdi; Ref.string_of vdi ])))
+            (Db.SR.get_VDIs ~__context ~self:sr);
+        SR.mark_sr ~__context ~sr ~doc ~op
+      );
+    finally
+      (fun () -> f ())
+      (fun () -> with_global_lock (fun () -> SR.unmark_sr ~__context ~sr ~doc ~op))
 
-  module Message = Local.Message
+  (* plug and unplug need to be executed on the host that the pbd is related to *)
+  let plug ~__context ~self =
+    info "PBD.plug: PBD = '%s'" (pbd_uuid ~__context self);
+    let local_fn = Local.PBD.plug ~self in
+    let sr = Db.PBD.get_SR ~__context ~self in
 
-  module Data_source = struct end
+    SR.with_sr_marked ~__context ~sr ~doc:"PBD.plug" ~op:`plug
+      (fun () ->
+        forward_pbd_op ~local_fn ~__context ~self
+          (fun session_id rpc -> Client.PBD.plug rpc session_id self));
+    (* Consider scanning the SR now. Note:
+       1. the current context contains a completed real task and we should not reuse it for what is
+       effectively another call.
+       2. the SR should still be locked by the current PBD.plug operation so it is safe to use
+       the internal scan function directly.
+    *)
+    Server_helpers.exec_with_new_task "PBD.plug initial SR scan" (fun __scan_context ->
+      (* Only handle metadata VDIs when attaching shared storage to the master. *)
+      let should_handle_metadata_vdis =
+        let pbd_host = Db.PBD.get_host ~__context:__scan_context ~self in
+        let master = Db.Pool.get_master ~__context:__scan_context ~self:(Helpers.get_pool ~__context:__scan_context) in
+        (pbd_host = master) && (Db.SR.get_shared ~__context:__scan_context ~self:sr)
+      in
+      let handle_metadata_vdis () =
+        if should_handle_metadata_vdis then begin
+          debug "Shared SR %s is being plugged to master - handling metadata VDIs." (sr_uuid ~__context sr);
+          let metadata_vdis = List.filter
+              (fun vdi -> Db.VDI.get_type ~__context:__scan_context ~self:vdi = `metadata)
+              (Db.SR.get_VDIs ~__context:__scan_context ~self:sr)
+          in
+          let pool = Helpers.get_pool ~__context:__scan_context in
+          let (vdis_of_this_pool, vdis_of_foreign_pool) = List.partition
+              (fun vdi -> Db.VDI.get_metadata_of_pool ~__context:__scan_context ~self:vdi = pool)
+              metadata_vdis
+          in
+          debug "Adding foreign pool metadata VDIs to cache: [%s]"
+            (String.concat ";" (List.map (fun vdi -> Db.VDI.get_uuid ~__context:__scan_context ~self:vdi) vdis_of_foreign_pool));
+          Xapi_dr.add_vdis_to_cache ~__context:__scan_context ~vdis:vdis_of_foreign_pool;
+          debug "Found metadata VDIs created by this pool: [%s]"
+            (String.concat ";" (List.map (fun vdi -> Db.VDI.get_uuid ~__context:__scan_context ~self:vdi) vdis_of_this_pool));
+          if vdis_of_this_pool <> [] then begin
+            let target_vdi = List.hd vdis_of_this_pool in
+            let vdi_uuid = Db.VDI.get_uuid ~__context:__scan_context ~self:target_vdi in
+            try
+              Xapi_vdi_helpers.enable_database_replication ~__context:__scan_context ~get_vdi_callback:(fun () -> target_vdi);
+              debug "Re-enabled database replication to VDI %s" vdi_uuid
+            with e ->
+              debug "Could not re-enable database replication to VDI %s - caught %s"
+                vdi_uuid (Printexc.to_string e)
+          end;
+          Xapi_dr.signal_sr_is_ready ~__context:__scan_context ~sr
+        end else
+          debug "SR %s is not shared or is being plugged to a slave - not handling metadata VDIs at this point." (sr_uuid ~__context sr)
+      in
+      if should_handle_metadata_vdis then
+        Xapi_dr.signal_sr_is_processing ~__context:__scan_context ~sr;
+      Xapi_sr.scan_one ~__context:__scan_context ~callback:handle_metadata_vdis sr)
 
-  module Secret = Local.Secret
+  let unplug ~__context ~self =
+    info "PBD.unplug: PBD = '%s'" (pbd_uuid ~__context self);
+    let local_fn = Local.PBD.unplug ~self in
+    let sr = Db.PBD.get_SR ~__context ~self in
 
-  module PCI = struct end
+    with_unplug_locks ~__context ~sr ~pbd:self
+      (fun () ->
+        forward_pbd_op ~local_fn ~__context ~self
+          (fun session_id rpc -> Client.PBD.unplug rpc session_id self))
+end
 
-  module PGPU = struct end
+module Crashdump = struct
 
-  module GPU_group = struct
-    (* Don't forward. These are just db operations. *)
-    let create ~__context ~name_label ~name_description ~other_config =
-      info "GPU_group.create: name_label = '%s'" name_label;
-      Local.GPU_group.create ~__context ~name_label ~name_description ~other_config
+  (* -------- Forwarding helper functions: ------------------------------------ *)
 
-    let destroy ~__context ~self =
-      info "GPU_group.destroy: gpu_group = '%s'" (gpu_group_uuid ~__context self);
-      (* WARNING WARNING WARNING: directly call destroy with the global lock since it does only database operations *)
-      with_global_lock (fun () ->
-        Local.GPU_group.destroy ~__context ~self)
-  end
+  (* Read VDI and then re-use VDI forwarding policy *)
+  let forward_crashdump_op ~local_fn ~__context ~self op =
+    let vdi = Db.Crashdump.get_VDI ~__context ~self in
+    VDI.forward_vdi_op ~local_fn ~__context ~self:vdi op
 
-  module VGPU = struct
-    let create ~__context ~vM ~gPU_group ~device ~other_config =
-      info "VGPU.create: VM = '%s'; GPU_group = '%s'" (vm_uuid ~__context vM) (gpu_group_uuid ~__context gPU_group);
-      Local.VGPU.create ~__context ~vM ~gPU_group ~device ~other_config
+  (* -------------------------------------------------------------------------- *)
 
-    let destroy ~__context ~self =
-      info "VGPU.destroy: VIF = '%s'" (vgpu_uuid ~__context self);
-      Local.VGPU.destroy ~__context ~self
-  end
+  let destroy ~__context ~self =
+    info "Crashdump.destroy: crashdump = '%s'" (crashdump_uuid ~__context self);
+    let local_fn = Local.Crashdump.destroy ~self in
+    forward_crashdump_op ~local_fn ~__context ~self (fun session_id rpc -> Client.Crashdump.destroy rpc session_id self)
+end
+
+(* whatever *)
+module VTPM = Local.VTPM
+
+module Console = Local.Console
+
+module User = Local.User
+
+module Blob = Local.Blob
+
+module Message = Local.Message
+
+module Data_source = struct end
+
+module Secret = Local.Secret
+
+module PCI = struct end
+
+module PGPU = struct end
+
+module GPU_group = struct
+  (* Don't forward. These are just db operations. *)
+  let create ~__context ~name_label ~name_description ~other_config =
+    info "GPU_group.create: name_label = '%s'" name_label;
+    Local.GPU_group.create ~__context ~name_label ~name_description ~other_config
+
+  let destroy ~__context ~self =
+    info "GPU_group.destroy: gpu_group = '%s'" (gpu_group_uuid ~__context self);
+    (* WARNING WARNING WARNING: directly call destroy with the global lock since it does only database operations *)
+    with_global_lock (fun () ->
+      Local.GPU_group.destroy ~__context ~self)
+end
+
+module VGPU = struct
+  let create ~__context ~vM ~gPU_group ~device ~other_config =
+    info "VGPU.create: VM = '%s'; GPU_group = '%s'" (vm_uuid ~__context vM) (gpu_group_uuid ~__context gPU_group);
+    Local.VGPU.create ~__context ~vM ~gPU_group ~device ~other_config
+
+  let destroy ~__context ~self =
+    info "VGPU.destroy: VIF = '%s'" (vgpu_uuid ~__context self);
+    Local.VGPU.destroy ~__context ~self
+end
 end
 

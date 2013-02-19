@@ -21,8 +21,8 @@ val draw_image : Images.t -> int -> int -> unit;;
 (** Draw an [Images.t] value into the graphic window. *)
 
 val get_image : int -> int -> int -> int -> Rgb24.t
-  (** [get_image x y w h] Capture the contents of a rectangle of the graphic
-     window with lower left corner at [x,y], width [w] and height [h] *)
+(** [get_image x y w h] Capture the contents of a rectangle of the graphic
+   window with lower left corner at [x,y], width [w] and height [h] *)
 
 (** lower interface *)
 

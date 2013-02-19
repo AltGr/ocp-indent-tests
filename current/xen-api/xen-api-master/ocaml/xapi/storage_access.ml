@@ -191,7 +191,7 @@ module SMAPIv1 = struct
         virtual_size = vdi_rec.API.vDI_virtual_size;
         physical_utilisation = vdi_rec.API.vDI_physical_utilisation;
         persistent = vdi_rec.API.vDI_on_boot = `persist;
-        sm_config = vdi_rec.API.vDI_sm_config;
+          sm_config = vdi_rec.API.vDI_sm_config;
       }
 
     let scan context ~dbg ~sr:sr' =
@@ -235,8 +235,8 @@ module SMAPIv1 = struct
               f device_config _type sr self
             )
         )
-        (* Allow us to remember whether a VDI is attached read/only or read/write.
-           If this is meaningful to the backend then this should be recorded there! *)
+    (* Allow us to remember whether a VDI is attached read/only or read/write.
+       If this is meaningful to the backend then this should be recorded there! *)
     let vdi_read_write = Hashtbl.create 10
     let vdi_read_write_m = Mutex.create ()
 
@@ -344,7 +344,7 @@ module SMAPIv1 = struct
         virtual_size = r.API.vDI_virtual_size;
         physical_utilisation = r.API.vDI_physical_utilisation;
         persistent = r.API.vDI_on_boot = `persist;
-        sm_config = r.API.vDI_sm_config;
+          sm_config = r.API.vDI_sm_config;
       }
 
     let newvdi ~__context vi =

@@ -333,7 +333,7 @@ module Epoll : sig
   val iter_ready : t -> f:(File_descr.t -> Flags.t -> unit) -> unit
   val fold_ready : t -> init:'a -> f:('a -> File_descr.t -> Flags.t -> 'a) -> 'a
 
-  (* pwait -> with the specified sigmask, analogous to pselect *)
-  (* val pwait   : t -> timeout:Span.t -> int list -> [ `Ok of Ready_fds.t | `Timeout ] *)
+    (* pwait -> with the specified sigmask, analogous to pselect *)
+    (* val pwait   : t -> timeout:Span.t -> int list -> [ `Ok of Ready_fds.t | `Timeout ] *)
 end
 

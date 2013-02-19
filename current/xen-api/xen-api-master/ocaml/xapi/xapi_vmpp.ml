@@ -352,14 +352,14 @@ let assert_all_keys ~ty ~ks ~value ~db =
 
 let assert_non_required_key ~ks ~key ~db =
   ()
-  (* (* currently disabled: unfortunately, key presence integrity is too strict for the CLI, which needs to remove and add keys at will *)
-     with_ks ~kss:ks ~fn:
-     (fun ks->
-      assert_req_values ~ks ~key ~value:"" ~db;
-      (* check if the key is not expected in this ks *)
-      if (List.mem_assoc key ks) then err key ""
-     )
-  *)
+(* (* currently disabled: unfortunately, key presence integrity is too strict for the CLI, which needs to remove and add keys at will *)
+   with_ks ~kss:ks ~fn:
+   (fun ks->
+    assert_req_values ~ks ~key ~value:"" ~db;
+    (* check if the key is not expected in this ks *)
+    if (List.mem_assoc key ks) then err key ""
+   )
+*)
 
 let map_password_to_secret ~__context ~new_password ~db =
   let secret_uuid = Uuid.to_string

@@ -117,7 +117,7 @@ let rec parse_cookies s =
       splitted
   with _ -> CookiesTable.empty
       (*VVV Actually the real syntax of cookies is more complex! *)
-      (*
+(*
 http://www.w3.org/Protocols/rfc2109/rfc2109
 Mozilla spec + RFC2109
 http://ws.bokeland.com/blog/376/1043/2006/10/27/76832

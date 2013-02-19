@@ -200,7 +200,7 @@ let validate_path path =
   (* Paths shouldn't have a "/" at the end, except for the root *)
   if path <> "/" && path <> "" && path.[String.length path - 1] = '/' then
     print_endline "XXX: Invalid_path"
-    (* XXX    raise (Invalid_path path) *)
+(* XXX    raise (Invalid_path path) *)
 
 (** Check to see if a path is suitable for watches *)
 let validate_watch_path path =

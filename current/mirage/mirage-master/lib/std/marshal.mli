@@ -47,7 +47,7 @@
 type extern_flags =
     No_sharing                          (** Don't preserve sharing *)
   | Closures                            (** Send function closures *)
-  (** The flags to the [Marshal.to_*] functions below. *)
+(** The flags to the [Marshal.to_*] functions below. *)
 
 external to_string :
   'a -> extern_flags list -> string = "caml_output_value_to_string"
@@ -57,19 +57,19 @@ external to_string :
    {!Marshal.to_channel}. *)
 
 val to_buffer : string -> int -> int -> 'a -> extern_flags list -> int
-  (** [Marshal.to_buffer buff ofs len v flags] marshals the value [v],
-     storing its byte representation in the string [buff],
-     starting at character number [ofs], and writing at most
-     [len] characters.  It returns the number of characters
-     actually written to the string. If the byte representation
-     of [v] does not fit in [len] characters, the exception [Failure]
-     is raised. *)
+(** [Marshal.to_buffer buff ofs len v flags] marshals the value [v],
+   storing its byte representation in the string [buff],
+   starting at character number [ofs], and writing at most
+   [len] characters.  It returns the number of characters
+   actually written to the string. If the byte representation
+   of [v] does not fit in [len] characters, the exception [Failure]
+   is raised. *)
 
 val from_string : string -> int -> 'a
-  (** [Marshal.from_string buff ofs] unmarshals a structured value
-     like {!Marshal.from_channel} does, except that the byte
-     representation is not read from a channel, but taken from
-     the string [buff], starting at position [ofs]. *)
+(** [Marshal.from_string buff ofs] unmarshals a structured value
+   like {!Marshal.from_channel} does, except that the byte
+   representation is not read from a channel, but taken from
+   the string [buff], starting at position [ofs]. *)
 
 val header_size : int
 (** The bytes representing a marshaled value are composed of
@@ -94,7 +94,7 @@ val header_size : int
    to unmarshal the value. *)
 
 val data_size : string -> int -> int
-  (** See {!Marshal.header_size}.*)
+(** See {!Marshal.header_size}.*)
 
 val total_size : string -> int -> int
-  (** See {!Marshal.header_size}.*)
+(** See {!Marshal.header_size}.*)

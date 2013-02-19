@@ -18,10 +18,10 @@
 (** {2 (Fill in Title!)} *)
 
 val set_emergency_mode_error : string -> string list -> unit
-  (** When starting xapi we begin in 'emergency mode' and hope to transition out of it by contacting
-      the master etc. As we make progress we set the 'emergency_mode_error' which is the error returned
-      by the CLI, indicating stuff like: failure to get a management IP address, the master doesn't
-      recognise us etc. *)
+(** When starting xapi we begin in 'emergency mode' and hope to transition out of it by contacting
+    the master etc. As we make progress we set the 'emergency_mode_error' which is the error returned
+    by the CLI, indicating stuff like: failure to get a management IP address, the master doesn't
+    recognise us etc. *)
 
 val local_assert_healthy : __context:'a -> unit 
 

@@ -509,7 +509,7 @@ let send_one_heartbeat ~__context ?(shutting_down=false) rpc session_id =
 
   let (_: (string*string) list) = Client.Client.Host.tickle_heartbeat rpc session_id localhost stuff in
   ()
-  (* debug "Master responded with [ %s ]" (String.concat ";" (List.map (fun (a, b) -> a ^ "=" ^ b) response)); *)
+(* debug "Master responded with [ %s ]" (String.concat ";" (List.map (fun (a, b) -> a ^ "=" ^ b) response)); *)
 
 let start_heartbeat_thread() =
   Debug.name_thread "heartbeat";

@@ -44,26 +44,26 @@ sig
       chan_id value. *)
 
   val create : ?name:string -> unit -> t
-    (** [create ()] returns a channel with a freshly baked identifier while
-        [create ~name ()] returns a channel with the identifier [name] after
-        checking for uniqueness. If [name] is the identifier of an existing
-        channel, the exception [Non_unique_channel_name] is raised. *)
+  (** [create ()] returns a channel with a freshly baked identifier while
+      [create ~name ()] returns a channel with the identifier [name] after
+      checking for uniqueness. If [name] is the identifier of an existing
+      channel, the exception [Non_unique_channel_name] is raised. *)
 
   val write : t -> (string * Ocsigen_stream.outcome Lwt.u option) -> unit
-    (** [write c (s, u)] sends the string [s] on the channel [c]. The argument [u]
-        allow one to observe the result of the operation. If [u] is [None], there
-        is no way to tell if the sending worked as expected. However if [u] is
-        [Some u'] then [u'] will be woken up with the outcome (either [`Falure] or
-        [`Success]) of the stream writing process. *)
+  (** [write c (s, u)] sends the string [s] on the channel [c]. The argument [u]
+      allow one to observe the result of the operation. If [u] is [None], there
+      is no way to tell if the sending worked as expected. However if [u] is
+      [Some u'] then [u'] will be woken up with the outcome (either [`Falure] or
+      [`Success]) of the stream writing process. *)
 
   val listeners : t -> int
-    (** [listeners c] returns the number of clients currently registered on [c]
-        A client is "currently registered" on a channel if an actual
-        connection is open for the server to push a message onto. Note that this
-        information is server-based only, and that because it is so, some clients
-        may still be registered as active while they have in fact closed the
-        connection. In such a case, the outcome mechanism in [write] will report
-        the failure. *)
+  (** [listeners c] returns the number of clients currently registered on [c]
+      A client is "currently registered" on a channel if an actual
+      connection is open for the server to push a message onto. Note that this
+      information is server-based only, and that because it is so, some clients
+      may still be registered as active while they have in fact closed the
+      connection. In such a case, the outcome mechanism in [write] will report
+      the failure. *)
 
   val get_id : t -> chan_id
     (** [get_id c] returns the unique identifier associated to [c]. The client can
@@ -79,22 +79,22 @@ module Security :
 sig
 
   val set_timeout : ?reset:bool -> float -> unit
-    (** [set_timeout ?reset f] sets the timeout value for future Comet connections
-        to [f]. If [reset] is [true] then current connections are closed and the
-        new timeout value will apply to the reopened connections. Default value
-        for [reset] is false. *)
+  (** [set_timeout ?reset f] sets the timeout value for future Comet connections
+      to [f]. If [reset] is [true] then current connections are closed and the
+      new timeout value will apply to the reopened connections. Default value
+      for [reset] is false. *)
 
   val deactivate : unit -> unit
-    (** [deactivate ()] ceases all Comet related activity. Each opened connection
-        is closed. Further attempts to connect to the server with a Comet specific
-        content type will result in a HTTP status code 503 (Unavailable).
-        If called when Comet is not activated it does nothing (not even logging
-        the deactivation attempt. *)
+  (** [deactivate ()] ceases all Comet related activity. Each opened connection
+      is closed. Further attempts to connect to the server with a Comet specific
+      content type will result in a HTTP status code 503 (Unavailable).
+      If called when Comet is not activated it does nothing (not even logging
+      the deactivation attempt. *)
 
   val activate : unit -> unit
-    (** [activate ()] starts serving Comet requests. It is the client's own
-        responsibility to reopen a connection. If Comet was already activated it
-        keeps going and nothing happens. *)
+  (** [activate ()] starts serving Comet requests. It is the client's own
+      responsibility to reopen a connection. If Comet was already activated it
+      keeps going and nothing happens. *)
 
   val activated : unit -> bool
     (** [activated ()] reflects the activation state of the Comet

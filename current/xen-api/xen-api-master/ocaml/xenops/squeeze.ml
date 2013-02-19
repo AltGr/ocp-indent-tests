@@ -258,10 +258,10 @@ let min_freeable ?(fistpoints=[]) domain =
   if List.mem DisableInaccuracyCompensation fistpoints
   then max 0L (domain.memory_actual_kib -* domain.dynamic_min_kib)
   else max 0L (domain.memory_actual_kib -* domain.dynamic_min_kib -* 2L ** domain.inaccuracy_kib)
-    (** The minimum amount we will allocate by setting target = dynamic_max *)
+(** The minimum amount we will allocate by setting target = dynamic_max *)
 let min_allocatable domain = max 0L (domain.dynamic_max_kib -* domain.memory_actual_kib -* 2L ** domain.inaccuracy_kib)
-  (** The range between dynamic_min and dynamic_max i.e. the total amount we may vary the balloon target
-      NOT the total amount the memory_actual may vary. *)
+(** The range between dynamic_min and dynamic_max i.e. the total amount we may vary the balloon target
+    NOT the total amount the memory_actual may vary. *)
 let range domain = max 0L (domain.dynamic_max_kib -* domain.dynamic_min_kib)
 
 module type POLICY = sig

@@ -43,4 +43,4 @@ val write: pcb -> OS.Io_page.t -> unit Lwt.t
 val writev: pcb -> OS.Io_page.t list -> unit Lwt.t
 
 val create: Ipv4.t -> t * unit Lwt.t
-      (* val tcpstats: t -> unit *)
+(* val tcpstats: t -> unit *)

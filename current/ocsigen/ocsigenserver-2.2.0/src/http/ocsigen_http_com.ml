@@ -361,7 +361,7 @@ let parse_http_header mode s =
       (if mode = Nofirstline then
          Http_lexer.nofirstline
            { Ocsigen_http_frame.Http_header.mode =
-               Ocsigen_http_frame.Http_header.Nofirstline;
+             Ocsigen_http_frame.Http_header.Nofirstline;
              proto =
                Ocsigen_http_frame.Http_header.HTTP11;
              headers = Http_headers.empty }
@@ -498,7 +498,7 @@ let get_http_frame ?(head = false) receiver =
                frame_content = la;
                frame_abort =
                  (fun () -> Lwt_ssl.close receiver.fd)}
-             (*VVV close or shutdown? *)
+(*VVV close or shutdown? *)
 
 (****)
 
@@ -575,7 +575,7 @@ let wait_all_senders conn =
 let (<<) h (n, v) = Http_headers.replace n v h
 
 let (<<?!) h (n, v) = Http_headers.replace_opt n v h
-  (* None means: remove from headers *)
+(* None means: remove from headers *)
 
 let (<<?) h (n, v) =
   match v with
@@ -806,7 +806,7 @@ let send
             | Some ka ->
                 hds
                 <<?! (* We override the value *)
-                (*XXX Check: HTTP/1.0 *)
+                  (*XXX Check: HTTP/1.0 *)
                   (Http_headers.connection,
                    if ka
                    (* && not (not chunked && res.res_content_length = None) *)
@@ -887,7 +887,7 @@ let send
   let headers =
     res.res_headers
     <<?
-    (* il faut récupérer la date de dernière modification *)
+      (* il faut récupérer la date de dernière modification *)
       (Http_headers.last_modified,
        match res.res_lastmodified with
            None    -> None (* We do not put last modified for dynamically

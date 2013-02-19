@@ -64,15 +64,15 @@ external rem : nativeint -> nativeint -> nativeint = "%nativeint_mod"
    If [y = 0], [Nativeint.rem x y] raises [Division_by_zero]. *)
 
 val succ : nativeint -> nativeint
-  (** Successor.
-     [Nativeint.succ x] is [Nativeint.add x Nativeint.one]. *)
+(** Successor.
+   [Nativeint.succ x] is [Nativeint.add x Nativeint.one]. *)
 
 val pred : nativeint -> nativeint
-  (** Predecessor.
-     [Nativeint.pred x] is [Nativeint.sub x Nativeint.one]. *)
+(** Predecessor.
+   [Nativeint.pred x] is [Nativeint.sub x Nativeint.one]. *)
 
 val abs : nativeint -> nativeint
-  (** Return the absolute value of its argument. *)
+(** Return the absolute value of its argument. *)
 
 val size : int
 (** The size in bits of a native integer.  This is equal to [32]
@@ -98,7 +98,7 @@ external logxor : nativeint -> nativeint -> nativeint = "%nativeint_xor"
 (** Bitwise logical exclusive or. *)
 
 val lognot : nativeint -> nativeint
-  (** Bitwise logical negation *)
+(** Bitwise logical negation *)
 
 external shift_left : nativeint -> int -> nativeint = "%nativeint_lsl"
 (** [Nativeint.shift_left x y] shifts [x] to the left by [y] bits.
@@ -161,16 +161,16 @@ external of_string : string -> nativeint = "caml_nativeint_of_string"
    exceeds the range of integers representable in type [nativeint]. *)
 
 val to_string : nativeint -> string
-  (** Return the string representation of its argument, in decimal. *)
+(** Return the string representation of its argument, in decimal. *)
 
 type t = nativeint
 (** An alias for the type of native integers. *)
 
 val compare: t -> t -> int
-  (** The comparison function for native integers, with the same specification as
-      {!Pervasives.compare}.  Along with the type [t], this function [compare]
-      allows the module [Nativeint] to be passed as argument to the functors
-      {!Set.Make} and {!Map.Make}. *)
+(** The comparison function for native integers, with the same specification as
+    {!Pervasives.compare}.  Along with the type [t], this function [compare]
+    allows the module [Nativeint] to be passed as argument to the functors
+    {!Set.Make} and {!Map.Make}. *)
 
 (**/**)
 

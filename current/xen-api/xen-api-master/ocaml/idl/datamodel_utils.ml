@@ -496,7 +496,7 @@ let on_client_side (x: message) : bool = match x with
   (* Anything that's msg_db_only is not on client-side *)
   | { msg_db_only = true } -> false
 
-(* Client cannot modify (set/add/remove) a non-RW field *)
+  (* Client cannot modify (set/add/remove) a non-RW field *)
   | { msg_tag = FromField((Setter|Add|Remove), { qualifier = RW }) } -> true
   | { msg_tag = FromField((Setter|Add|Remove), _) } -> false
   (* If an object is tagged with custom ctor/dtor, omit the default one *)

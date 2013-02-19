@@ -77,7 +77,7 @@ module type Gen_set = sig
   type 'a t
   type 'a bound
   type 'a interval
-    (* An interval set is a set of nonempty disjoint intervals. *)
+  (* An interval set is a set of nonempty disjoint intervals. *)
 
   (* [create] creates an interval set containing values between each pair of
      values.  It is an error if the pairs overlap. *)
@@ -109,8 +109,8 @@ module type S = sig
   include Gen
     with type 'a t := 'a t_
     with type 'a bound := 'a bound_
-      (* [create] has the same type as in [Gen], but adding it here prevents a type-checker
-         issue with nongeneralizable type variables. *)
+  (* [create] has the same type as in [Gen], but adding it here prevents a type-checker
+     issue with nongeneralizable type variables. *)
   val create : bound -> bound -> t
 
   type 'a poly_t

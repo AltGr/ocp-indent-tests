@@ -20,11 +20,11 @@ sig
   (*  dbg_str -> edition -> additional_params -> enabled_features, additional_params *)
   val apply_edition : string -> string -> (string * string) list ->
     string * Features.feature list * (string * string) list
-      (* dbg_str -> list of editions *)
+  (* dbg_str -> list of editions *)
   val get_editions : string -> (string * string * string * int) list
-    (* dbg_str -> result *)
+  (* dbg_str -> result *)
   val get_version : string -> string
-    (* () -> version *)
+  (* () -> version *)
   val reopen_logs : unit -> bool
 end  
 

@@ -14,7 +14,7 @@ open Async.Std
 *)
 
 let trace = ref false
-  (* let trace = Deferred.debug_trace_connect *)
+(* let trace = Deferred.debug_trace_connect *)
 
 (** Guaranteed to be filled after everything else that
    will be scheduled this thread has been executed. *)

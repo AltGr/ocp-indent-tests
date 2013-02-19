@@ -101,14 +101,14 @@ sig
   val write : t -> (string * OStream.outcome Lwt.u option) -> unit
 
   val listeners : t -> int
-    (* The up-to-date count of registered clients *)
+  (* The up-to-date count of registered clients *)
   val send_listeners : t -> int -> unit
-    (* [send_listeners c i] adds [i] to [listeners c]. [i] may be negative. *)
+  (* [send_listeners c i] adds [i] to [listeners c]. [i] may be negative. *)
 
   val find_channel : chan_id -> t
-    (* may raise Not_found if the channel was collected or never created.
-     * Basically ids are meant for clients to tell a server to start listening
-     * to it. *)
+  (* may raise Not_found if the channel was collected or never created.
+   * Basically ids are meant for clients to tell a server to start listening
+   * to it. *)
   val get_id : t -> chan_id
     (* [find_channel (get_id ch)] returns [ch] if the channel wasn't destroyed
      * that is. *)
@@ -231,16 +231,16 @@ sig
 
   val decode_upcomming :
     OX.request -> (Channels.t list * Channels.chan_id list) Lwt.t
-      (* decode incomming message : the result is the list of channels to listen
-         to (on the left) or to signal non existence (on the right). *)
+  (* decode incomming message : the result is the list of channels to listen
+     to (on the left) or to signal non existence (on the right). *)
 
   val encode_downgoing :
     Channels.chan_id list
     -> (Channels.t * string * OStream.outcome Lwt.u option) list option
     -> string OStream.t
-      (* Encode outgoing messages : the first argument is the list of channels
-       * that have already been collected.
-       * The results is the stream to send to the client*)
+  (* Encode outgoing messages : the first argument is the list of channels
+   * that have already been collected.
+   * The results is the stream to send to the client*)
 
   val encode_ended : Channels.chan_id list -> string
 
@@ -334,20 +334,20 @@ module Security :
 sig
 
   val set_timeout : ?reset:bool -> float -> unit
-    (* Set the [timeout] constant for new connections. Existing connections are
-     * not affected unless [?reset] is [Some true] *)
+  (* Set the [timeout] constant for new connections. Existing connections are
+   * not affected unless [?reset] is [Some true] *)
 
   val deactivate : unit -> unit
-    (* Stop serving comet connections and kill all current connections. *)
+  (* Stop serving comet connections and kill all current connections. *)
 
   val activate : unit -> unit
-    (* (Re)start serving connections *)
+  (* (Re)start serving connections *)
 
   val activated : unit -> bool
-    (* activation state *)
+  (* activation state *)
 
   val kill : unit React.E.t
-      (* The event reflecting willingness to kill connections *)
+  (* The event reflecting willingness to kill connections *)
 
   val command_function : string -> string list -> unit Lwt.t
       (* To be registered with Ocsigen_extension.register_command_function *)

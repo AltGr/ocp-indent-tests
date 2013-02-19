@@ -69,13 +69,13 @@ module List : sig
 
   val remove_first_if_any : 'a -> 'a list -> 'a list
   val remove_first_if_any_q : 'a -> 'a list -> 'a list
-    (* val remove_first : 'a -> 'a list -> 'a list *)
-    (* val remove_first_q : 'a -> 'a list -> 'a list *)
-    (* val remove_all : 'a -> 'a list -> 'a list *)
-    (* val remove_all_q : 'a -> 'a list -> 'a list *)
+  (* val remove_first : 'a -> 'a list -> 'a list *)
+  (* val remove_first_q : 'a -> 'a list -> 'a list *)
+  (* val remove_all : 'a -> 'a list -> 'a list *)
+  (* val remove_all_q : 'a -> 'a list -> 'a list *)
   val remove_all_assoc : 'a -> ('a * 'b) list -> ('a * 'b) list
-    (* val remove_all_assoc_q : 'a -> ('a * 'b) list -> ('a * 'b) list *)
-    (* val is_prefix : 'a list -> 'a list -> bool *)
+  (* val remove_all_assoc_q : 'a -> ('a * 'b) list -> ('a * 'b) list *)
+  (* val is_prefix : 'a list -> 'a list -> bool *)
 
   val chop : int -> 'a list -> 'a list
 
@@ -156,7 +156,7 @@ module Url_base : sig
   val add_end_slash_if_missing : path -> path
   val remove_slash_at_end : path -> path
   val remove_slash_at_beginning : path -> path
-    (* val recursively_remove_slash_at_beginning : path -> path *)
+  (* val recursively_remove_slash_at_beginning : path -> path *)
   val is_prefix_skip_end_slash : string list -> string list -> bool
 
 

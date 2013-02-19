@@ -130,21 +130,21 @@ let nonpersistent_rpc xml =
         parse (tokens_of_argv arg_array) in
       let cmd = parse_commandline (Array.to_list Sys.argv) in
       exec_command cmd
-      (*  with
-            Cli_frontend.ParseError s ->
-         param_error "Syntax error" s;
-          | Cli_frontend.ParamNotFound s ->
-         param_error "Required parameter not found" s;
-          | FatalError s ->
-         param_error "Fatal error" s
-          | Errors.Server_error(c,s) ->
-         List.iter (print_endline) s;
-         exit exit_error
-          | Xml.Error exn ->
-         print_endline ("XML error!: " ^ Xml.error exn);
-         exit exit_error
-          | exc ->
-         print_endline ("Unhandled exception: " ^ (Printexc.to_string exc));
-         raise exc *)
+    (*  with
+          Cli_frontend.ParseError s ->
+       param_error "Syntax error" s;
+        | Cli_frontend.ParamNotFound s ->
+       param_error "Required parameter not found" s;
+        | FatalError s ->
+       param_error "Fatal error" s
+        | Errors.Server_error(c,s) ->
+       List.iter (print_endline) s;
+       exit exit_error
+        | Xml.Error exn ->
+       print_endline ("XML error!: " ^ Xml.error exn);
+       exit exit_error
+        | exc ->
+       print_endline ("Unhandled exception: " ^ (Printexc.to_string exc));
+       raise exc *)
 
     let _ = main()

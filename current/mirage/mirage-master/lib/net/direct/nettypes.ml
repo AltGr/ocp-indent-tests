@@ -72,7 +72,7 @@ let ipv4_addr_of_string x =
 let ipv4_blank = 0l
 (* Broadcast 255.255.255.255 IPv4 address *)
 let ipv4_broadcast = ipv4_addr_of_tuple (255l,255l,255l,255l)
-  (* Localhost 127.0.0.1 ipv4 address  *)
+(* Localhost 127.0.0.1 ipv4 address  *)
 let ipv4_localhost = ipv4_addr_of_tuple (127l,0l,0l,1l)
 
 let ipv4_addr_to_string s =

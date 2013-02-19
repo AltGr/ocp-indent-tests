@@ -524,7 +524,7 @@ let redo_log_alert_key = "metadata_lun_alerts"
 (** Mutex for the external authentication in pool *)
 (* CP-825: Serialize execution of pool-enable-extauth and pool-disable-extauth *)
 let serialize_pool_enable_disable_extauth = Mutex.create()
-  (* CP-695: controls our asynchronous persistent initialization of the external authentication service during Xapi.server_init *)
+(* CP-695: controls our asynchronous persistent initialization of the external authentication service during Xapi.server_init *)
 
 let event_hook_auth_on_xapi_initialize_succeeded = ref false
 
@@ -612,7 +612,7 @@ let pif_reconfigure_ip_timeout = ref 300.
 
 (* CA-16878: 5 minutes, same as the local database flush *)
 let pool_db_sync_interval = ref 300.
-  (* blob/message/rrd file syncing - sync once a day *)
+(* blob/message/rrd file syncing - sync once a day *)
 let pool_data_sync_interval = ref 86400.
 
 let domain_shutdown_ack_timeout = ref 10.
@@ -672,8 +672,8 @@ let minimum_time_between_bounces = ref 120. (* 2 minutes *)
 let minimum_time_between_reboot_with_no_added_delay = ref 60. (* 1 minute *)
 
 let ha_monitor_interval = ref 20.
-  (* Unconditionally replan every once in a while just in case the overcommit
-     protection is buggy and we don't notice *)
+(* Unconditionally replan every once in a while just in case the overcommit
+   protection is buggy and we don't notice *)
 let ha_monitor_plan_interval = ref 1800.
 
 let ha_monitor_startup_timeout = ref 1800.

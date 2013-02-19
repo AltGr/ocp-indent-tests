@@ -47,7 +47,7 @@ sig
 
   val partition : ('a elt -> bool) -> 'a t -> 'a t * 'a t
 
-  (*
+      (*
   val cases : 'a t -> (unit -> 'b) -> ('a elt -> 'a t -> 'b) -> 'b
 *)
 end

@@ -94,13 +94,13 @@ let request_sender =
 module T = Hashtbl.Make(
   struct
     type t = int * (Unix.inet_addr * int * bool)
-        (* client ID, (IP, port, doing HEAD request) *)
+    (* client ID, (IP, port, doing HEAD request) *)
     let equal = (=)
     let hash = Hashtbl.hash
   end)
 
 let connection_table = T.create 100
-  (*
+(*
   (comment added 2001/02/09)
 
   The connection table associates to each incoming connection
@@ -128,7 +128,7 @@ module FT = struct
     end)
 
   let free_connection_table = T.create 100
-    (* contains unused opened output connections *)
+  (* contains unused opened output connections *)
 
   let add k v =
     let add_last v =
@@ -693,11 +693,11 @@ let raw_request
     in
     Lwt.return
       {Ocsigen_http_frame.frame_header=
-          {Ocsigen_http_frame.Http_header.mode =
-              http_frame.Ocsigen_http_frame.frame_header.Ocsigen_http_frame.Http_header.mode;
-            Ocsigen_http_frame.Http_header.proto =
-              http_frame.Ocsigen_http_frame.frame_header.Ocsigen_http_frame.Http_header.proto;
-            Ocsigen_http_frame.Http_header.headers = headers};
+        {Ocsigen_http_frame.Http_header.mode =
+          http_frame.Ocsigen_http_frame.frame_header.Ocsigen_http_frame.Http_header.mode;
+          Ocsigen_http_frame.Http_header.proto =
+          http_frame.Ocsigen_http_frame.frame_header.Ocsigen_http_frame.Http_header.proto;
+          Ocsigen_http_frame.Http_header.headers = headers};
         frame_content = http_frame.Ocsigen_http_frame.frame_content;
         frame_abort = http_frame.Ocsigen_http_frame.frame_abort;
       }

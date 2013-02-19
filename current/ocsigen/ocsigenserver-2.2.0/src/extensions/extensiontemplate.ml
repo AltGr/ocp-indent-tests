@@ -177,10 +177,10 @@ let site_creator
     (hostpattern : Ocsigen_extensions.virtual_hosts)
     (config_info : Ocsigen_extensions.config_info)
   = parse_config
-  (* hostpattern has type Ocsigen_extensions.virtual_hosts
-     and represents the name of the virtual host.
-     The path and the charset are declared in <site path... charset=.../>
-  *)
+(* hostpattern has type Ocsigen_extensions.virtual_hosts
+   and represents the name of the virtual host.
+   The path and the charset are declared in <site path... charset=.../>
+*)
 
 
 (* Same thing if the extension is loaded inside a local config
@@ -195,13 +195,13 @@ let () = register_extension
     ~name:"extensionname"
     ~fun_site:site_creator
 
-(* If your extension is safe for users and if you want to allow
-   exactly the same options as for global configuration, use the same
-   [site_creator] function for [user_fun_site] as for [fun_site].
+    (* If your extension is safe for users and if you want to allow
+       exactly the same options as for global configuration, use the same
+       [site_creator] function for [user_fun_site] as for [fun_site].
 
-   If you don't want to allow users to use that extension in their
-   configuration files, you can omit user_fun_site.
-*)
+       If you don't want to allow users to use that extension in their
+       configuration files, you can omit user_fun_site.
+    *)
     ~user_fun_site:user_site_creator
     ~init_fun: parse_global_config
 

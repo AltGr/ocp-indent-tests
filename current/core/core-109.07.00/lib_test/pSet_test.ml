@@ -2,7 +2,7 @@ open OUnit;;
 open Core.Std
 
 let s1 = Set.Poly.of_list ["a"; "b"; "c"; "d"]
-                          (*let m2 = Map.of_alist ["a",1; "c",-3; "d",4; "e",5]*)
+(*let m2 = Map.of_alist ["a",1; "c",-3; "d",4; "e",5]*)
 
 let test =
   "pSet" >:::

@@ -57,7 +57,7 @@ and device =
   |Blkif of blkif
   |KV_RO of kv_ro
 
-(** A provider listens for new device ids, and create/destroy them *)
+    (** A provider listens for new device ids, and create/destroy them *)
 and provider = <
   id: string;             (* Human-readable name of provider *)
   create: deps:entry list -> cfg:(string * string) list -> id -> entry Lwt.t; (* Create a device from an id *)
@@ -67,9 +67,9 @@ and provider = <
 
 (** Track all the devices in the system *)
 let device_tree: (id, entry) Hashtbl.t = Hashtbl.create 1
-  (** Track all the threads waiting for a device *)
+(** Track all the threads waiting for a device *)
 let device_waiters: (id, entry Lwt.u Lwt_sequence.t) Hashtbl.t = Hashtbl.create 1
-  (** Track all the threads waiting for general listen events *)
+(** Track all the threads waiting for general listen events *)
 let wildcard_waiters: id Lwt_mvar.t Lwt_sequence.t = Lwt_sequence.create ()
 
 (** Track all registered providers in the system *)

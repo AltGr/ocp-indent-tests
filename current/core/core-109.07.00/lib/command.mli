@@ -26,43 +26,43 @@ module Spec : sig
 
   (** composable command-line specifications *)
   type ('main_in, 'main_out) t
-    (**
-        Ultimately one forms a base command by combining a spec of type [('main, unit) t]
-        with a main function of type ['main]; see the [basic] function below.  Combinators
-        in this library incrementally build up the type of main according to what
-        command-line parameters it expects, so the resulting type of [main] is something
-        like:
+  (**
+      Ultimately one forms a base command by combining a spec of type [('main, unit) t]
+      with a main function of type ['main]; see the [basic] function below.  Combinators
+      in this library incrementally build up the type of main according to what
+      command-line parameters it expects, so the resulting type of [main] is something
+      like:
 
-        [arg1 -> ... -> argN -> unit]
+      [arg1 -> ... -> argN -> unit]
 
-        It may help to think of [('a, 'b) t] as a function space ['a -> 'b] embellished with
-        information about:
+      It may help to think of [('a, 'b) t] as a function space ['a -> 'b] embellished with
+      information about:
 
-        {ul {- how to parse command line}
-            {- what the command does and how to call it}
-            {- how to auto-complete a partial command line}}
+      {ul {- how to parse command line}
+          {- what the command does and how to call it}
+          {- how to auto-complete a partial command line}}
 
-        One can view a value of type [('main_in, 'main_out) t] as function that transforms a
-        main function from type ['main_in] to ['main_out], typically by supplying some
-        arguments.  E.g. a value of type [Spec.t] might have type:
+      One can view a value of type [('main_in, 'main_out) t] as function that transforms a
+      main function from type ['main_in] to ['main_out], typically by supplying some
+      arguments.  E.g. a value of type [Spec.t] might have type:
 
-        |  (arg1 -> ... -> argN -> 'r, 'r) Spec.t
+      |  (arg1 -> ... -> argN -> 'r, 'r) Spec.t
 
-        Such a value can transform a main function of type [arg1 -> ... -> argN -> 'r] by
-        supplying it argument values of type [arg1], ..., [argn], leaving a main function
-        whose type is ['r].  In the end, [Command.basic] takes a completed spec where ['r =
-        unit], and hence whose type looks like:
+      Such a value can transform a main function of type [arg1 -> ... -> argN -> 'r] by
+      supplying it argument values of type [arg1], ..., [argn], leaving a main function
+      whose type is ['r].  In the end, [Command.basic] takes a completed spec where ['r =
+      unit], and hence whose type looks like:
 
-        |  (arg1 -> ... -> argN -> unit, unit) Spec.t
+      |  (arg1 -> ... -> argN -> unit, unit) Spec.t
 
-        A value of this type can fully apply a main function of type [arg1 -> ... -> argN
-        -> unit] to all its arguments.
+      A value of this type can fully apply a main function of type [arg1 -> ... -> argN
+      -> unit] to all its arguments.
 
-        The view of [('main_in, main_out) Spec.t] as a function from ['main_in] to
-        ['main_out] is directly reflected by the [step] function, whose type is:
+      The view of [('main_in, main_out) Spec.t] as a function from ['main_in] to
+      ['main_out] is directly reflected by the [step] function, whose type is:
 
-        |  val step : ('m1 -> 'm2) -> ('m1, 'm2) t
-    *)
+      |  val step : ('m1 -> 'm2) -> ('m1, 'm2) t
+  *)
 
   (** [spec1 ++ spec2 ++ ... ++ specN] composes spec1 through specN.
 
@@ -105,59 +105,59 @@ module Spec : sig
 
   (** add a leftmost parameter onto the type of main *)
   val (+<) : ('m1, 'm2) t -> 'a param -> ('a -> 'm1, 'm2) t
-    (** this function should only be used as a workaround in situations where the
-        order of composition is at odds with the order of anonymous arguments due
-        to factoring out some common spec *)
+  (** this function should only be used as a workaround in situations where the
+      order of composition is at odds with the order of anonymous arguments due
+      to factoring out some common spec *)
 
   (** combinator for patching up how parameters are obtained or presented *)
   val step : ('m1 -> 'm2) -> ('m1, 'm2) t
-    (** Here are a couple examples of some of its many uses
-        {ul
-          {li {i introducing labeled arguments}
-              {v step (fun m v -> m ~foo:v)
-                 +> flag "-foo" no_arg : (foo:bool -> 'm, 'm) t v}}
-          {li {i prompting for missing values}
-              {v step (fun m user -> match user with
-                   | Some user -> m user
-                   | None -> print_string "enter username: "; m (read_line ()))
-                 +> flag "-user" (optional string) ~doc:"USER to frobnicate"
-                 : (string -> 'm, 'm) t v}}
-        }
+  (** Here are a couple examples of some of its many uses
+      {ul
+        {li {i introducing labeled arguments}
+            {v step (fun m v -> m ~foo:v)
+               +> flag "-foo" no_arg : (foo:bool -> 'm, 'm) t v}}
+        {li {i prompting for missing values}
+            {v step (fun m user -> match user with
+                 | Some user -> m user
+                 | None -> print_string "enter username: "; m (read_line ()))
+               +> flag "-user" (optional string) ~doc:"USER to frobnicate"
+               : (string -> 'm, 'm) t v}}
+      }
 
-        A use of [step] might look something like:
+      A use of [step] might look something like:
 
-        |  step (fun main -> let ... in main x1 ... xN) : (arg1 -> ... -> argN -> 'r, 'r) t
+      |  step (fun main -> let ... in main x1 ... xN) : (arg1 -> ... -> argN -> 'r, 'r) t
 
-        Thus, [step] allows one to write arbitrary code to decide how to transform a main
-        function.  As a simple example:
+      Thus, [step] allows one to write arbitrary code to decide how to transform a main
+      function.  As a simple example:
 
-        |  step (fun main -> main 13.) : (float -> 'r, 'r) t
+      |  step (fun main -> main 13.) : (float -> 'r, 'r) t
 
-        This spec is identical to [const 13.]; it transforms a main function by supplying
-        it with a single float argument, [13.].  As another example:
+      This spec is identical to [const 13.]; it transforms a main function by supplying
+      it with a single float argument, [13.].  As another example:
 
-        |  step (fun m v -> m ~foo:v) : (foo:'foo -> 'r, 'foo -> 'r) t
+      |  step (fun m v -> m ~foo:v) : (foo:'foo -> 'r, 'foo -> 'r) t
 
-        This spec transforms a main function that requires a labeled argument into
-        a main function that requires the argument unlabeled, making it easily composable
-        with other spec combinators. *)
+      This spec transforms a main function that requires a labeled argument into
+      a main function that requires the argument unlabeled, making it easily composable
+      with other spec combinators. *)
 
   (** combinator for defining a class of commands with common behavior *)
   val wrap : (run:('m1 -> 'r1) -> main:'m2 -> 'r2) -> ('m1, 'r1) t -> ('m2, 'r2) t
-    (** Here are two examples of command classes defined using [wrap]
-        {ul
-          {li {i print top-level exceptions to stderr}
-              {v wrap (fun ~run ~main ->
-                   Exn.handle_uncaught ~exit:true (fun () -> run main)
-                 ) : ('m, unit) t -> ('m, unit) t
-               v}}
-          {li {i iterate over lines from stdin}
-              {v wrap (fun ~run ~main ->
-                   In_channel.iter_lines stdin ~f:(fun line -> run (main line))
-                 ) : ('m, unit) t -> (string -> 'm, unit) t
-               v}}
-        }
-    *)
+  (** Here are two examples of command classes defined using [wrap]
+      {ul
+        {li {i print top-level exceptions to stderr}
+            {v wrap (fun ~run ~main ->
+                 Exn.handle_uncaught ~exit:true (fun () -> run main)
+               ) : ('m, unit) t -> ('m, unit) t
+             v}}
+        {li {i iterate over lines from stdin}
+            {v wrap (fun ~run ~main ->
+                 In_channel.iter_lines stdin ~f:(fun line -> run (main line))
+               ) : ('m, unit) t -> (string -> 'm, unit) t
+             v}}
+      }
+  *)
 
   (** {1 argument types} *)
 

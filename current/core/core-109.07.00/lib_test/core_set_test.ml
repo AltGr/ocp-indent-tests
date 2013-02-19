@@ -4,7 +4,7 @@ open Core.Std
 module String_set = Set.Make(String)
 
 let s1 = String_set.of_list ["a"; "b"; "c"; "d"]
-                            (*let m2 = Map.of_alist ["a",1; "c",-3; "d",4; "e",5]*)
+(*let m2 = Map.of_alist ["a",1; "c",-3; "d",4; "e",5]*)
 
 type int_set = int Set.Poly.t with bin_io
 

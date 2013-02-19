@@ -394,7 +394,7 @@ let db_action api : O.Module.t =
           [ "let expr' = Db_filter.expr_of_string expr in";
             "get_records_where ~" ^ Gen_common.context ^ " ~expr:expr'" ]
 
-(*
+          (*
       | FromObject(Private(Copy)) ->
     begin match x.msg_params with
     | [ _, src_name, _; _, dst_name, _ ] -> make_shallow_copy api obj (OU.escape src_name) (OU.escape dst_name) (DU.fields_of_obj obj)

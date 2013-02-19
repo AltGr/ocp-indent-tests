@@ -7,12 +7,12 @@ module Avltree = struct
     | Node of ('k, 'v) node
     | Leaf of 'k * 'v
 
-  (* This record adds an indirection, but it is necessary to make
-     insert performance decent, otherwise we are killed by
-     allocation. It IS possible to get rid of it by collapsing it's
-     fields into a constructor. However, in order to set the fields
-     we'd need to use the Obj module, and I wasn't willing to
-     contamplate that just yet. (E.G. Obj.set_field ) *)
+        (* This record adds an indirection, but it is necessary to make
+           insert performance decent, otherwise we are killed by
+           allocation. It IS possible to get rid of it by collapsing it's
+           fields into a constructor. However, in order to set the fields
+           we'd need to use the Obj module, and I wasn't willing to
+           contamplate that just yet. (E.G. Obj.set_field ) *)
   and ('k, 'v) node = {
     key: 'k;
     mutable value: 'v;

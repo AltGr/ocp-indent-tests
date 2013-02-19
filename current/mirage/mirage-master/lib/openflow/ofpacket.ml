@@ -554,7 +554,7 @@ let gen_reply_features req datapath_id ports_phy =
            ;ports_phy_bitstring:(Bitstring.bitstring_length
                  ports_phy_bitstring):bitstring  
            } 
-           (*       Printf.printf "Sending data %d\n" (Bitstring.bitstring_length data); *)
+(*       Printf.printf "Sending data %d\n" (Bitstring.bitstring_length data); *)
 
 let parse_features bits = 
   let parse_phys bits = 
@@ -756,7 +756,7 @@ let parse_from_raw_packet in_port bits =
        tp_dst=tp_dst
      }
 
-(* UDP *)
+     (* UDP *)
 | {dmac:48:string; smac:48:string; 0x0800:16; 4:4; ihl:4; tos:8; 
    _:56; 17:8; _:16; 
    nw_src:32; nw_dst:32; _:(ihl-5)*32; tp_src:16; tp_dst:16; 
@@ -768,7 +768,7 @@ let parse_from_raw_packet in_port bits =
      nw_proto=(char_of_int 17); tp_src=tp_src; tp_dst=tp_dst
    }
 
-(* IP *)
+   (* IP *)
 | {dmac:48:string; smac:48:string; 0x0800:16; 4:4; ihl:4; tos:8; 
    _:56; nw_proto:8; _:16; 
    nw_src:32; nw_dst:32; _:(ihl-5)*32:bitstring; _:-1:bitstring } 
@@ -780,7 +780,7 @@ let parse_from_raw_packet in_port bits =
      tp_dst=0 
    }
 
-(* Ethernet only *)
+   (* Ethernet only *)
 | {dmac:48:string; smac:48:string; etype:16; _:-1:bitstring}
 -> { wildcards=Wildcards.l2_match; 
      in_port=in_port;dl_src=smac; dl_dst=dmac; dl_vlan=0xffff;
@@ -1086,7 +1086,7 @@ module Flow_mod = struct
     in
     Bitstring.concat packet
 
-  (*
+    (*
   let flow_mod_of_bitstring h bits = 
     bitmatch h bits with
       | { match_data:Match.get_len:bitstring;
@@ -1594,7 +1594,7 @@ let parse h bits =
     | PORT_STATUS -> Port_status(h, (Port.status_of_bitstring bits)) 
     | _ -> raise (Unparsed ("_", bits))
   )
-  (*
+(*
           (bitmatch bits with  
           | { 1:8; 10:8; len:16; xid:32; buffer_id:32; total_len:16; in_port : 16; reason:8;
           bits:-1:bitstring}  

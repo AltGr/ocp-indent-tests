@@ -394,10 +394,10 @@ module Dir_entry = struct
   let fake_root_entry = {
     utf_filename = "";
     dos = 0, {
-      filename = ""; ext = ""; deleted = false; read_only = false;
-      hidden = false; system = false; volume = false; subdir = true; archive = false;
-      create = epoch; access = epoch; modify = epoch; start_cluster = 0; file_size = 0l
-    };
+        filename = ""; ext = ""; deleted = false; read_only = false;
+        hidden = false; system = false; volume = false; subdir = true; archive = false;
+        create = epoch; access = epoch; modify = epoch; start_cluster = 0; file_size = 0l
+      };
     lfns = []
   }
 
@@ -598,10 +598,10 @@ module Dir_entry = struct
   } ->
   Lfn {
     lfn_deleted = seq land 0x80 = 0x80;
-    lfn_last = seq land 0x40 = 0x40;
-    lfn_seq = seq land 0x3f;
-    lfn_checksum = checksum;
-    lfn_utf16_name = utf1 ^ utf2 ^ utf3;
+      lfn_last = seq land 0x40 = 0x40;
+      lfn_seq = seq land 0x3f;
+      lfn_checksum = checksum;
+      lfn_utf16_name = utf1 ^ utf2 ^ utf3;
   }
 | { filename: (8 * 8): string;
     ext: (3 * 8): string;

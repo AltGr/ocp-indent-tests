@@ -52,8 +52,8 @@ val getenv_exn : string -> string
 
 (** Execute the given shell command and return its exit code. *)
 val command : string -> int
-  (** [command_exn command] runs [command] and then raises an exception if it
-      returns with nonzero exit status. *)
+(** [command_exn command] runs [command] and then raises an exception if it
+    returns with nonzero exit status. *)
 val command_exn : string -> unit
 
 (** Change the current working directory of the process. *)

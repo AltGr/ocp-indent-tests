@@ -174,7 +174,7 @@ let operation (obj: obj) (x: message) =
                          get those from the 'default_fields' arg *)
       else  List.map from_rpc args_without_default_values)
 
-(* and for every default value we try to get this from default_args or default it *)
+    (* and for every default value we try to get this from default_args or default it *)
     @ (
       List.map
         (fun (param_count, default_param) ->

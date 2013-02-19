@@ -142,20 +142,20 @@ let parse_mime_types ~filename : mime_type assoc =
     with End_of_file -> mimemap
   in
   { assoc_list =
-      [ Map(try
-          let in_ch = open_in filename in
-          let map =
-            (try
-              read_and_split MapString.empty in_ch
-            with e -> close_in in_ch; raise e)
-          in
-          close_in in_ch;
-          map
-        with Sys_error s ->
-            Ocsigen_messages.warning
-              (Printf.sprintf "Ocsigen_charser_mime: unable to read the mime.types file (Error: %s)." s);
-            MapString.empty
-        )];
+    [ Map(try
+        let in_ch = open_in filename in
+        let map =
+          (try
+            read_and_split MapString.empty in_ch
+          with e -> close_in in_ch; raise e)
+        in
+        close_in in_ch;
+        map
+      with Sys_error s ->
+          Ocsigen_messages.warning
+            (Printf.sprintf "Ocsigen_charser_mime: unable to read the mime.types file (Error: %s)." s);
+          MapString.empty
+      )];
     assoc_default = default_mime_type;
   }
 

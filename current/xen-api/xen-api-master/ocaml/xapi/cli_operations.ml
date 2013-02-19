@@ -783,7 +783,7 @@ let gen_cmds rpc session_id =
     (make_param_funs (Client.Role.get_all) (fun ~rpc ~session_id ~expr -> Client.Role.get_all_records_where ~rpc ~session_id ~expr:Xapi_role.expr_no_permissions)
        (Client.Role.get_by_uuid) (role_record) "role" [] ["uuid";"name";"description";"subroles"] rpc session_id) @
     (make_param_funs (Client.VMPP.get_all) (Client.VMPP.get_all_records_where) (Client.VMPP.get_by_uuid) (vmpp_record) "vmpp" [] ["uuid";"name-label";"name-description";"is-policy-enabled";"backup-type";"backup-retention-value";"backup-frequency";"backup-schedule";"is-backup-running";"backup-last-run-time";"archive-target-type";"archive-target-config";"archive-frequency";"archive-schedule";"is-archive-running";"archive-last-run-time";"is-alarm-enabled";"alarm-config";"VMs"] rpc session_id) @
-  (*
+    (*
       (make_param_funs (Client.Blob.get_all) (Client.Blob.get_all_records_where) (Client.Blob.get_by_uuid) (blob_record) "blob" [] ["uuid";"mime-type"] rpc session_id) @
      *)
     (make_param_funs (Client.Message.get_all) (Client.Message.get_all_records_where) (Client.Message.get_by_uuid) (message_record) "message" [] [] rpc session_id) @
@@ -793,7 +793,7 @@ let gen_cmds rpc session_id =
     (make_param_funs (Client.GPU_group.get_all) (Client.GPU_group.get_all_records_where) (Client.GPU_group.get_by_uuid) (gpu_group_record) "gpu-group" [] ["uuid";"name-label";"name-description"] rpc session_id) @
     (make_param_funs (Client.VGPU.get_all) (Client.VGPU.get_all_records_where) (Client.VGPU.get_by_uuid) (vgpu_record) "vgpu" [] ["uuid";"vm-uuid";"device";"gpu-group-uuid"] rpc session_id) @
     (make_param_funs (Client.DR_task.get_all) (Client.DR_task.get_all_records_where) (Client.DR_task.get_by_uuid) (dr_task_record) "drtask" [] [] rpc session_id)
-    (*
+(*
       @ (make_param_funs (Client.Alert.get_all) (Client.Alert.get_all_records_where) (Client.Alert.get_by_uuid) (alert_record) "alert" [] ["uuid";"message";"level";"timestamp";"system";"task"] rpc session_id)
      *)
 
@@ -1240,7 +1240,7 @@ let print_assert_exception e =
   | Api_errors.Server_error(code, [key; v] ) when code=Api_errors.invalid_value ->
     Printf.sprintf "Field has invalid value: %s = %s" key v
 
-(* Used by VM.assert_agile: *)
+      (* Used by VM.assert_agile: *)
   | Api_errors.Server_error(code, [ sr ]) when code=Api_errors.ha_constraint_violation_sr_not_shared ->
     Printf.sprintf "VM requires access to non-shared SR: %s. SR must both be marked as shared and a properly configured PBD must be plugged-in on every host" (Cli_util.ref_convert sr)
   | Api_errors.Server_error(code, [ net]) when code = Api_errors.ha_constraint_violation_network_not_shared ->
@@ -2733,7 +2733,7 @@ let vm_cd_add printer rpc session_id params =
       rpc session_id (vm.getref()) vdi (List.assoc "device" params) false `RO `CD true "" []
   in
   ignore(do_vm_op printer rpc session_id op params ["cd-name";"device";"cd-location"])
-  (* cd-location was a geneva-style param *)
+(* cd-location was a geneva-style param *)
 
 let vm_cd_eject printer rpc session_id params =
   let op vm =

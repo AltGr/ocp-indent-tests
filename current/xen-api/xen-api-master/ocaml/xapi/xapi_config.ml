@@ -46,4 +46,4 @@ let dump_config () =
   debug "git changeset: %s" Version.git_id;
   debug "version: %d.%d" version_major version_minor;
   debug "use-xenopsd: %b" !Xapi_globs.use_xenopsd
-    (* debug "License filename: %s" !License_file.filename *)
+(* debug "License filename: %s" !License_file.filename *)

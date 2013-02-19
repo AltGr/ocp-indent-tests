@@ -42,8 +42,8 @@ let shutdown = ref false
 let () = Random.self_init ()
 
 let () = Ocsigen_commandline.cmdline
-  (* This is only to have the module Ocsigen_commandline linked
-     when we do not use -linkall *)
+(* This is only to have the module Ocsigen_commandline linked
+   when we do not use -linkall *)
 
 (* Without the following line, it stops with "Broken Pipe" without raising
    an exception ... *)

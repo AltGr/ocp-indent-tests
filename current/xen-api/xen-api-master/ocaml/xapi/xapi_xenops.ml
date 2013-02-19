@@ -231,206 +231,206 @@ module MD = struct
       id = (vm.API.vM_uuid, Device_number.to_linux_device device_number);
       position = Some device_number;
       mode = if vbd.API.vBD_mode = `RO then ReadOnly else ReadWrite;
-      backend = disk_of_vdi ~__context ~self:vbd.API.vBD_VDI;
-      ty = if vbd.API.vBD_type = `Disk then Disk else CDROM;
-      unpluggable = vbd.API.vBD_unpluggable;
-      extra_backend_keys = [];
-      extra_private_keys = [];
-      qos = qos ty;
-    }
+backend = disk_of_vdi ~__context ~self:vbd.API.vBD_VDI;
+ty = if vbd.API.vBD_type = `Disk then Disk else CDROM;
+unpluggable = vbd.API.vBD_unpluggable;
+extra_backend_keys = [];
+extra_private_keys = [];
+qos = qos ty;
+}
 
-  let of_vif ~__context ~vm ~vif =
-    let net = Db.Network.get_record ~__context ~self:vif.API.vIF_network in
-    let net_mtu = Int64.to_int (net.API.network_MTU) in
-    let mtu =
+let of_vif ~__context ~vm ~vif =
+  let net = Db.Network.get_record ~__context ~self:vif.API.vIF_network in
+  let net_mtu = Int64.to_int (net.API.network_MTU) in
+  let mtu =
+    try
+      if List.mem_assoc "mtu" vif.API.vIF_other_config
+      then List.assoc "mtu" vif.API.vIF_other_config |> int_of_string
+      else net_mtu
+    with _ ->
+      error "Failed to parse VIF.other_config:mtu; defaulting to network.mtu";
+      net_mtu in
+  let qos_type = vif.API.vIF_qos_algorithm_type in
+  let qos_params = vif.API.vIF_qos_algorithm_params in
+  let log_qos_failure reason =
+    warn "vif QoS failed: %s (vm=%s,vif=%s)" reason vm.API.vM_uuid vif.API.vIF_uuid in
+  let rate = match qos_type with
+    | "ratelimit" ->
+      let timeslice =
+        try Int64.of_string (List.assoc "timeslice_us" qos_params)
+        with _ -> 0L in
+      begin
+        try
+          let rate = Int64.of_string (List.assoc "kbps" qos_params) in
+          Some (rate, timeslice)
+        with
+        | Failure "int_of_string" ->
+          log_qos_failure "parameter \"kbps\" not an integer"; None
+        | Not_found ->
+          log_qos_failure "necessary parameter \"kbps\" not found"; None
+        | e ->
+          log_qos_failure (Printf.sprintf "unexpected error: %s" (Printexc.to_string e)); None
+      end
+    | "" -> None
+    | _ -> log_qos_failure (Printf.sprintf "unknown type: %s" qos_type); None in
+  let locking_mode = match vif.API.vIF_locking_mode, net.API.network_default_locking_mode with
+    | `network_default, `disabled -> Vif.Disabled
+    | `network_default, `unlocked -> Vif.Unlocked
+    | `locked, _ -> Vif.Locked { Vif.ipv4 = vif.API.vIF_ipv4_allowed; ipv6 = vif.API.vIF_ipv6_allowed }
+    | `unlocked, _ -> Vif.Unlocked
+    | `disabled, _ -> Vif.Disabled in
+  let carrier =
+    if !pass_through_pif_carrier then
+      (* We need to reflect the carrier of the local PIF on the network (if any) *)
+      let host = Helpers.get_localhost ~__context in
+      let pifs = Xapi_network_attach_helpers.get_local_pifs ~__context ~network:vif.API.vIF_network ~host in
+      match pifs with
+      | [] -> true (* Internal network; consider as "always up" *)
+      | pif :: _ ->
+        try
+          let metrics = Db.PIF.get_metrics ~__context ~self:pif in
+          Db.PIF_metrics.get_carrier ~__context ~self:metrics
+        with _ -> true
+    else
+      (* If we don't need to reflect anything, the carrier is set to "true" *)
+      true
+  in
+  let open Vif in {
+    id = (vm.API.vM_uuid, vif.API.vIF_device);
+    position = int_of_string vif.API.vIF_device;
+    mac = vif.API.vIF_MAC;
+    carrier = carrier;
+    mtu = mtu;
+    rate = rate;
+    backend = backend_of_network net;
+    other_config = vif.API.vIF_other_config;
+    locking_mode = locking_mode;
+    extra_private_keys = [
+      "vif-uuid", vif.API.vIF_uuid;
+      "network-uuid", net.API.network_uuid
+    ]
+  }
+
+let pcis_of_vm ~__context (vmref, vm) =
+  let vgpu_pcidevs = Vgpuops.list_vgpus ~__context ~vm:vmref in
+  let devs = List.flatten (List.map (fun (_, dev) -> dev) (Pciops.sort_pcidevs vgpu_pcidevs)) in
+
+  (* The 'unmanaged' PCI devices are in the other_config key: *)
+  let other_pcidevs = Pciops.other_pcidevs_of_vm ~__context vm.API.vM_other_config in
+
+  let unmanaged = List.flatten (List.map (fun (_, dev) -> dev) (Pciops.sort_pcidevs other_pcidevs)) in
+
+  let devs = devs @ unmanaged in
+
+  let open Pci in
+  List.map
+    (fun (idx, (domain, bus, dev, fn)) -> {
+      id = (vm.API.vM_uuid, Printf.sprintf "%04x:%02x:%02x.%01x" domain bus dev fn);
+      position = idx;
+      domain = domain;
+      bus = bus;
+      dev = dev;
+      fn = fn;
+      msitranslate = None;
+      power_mgmt = None;
+    })
+    (List.combine (Range.to_list (Range.make 0 (List.length devs))) devs)
+
+let of_vm ~__context (vmref, vm) vbds pci_passthrough =
+  let on_crash_behaviour = function
+    | `preserve -> [ Vm.Pause ]
+    | `coredump_and_restart -> [ Vm.Coredump; Vm.Start ]
+    | `coredump_and_destroy -> [ Vm.Coredump; Vm.Shutdown ]
+    | `restart
+    | `rename_restart -> [ Vm.Start ]
+    | `destroy -> [ Vm.Shutdown ] in
+  let on_normal_exit_behaviour = function
+    | `restart -> [ Vm.Start ]
+    | `destroy -> [ Vm.Shutdown ] in
+  let open Vm in
+  let scheduler_params =
+    (* vcpu <-> pcpu affinity settings are stored here.
+       Format is either:
+       1,2,3         ::  all vCPUs receive this mask
+       1,2,3; 4,5,6  ::  vCPU n receives mask n. Unlisted vCPUs 
+                         receive first mask *)
+    let affinity =
       try
-        if List.mem_assoc "mtu" vif.API.vIF_other_config
-        then List.assoc "mtu" vif.API.vIF_other_config |> int_of_string
-        else net_mtu
-      with _ ->
-        error "Failed to parse VIF.other_config:mtu; defaulting to network.mtu";
-        net_mtu in
-    let qos_type = vif.API.vIF_qos_algorithm_type in
-    let qos_params = vif.API.vIF_qos_algorithm_params in
-    let log_qos_failure reason =
-      warn "vif QoS failed: %s (vm=%s,vif=%s)" reason vm.API.vM_uuid vif.API.vIF_uuid in
-    let rate = match qos_type with
-      | "ratelimit" ->
-        let timeslice =
-          try Int64.of_string (List.assoc "timeslice_us" qos_params)
-          with _ -> 0L in
-        begin
-          try
-            let rate = Int64.of_string (List.assoc "kbps" qos_params) in
-            Some (rate, timeslice)
-          with
-          | Failure "int_of_string" ->
-            log_qos_failure "parameter \"kbps\" not an integer"; None
-          | Not_found ->
-            log_qos_failure "necessary parameter \"kbps\" not found"; None
-          | e ->
-            log_qos_failure (Printf.sprintf "unexpected error: %s" (Printexc.to_string e)); None
-        end
-      | "" -> None
-      | _ -> log_qos_failure (Printf.sprintf "unknown type: %s" qos_type); None in
-    let locking_mode = match vif.API.vIF_locking_mode, net.API.network_default_locking_mode with
-      | `network_default, `disabled -> Vif.Disabled
-      | `network_default, `unlocked -> Vif.Unlocked
-      | `locked, _ -> Vif.Locked { Vif.ipv4 = vif.API.vIF_ipv4_allowed; ipv6 = vif.API.vIF_ipv6_allowed }
-      | `unlocked, _ -> Vif.Unlocked
-      | `disabled, _ -> Vif.Disabled in
-    let carrier =
-      if !pass_through_pif_carrier then
-        (* We need to reflect the carrier of the local PIF on the network (if any) *)
-        let host = Helpers.get_localhost ~__context in
-        let pifs = Xapi_network_attach_helpers.get_local_pifs ~__context ~network:vif.API.vIF_network ~host in
-        match pifs with
-        | [] -> true (* Internal network; consider as "always up" *)
-        | pif :: _ ->
-          try
-            let metrics = Db.PIF.get_metrics ~__context ~self:pif in
-            Db.PIF_metrics.get_carrier ~__context ~self:metrics
-          with _ -> true
-      else
-        (* If we don't need to reflect anything, the carrier is set to "true" *)
-        true
-    in
-    let open Vif in {
-      id = (vm.API.vM_uuid, vif.API.vIF_device);
-      position = int_of_string vif.API.vIF_device;
-      mac = vif.API.vIF_MAC;
-      carrier = carrier;
-      mtu = mtu;
-      rate = rate;
-      backend = backend_of_network net;
-      other_config = vif.API.vIF_other_config;
-      locking_mode = locking_mode;
-      extra_private_keys = [
-        "vif-uuid", vif.API.vIF_uuid;
-        "network-uuid", net.API.network_uuid
-      ]
-    }
+        List.map
+          (fun x -> List.map int_of_string (String.split ',' x))
+          (String.split ';' (List.assoc "mask" vm.API.vM_VCPUs_params))
+      with _ -> [] in
+    let localhost = Helpers.get_localhost ~__context in
+    let host_guest_VCPUs_params = Db.Host.get_guest_VCPUs_params ~__context ~self:localhost in
+    let host_cpu_mask =
+      try 
+        List.map int_of_string (String.split ',' (List.assoc "mask" host_guest_VCPUs_params))
+      with _ -> [] in
+    let affinity = 
+      match affinity,host_cpu_mask with 
+      | [],[] -> []
+      | [],h -> [h]
+      | v,[] -> v
+      | affinity,mask -> 
+        List.map
+          (fun vcpu_affinity ->
+            List.filter (fun x -> List.mem x mask) vcpu_affinity) affinity in
+    let priority =
+      try
+        let weight = List.assoc "weight" vm.API.vM_VCPUs_params in
+        let cap = List.assoc "cap" vm.API.vM_VCPUs_params in
+        Some (int_of_string weight, int_of_string cap)
+      with _ -> None in
+    { priority = priority; affinity = affinity } in
 
-  let pcis_of_vm ~__context (vmref, vm) =
-    let vgpu_pcidevs = Vgpuops.list_vgpus ~__context ~vm:vmref in
-    let devs = List.flatten (List.map (fun (_, dev) -> dev) (Pciops.sort_pcidevs vgpu_pcidevs)) in
+  let platformdata =
+    let p = vm.API.vM_platform in
+    if not (Pool_features.is_enabled ~__context Features.No_platform_filter) then
+      List.filter (fun (k, v) -> List.mem k filtered_platform_flags) p
+    else p in
+  let timeoffset = rtc_timeoffset_of_vm ~__context (vmref, vm) vbds in
+  (* Replace the timeoffset in the platform data too, to avoid confusion *)
+  let platformdata =
+    ("timeoffset", timeoffset) ::
+      (List.filter (fun (key, _) -> key <> "timeoffset") platformdata) in
+  (* Filter out invalid TSC modes. *)
+  let platformdata =
+    List.filter
+      (fun (k, v) -> k <> "tsc_mode" || List.mem v ["0"; "1"; "2"; "3"])
+      platformdata
+  in
 
-    (* The 'unmanaged' PCI devices are in the other_config key: *)
-    let other_pcidevs = Pciops.other_pcidevs_of_vm ~__context vm.API.vM_other_config in
-
-    let unmanaged = List.flatten (List.map (fun (_, dev) -> dev) (Pciops.sort_pcidevs other_pcidevs)) in
-
-    let devs = devs @ unmanaged in
-
-    let open Pci in
-    List.map
-      (fun (idx, (domain, bus, dev, fn)) -> {
-        id = (vm.API.vM_uuid, Printf.sprintf "%04x:%02x:%02x.%01x" domain bus dev fn);
-        position = idx;
-        domain = domain;
-        bus = bus;
-        dev = dev;
-        fn = fn;
-        msitranslate = None;
-        power_mgmt = None;
-      })
-      (List.combine (Range.to_list (Range.make 0 (List.length devs))) devs)
-
-  let of_vm ~__context (vmref, vm) vbds pci_passthrough =
-    let on_crash_behaviour = function
-      | `preserve -> [ Vm.Pause ]
-      | `coredump_and_restart -> [ Vm.Coredump; Vm.Start ]
-      | `coredump_and_destroy -> [ Vm.Coredump; Vm.Shutdown ]
-      | `restart
-      | `rename_restart -> [ Vm.Start ]
-      | `destroy -> [ Vm.Shutdown ] in
-    let on_normal_exit_behaviour = function
-      | `restart -> [ Vm.Start ]
-      | `destroy -> [ Vm.Shutdown ] in
-    let open Vm in
-    let scheduler_params =
-      (* vcpu <-> pcpu affinity settings are stored here.
-         Format is either:
-         1,2,3         ::  all vCPUs receive this mask
-         1,2,3; 4,5,6  ::  vCPU n receives mask n. Unlisted vCPUs 
-                           receive first mask *)
-      let affinity =
-        try
-          List.map
-            (fun x -> List.map int_of_string (String.split ',' x))
-            (String.split ';' (List.assoc "mask" vm.API.vM_VCPUs_params))
-        with _ -> [] in
-      let localhost = Helpers.get_localhost ~__context in
-      let host_guest_VCPUs_params = Db.Host.get_guest_VCPUs_params ~__context ~self:localhost in
-      let host_cpu_mask =
-        try 
-          List.map int_of_string (String.split ',' (List.assoc "mask" host_guest_VCPUs_params))
-        with _ -> [] in
-      let affinity = 
-        match affinity,host_cpu_mask with 
-        | [],[] -> []
-        | [],h -> [h]
-        | v,[] -> v
-        | affinity,mask -> 
-          List.map
-            (fun vcpu_affinity ->
-              List.filter (fun x -> List.mem x mask) vcpu_affinity) affinity in
-      let priority =
-        try
-          let weight = List.assoc "weight" vm.API.vM_VCPUs_params in
-          let cap = List.assoc "cap" vm.API.vM_VCPUs_params in
-          Some (int_of_string weight, int_of_string cap)
-        with _ -> None in
-      { priority = priority; affinity = affinity } in
-
-    let platformdata =
-      let p = vm.API.vM_platform in
-      if not (Pool_features.is_enabled ~__context Features.No_platform_filter) then
-        List.filter (fun (k, v) -> List.mem k filtered_platform_flags) p
-      else p in
-    let timeoffset = rtc_timeoffset_of_vm ~__context (vmref, vm) vbds in
-    (* Replace the timeoffset in the platform data too, to avoid confusion *)
-    let platformdata =
-      ("timeoffset", timeoffset) ::
-        (List.filter (fun (key, _) -> key <> "timeoffset") platformdata) in
-    (* Filter out invalid TSC modes. *)
-    let platformdata =
-      List.filter
-        (fun (k, v) -> k <> "tsc_mode" || List.mem v ["0"; "1"; "2"; "3"])
-        platformdata
-    in
-
-    let pci_msitranslate = true in (* default setting *)
-    (* CA-55754: allow VM.other_config:msitranslate to override the bus-wide setting *)
-    let pci_msitranslate =
-      if List.mem_assoc "msitranslate" vm.API.vM_other_config
-      then List.assoc "msitranslate" vm.API.vM_other_config = "1"
-      else pci_msitranslate in
-    (* CA-55754: temporarily disable msitranslate when GPU is passed through. *)
-    let pci_msitranslate =
-      if vm.API.vM_VGPUs <> [] then false else pci_msitranslate in
-    {
-      id = vm.API.vM_uuid;
-      name = vm.API.vM_name_label;
-      ssidref = 0l;
-      xsdata = vm.API.vM_xenstore_data;
-      platformdata = platformdata;
-      bios_strings = vm.API.vM_bios_strings;
-      ty = builder_of_vm ~__context ~vm timeoffset pci_passthrough;
-      suppress_spurious_page_faults = (try List.assoc "suppress-spurious-page-faults" vm.API.vM_other_config = "true" with _ -> false);
-      machine_address_size = (try Some(int_of_string (List.assoc "machine-address-size" vm.API.vM_other_config)) with _ -> None);
-      memory_static_max = vm.API.vM_memory_static_max;
-      memory_dynamic_max = vm.API.vM_memory_dynamic_max;
-      memory_dynamic_min = vm.API.vM_memory_dynamic_min;
-      vcpu_max = Int64.to_int vm.API.vM_VCPUs_max;
-      vcpus = Int64.to_int vm.API.vM_VCPUs_at_startup;
-      scheduler_params = scheduler_params;
-      on_crash = on_crash_behaviour vm.API.vM_actions_after_crash;
-      on_shutdown = on_normal_exit_behaviour vm.API.vM_actions_after_shutdown;
-      on_reboot = on_normal_exit_behaviour vm.API.vM_actions_after_reboot;
-      pci_msitranslate = pci_msitranslate;
-      pci_power_mgmt = false;
-    }    
+  let pci_msitranslate = true in (* default setting *)
+  (* CA-55754: allow VM.other_config:msitranslate to override the bus-wide setting *)
+  let pci_msitranslate =
+    if List.mem_assoc "msitranslate" vm.API.vM_other_config
+    then List.assoc "msitranslate" vm.API.vM_other_config = "1"
+    else pci_msitranslate in
+  (* CA-55754: temporarily disable msitranslate when GPU is passed through. *)
+  let pci_msitranslate =
+    if vm.API.vM_VGPUs <> [] then false else pci_msitranslate in
+  {
+    id = vm.API.vM_uuid;
+    name = vm.API.vM_name_label;
+    ssidref = 0l;
+    xsdata = vm.API.vM_xenstore_data;
+    platformdata = platformdata;
+    bios_strings = vm.API.vM_bios_strings;
+    ty = builder_of_vm ~__context ~vm timeoffset pci_passthrough;
+    suppress_spurious_page_faults = (try List.assoc "suppress-spurious-page-faults" vm.API.vM_other_config = "true" with _ -> false);
+    machine_address_size = (try Some(int_of_string (List.assoc "machine-address-size" vm.API.vM_other_config)) with _ -> None);
+    memory_static_max = vm.API.vM_memory_static_max;
+    memory_dynamic_max = vm.API.vM_memory_dynamic_max;
+    memory_dynamic_min = vm.API.vM_memory_dynamic_min;
+    vcpu_max = Int64.to_int vm.API.vM_VCPUs_max;
+    vcpus = Int64.to_int vm.API.vM_VCPUs_at_startup;
+    scheduler_params = scheduler_params;
+    on_crash = on_crash_behaviour vm.API.vM_actions_after_crash;
+    on_shutdown = on_normal_exit_behaviour vm.API.vM_actions_after_shutdown;
+    on_reboot = on_normal_exit_behaviour vm.API.vM_actions_after_reboot;
+    pci_msitranslate = pci_msitranslate;
+    pci_power_mgmt = false;
+  }    
 
 
 end

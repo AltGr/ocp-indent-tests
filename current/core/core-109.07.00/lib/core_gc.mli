@@ -198,13 +198,13 @@ external compact : unit -> unit = "caml_gc_compaction"
    compaction is a lengthy operation. *)
 
 val print_stat : out_channel -> unit
-  (** Print the current values of the memory management counters (in
-     human-readable form) into the channel argument. *)
+(** Print the current values of the memory management counters (in
+   human-readable form) into the channel argument. *)
 
 val allocated_bytes : unit -> float
-  (** Return the total number of bytes allocated since the program was
-     started.  It is returned as a [float] to avoid overflow problems
-     with [int] on 32-bit machines. *)
+(** Return the total number of bytes allocated since the program was
+   started.  It is returned as a [float] to avoid overflow problems
+   with [int] on 32-bit machines. *)
 
 (** [add_finalizer b f] ensures that [f] runs after [b] becomes unreachable.  The
     OCaml runtime only supports finalizers on heap blocks, hence [add_finalizer] requires
@@ -258,14 +258,14 @@ type alarm
    and delete alarms. *)
 
 val create_alarm : (unit -> unit) -> alarm
-  (** [create_alarm f] will arrange for [f] to be called at the end of each
-     major GC cycle, starting with the current cycle or the next one.
-     A value of type [alarm] is returned that you can
-     use to call [delete_alarm]. *)
+(** [create_alarm f] will arrange for [f] to be called at the end of each
+   major GC cycle, starting with the current cycle or the next one.
+   A value of type [alarm] is returned that you can
+   use to call [delete_alarm]. *)
 
 val delete_alarm : alarm -> unit
-  (** [delete_alarm a] will stop the calls to the function associated
-     to [a].  Calling [delete_alarm a] again has no effect. *)
+(** [delete_alarm a] will stop the calls to the function associated
+   to [a].  Calling [delete_alarm a] again has no effect. *)
 
 (** Adjust the specified GC parameters. *)
 val tune :

@@ -18,10 +18,10 @@
    of these thumbnail files. *)
 
 val load : string -> string * Index8.t
-    (** Returns image info and its thumbnail *)
+(** Returns image info and its thumbnail *)
 
 val save : string -> string -> Index8.t -> unit
-  (** Save xv thumbnail.
-     The [Index8.t] value must be 80x80 at most. *)
+(** Save xv thumbnail.
+   The [Index8.t] value must be 80x80 at most. *)
 
 val create : Images.t -> Index8.t;;

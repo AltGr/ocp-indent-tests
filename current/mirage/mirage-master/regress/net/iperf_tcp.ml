@@ -45,7 +45,7 @@ let print_data st ts_now =
 let iperf (dip,dpt) chan =
   Log.info "tcp_iperf" "connected";
   let st = {bytes=0L; packets=0L; bin_bytes=0L; bin_packets=0L; last_time =
-              (OS.Clock.time ())} in
+             (OS.Clock.time ())} in
   try_lwt
     while_lwt true do
       lwt data = (Net.Channel.read_some chan) in

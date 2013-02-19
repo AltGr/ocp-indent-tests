@@ -306,7 +306,7 @@ module Spec = struct
     |External -> `External
 
   let backends_iter fn spec = List.iter fn spec.backends
-      (* Map over backends, calling supported or unsupported on them appropriately *)
+  (* Map over backends, calling supported or unsupported on them appropriately *)
   let backends_map supported unsupported spec = 
     let sup,unsup = List.partition (fun be ->
         match is_supported be with |`Yes|`External->true |`No->false) spec.backends in

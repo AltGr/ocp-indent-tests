@@ -21,7 +21,7 @@ let rec pow2 = function
   | 0 -> 1
   | n -> 2 * (pow2 (n - 1))
 
-(*
+    (*
   struct sring {
     RING_IDX req_prod, req_event;
     RING_IDX rsp_prod, rsp_event;

@@ -114,10 +114,10 @@ end = struct
         mutable collection : float option; (* the timestamp for removal *)
       }
 
-  (* Doubly-linked list with maximum size.
-     The field [oldest] is the first
-     element that must be removed if the list becomes too long.
-  *)
+      (* Doubly-linked list with maximum size.
+         The field [oldest] is the first
+         element that must be removed if the list becomes too long.
+      *)
   and 'a t =
       {mutable newest : 'a node option (* None = empty *);
        mutable oldest : 'a node option;
@@ -319,7 +319,7 @@ end = struct
             | _ ->
                 remove' node l;
                 ignore (add_node node l) (* assertion: = None *)
-                (* we must not change the physical address => use add_node *)
+  (* we must not change the physical address => use add_node *)
 
   let rec remove_n_oldest l n = (* remove the n oldest values
                                    (or less if the list is not long enough) ;

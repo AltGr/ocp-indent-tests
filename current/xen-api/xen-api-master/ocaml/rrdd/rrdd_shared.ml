@@ -19,9 +19,9 @@ module StringSet = Set.Make(String)
 
 (* The time between each monitoring loop. *)
 let timeslice : float ref = ref 5.
-  (* Timestamp of the last monitoring loop end. *)
+(* Timestamp of the last monitoring loop end. *)
 let last_loop_end_time : float ref = ref neg_infinity
-  (* The mutex that protects the last_loop_end_time against data corruption. *)
+(* The mutex that protects the last_loop_end_time against data corruption. *)
 let last_loop_end_time_m : Mutex.t = Mutex.create ()
 
 (** Cache memory/target values *)

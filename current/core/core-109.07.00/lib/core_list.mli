@@ -301,7 +301,7 @@ module Assoc : sig
   val mem      : ('a, 'b) t -> ?equal:('a -> 'a -> bool) -> 'a -> bool
   val remove   : ('a, 'b) t -> ?equal:('a -> 'a -> bool) -> 'a -> ('a, 'b) t
   val map      : ('a, 'b) t -> f:('b -> 'c) -> ('a, 'c) t
-    (* Bijectivity is not guaranteed because we allow a key to appear more than once. *)
+  (* Bijectivity is not guaranteed because we allow a key to appear more than once. *)
   val inverse  : ('a, 'b) t -> ('b, 'a) t
 end
 

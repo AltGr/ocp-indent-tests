@@ -90,7 +90,7 @@ let summarise_host_snapshot extra_guests host =
   ; HSS.memory_dynamic_max_sum = sum 0L (fun g -> g.GS.memory_dynamic_max)
   ; HSS.memory_static_max_sum = sum 0L (fun g -> g.GS.memory_static_max)
   ; HSS.memory_available_sum = host.HS.memory_total --
-        (sum host.HS.memory_overhead (fun g -> g.GS.memory_overhead))
+      (sum host.HS.memory_overhead (fun g -> g.GS.memory_overhead))
   }
 
 let summarise_pool_snapshot extra_guests pool =

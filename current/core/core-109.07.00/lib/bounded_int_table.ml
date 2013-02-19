@@ -295,7 +295,7 @@ TEST_MODULE = struct
   TEST = equal_of_list [1; 2] [1; 2] = true
   TEST = equal_of_list [1; 2] [2; 1] = true
 
-  (* test [equal] between tables that have different [to_int] functions. *)
+    (* test [equal] between tables that have different [to_int] functions. *)
   TEST_UNIT =
     let of_list ~offset keys =
       let t = create ~num_keys:10 ~key_to_int:(fun i -> i + offset) () in

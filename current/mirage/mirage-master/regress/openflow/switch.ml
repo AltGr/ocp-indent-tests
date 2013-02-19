@@ -22,7 +22,7 @@ let resolve t = Lwt.on_success t (fun _ -> ())
 
 module OP = Openflow.Ofpacket
 module OS = Openflow.Switch
-  (* module OE = OS.Event *)
+(* module OE = OS.Event *)
 
 let pp = Printf.printf
 let sp = Printf.sprintf

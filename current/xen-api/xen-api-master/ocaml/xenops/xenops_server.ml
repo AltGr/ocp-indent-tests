@@ -1099,9 +1099,9 @@ let rec immediate_operation dbg id op =
   | Task.Failed e ->
     raise (exn_of_exnty (Exception.exnty_of_rpc e))
 
-(* At all times we ensure that an operation which partially fails
-   leaves the system in a recoverable state. All that should be
-   necessary is to call the {VM,VBD,VIF,PCI}_check_state function. *)
+      (* At all times we ensure that an operation which partially fails
+         leaves the system in a recoverable state. All that should be
+         necessary is to call the {VM,VBD,VIF,PCI}_check_state function. *)
 and trigger_cleanup_after_failure op t = match op with
   | VM_check_state _
   | PCI_check_state _

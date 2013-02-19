@@ -27,20 +27,20 @@ val get :
   uri:string ->
   unit ->
   Ocsigen_http_frame.t Lwt.t
-    (** Do a GET HTTP request.
-        The default port is 80 for HTTP, 443 for HTTPS.
-        The default protocol is http ([https=false]).
+(** Do a GET HTTP request.
+    The default port is 80 for HTTP, 443 for HTTPS.
+    The default protocol is http ([https=false]).
 
-        Warning: the stream must be finalized manually after reading, using
-        {!Ocsigen_stream.finalize}, otherwise you will have fd leaks.
-    *)
+    Warning: the stream must be finalized manually after reading, using
+    {!Ocsigen_stream.finalize}, otherwise you will have fd leaks.
+*)
 
 val get_url : ?headers: Http_headers.t -> string -> Ocsigen_http_frame.t Lwt.t
-    (** Do a GET HTTP request. The string must be a full URL. 
+(** Do a GET HTTP request. The string must be a full URL. 
 
-        Warning: the stream must be finalized manually after reading, using
-        {!Ocsigen_stream.finalize}, otherwise you will have fd leaks.
-    *)
+    Warning: the stream must be finalized manually after reading, using
+    {!Ocsigen_stream.finalize}, otherwise you will have fd leaks.
+*)
 
 val post_string :
   ?https: bool ->
@@ -52,13 +52,13 @@ val post_string :
   content_type:(string * string) ->
   unit ->
   Ocsigen_http_frame.t Lwt.t
-    (** Do a POST HTTP request.
-        The default port is 80 for HTTP, 443 for HTTPS.
-        The default protocol is http ([https=false]).
+(** Do a POST HTTP request.
+    The default port is 80 for HTTP, 443 for HTTPS.
+    The default protocol is http ([https=false]).
 
-        Warning: the stream must be finalized manually after reading, using
-        {!Ocsigen_stream.finalize}, otherwise you will have fd leaks.
-    *)
+    Warning: the stream must be finalized manually after reading, using
+    {!Ocsigen_stream.finalize}, otherwise you will have fd leaks.
+*)
 
 val post_string_url :
   ?headers: Http_headers.t ->
@@ -66,11 +66,11 @@ val post_string_url :
   content_type:(string * string) ->
   string ->
   Ocsigen_http_frame.t Lwt.t
-    (** Do a GET HTTP request. The string must be a full URL. 
+(** Do a GET HTTP request. The string must be a full URL. 
 
-        Warning: the stream must be finalized manually after reading, using
-        {!Ocsigen_stream.finalize}, otherwise you will have fd leaks.
-    *)
+    Warning: the stream must be finalized manually after reading, using
+    {!Ocsigen_stream.finalize}, otherwise you will have fd leaks.
+*)
 
 val post_urlencoded :
   ?https: bool ->
@@ -81,25 +81,25 @@ val post_urlencoded :
   content:(string * string) list ->
   unit ->
   Ocsigen_http_frame.t Lwt.t
-    (** Do a POST HTTP request with URL encoded parameters as content.
-        The default port is 80 for HTTP, 443 for HTTPS.
-        The default protocol is http ([https=false]).
+(** Do a POST HTTP request with URL encoded parameters as content.
+    The default port is 80 for HTTP, 443 for HTTPS.
+    The default protocol is http ([https=false]).
 
-        Warning: the stream must be finalized manually after reading, using
-        {!Ocsigen_stream.finalize}, otherwise you will have fd leaks.
-    *)
+    Warning: the stream must be finalized manually after reading, using
+    {!Ocsigen_stream.finalize}, otherwise you will have fd leaks.
+*)
 
 val post_urlencoded_url :
   ?headers: Http_headers.t ->
   content:(string * string) list ->
   string ->
   Ocsigen_http_frame.t Lwt.t
-    (** Do a GET HTTP request with URL encoded parameters as content.
-        The string must be a full URL. 
+(** Do a GET HTTP request with URL encoded parameters as content.
+    The string must be a full URL. 
 
-        Warning: the stream must be finalized manually after reading, using
-        {!Ocsigen_stream.finalize}, otherwise you will have fd leaks.
-    *)
+    Warning: the stream must be finalized manually after reading, using
+    {!Ocsigen_stream.finalize}, otherwise you will have fd leaks.
+*)
 
 
 val raw_request :
@@ -117,46 +117,46 @@ val raw_request :
   unit ->
   unit ->
   Ocsigen_http_frame.t Lwt.t
-    (**
-       Do an HTTP request (low level).
+(**
+   Do an HTTP request (low level).
 
-       If the optional argument [headers] is present, no headers will be
-       added by Ocsigen, but those in this argument and host, and
-       [connection: close] or [connection: keep-alive].
-       Be carefull to respect HTTP/1.1 in this case!
-       ([host] is the full Host HTTP field to send).
+   If the optional argument [headers] is present, no headers will be
+   added by Ocsigen, but those in this argument and host, and
+   [connection: close] or [connection: keep-alive].
+   Be carefull to respect HTTP/1.1 in this case!
+   ([host] is the full Host HTTP field to send).
 
-       The default port is 80 for HTTP, 443 for HTTPS.
+   The default port is 80 for HTTP, 443 for HTTPS.
 
-       The default protocol is http ([https=false]).
+   The default protocol is http ([https=false]).
 
-       The optional parameter [~keep_alive] asks to keep the connection opened
-       after the request for a short amount of time
-       to allow other requests to the same server to use the same connection.
-       It is true by default.
-       If there is one opened free connection, we will use it instead of opening
-       a new one.
+   The optional parameter [~keep_alive] asks to keep the connection opened
+   after the request for a short amount of time
+   to allow other requests to the same server to use the same connection.
+   It is true by default.
+   If there is one opened free connection, we will use it instead of opening
+   a new one.
 
-       If you do this request to serve it later to a client or to generate a page
-       for a client, add the optional parameter [~client].
-       Thus, the request you do will be pipelined
-       with other requests coming from the same connection.
-       A request will never be pipelined after a request from another client
-       connection.
-       Pipelining will be used only for requests to server we know supporting it
-       (according to previous requests).
-       It is recommended to specify this optional parameter for all requests
-       (with the value found in field
-       [ri_client] of type {!Ocsigen_extensions.request_info}).
+   If you do this request to serve it later to a client or to generate a page
+   for a client, add the optional parameter [~client].
+   Thus, the request you do will be pipelined
+   with other requests coming from the same connection.
+   A request will never be pipelined after a request from another client
+   connection.
+   Pipelining will be used only for requests to server we know supporting it
+   (according to previous requests).
+   It is recommended to specify this optional parameter for all requests
+   (with the value found in field
+   [ri_client] of type {!Ocsigen_extensions.request_info}).
 
-       The optional parameter [?head] asks to do a [HEAD] HTTP request.
-       It is [false] by default.
+   The optional parameter [?head] asks to do a [HEAD] HTTP request.
+   It is [false] by default.
 
-       When called without the last parameter, the function will pipeline
-       the request (if needed), then return the function to get the page.
-       This allows to keep pipeline order when writing an extension.
-    *)
-    (*VVV Dangerous!! *)
+   When called without the last parameter, the function will pipeline
+   the request (if needed), then return the function to get the page.
+   This allows to keep pipeline order when writing an extension.
+*)
+(*VVV Dangerous!! *)
 
 
 val basic_raw_request :
@@ -171,10 +171,10 @@ val basic_raw_request :
   uri:string ->
   unit ->
   Ocsigen_http_frame.t Lwt.t
-    (** Same as {!Ocsigen_http_client.raw_request}, 
-        but does not try to reuse connections.
-        Opens a new connections for each request. Far less efficient.
-    *)
+(** Same as {!Ocsigen_http_client.raw_request}, 
+    but does not try to reuse connections.
+    Opens a new connections for each request. Far less efficient.
+*)
 
 
 (**/**)

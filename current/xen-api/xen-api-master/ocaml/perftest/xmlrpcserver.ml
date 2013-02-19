@@ -59,7 +59,7 @@ let callback1 is_json req fd body xml =
     | _ -> response
   in
   XMLRPC.To.methodResponse translated
-  (* debug(fmt "response = %s" response); *)
+(* debug(fmt "response = %s" response); *)
 
 
 

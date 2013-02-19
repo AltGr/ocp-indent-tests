@@ -42,15 +42,15 @@ val check_header : string -> Images.header;;
 (** Checks the file header *)
 
 val load : string -> Images.load_option list -> gif_sequence
-  (** Loads a gif image sequence *)
+(** Loads a gif image sequence *)
 val load_sequence : string -> Images.load_option list -> Images.sequence
-  (** Loads a gif image sequence, but to more general type *)
+(** Loads a gif image sequence, but to more general type *)
 val load_first : string -> Images.load_option list -> Images.t
-  (** Loads the first frame of a gif image sequence. *)
+(** Loads the first frame of a gif image sequence. *)
 val save : string -> Images.save_option list -> gif_sequence -> unit
-  (** Saves a gif image sequence *)
+(** Saves a gif image sequence *)
 val save_image : string -> Images.save_option list -> Images.t -> unit
-  (** Saves an image as a gif file with only one frame *)
+(** Saves an image as a gif file with only one frame *)
 
 (*** Below they are all low level interfaces *)
 

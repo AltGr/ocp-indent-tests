@@ -31,7 +31,7 @@ exception Canceled
 module Int_map = Map.Make(struct type t = int let compare = compare end)
 
 type data = (unit -> unit) Int_map.t
-    (* Type of data carried by threads *)
+(* Type of data carried by threads *)
 
 type +'a t
 type -'a u

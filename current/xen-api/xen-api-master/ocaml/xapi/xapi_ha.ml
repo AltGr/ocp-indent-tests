@@ -44,7 +44,7 @@ let ha_propose_master = Filename.concat Fhs.xhadir "ha_propose_master"
 let ha_disarm_fencing = Filename.concat Fhs.xhadir "ha_disarm_fencing"
 let ha_set_excluded = Filename.concat Fhs.xhadir "ha_set_excluded"
 let fence_path = Filename.concat Fhs.libexecdir "fence"
-  (* Unused: let ha_clear_excluded = Filename.concat Fhs.xhadir "ha_clear_excluded" *)
+(* Unused: let ha_clear_excluded = Filename.concat Fhs.xhadir "ha_clear_excluded" *)
 
 (** The xHA scripts throw these exceptions: *)
 exception Xha_error of Xha_errno.code
@@ -1108,9 +1108,9 @@ let join_liveset __context host =
 
 (* The last proposal received *)
 let proposed_master : string option ref = ref None
-  (* The time the proposal was received. XXX need to be quite careful with timeouts to handle
-     the case where the proposed new master dies in the middle of the protocol. Once we believe
-     he has fenced himself then we can abort the transaction. *)
+(* The time the proposal was received. XXX need to be quite careful with timeouts to handle
+   the case where the proposed new master dies in the middle of the protocol. Once we believe
+   he has fenced himself then we can abort the transaction. *)
 let proposed_master_time = ref 0.
 
 let proposed_master_m = Mutex.create ()

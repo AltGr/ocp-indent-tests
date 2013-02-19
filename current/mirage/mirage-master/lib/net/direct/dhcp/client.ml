@@ -129,11 +129,11 @@ let input t ~src ~dst ~source_port buf =
             let server_identifier = find packet
                 (function `Server_identifier addr -> Some addr | _ -> None) in
             let options = { op=`Request; opts=
-                              `Requested_ip yiaddr :: (
-                                match server_identifier with
-                                | Some x -> [ `Server_identifier x ]
-                                | None -> []
-                              )
+                            `Requested_ip yiaddr :: (
+                              match server_identifier with
+                              | Some x -> [ `Server_identifier x ]
+                              | None -> []
+                            )
                           } in
             t.state <- Offer_accepted offer;
             output_broadcast t ~xid ~yiaddr ~siaddr ~options
@@ -167,9 +167,9 @@ let start_discovery t =
   let yiaddr = ipv4_blank in
   let siaddr = ipv4_blank in
   let options = { Option.Packet.op=`Discover; opts= [
-                    (`Parameter_request [`Subnet_mask; `Router; `DNS_server; `Broadcast]);
-                    (`Host_name "miragevm")
-                  ] } in
+                  (`Parameter_request [`Subnet_mask; `Router; `DNS_server; `Broadcast]);
+                  (`Host_name "miragevm")
+                ] } in
   Printf.printf "DHCP: start discovery\n%!";
   t.state <- Request_sent xid;
   output_broadcast t ~xid ~yiaddr ~siaddr ~options >>

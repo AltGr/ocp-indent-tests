@@ -179,11 +179,11 @@ module type HandlerTools = sig
   (* Compare the state of the database with the metadata to be imported. *)
   (* Returns a result which signals what we should do to import the metadata. *)
   val precheck: Context.t -> config -> (Rpc.call -> Rpc.response) -> API.ref_session -> state -> obj -> precheck_t
-    (* Handle the result of the precheck function, but don't create any database objects. *)
-    (* Add objects to the state table if necessary, to keep track of what would have been imported.*)
+  (* Handle the result of the precheck function, but don't create any database objects. *)
+  (* Add objects to the state table if necessary, to keep track of what would have been imported.*)
   val handle_dry_run: Context.t -> config -> (Rpc.call -> Rpc.response) -> API.ref_session -> state -> obj -> precheck_t -> unit
-    (* Handle the result of the check function, creating database objects if necessary. *)
-    (* For certain combinations of result and object type, this can be aliased to handle_dry_run. *)
+  (* Handle the result of the check function, creating database objects if necessary. *)
+  (* For certain combinations of result and object type, this can be aliased to handle_dry_run. *)
   val handle: Context.t -> config -> (Rpc.call -> Rpc.response) -> API.ref_session -> state -> obj -> precheck_t -> unit
 end
 

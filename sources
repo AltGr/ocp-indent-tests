@@ -4,3 +4,4 @@ camlimages https://bitbucket.org/camlspotter/camlimages/get/4.0.2.tar.gz
 core https://ocaml.janestreet.com/ocaml-core/109.07.00/individual/core-109.07.00.tar.gz -c JaneStreet,type=2
 xen-api https://github.com/xen-org/xen-api/archive/master.zip
 mirage https://github.com/avsm/mirage/archive/master.tar.gz --syntax lwt
+opalang https://github.com/MLstate/opalang/archive/v4111.tar.gz -c match_clause=4

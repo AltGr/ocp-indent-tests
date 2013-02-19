@@ -165,26 +165,26 @@ module Make (Syntax : Sig.Camlp4Syntax) = struct
            new_object _loc e (parse_comma_list l) ]];
     END
 
-  (*XXX n-ary methods
+    (*XXX n-ary methods
 
-     how to express optional fields?  if they are there, they must have
-     some type, but  they do not have to be there
+       how to express optional fields?  if they are there, they must have
+       some type, but  they do not have to be there
 
-     use variant types instead of object types?
-     in a negative position...  (but then we have to negate again...)
+       use variant types instead of object types?
+       in a negative position...  (but then we have to negate again...)
 
-      { foo: "bar", baz : 7 } : [`foo of string field | `baz of int field] obj
+        { foo: "bar", baz : 7 } : [`foo of string field | `baz of int field] obj
 
-      let f (x : t) = (x : [< `foo of string field | `baz of int field| `x of string field] obj)
+        let f (x : t) = (x : [< `foo of string field | `baz of int field| `x of string field] obj)
 
 
-     XXXX
-     module WEIRDMODULENAME = struct type 'a o = 'a Js.t val unsafe_get = Js.Unsafe.get ... end
-     (let module M = WEIRDMODULENAME in (M.unsafe_get : <x : 'a M.meth> -> 'a))
+       XXXX
+       module WEIRDMODULENAME = struct type 'a o = 'a Js.t val unsafe_get = Js.Unsafe.get ... end
+       (let module M = WEIRDMODULENAME in (M.unsafe_get : <x : 'a M.meth> -> 'a))
 
-     XXXX be more careful with error messages:
-     put coercions against arguments or whole expression
-  *)
+       XXXX be more careful with error messages:
+       put coercions against arguments or whole expression
+    *)
 
 end
 

@@ -549,7 +549,7 @@ module Stable = struct
         let tests = tests
       end)
 
-    (* test that t_of_sexp accepts sexps qualified with time zones in two formats *)
+      (* test that t_of_sexp accepts sexps qualified with time zones in two formats *)
     TEST_UNIT =
       ignore (V1.t_of_sexp (Sexp.of_string "(2012-04-09 12:00:00.000000-04:00:00)"))
 

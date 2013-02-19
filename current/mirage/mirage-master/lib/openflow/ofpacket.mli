@@ -209,7 +209,7 @@ sig
     ports : Port.phy list;
   }
   val parse_features : string * int * int -> features
-    (* val gen_reply_features : Header.h -> int64 -> Bitstring.t *)
+  (* val gen_reply_features : Header.h -> int64 -> Bitstring.t *)
   val gen_reply_features : Header.h -> int64 -> Port.phy list -> Bitstring.t 
   type config = { drop : bool; reasm : bool; miss_send_len : uint16; }
   val init_switch_config : config

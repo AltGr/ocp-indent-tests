@@ -42,7 +42,7 @@ let make_url ~(address : string) ~(req : Http.Request.t) : string =
 let fail_req_with (s : Unix.file_descr) msg (http_err : unit -> string list) =
   error msg;
   Http_svr.headers s (http_err ())
-  (* End of helper methods. *)
+(* End of helper methods. *)
 
 (* If the host contains the RRD for the requested VM then simply forward the
  * HTTP request to rrdd_http_handler. Otherwise, we redirect to the host that

@@ -49,9 +49,9 @@ let max_stored_events = 500
 
 (** Ordered list of events, newest first *)
 let queue = ref []
-                (** Monotonically increasing event ID. One higher than the highest event ID in the queue *)
+(** Monotonically increasing event ID. One higher than the highest event ID in the queue *)
 let id = ref 0L 
-  (** When we GC events we track how many we've deleted so we can send an error to the client *)
+(** When we GC events we track how many we've deleted so we can send an error to the client *)
 let highest_forgotten_id = ref (-1L)
 
 (** Types used to store user event subscriptions: ***********************************************)

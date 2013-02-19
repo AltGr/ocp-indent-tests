@@ -324,7 +324,7 @@ with sexp
 
 ENDIF (* OCAML_4 *)
 
-(** The type of file access rights. *)
+  (** The type of file access rights. *)
 type file_perm = int with sexp
 
 (** Open the named file with the given flags. Third argument is the permissions to give to
@@ -1558,34 +1558,34 @@ module IOVec : sig
   val bigstring_kind : bigstring kind
 
   val empty : 'buf kind -> 'buf t
-    (** [empty] the empty I/O-vector. *)
+  (** [empty] the empty I/O-vector. *)
 
   val of_string : ?pos : int -> ?len : int -> string -> string t
-    (** [of_string ?pos ?len str] @return an I/O-vector designated by
-        position [pos] and length [len] in string [str].
+  (** [of_string ?pos ?len str] @return an I/O-vector designated by
+      position [pos] and length [len] in string [str].
 
-        @raise Invalid_argument if designated substring out of bounds.
+      @raise Invalid_argument if designated substring out of bounds.
 
-        @param pos default = 0
-        @param len default = [String.length str - pos]
-    *)
+      @param pos default = 0
+      @param len default = [String.length str - pos]
+  *)
 
   val of_bigstring : ?pos : int -> ?len : int -> bigstring -> bigstring t
-    (** [of_bigstring ?pos ?len bstr] @return an I/O-vector designated by
-        position [pos] and length [len] in bigstring [bstr].
+  (** [of_bigstring ?pos ?len bstr] @return an I/O-vector designated by
+      position [pos] and length [len] in bigstring [bstr].
 
-        @raise Invalid_argument if designated substring out of bounds.
+      @raise Invalid_argument if designated substring out of bounds.
 
-        @param pos default = 0
-        @param len default = [String.length str - pos]
-    *)
+      @param pos default = 0
+      @param len default = [String.length str - pos]
+  *)
 
   val drop : 'buf t -> int -> 'buf t
-    (** [drop iovec n] drops [n] characters from [iovec].  @return resulting
-        I/O-vector.
+  (** [drop iovec n] drops [n] characters from [iovec].  @return resulting
+      I/O-vector.
 
-        @raise Failure if [n] is greater than length of [iovec].
-    *)
+      @raise Failure if [n] is greater than length of [iovec].
+  *)
 
   val max_iovecs : int
 end
@@ -1614,55 +1614,55 @@ external readdir_ino :
 
 val read_assume_fd_is_nonblocking :
   File_descr.t -> ?pos : int -> ?len : int -> string -> int
-  (** [read_assume_fd_is_nonblocking fd ?pos ?len buf] calls the system call
-      [read] ASSUMING THAT IT IS NOT GOING TO BLOCK.  Reads at most [len]
-      bytes into buffer [buf] starting at position [pos].  @return the
-      number of bytes actually read.
+(** [read_assume_fd_is_nonblocking fd ?pos ?len buf] calls the system call
+    [read] ASSUMING THAT IT IS NOT GOING TO BLOCK.  Reads at most [len]
+    bytes into buffer [buf] starting at position [pos].  @return the
+    number of bytes actually read.
 
-      @raise Invalid_argument if buffer range out of bounds.
-      @raise Unix_error on Unix-errors.
+    @raise Invalid_argument if buffer range out of bounds.
+    @raise Unix_error on Unix-errors.
 
-      @param pos = 0
-      @param len = [String.length buf - pos]
-  *)
+    @param pos = 0
+    @param len = [String.length buf - pos]
+*)
 
 val write_assume_fd_is_nonblocking :
   File_descr.t -> ?pos : int -> ?len : int -> string -> int
-  (** [write_assume_fd_is_nonblocking fd ?pos ?len buf] calls the system call
-      [write] ASSUMING THAT IT IS NOT GOING TO BLOCK.  Writes at most [len]
-      bytes from buffer [buf] starting at position [pos].  @return the
-      number of bytes actually written.
+(** [write_assume_fd_is_nonblocking fd ?pos ?len buf] calls the system call
+    [write] ASSUMING THAT IT IS NOT GOING TO BLOCK.  Writes at most [len]
+    bytes from buffer [buf] starting at position [pos].  @return the
+    number of bytes actually written.
 
-      @raise Invalid_argument if buffer range out of bounds.
-      @raise Unix_error on Unix-errors.
+    @raise Invalid_argument if buffer range out of bounds.
+    @raise Unix_error on Unix-errors.
 
-      @param pos = 0
-      @param len = [String.length buf - pos]
-  *)
+    @param pos = 0
+    @param len = [String.length buf - pos]
+*)
 
 val writev_assume_fd_is_nonblocking :
   File_descr.t -> ?count : int -> string IOVec.t array -> int
-  (** [writev_assume_fd_is_nonblocking fd ?count iovecs] calls the system call
-      [writev] ASSUMING THAT IT IS NOT GOING TO BLOCK using [count]
-      I/O-vectors [iovecs].  @return the number of bytes actually written.
+(** [writev_assume_fd_is_nonblocking fd ?count iovecs] calls the system call
+    [writev] ASSUMING THAT IT IS NOT GOING TO BLOCK using [count]
+    I/O-vectors [iovecs].  @return the number of bytes actually written.
 
-      @raise Invalid_argument if the designated ranges are invalid.
-      @raise Unix_error on Unix-errors.
-  *)
+    @raise Invalid_argument if the designated ranges are invalid.
+    @raise Unix_error on Unix-errors.
+*)
 
 val writev : File_descr.t -> ?count : int -> string IOVec.t array -> int
-  (** [writev fd ?count iovecs] like {!writev_assume_fd_is_nonblocking}, but does
-      not require the descriptor to not block.  If you feel you have to
-      use this function, you should probably have chosen I/O-vectors that
-      build on bigstrings, because this function has to internally blit
-      the I/O-vectors (ordinary OCaml strings) to intermediate buffers on
-      the C-heap.
+(** [writev fd ?count iovecs] like {!writev_assume_fd_is_nonblocking}, but does
+    not require the descriptor to not block.  If you feel you have to
+    use this function, you should probably have chosen I/O-vectors that
+    build on bigstrings, because this function has to internally blit
+    the I/O-vectors (ordinary OCaml strings) to intermediate buffers on
+    the C-heap.
 
-      @return the number of bytes actually written.
+    @return the number of bytes actually written.
 
-      @raise Invalid_argument if the designated ranges are invalid.
-      @raise Unix_error on Unix-errors.
-  *)
+    @raise Invalid_argument if the designated ranges are invalid.
+    @raise Unix_error on Unix-errors.
+*)
 
 external pselect :
   File_descr.t list -> File_descr.t list -> File_descr.t list -> float -> int list ->

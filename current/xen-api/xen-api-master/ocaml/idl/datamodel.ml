@@ -133,7 +133,7 @@ let roles_gte role =
   let rec gte = function []->failwith "invalid role"
                        |x::xs->if x=role then x::[] else x::gte xs in
   gte roles_all
-  (* shortcuts to subsets of greater than or equal roles *)
+(* shortcuts to subsets of greater than or equal roles *)
 let _R_LOCAL_ROOT_ONLY = Some([]) (* only local root, emergency and pool-secret *)
 let _R_POOL_ADMIN = Some(roles_gte role_pool_admin)
 let _R_POOL_OP = Some(roles_gte role_pool_operator)
@@ -2305,7 +2305,7 @@ let host_ha_wait_for_shutdown_via_statefile = call
     ~hide_from_docs:true
     ~allowed_roles:_R_LOCAL_ROOT_ONLY
     ()
-    (*
+(*
 let host_query_ha = call ~flags:[`Session]
   ~in_product_since:rel_miami
   ~name:"query_ha"
@@ -3370,7 +3370,7 @@ let task_destroy = call ~flags:[`Session]
     ~params:[Ref _task, "self", "Reference to the task object"]
     ~allowed_roles:_R_READ_ONLY (* POOL_OP can destroy any tasks, others can destroy only owned tasks *)
     ()
-    (* this permission allows to destroy any task, instead of only the owned ones *)
+(* this permission allows to destroy any task, instead of only the owned ones *)
 let extra_permission_task_destroy_any = "task.destroy/any"
 
 let task_allowed_operations =
@@ -6339,7 +6339,7 @@ let subject_get_permissions_name_label = call ~flags:[`Session]
     ~doc:"This call returns a list of permission names given a subject"
     ~allowed_roles:_R_READ_ONLY
     ()
-    (* a subject is a user/group that can log in xapi *)
+(* a subject is a user/group that can log in xapi *)
 let subject =
   create_obj ~in_db:true ~in_product_since:rel_george ~in_oss_since:None ~internal_deprecated_since:None ~persist:PersistEverything ~gen_constructor_destructor:true ~name:_subject ~descr:"A user or group that can log in xapi"
     ~gen_events:true

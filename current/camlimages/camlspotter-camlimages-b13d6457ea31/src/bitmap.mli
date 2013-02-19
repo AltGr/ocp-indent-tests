@@ -63,64 +63,64 @@ end;;
 
 module Make(B:Bitdepth) : sig
   type t;;
-(* Bitmap type *)
+  (* Bitmap type *)
 
   val create : int -> int -> string option -> t
-    (* [create width height initopt] creates a bitmap of size
-       [width] x [height]. You can set [initopt] the value to 
-       fill the bitmap *)
+  (* [create width height initopt] creates a bitmap of size
+     [width] x [height]. You can set [initopt] the value to 
+     fill the bitmap *)
 
   val create_with : int -> int -> string -> t
-    (* [create_with width height initdata] creates a bitmap whose
-        initial data is [initdata]. *)
+  (* [create_with width height initdata] creates a bitmap whose
+      initial data is [initdata]. *)
 
   val create_with_scanlines : int -> int -> string array -> t
 
   val destroy : t -> unit
-    (* Destroy bitmaps *)
+  (* Destroy bitmaps *)
 
   val access : t -> int -> int -> string * int
 
   val get_strip : t -> int -> int -> int -> string
   val set_strip : t -> int -> int -> int -> string -> unit
-    (* Strip access
-       Here, "strip" means a rectangle region with height 1.
-       [get_strip t x y w] returns the string reprensentation of strip of [t]
-       at (x, y) - (x + w - 1, y).
-       [set_strip t x y w str] write [str] to the strip of [t]
-       at (x, y) - (x + w - 1, y).
-    *)
+  (* Strip access
+     Here, "strip" means a rectangle region with height 1.
+     [get_strip t x y w] returns the string reprensentation of strip of [t]
+     at (x, y) - (x + w - 1, y).
+     [set_strip t x y w str] write [str] to the strip of [t]
+     at (x, y) - (x + w - 1, y).
+  *)
 
   val get_scanline : t -> int -> string
   val set_scanline : t -> int -> string -> unit
-    (* Scanline access 
-       [get_scanline t y] returns the string representation of the scanline
-       of [t] at [y].
-       [set_scanline t y str] writes [str] to the scanline of [t] at [y].
-    *)
+  (* Scanline access 
+     [get_scanline t y] returns the string representation of the scanline
+     of [t] at [y].
+     [set_scanline t y str] writes [str] to the scanline of [t] at [y].
+  *)
 
   (* only for one row *)      
   val get_scanline_ptr : t -> (int -> (string * int) * int) option
 
   val dump : t -> string
-    (* Create a string representation of a bitmap. It may easily raise
-       an exception Out_of_memory for large images. *)
+  (* Create a string representation of a bitmap. It may easily raise
+     an exception Out_of_memory for large images. *)
 
   val copy : t -> t
 
   val sub : t -> int -> int -> int -> int -> t
-    (* [sub src x y width height] returns sub-bitmap of [src],
-       at (x, y) - (x + width - 1, y + height - 1). *)
+  (* [sub src x y width height] returns sub-bitmap of [src],
+     at (x, y) - (x + width - 1, y + height - 1). *)
 
   val blit : t -> int -> int -> t -> int -> int -> int -> int -> unit
-    (* [blit src sx sy dst dx dy width height] copies the rectangle
-       region of [src] at
-       (sx, sy) - (sx + width - 1, sy + height - 1)
-       to [dst], at
-       (dx, dy) - (dx + width - 1, dy + height - 1) *)
+  (* [blit src sx sy dst dx dy width height] copies the rectangle
+     region of [src] at
+     (sx, sy) - (sx + width - 1, sy + height - 1)
+     to [dst], at
+     (dx, dy) - (dx + width - 1, dy + height - 1) *)
 
   val blocks : t -> int * int
-    (* returns number of blocks in row and column *)  
+  (* returns number of blocks in row and column *)  
 
   val dump_block : t -> int -> int -> Block.t
 end;;

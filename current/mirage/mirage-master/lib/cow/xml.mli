@@ -45,31 +45,31 @@ type encoding = [
   | `US_ASCII ]
 
 type dtd = string option
-  (** The type for the optional
-      {{:http://www.w3.org/TR/REC-xml/#dt-doctype}DTD}. *)
+(** The type for the optional
+    {{:http://www.w3.org/TR/REC-xml/#dt-doctype}DTD}. *)
 
 type name = string * string 
-  (** The type for attribute and element's
-      {{:http://www.w3.org/TR/xml-names11/#dt-expname}expanded names} 
-      [(uri,local)]. An empty [uri] represents a name without a
-      namespace name, i.e. an unprefixed name 
-      that is not under the scope of a default namespace. *)
+(** The type for attribute and element's
+    {{:http://www.w3.org/TR/xml-names11/#dt-expname}expanded names} 
+    [(uri,local)]. An empty [uri] represents a name without a
+    namespace name, i.e. an unprefixed name 
+    that is not under the scope of a default namespace. *)
 
 type attribute = name * string
-  (** The type for attributes. Name and attribute data. *)
+(** The type for attributes. Name and attribute data. *)
 
 type tag = name * attribute list
-    (** The type for an element tag. Tag name and attribute list. *)
+(** The type for an element tag. Tag name and attribute list. *)
 
 type signal = [ `Dtd of dtd | `El_start of tag | `El_end | `Data of string |`Raw of string]
-              (** The type for signals. A {e well-formed} sequence of signals belongs
-                  to the language of the [doc] grammar :
-                  {[doc ::= `Dtd tree
-                 tree ::= `El_start child `El_end
-                 child ::= `Data | tree | epsilon ]}
-                  Input and output deal only with well-formed sequences or
-                  exceptions are raised.
-              *)
+(** The type for signals. A {e well-formed} sequence of signals belongs
+    to the language of the [doc] grammar :
+    {[doc ::= `Dtd tree
+   tree ::= `El_start child `El_end
+   child ::= `Data | tree | epsilon ]}
+    Input and output deal only with well-formed sequences or
+    exceptions are raised.
+*)
 
 val ns_xml : string 
 (** Namespace name {{:http://www.w3.org/XML/1998/namespace}value} bound to the 
@@ -82,8 +82,8 @@ val ns_xmlns : string
 (** {1 Input} *)
 
 type pos = int * int 
-  (** The type for input positions. Line and column number, both start
-      with 1. *)
+(** The type for input positions. Line and column number, both start
+    with 1. *)
 
 (** The type for input errors. *)
 type error = [
@@ -109,10 +109,10 @@ type error = [
   (** Expected the document's root element. *) ]
 
 val error_message : error -> string
-  (** Converts the error to an english error message. *)
+(** Converts the error to an english error message. *)
 
 exception Error of pos * error
-    (** Raised on input errors. *)
+(** Raised on input errors. *)
 
 type source = [ 
   `String of int * string | `Fun of (unit -> int) ]
@@ -129,116 +129,116 @@ val make_input :
   ?enc:encoding option -> ?strip:bool -> 
   ?ns:(string -> string option) -> 
   ?entity: (string -> string option) -> source -> input
-  (** Returns a new input abstraction reading from the given source.
-      {ul 
-      {- [enc], character encoding of the document, {{:#inenc} details}. 
-         Defaults to [None].}
-      {- [strip], strips whitespace in character data, {{:#inwspace} details}.
-         Defaults to [false].} 
-      {- [ns] is called to bind undeclared namespace prefixes,
-         {{:#inns} details}. Default returns always [None].}
-      {- [entity] is called to resolve non predefined entity references,
-         {{:#inentity} details}. Default returns always [None].}} *)
+(** Returns a new input abstraction reading from the given source.
+    {ul 
+    {- [enc], character encoding of the document, {{:#inenc} details}. 
+       Defaults to [None].}
+    {- [strip], strips whitespace in character data, {{:#inwspace} details}.
+       Defaults to [false].} 
+    {- [ns] is called to bind undeclared namespace prefixes,
+       {{:#inns} details}. Default returns always [None].}
+    {- [entity] is called to resolve non predefined entity references,
+       {{:#inentity} details}. Default returns always [None].}} *)
 
 val input : input -> signal
-  (** Inputs a signal. Repeated invocation of the function with the same
-      input abstraction will generate a {{:#TYPEsignal}well-formed} sequence
-      of signals or an {!Error} is raised. Furthermore there will be no
-      two consecutive [`Data] signals in the sequence and their string
-      is always non empty. After a well-formed sequence was input another may 
-      be input, see {!eoi} and {{:#iseq}details}.
+(** Inputs a signal. Repeated invocation of the function with the same
+    input abstraction will generate a {{:#TYPEsignal}well-formed} sequence
+    of signals or an {!Error} is raised. Furthermore there will be no
+    two consecutive [`Data] signals in the sequence and their string
+    is always non empty. After a well-formed sequence was input another may 
+    be input, see {!eoi} and {{:#iseq}details}.
 
-      {b Raises} {!Error} on input errors. *)
+    {b Raises} {!Error} on input errors. *)
 
 val input_tree : el:(tag -> 'a list -> 'a) -> data:(string -> 'a)  -> 
   input -> 'a
-  (** If the next signal is a :
-      {ul
-      {- [`Data] signal, inputs it and invokes [data] with the character data.}
-      {- [`El_start] signal, inputs the sequence of signals until its 
-         matching [`El_end] and invokes [el] and [data] as follows
-      {ul
-      {- [el], is called on each [`El_end] signals with the corresponding 
-        [`El_start] tag and the result of the callback invocation for the 
-        element's children.}
-      {- [data], is called on each [`Data] signals with the character data. 
-        This function won't be called twice consecutively or with the empty 
-        string.}}}
-      {- Other signals, raises [Invalid_argument].}}
+(** If the next signal is a :
+    {ul
+    {- [`Data] signal, inputs it and invokes [data] with the character data.}
+    {- [`El_start] signal, inputs the sequence of signals until its 
+       matching [`El_end] and invokes [el] and [data] as follows
+    {ul
+    {- [el], is called on each [`El_end] signals with the corresponding 
+      [`El_start] tag and the result of the callback invocation for the 
+      element's children.}
+    {- [data], is called on each [`Data] signals with the character data. 
+      This function won't be called twice consecutively or with the empty 
+      string.}}}
+    {- Other signals, raises [Invalid_argument].}}
 
-      {b Raises} {!Error} on input errors and [Invalid_argument]
-        if the next signal is not [`El_start] or [`Data]. *)
+    {b Raises} {!Error} on input errors and [Invalid_argument]
+      if the next signal is not [`El_start] or [`Data]. *)
 
 val input_doc_tree : el:(tag -> 'a list -> 'a) -> data:(string -> 'a) -> 
   input -> (dtd * 'a)
-  (** Same as {!input_tree} but reads a complete {{:#TYPEsignal}well-formed}  
-      sequence of signals. 
+(** Same as {!input_tree} but reads a complete {{:#TYPEsignal}well-formed}  
+    sequence of signals. 
 
-      {b Raises} {!Error} on input errors and [Invalid_argument]
-       if the next signal is not [`Dtd]. *)
+    {b Raises} {!Error} on input errors and [Invalid_argument]
+     if the next signal is not [`Dtd]. *)
 
 val peek : input -> signal
-  (** Same as {!input} but doesn't remove the signal from the sequence. 
+(** Same as {!input} but doesn't remove the signal from the sequence. 
 
-      {b Raises} {!Error} on input errors. *)
+    {b Raises} {!Error} on input errors. *)
 
 val eoi : input -> bool
-  (** Returns [true] if the end of input is reached. See {{:#iseq}details}.
-     
-      {b Raises} {!Error} on input errors. *)
+(** Returns [true] if the end of input is reached. See {{:#iseq}details}.
+   
+    {b Raises} {!Error} on input errors. *)
 
 val pos : input -> pos 
-  (** Current position in the input abstraction. *)
+(** Current position in the input abstraction. *)
 
 (** {1 Output} *)
 
 type 'a frag = [ `El of tag * 'a list | `Data of string ]
-               (** The type for deconstructing data structures of type ['a]. *)
+(** The type for deconstructing data structures of type ['a]. *)
 
 type t = (('a frag as 'a) frag) list
-  (** The type for XML fragments *)
+(** The type for XML fragments *)
 
 type dest = [ `Buffer of Buffer.t | 
               `Fun of (int -> unit) ]
-            (** The type for output destinations. For [`Buffer], the buffer won't
-                be cleared. For [`Fun] the function is called with the output {e
-                bytes} as [int]s. *)
+(** The type for output destinations. For [`Buffer], the buffer won't
+    be cleared. For [`Fun] the function is called with the output {e
+    bytes} as [int]s. *)
 
 type output
 (** The type for output abstractions. *)
 
 val make_output : ?nl:bool -> ?indent:int option -> 
   ?ns_prefix:(string -> string option) -> dest -> output
-  (** Returns a new output abstraction writing to the given destination.
-      {ul 
-      {- [nl], if [true] a newline is output when the root's element [`El_end] 
-       signal is output.
-      Defaults to [false].}
-      {- [indent], identation behaviour, see {{:#outindent} details}. Defaults to
-        [None].}
-      {- [ns_prefix], undeclared namespace prefix bindings, 
-         see {{:#outns}details}. Default returns always [None].}} *)
+(** Returns a new output abstraction writing to the given destination.
+    {ul 
+    {- [nl], if [true] a newline is output when the root's element [`El_end] 
+     signal is output.
+    Defaults to [false].}
+    {- [indent], identation behaviour, see {{:#outindent} details}. Defaults to
+      [None].}
+    {- [ns_prefix], undeclared namespace prefix bindings, 
+       see {{:#outns}details}. Default returns always [None].}} *)
 
 
 val output : output -> signal -> unit
-  (** Outputs a signal. After a well-formed sequence of signals was 
-      output a new well-formed sequence can be output.
+(** Outputs a signal. After a well-formed sequence of signals was 
+    output a new well-formed sequence can be output.
 
-      {b Raises} [Invalid_argument] if the resulting signal sequence on
-      the output abstraction is not {{:#TYPEsignal}well-formed} or if a
-      namespace name could not be bound to a prefix. *)
+    {b Raises} [Invalid_argument] if the resulting signal sequence on
+    the output abstraction is not {{:#TYPEsignal}well-formed} or if a
+    namespace name could not be bound to a prefix. *)
 
 val output_tree : ('a -> 'a frag) -> output -> 'a -> unit
-  (** Outputs signals corresponding to a value by recursively
-      applying the given value deconstructor.
+(** Outputs signals corresponding to a value by recursively
+    applying the given value deconstructor.
 
-      {b Raises} see {!output}. *)
+    {b Raises} see {!output}. *)
 
 val output_doc_tree : ('a -> 'a frag) -> output -> (dtd * 'a) -> unit   
-  (** Same as {!output_tree} but outputs a complete {{:#TYPEsignal}well-formed} 
-      sequence of signals.
+(** Same as {!output_tree} but outputs a complete {{:#TYPEsignal}well-formed} 
+    sequence of signals.
 
-      {b Raises} see {!output}. *)
+    {b Raises} see {!output}. *)
 
 (** {1:sto Functorial interface} 
 
@@ -260,27 +260,27 @@ module type XMLString = sig
   (** The empty string. *)
 
   val length : t -> int
-    (** Returns the length of the string. *)
+  (** Returns the length of the string. *)
 
   val append : t -> t -> t
-    (** Concatenates two strings. *)
+  (** Concatenates two strings. *)
 
   val lowercase : t -> t
-    (** New string with uppercase letter translated
-        to lowercase (correctness is only needed for ASCII
-        {{:http://www.unicode.org/glossary/#code_point}code point}). *)
+  (** New string with uppercase letter translated
+      to lowercase (correctness is only needed for ASCII
+      {{:http://www.unicode.org/glossary/#code_point}code point}). *)
 
   val iter : (int -> unit) -> t -> unit
-    (** Iterates over the unicode 
-        {{:http://www.unicode.org/glossary/#code_point}code point}
-        of the given string. *)
+  (** Iterates over the unicode 
+      {{:http://www.unicode.org/glossary/#code_point}code point}
+      of the given string. *)
 
   val of_string : std_string -> t
-    (** String from an OCaml string. *)
+  (** String from an OCaml string. *)
 
   val to_utf_8 : ('a -> std_string -> 'a) -> 'a -> t -> 'a
-    (** [to_utf_8 f v s], is [f (... (f (f v s1) s2) ...) sn]. Where the
-        concatenation of [s1], [s2], ... [sn] is [s] as an UTF-8 stream. *)
+  (** [to_utf_8 f v s], is [f (... (f (f v s1) s2) ...) sn]. Where the
+      concatenation of [s1], [s2], ... [sn] is [s] as an UTF-8 stream. *)
 
   val compare : t -> t -> int
     (** String comparison. Binary comparison is sufficent. *)
@@ -299,20 +299,20 @@ module type XMLBuffer = sig
   (** Raised if the buffer cannot be grown. *)
 
   val create : int -> t
-    (** Creates a buffer of the given size. *)
+  (** Creates a buffer of the given size. *)
 
   val add_uchar : t -> int -> unit
-    (** Adds the given (guaranteed valid) unicode
-        {{:http://www.unicode.org/glossary/#code_point}code point} to a
-        buffer. 
+  (** Adds the given (guaranteed valid) unicode
+      {{:http://www.unicode.org/glossary/#code_point}code point} to a
+      buffer. 
 
-        {b Raises} {!Full} if the buffer cannot be grown. *)
+      {b Raises} {!Full} if the buffer cannot be grown. *)
 
   val clear : t -> unit
-    (** Clears the buffer. *)
+  (** Clears the buffer. *)
 
   val contents : t -> string
-    (** Returns the buffer contents. *)
+  (** Returns the buffer contents. *)
 
   val length : t -> int
     (** Returns the number of characters contained in the buffer. *)

@@ -79,7 +79,7 @@ end = struct
           fermentum condimentum eros, sit amet pulvinar dui ultrices in."]
 
     TEST = word_wrap long_text 39 =
-      (*
+        (*
         .........1.........2.........3.........4
         1234567890123456789012345678901234567890
       *)
@@ -88,7 +88,7 @@ end = struct
          "condimentum eros, sit amet pulvinar dui";
          "ultrices in."]
 
-    (* no guarantees: too-long words just overhang the soft bound *)
+        (* no guarantees: too-long words just overhang the soft bound *)
     TEST = word_wrap long_text 2 =
         ["Lorem"; "ipsum"; "dolor"; "sit"; "amet,"; "consectetur";
          "adipiscing"; "elit."; "Vivamus"; "fermentum"; "condimentum";
@@ -844,28 +844,28 @@ module Base = struct
 
     let const v =
       { param =
-          { f = (fun _env -> return (fun k -> k v));
-            flags = [];
-            usage = Anon.Grammar.zero; } }
+        { f = (fun _env -> return (fun k -> k v));
+          flags = [];
+          usage = Anon.Grammar.zero; } }
 
     let map p ~f =
       { param =
-          { f =
-              (fun env -> p.param.f env >>= fun c -> return (fun k -> c (fun v -> k (f v))));
-            flags = p.param.flags;
-            usage = p.param.usage; } }
+        { f =
+          (fun env -> p.param.f env >>= fun c -> return (fun k -> c (fun v -> k (f v))));
+          flags = p.param.flags;
+          usage = p.param.usage; } }
 
     let wrap f t =
       { f =
-          (fun env -> t.f env >>= fun run -> return (fun main -> f ~run ~main));
+        (fun env -> t.f env >>= fun run -> return (fun main -> f ~run ~main));
         flags = t.flags;
         usage = t.usage; }
 
     let lookup key =
       { param =
-          { f = (fun env -> return (fun m -> m (Env.find_exn env key)));
-            flags = [];
-            usage = Anon.Grammar.zero; } }
+        { f = (fun env -> return (fun m -> m (Env.find_exn env key)));
+          flags = [];
+          usage = Anon.Grammar.zero; } }
 
     let path : Path.t        param = lookup path_key
     let args : string list   param = lookup args_key
@@ -873,9 +873,9 @@ module Base = struct
 
     let env =
       { param =
-          { f = (fun env -> return (fun m -> m env));
-            flags = [];
-            usage = Anon.Grammar.zero; } }
+        { f = (fun env -> return (fun m -> m env));
+          flags = [];
+          usage = Anon.Grammar.zero; } }
 
     include struct
       module Arg_type = Arg_type
@@ -902,9 +902,9 @@ module Base = struct
 
       let anon spec =
         { param =
-            { f = (fun _env -> spec.p >>= fun v -> return (fun k -> k v));
-              flags = [];
-              usage = spec.grammar; } }
+          { f = (fun _env -> spec.p >>= fun v -> return (fun k -> k v));
+            flags = [];
+            usage = spec.grammar; } }
     end
 
     include struct
@@ -928,9 +928,9 @@ module Base = struct
           if optional then `Optional else `Required (fun () -> ignore (read ()))
         in
         { param =
-            { f = (fun _env -> return (fun k -> k (read ())));
-              flags = [{ Flag.name; aliases; doc; action; check_available }];
-              usage = Anon.Grammar.zero; } }
+          { f = (fun _env -> return (fun k -> k (read ())));
+            flags = [{ Flag.name; aliases; doc; action; check_available }];
+            usage = Anon.Grammar.zero; } }
     end
 
     module Deprecated = struct

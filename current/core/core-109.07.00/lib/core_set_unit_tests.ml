@@ -41,10 +41,10 @@ module Unit_tests
   module Set = struct
     include Set
     let add            = simplify_accessor add
-      (* let remove         = simplify_accessor remove *)
+    (* let remove         = simplify_accessor remove *)
     let mem            = simplify_accessor mem
-      (* let filter         = simplify_accessor filter *)
-      (* let compare_direct = simplify_accessor compare_direct *)
+    (* let filter         = simplify_accessor filter *)
+    (* let compare_direct = simplify_accessor compare_direct *)
     let equal          = simplify_accessor equal
     let inter          = simplify_accessor inter
     let subset         = simplify_accessor subset

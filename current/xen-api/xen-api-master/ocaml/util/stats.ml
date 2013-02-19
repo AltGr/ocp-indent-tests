@@ -82,7 +82,7 @@ let sample (name: string) (x: float) : unit =
       Hashtbl.replace timings name p';
       (*       debug "Population %s time = %f mean = %s" name x (string_of p'); *)
     )
-    (*
+(*
   (* Check to see if the value is > 3 standard deviations from the mean *)
   if abs_float (x -. (mean p)) > (sd p *. 3.)
   then debug "Population %s time more than 3 standard deviations from the mean (time = %f; mean = %s)" name x (string_of p)
@@ -117,7 +117,7 @@ let dbstats_write_dbcalls : (string,int) Hashtbl.t = Hashtbl.create 100
 let dbstats_create_dbcalls : (string,int) Hashtbl.t = Hashtbl.create 100
 let dbstats_drop_dbcalls : (string,int) Hashtbl.t = Hashtbl.create 100
 let dbstats_task : (string,(string * dbcallty) list) Hashtbl.t = Hashtbl.create 100
-  (* let dbstats_taskthreads : (string, int list) Hashtbl.t = Hashtbl.create 100*)
+(* let dbstats_taskthreads : (string, int list) Hashtbl.t = Hashtbl.create 100*)
 let dbstats_threads : (int, (string * dbcallty) list) Hashtbl.t = Hashtbl.create 100
 
 let log_stats = ref false

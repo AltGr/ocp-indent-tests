@@ -84,8 +84,8 @@ type format =
 val extension : format -> string;;
 (** returns the corresponding extension "gif", "bmp" etc. for given format *)
 val guess_format : string -> format
-  (** returns the image format guessed from the file extension of
-     a given file name *)
+(** returns the image format guessed from the file extension of
+   a given file name *)
 
 (** Lower interface *)
 val get_extension : string -> string * string;;
@@ -115,12 +115,12 @@ type header = {
 };;
 
 val file_format : string -> format * header
-  (** [file_format filename] reads the header of image file [filename]
-     and returns its format and some useful information found in the
-     header (ex. width, height). [file_format] does not read image
-     contents, but just quickly returns file header information.
+(** [file_format filename] reads the header of image file [filename]
+   and returns its format and some useful information found in the
+   header (ex. width, height). [file_format] does not read image
+   contents, but just quickly returns file header information.
 
-     [file_format] does not depend on any external libraries *)
+   [file_format] does not depend on any external libraries *)
 
 (**************************************************** Image file I/O options *)
 
@@ -156,8 +156,8 @@ type format_methods = {
 (************************************************ Generic image manupilation *)
 
 val add_methods : format -> format_methods -> unit
-  (** If you write new drivers for some image format, use this function
-     to register their loading/saving functions into the libaray *)
+(** If you write new drivers for some image format, use this function
+   to register their loading/saving functions into the libaray *)
 
 val load : string -> load_option list -> t;;
 (** [load filename options] read the header of an image file [filename],

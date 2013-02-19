@@ -31,7 +31,7 @@ let serialize_auth = Mutex.create()
 
 let wipe_string_contents str = for i = 0 to String.length str - 1 do str.[i] <- '\000' done
 let wipe ss = List.iter (fun s -> wipe_string_contents s) ss
-  (* wrapper that erases sensitive string parameters from functions *)
+(* wrapper that erases sensitive string parameters from functions *)
 let wipe_params_after_fn params fn =
   try (let r=fn () in wipe params; r) with e -> (wipe params; raise e)
 
