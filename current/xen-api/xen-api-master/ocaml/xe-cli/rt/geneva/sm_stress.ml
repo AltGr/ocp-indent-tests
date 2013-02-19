@@ -45,7 +45,7 @@ let _ =
       print_line "Must specify -xe option. Run with --help for more info";
       raise InvalidArgument
     end;
-  (*
+(*
   if !host = "" then
     begin
       print_line "Must specify -host option. Run with --help for more info";

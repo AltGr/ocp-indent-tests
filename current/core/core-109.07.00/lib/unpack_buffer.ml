@@ -111,12 +111,12 @@ let invariant t =
 
 let create ?partial_unpack unpack_one =
   { state =
-    Alive { partial_unpack;
-            unpack_one;
-            buf = Bigstring.create 1;
-            pos = 0;
-            len = 0;
-          };
+      Alive { partial_unpack;
+              unpack_one;
+              buf = Bigstring.create 1;
+              pos = 0;
+              len = 0;
+            };
   }
 ;;
 

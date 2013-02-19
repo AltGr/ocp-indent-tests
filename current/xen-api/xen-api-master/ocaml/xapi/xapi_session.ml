@@ -573,7 +573,7 @@ let change_password  ~__context ~old_pwd ~new_pwd = wipe_params_after_fn [old_pw
 
     if (Db.Session.get_is_local_superuser ~__context ~self:session_id) then
       begin (* CP-696: only change password if session has is_local_superuser bit set *)
-        (*
+(*
   CA-13567: If you have root priviledges then we do not authenticate old_pwd; right now, since we only
             ever have root priviledges we just comment this out.
 

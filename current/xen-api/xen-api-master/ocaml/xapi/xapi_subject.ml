@@ -48,7 +48,7 @@ let create ~__context ~subject_identifier ~other_config =
       raise (Api_errors.Server_error(Api_errors.subject_already_exists, []))
     end
   else
-    (*
+  (*
     (* one of other_config's fields MUST be 'subject_name' (see interface requirement: ocaml/auth/auth_signature.ml) *)
     (* any other name-value pair is optional *)
     if not (List.mem_assoc "subject_name" other_config) 

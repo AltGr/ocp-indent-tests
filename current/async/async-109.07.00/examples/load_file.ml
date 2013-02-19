@@ -14,7 +14,7 @@ let lines file =
     (*     (fun reader ->
           Reader.contents reader >>| fun contents ->
             Array.of_list (String.split ~on:'\n' contents)) *)
-    (*
+(*
       let lines_stream = Reader.lines reader in
       Stream.to_list lines_stream >>| Array.of_list) *)
 ;;

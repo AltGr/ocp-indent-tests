@@ -42,7 +42,7 @@ let rec gen_test_type highapi ty =
   in
   aux ty
 
-  (** Generate a list of modules for each record kind *)
+(** Generate a list of modules for each record kind *)
 and gen_record_type highapi record =
   let obj_name = OU.ocaml_of_record_name record in
   let all_fields = DU.fields_of_obj (Dm_api.get_obj_by_name highapi ~objname:record) in

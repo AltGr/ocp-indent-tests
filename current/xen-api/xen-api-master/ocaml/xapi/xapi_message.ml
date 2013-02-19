@@ -634,7 +634,7 @@ let rss_handler (req: Http.Request.t) (bio: Buf_io.t) _ =
             Rss.item_link=None;
             Rss.item_description=body;
             Rss.item_pubdate=Date.rfc822_to_string
-              (Date.rfc822_of_float (Date.to_float message.API.message_timestamp))}) messages
+                (Date.rfc822_of_float (Date.to_float message.API.message_timestamp))}) messages
       in
       let channel =
         {Rss.chan_title="XenServer Messages";

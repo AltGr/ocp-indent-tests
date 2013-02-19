@@ -213,10 +213,10 @@ type request_info =
 
      ri_connection_closed: unit Lwt.t; (** a thread waking up when the connection is closed *)
     }
-    (** If you force [ri_files] or [ri_post_params], the request is fully read,
-       so it is not possible any more to read it from [ri_http_frame]
-       (and vice versa).
-    *)
+(** If you force [ri_files] or [ri_post_params], the request is fully read,
+   so it is not possible any more to read it from [ri_http_frame]
+   (and vice versa).
+*)
 and request = {
   request_info: request_info;
   request_config: config_info;

@@ -1921,7 +1921,7 @@ add a mapping of 'path' -> '/tmp', the command line should contain the argument 
       implementation=No_fd Cli_operations.diagnostic_vm_status;
       flags=[Standard];
     };
-    (*
+(*
    "diagnostic-event-deltas",
     { 
       reqd=["class"];
@@ -2120,7 +2120,7 @@ add a mapping of 'path' -> '/tmp', the command line should contain the argument 
       implementation=No_fd Cli_operations.task_cancel;
       flags=[];
     };
-    (*
+(*
    "alert-create",
     {
       reqd=["message"];
@@ -2138,7 +2138,7 @@ add a mapping of 'path' -> '/tmp', the command line should contain the argument 
       flags=[];
     };
 *)
-    (*
+(*
    "host-fence",
     {
       reqd=["host-uuid"];
@@ -2233,7 +2233,7 @@ add a mapping of 'path' -> '/tmp', the command line should contain the argument 
       flags=[Hidden;Neverforward]
     };
 
-    (*
+(*
    "host-ha-query",
     {
       reqd=[];
@@ -2244,7 +2244,7 @@ add a mapping of 'path' -> '/tmp', the command line should contain the argument 
     };
 
 *)
-    (*
+(*
     "subject-list",
     {
       reqd=[]; 

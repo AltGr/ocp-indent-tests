@@ -218,13 +218,13 @@ let parse_vif vm_id (x, idx) =
     Vif.id = vm_id, string_of_int idx;
     position = idx;
     mac = if List.mem_assoc _mac kvpairs then List.assoc _mac kvpairs else "";
-      carrier = true;
-      mtu = 1500;
-      rate = None;
-      backend = if List.mem_assoc _bridge kvpairs then Network.Local (List.assoc _bridge kvpairs) else Network.Local "xenbr0";
-      other_config = [];
-      locking_mode = Vif.Unlocked;
-      extra_private_keys = [];
+    carrier = true;
+    mtu = 1500;
+    rate = None;
+    backend = if List.mem_assoc _bridge kvpairs then Network.Local (List.assoc _bridge kvpairs) else Network.Local "xenbr0";
+    other_config = [];
+    locking_mode = Vif.Unlocked;
+    extra_private_keys = [];
   }
 
 let print_vm id =
@@ -300,7 +300,7 @@ let add filename =
                           } else if mem _kernel then Direct {
                             kernel = find _kernel |> string;
                             cmdline = if mem _root then find _root |> string else "";
-                              ramdisk = if mem _ramdisk then Some (find _ramdisk |> string) else None;
+                            ramdisk = if mem _ramdisk then Some (find _ramdisk |> string) else None;
                           } else begin
                           List.iter (Printf.fprintf stderr "%s\n") [
                             "I couldn't determine how to start this VM.";
@@ -322,8 +322,8 @@ let add filename =
                        pci_emulations = [];
                        pci_passthrough = false;
                        boot_order = if mem _boot then find _boot |> string else "cd";
-                         qemu_disk_cmdline = false;
-                         qemu_stubdom = false;
+                       qemu_disk_cmdline = false;
+                       qemu_stubdom = false;
                      } in
       let uuid = if mem _uuid then find _uuid |> string else Uuid.string_of_uuid (Uuid.make_uuid ()) in
       let name = if mem _name then find _name |> string else uuid in

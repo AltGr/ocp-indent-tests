@@ -156,12 +156,12 @@ let create_vm id =
       vncterm = true;
       vncterm_ip = None;
       Vm.boot = Indirect {
-        bootloader = "pygrub";
-        extra_args = "extra";
-        legacy_args = "legacy";
-        bootloader_args = "bootloader";
-        devices = [ Local "0"; Local "1" ]
-      }
+          bootloader = "pygrub";
+          extra_args = "extra";
+          legacy_args = "legacy";
+          bootloader_args = "bootloader";
+          devices = [ Local "0"; Local "1" ]
+        }
     } in
   let hvm = HVM {
       hap = true;

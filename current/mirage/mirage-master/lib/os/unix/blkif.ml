@@ -50,7 +50,7 @@ let read_512 t offset length =
 let write_page t offset page =
   (* Similar to read_n *)
   fail (Failure "not implemented: blkif.write_page")
-(*
+ (*
   let off = 0L in
   let len = Io_page.length page in
   lwt () = Socket.(iobind (lseek t.fd) off) in

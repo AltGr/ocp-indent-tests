@@ -59,7 +59,7 @@ let open_in_thumbnail name geom_spec =
   let scale =
     try
       let geom = Geometry.compute geom_spec image_width image_height in
-      (*
+(*
       prerr_endline (Printf.sprintf "Denom %d/%d" image_width geom.Geometry.geom_width);
 *)
       image_width / geom.Geometry.geom_width

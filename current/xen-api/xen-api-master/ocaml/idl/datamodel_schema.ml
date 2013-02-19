@@ -40,7 +40,7 @@ let of_datamodel () =
         if issetref 
         then Some (SExpr.string_of (SExpr.Node []))
         else Opt.map Datamodel_values.to_db_string f.Datamodel_types.default_value ;
-        issetref = issetref;
+      issetref = issetref;
     } in
 
   (* We store the reference in two places for no good reason still: *)

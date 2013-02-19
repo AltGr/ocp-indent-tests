@@ -361,7 +361,7 @@ let parse_http_header mode s =
       (if mode = Nofirstline then
          Http_lexer.nofirstline
            { Ocsigen_http_frame.Http_header.mode =
-             Ocsigen_http_frame.Http_header.Nofirstline;
+               Ocsigen_http_frame.Http_header.Nofirstline;
              proto =
                Ocsigen_http_frame.Http_header.HTTP11;
              headers = Http_headers.empty }

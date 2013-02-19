@@ -149,18 +149,18 @@ let to_rgba32 ?failsafe t =
             else
               { color= t.colormap.map.(index);
                 alpha= if index = t.transparent then 0 else 255 }
-in
-Rgba32.unsafe_set rgba32 x y rgba
-done
-done
-| None ->
-  for y = 0 to t.height - 1 do
-    for x = 0 to t.width - 1 do
-      let index = unsafe_get t x y in
-      Rgba32.unsafe_set rgba32 x y
-        { color= t.colormap.map.(index);
-          alpha= if index = t.transparent then 0 else 255 }
-done
-done
-end;
-rgba32;;
+          in
+          Rgba32.unsafe_set rgba32 x y rgba
+        done
+      done
+    | None ->
+      for y = 0 to t.height - 1 do
+        for x = 0 to t.width - 1 do
+          let index = unsafe_get t x y in
+          Rgba32.unsafe_set rgba32 x y
+            { color= t.colormap.map.(index);
+              alpha= if index = t.transparent then 0 else 255 }
+        done
+      done
+  end;
+  rgba32;;

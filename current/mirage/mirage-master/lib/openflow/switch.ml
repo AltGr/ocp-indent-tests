@@ -304,7 +304,7 @@ let process_of_packet state (remote_addr, remote_port) ofp t =
     Channel.write_bitstring t (OP.Switch.bitstring_of_switch_config 
         h.OP.Header.xid resp);
     Channel.flush t
-    (*
+(*
       | OP.Flow_mod(h,fm) 
         -> Printf.printf "Flow modification received\n"
  *)

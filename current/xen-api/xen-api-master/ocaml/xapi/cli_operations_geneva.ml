@@ -388,7 +388,7 @@ let vm_install fd printer rpc session_id params =
 
     Client.VM.provision rpc session_id new_vm;
     (* Geneva doesn't start VMs automatically on install *)
-    (*
+  (*
   Client.VM.start rpc session_id new_vm false true;
   *)
     (* We wait for the PV bootloader switcheroo *)

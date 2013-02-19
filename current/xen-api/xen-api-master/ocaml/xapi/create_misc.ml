@@ -285,7 +285,7 @@ and update_domain_zero_memory_constraints (host_info: host_info) (constraints: V
   | Some constraints ->
     constraints
 
-    (** Calculates the range of memory to which domain 0 is constrained, in bytes. *)
+(** Calculates the range of memory to which domain 0 is constrained, in bytes. *)
 and calculate_domain_zero_memory_static_range (host_info: host_info) : int64 * int64 =
 
   (** Calculates the minimum amount of memory needed by domain 0, in bytes. *)

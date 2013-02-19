@@ -109,9 +109,9 @@ module Test_data = struct
 
     let create () =
       { a =
-        (if Random.bool s then `R
-         else if Random.bool s then `M (`A (String.create 10))
-         else `M (`B 9));
+          (if Random.bool s then `R
+           else if Random.bool s then `M (`A (String.create 10))
+           else `M (`B 9));
         b = 10;
         c = Random.float s 10_000.0;
         d = Random.string s 15;

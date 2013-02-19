@@ -281,7 +281,7 @@ struct
 
     | _ -> raise Not_found
 
-  (*
+(*
   In addition, there are some event hooks that auth modules implement as follows:
 *)
 

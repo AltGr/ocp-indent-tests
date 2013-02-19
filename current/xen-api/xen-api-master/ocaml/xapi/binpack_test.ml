@@ -84,7 +84,7 @@ let prove_plan_is_possible_via_counterexample_search (h: (int, int) Binpack.heur
        Printf.printf "  Dead hosts = [ %s ]; failed VMs = [ %s ]\n" (String.concat ";" (List.map string_of_int dead_hosts)) (String.concat ";" (List.map string_of_int failed_vms));
 *)
       let plan = h.get_specific_plan config failed_vms in
-      (*
+(*
        Printf.printf "  Plan = [ %s ]\n" (String.concat "; " (List.map (fun (a, b) -> Printf.sprintf "%d -> %d" a b) plan));
 *)
       check_plan config dead_hosts plan) combinations_to_try;

@@ -83,7 +83,7 @@ let treat_font font =
         | _ -> face#set_charmap (List.hd face#charmaps)
     end;
 
-    (*
+(*
     let mbbox = get_maximum_bbox inst#face in
 *)
     let smetrics = face#size_metrics in

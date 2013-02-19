@@ -118,7 +118,7 @@ struct
     | Leaf(k,x) -> Leaf(k, f x)
     | Branch(p,m,t0,t1) -> Branch(p, m, map f t0, map f t1)
 
-  (*
+        (*
           let rec mapi f = function
           | Empty -> Empty
           | Leaf (k,x) -> Leaf (k, f k x)

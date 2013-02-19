@@ -135,9 +135,9 @@ module Task = functor (Interface : INTERFACE) -> struct
       cancel_points_seen = 0;
       test_cancel_at = match tasks.test_cancel_trigger with
         | Some (dbg', n) when dbg = dbg' ->
-        clear_cancel_trigger tasks; (* one shot *)
-        Some n
-      | _ -> None
+          clear_cancel_trigger tasks; (* one shot *)
+          Some n
+        | _ -> None
     } in
     Mutex.execute tasks.m
       (fun () ->

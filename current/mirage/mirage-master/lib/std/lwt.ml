@@ -905,9 +905,9 @@ let npick threads =
 
 let join l =
   let res = temp (ref (Cancel_func(fun () -> List.iter cancel l)))
-    (* Number of threads still sleeping: *)
+(* Number of threads still sleeping: *)
   and sleeping = ref 0
-    (* The state that must be returned: *)
+(* The state that must be returned: *)
   and return_state = ref (Return ()) in
   let rec waiter = ref (Some handle_result)
   and handle_result state =

@@ -1024,7 +1024,7 @@ module Forward = functor(Local: Custom_actions.CUSTOM_ACTIONS) -> struct
           (fun () ->
             Local.VM.set_is_a_template ~__context ~self ~value:true)
       else Local.VM.set_is_a_template ~__context ~self ~value
-    (*
+        (*
           else raise (Api_errors.Server_error(Api_errors.operation_not_allowed, [ "Must use VM.provision" ]))
         *)
 

@@ -87,7 +87,7 @@ let filter f keep img =
       store_sample hist (img#unsafe_get x y)
     done
   done;
-  (*
+(*
   let dx = img#width / 100 in
   let dy = img#height / 100 in
   for x = 0 to (img#width - 1) / dx do

@@ -121,7 +121,7 @@ let gen hostpattern sitepath (regexp, conf, url, prefix, localpath) = function
               and prefix = Netstring_pcre.global_replace regexp prefix path
               and userconf_options = {
                 Ocsigen_extensions.localfiles_root =
-                Ocsigen_extensions.replace_user_dir regexp localpath path }
+                  Ocsigen_extensions.replace_user_dir regexp localpath path }
               and conf = conf_to_xml conf0
               in
               let user_parse_host = Ocsigen_extensions.parse_user_site_item

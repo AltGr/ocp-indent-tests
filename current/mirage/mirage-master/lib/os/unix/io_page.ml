@@ -39,7 +39,7 @@ let get () =
     try
       let page = Queue.pop free_list in
       (* Add finaliser to put it back in the pool *)
-      (*
+(*
       let fin p =
         Printf.printf "page finalise\n%!";
         Queue.add p free_list

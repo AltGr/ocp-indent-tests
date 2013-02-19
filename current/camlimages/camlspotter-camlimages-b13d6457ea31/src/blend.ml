@@ -25,7 +25,7 @@ let blend = function
       let t = t + 0x80 in
       let t = t + t lsr 8 in
       t lsr 8
-      (*
+(*
   | SoftLight ->
       if s < 0x80 then begin
         let t = (0xff - (src lsl 1)) * art_blend_sq_diff_8[dst] in

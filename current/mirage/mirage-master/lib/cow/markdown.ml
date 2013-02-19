@@ -258,7 +258,7 @@ and parse_text s =
       current = new_fragment (); }
     0
 
-    (* scan s starting from n, upto max (exclusive) *)
+(* scan s starting from n, upto max (exclusive) *)
 and scan s st n =
   let max = st.max in
   if n >= max then List.rev (push_current st)
@@ -295,8 +295,8 @@ and scan s st n =
     | '\\' when (n + 1) < max -> addc st.current s.[n+1]; scan s st (n + 2)
     | c -> addc st.current c; scan s st (n + 1)
 
-      (* [delimited f delim first] tries to match [delim] starting from [first],
-       * returns Some (offset of char after closing delim) or None *)
+(* [delimited f delim first] tries to match [delim] starting from [first],
+ * returns Some (offset of char after closing delim) or None *)
 and delimited f delim s st first =
   let max = st.max in
   let delim_len = String.length delim in
@@ -323,7 +323,7 @@ and maybe_link delim f s st n = match scan_link s ~max:st.max n with
                 current = (new_fragment ()) }
       n
 
-      (* return None if delim not found, else Some (offset of char *after* delim) *)
+(* return None if delim not found, else Some (offset of char *after* delim) *)
 and scan_past ~delim s ~max n =
   let re = Re.compile (Re.string delim) in
   let rec loop m ~max =
@@ -337,8 +337,8 @@ and scan_past ~delim s ~max n =
       | _ -> None (* no match or >= max  *)
   in loop n ~max
 
-  (* returns None or offset of char after the reference
-   * (i.e. after closing ')'). *)
+(* returns None or offset of char after the reference
+ * (i.e. after closing ')'). *)
 and scan_link s ~max n = match scan_past ~delim:"]" s ~max n with
     None -> None
   | Some end_of_desc ->

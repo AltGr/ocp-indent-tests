@@ -185,7 +185,7 @@ module Ip_address = struct
       (Lwt_unix.getaddrinfo host "" [])
       aux
 
-      (*
+(*
   let getnameinfo ia p =
     try
       Lwt_unix.getnameinfo (Unix.ADDR_INET (ia, p)) [Unix.NI_NAMEREQD] >>= fun r ->

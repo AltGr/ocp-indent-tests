@@ -89,7 +89,7 @@ type t =
     *)
     query_group_membership : string -> (string list);
 
-    (*
+      (*
   In addition, there are some event hooks that auth modules implement as follows:
       *)
 

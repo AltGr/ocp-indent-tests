@@ -5702,7 +5702,7 @@ let setup_t =
          CustomPlugin.Test.main
            {
              CustomPlugin.cmd_main =
-             [(OASISExpr.EBool true, ("$test_runner", []))];
+               [(OASISExpr.EBool true, ("$test_runner", []))];
              cmd_clean = [(OASISExpr.EBool true, None)];
              cmd_distclean = [(OASISExpr.EBool true, None)];
            })
@@ -5717,7 +5717,7 @@ let setup_t =
          CustomPlugin.Test.clean
            {
              CustomPlugin.cmd_main =
-             [(OASISExpr.EBool true, ("$test_runner", []))];
+               [(OASISExpr.EBool true, ("$test_runner", []))];
              cmd_clean = [(OASISExpr.EBool true, None)];
              cmd_distclean = [(OASISExpr.EBool true, None)];
            })
@@ -5730,7 +5730,7 @@ let setup_t =
          CustomPlugin.Test.distclean
            {
              CustomPlugin.cmd_main =
-             [(OASISExpr.EBool true, ("$test_runner", []))];
+               [(OASISExpr.EBool true, ("$test_runner", []))];
              cmd_clean = [(OASISExpr.EBool true, None)];
              cmd_distclean = [(OASISExpr.EBool true, None)];
            })

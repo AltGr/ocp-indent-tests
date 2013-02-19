@@ -168,7 +168,7 @@ let gen_module api : O.Module.t =
     let operations = List.map (fun x -> operation ~sync obj x) obj.messages in
     let helpers = List.concat (List.map (fun x -> helper_record_constructor ~sync obj x) obj.messages) in
     let fields = fields_of (operations @ helpers) in
-    (*
+(*
     let fields = List.map (fun x -> O.Module.Let (operation ~sync obj x)) obj.messages in
 *)  
     O.Module.make

@@ -1606,9 +1606,9 @@ module VBD = struct
             let dp_id = _dp_id, Storage.id_of frontend_domid vbd.Vbd.id in
             let x = {
               Device.Vbd.mode = (match vbd.mode with
-              | ReadOnly -> Device.Vbd.ReadOnly 
-              | ReadWrite -> Device.Vbd.ReadWrite
-            );
+                | ReadOnly -> Device.Vbd.ReadOnly 
+                | ReadWrite -> Device.Vbd.ReadWrite
+              );
               device_number = vbd.position;
               phystype = Device.Vbd.Phys;
               params = vdi.attach_info.Storage_interface.params;

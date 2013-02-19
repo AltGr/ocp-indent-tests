@@ -191,7 +191,7 @@ module SMAPIv1 = struct
         virtual_size = vdi_rec.API.vDI_virtual_size;
         physical_utilisation = vdi_rec.API.vDI_physical_utilisation;
         persistent = vdi_rec.API.vDI_on_boot = `persist;
-          sm_config = vdi_rec.API.vDI_sm_config;
+        sm_config = vdi_rec.API.vDI_sm_config;
       }
 
     let scan context ~dbg ~sr:sr' =
@@ -344,7 +344,7 @@ module SMAPIv1 = struct
         virtual_size = r.API.vDI_virtual_size;
         physical_utilisation = r.API.vDI_physical_utilisation;
         persistent = r.API.vDI_on_boot = `persist;
-          sm_config = r.API.vDI_sm_config;
+        sm_config = r.API.vDI_sm_config;
       }
 
     let newvdi ~__context vi =

@@ -267,7 +267,7 @@ let get_extra_permissions_roles =
 
 (* Returns a (permission, static_role list) list generated from datamodel.ml *)
 let gen_roles_of_permissions roles_permissions =
-  (*
+(*
 (* Lists all api call names available *)
 let apicalls obj =
   let objmsgs obj = List.map (fun msg -> Printf.sprintf "\"%s\";" (DU.wire_name ~sync:true obj msg)) obj.messages in

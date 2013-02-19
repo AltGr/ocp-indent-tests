@@ -13,14 +13,14 @@ class status_bar ?packing ?show () =
     l
   in
   let progress =
-    (*
+(*
     let f = GBin.frame ~width: 120 ~border_width: 0 ~shadow_type: `IN
   ~packing: (hbox#pack ~expand: false ~fill: false) () in
 *)
     let f = GBin.event_box ~width: 120 
         ~packing: (hbox#pack ~expand: false ~fill: false) () in
     let p = GRange.progress_bar ~packing: f#add () in
-    (*
+(*
     p#set_show_text true;
     p#set_format_string "";
 *)
@@ -36,7 +36,7 @@ class status_bar ?packing ?show () =
     method set_pattern = label#set_pattern
     method set_line_wrap = label#set_line_wrap
 
-    (*
+(*
   method adjustment = progress#adjustment
   method configure = progress#configure
   method percentage = progress#percentage
@@ -45,7 +45,7 @@ class status_bar ?packing ?show () =
     method get_fraction = progress#fraction
 
     method event = progress#event
-    (*
+(*
   method set_activity_blocks = progress#set_activity_blocks
   method set_activity_step = progress#set_activity_step
   method set_bar_style = progress#set_bar_style
@@ -53,12 +53,12 @@ class status_bar ?packing ?show () =
 *)
     method set_orientation = progress#set_orientation
 
-    (*
+(*
   val mutable activity_mode = false
 *)
 
     method set_fraction p = 
-      (*
+(*
     if activity_mode then begin
       progress#set_activity_mode false;
       activity_mode <- false
@@ -67,7 +67,7 @@ class status_bar ?packing ?show () =
       progress#set_fraction p
 
     method activate () =
-      (*
+(*
     if not activity_mode then begin
       progress#set_activity_mode true;
       activity_mode <- true

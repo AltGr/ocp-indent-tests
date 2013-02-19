@@ -810,7 +810,7 @@ let set_suspend_VDI ~__context ~self ~value =
   let src_vdi = Db.VM.get_suspend_VDI ~__context ~self in
   let dst_vdi = value in
   if src_vdi <> dst_vdi then
-    (*
+  (*
    * We don't care if the future host can see current suspend VDI or not, but
    * we want to make sure there's at least a host can see all the VDIs of the
    * VM + the new suspend VDI. We raise an exception if there's no suitable

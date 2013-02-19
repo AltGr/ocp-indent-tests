@@ -241,7 +241,7 @@ class livsh init_dir func =
         joe#start_rotate;
         prevw <- vw;
         prevh <- vh;
-        (*
+(*
       prerr_endline "RECONFIG";
       prerr_endline (Printf.sprintf "get size done (%d,%d)" vw vh);
 *)
@@ -277,7 +277,7 @@ class livsh init_dir func =
             item#set_position x y)
           items positions;
 
-        (*
+(*
       prerr_endline (Printf.sprintf "change <fixed> %dx%d" !mx !my);
 *)
         fixed#misc#set_size_request ~width: !mx ~height: !my ();

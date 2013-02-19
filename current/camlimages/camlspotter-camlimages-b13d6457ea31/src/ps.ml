@@ -225,7 +225,7 @@ let super_save file conf comments showpage images =
           if limitw /. float w  *. float h < limith
           then limitw /. float w
           else limith /. float h in
-        (*
+(*
           let dpi = paper_width /. 8.26 /. ratio in
           debug_endline (sprintf "%f dpi" dpi);
 *)
@@ -287,7 +287,7 @@ let super_save file conf comments showpage images =
       for y = y1 to y1 + h - 1 do
         let perdec = (y - y1) * 10 / h in
         if !prevperdec <> perdec then begin
-          (*
+(*
           debug_endline (sprintf "%d0 %% done" perdec);
 *)
           prevperdec := perdec

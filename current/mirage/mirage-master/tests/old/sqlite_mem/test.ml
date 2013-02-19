@@ -69,7 +69,7 @@ let _ =
     let db = db_open ":memory:" in
     cmd db "CREATE TABLE IF NOT EXISTS foo (a TEXT, b INTEGER, c FLOAT)";
     delete_all db;
-    (*
+(*
     List.iter (fun i ->   
       List.iter (fun sz -> 
         with_time i (sprintf "%d" sz) 

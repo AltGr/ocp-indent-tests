@@ -58,7 +58,7 @@ let ty_to_xmlrpc api ty =
       let vf = alias_of_ty value in
       "fun m -> map ("^kf^") ("^vf^") m"
     | Ref _ -> "fun r -> To.string (Ref.string_of r)"
-    (*
+(*
     | Ref "session" -> "fun uuid -> To.string(Uuid.string_of_cookie uuid)"
     | Ref s -> "fun uuid -> To.string(Uuid.string_of_uuid uuid)"
 *)
@@ -90,7 +90,7 @@ let gen_to_xmlrpc api tys = block
       ["let map fk fv m =";
        "  let elements = List.map (fun (k, v) -> fk k, fv v) m in";
        "  XMLRPC.To.structure elements";
-       (*
+(*
      "  set (fun (k, v) -> XMLRPC.To.structure [\"key\", fk k; \"value\", fv v]) m"
 *)
       ];
@@ -128,7 +128,7 @@ let ty_of_xmlrpc api ty =
       let vf = alias_of_ty_param value in
       wrap "xml" ("map ("^kf^") ("^vf^") xml")
     | Ref _ -> wrap "xml" "Ref.of_string (From.string xml)"
-                 (*
+(*
     | Ref "session" -> "fun uuid -> Uuid.cookie_of_string(From.string uuid)"
     | Ref s -> "fun uuid -> Uuid.uuid_of_string(From.string uuid)"
 *)
@@ -175,7 +175,7 @@ let gen_of_xmlrpc api tys = block
        "  From.array f xml"];
       ["let map fk fv (xml: XMLRPC.xmlrpc) =";
        "  List.map (fun (k, v) -> fk k, fv v) (From.structure xml)"
-       (*
+(*
      "  let f m = fk (List.assoc \"key\" m), fv (List.assoc \"value\" m) in";
      "  set (fun b -> f (From.structure b)) xml"
 *)

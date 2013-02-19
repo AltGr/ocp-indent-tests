@@ -697,7 +697,7 @@ let marshal dns =
       BITSTRING { s:((String.length s)*8):string })
   in
 
-  (*
+(*
   let mn (labels:domain_name) =
     let bits = ref [] in
     List.iter (fun s -> 

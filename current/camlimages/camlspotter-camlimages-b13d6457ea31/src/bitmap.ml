@@ -161,10 +161,10 @@ let memory width height init =
                 }) |];
     access = 
       if blocks_y = 1 then (fun x y -> 
-  bufs.(0), (y * width + x) * bytes_per_pixel) 
-else (fun x y -> 
-  bufs.(y / hsize), ((y mod hsize) * width + x) * bytes_per_pixel)
-};;
+        bufs.(0), (y * width + x) * bytes_per_pixel) 
+      else (fun x y -> 
+        bufs.(y / hsize), ((y mod hsize) * width + x) * bytes_per_pixel)
+  };;
 
 
 let swap_out = function

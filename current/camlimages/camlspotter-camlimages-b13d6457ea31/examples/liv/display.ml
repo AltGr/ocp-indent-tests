@@ -195,7 +195,7 @@ let sort_filters (filters : filter list) =
     | [] -> []
     | `SIZE x :: _ -> [`SIZE x]
     | _ :: xs -> get_size xs in
-  (*
+(*
   let rec get_normalize = function
     | [] -> []
     | `NORMALIZE :: _ -> [`NORMALIZE]

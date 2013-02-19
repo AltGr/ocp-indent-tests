@@ -57,7 +57,7 @@ and device =
   |Blkif of blkif
   |KV_RO of kv_ro
 
-    (** A provider listens for new device ids, and create/destroy them *)
+(** A provider listens for new device ids, and create/destroy them *)
 and provider = <
   id: string;             (* Human-readable name of provider *)
   create: deps:entry list -> cfg:(string * string) list -> id -> entry Lwt.t; (* Create a device from an id *)

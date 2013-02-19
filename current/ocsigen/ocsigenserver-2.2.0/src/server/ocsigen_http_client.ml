@@ -693,11 +693,11 @@ let raw_request
     in
     Lwt.return
       {Ocsigen_http_frame.frame_header=
-        {Ocsigen_http_frame.Http_header.mode =
-          http_frame.Ocsigen_http_frame.frame_header.Ocsigen_http_frame.Http_header.mode;
-          Ocsigen_http_frame.Http_header.proto =
-          http_frame.Ocsigen_http_frame.frame_header.Ocsigen_http_frame.Http_header.proto;
-          Ocsigen_http_frame.Http_header.headers = headers};
+          {Ocsigen_http_frame.Http_header.mode =
+              http_frame.Ocsigen_http_frame.frame_header.Ocsigen_http_frame.Http_header.mode;
+            Ocsigen_http_frame.Http_header.proto =
+              http_frame.Ocsigen_http_frame.frame_header.Ocsigen_http_frame.Http_header.proto;
+            Ocsigen_http_frame.Http_header.headers = headers};
         frame_content = http_frame.Ocsigen_http_frame.frame_content;
         frame_abort = http_frame.Ocsigen_http_frame.frame_abort;
       }

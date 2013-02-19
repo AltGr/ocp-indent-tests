@@ -433,7 +433,7 @@ struct
         (List.fold_left (fun p pp->if p="" then pp else p^","^pp) "" subject_sid_membership_list);
       subject_sid_membership_list
 
-  (*
+(*
   In addition, there are some event hooks that auth modules implement as follows:
 *)
 

@@ -181,7 +181,7 @@ let create  ~__context ~host ~device_config ~(physical_size:int64) ~name_label ~
   Helpers.assert_rolling_upgrade_not_in_progress ~__context ;
   debug "SR.create name_label=%s sm_config=[ %s ]" name_label (String.concat "; " (List.map (fun (k, v) -> k ^ " = " ^ v) sm_config));
   (* This breaks the udev SR which doesn't support sr_probe *)
-  (*
+(*
   let probe_result = probe ~__context ~host ~device_config ~_type ~sm_config in
   begin 
     match Xml.parse_string probe_result with

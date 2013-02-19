@@ -158,8 +158,8 @@ let read_raw_gen_ic read_pixel ic l c max =
   let greymap =
     { Color.max = max;
       Color.map =
-      let make_grey i = {r = i; g = i; b = i} in
-      Array.init (max + 1) make_grey} in
+        let make_grey i = {r = i; g = i; b = i} in
+        Array.init (max + 1) make_grey} in
   img.Index8.colormap <- greymap;
   for i = 0 to l - 1 do
     for j = 0 to c - 1 do
@@ -181,8 +181,8 @@ let read_raw_pbm_ic ic l c =
   let greymap =
     { Color.max = max_byte;
       Color.map =
-      let make_grey i = {r = i; g = i; b = i} in
-      Array.init (max_byte + 1) make_grey} in
+        let make_grey i = {r = i; g = i; b = i} in
+        Array.init (max_byte + 1) make_grey} in
   img.Index8.colormap <- greymap;
   for i = 0 to l - 1 do
     let rec loop j bn byte =

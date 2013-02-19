@@ -344,7 +344,7 @@ let cd_guest_verified (cli : Util.t_cli) vmid =
   let hotplug_tests =
     [("cd_hotplug_3_____________________",(fun () -> cd_hotplug [cd1]),"cd",
       "Attaching cd to device 3 while VM is started then verifying the guest can read it, repeated 100 times. ");
-     (*
+(*
      ("cd_hotplug_3_4",(fun () -> cd_hotplug [cd1;cd2]),"cd",
      "Attaching cd to device 3 while VM is started then verifying the guest can read it, repeated 100 times. ");
 *)
@@ -467,7 +467,7 @@ let disk_guest_verified (cli : Util.t_cli) vmid =
       ignore(destroy_disk cli (vdi_uuid,newvbd))
   in
 
-  (*
+(*
   let disk_hotplug cdset =
     log Info "Starting CD hotplug test";
     log Info "Removing all currently attached CDs";

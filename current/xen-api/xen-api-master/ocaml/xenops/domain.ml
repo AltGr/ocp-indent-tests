@@ -676,12 +676,12 @@ let build_hvm (task: Xenops_task.t) ~xc ~xs ~static_max_kib ~target_kib ~shadow_
 
   let local_stuff = [
     "serial/0/limit",    string_of_int 65536;
-    (*
+(*
     "console/port",      string_of_int console_port;
     "console/ring-ref",  sprintf "%nu" console_mfn;
 *)
   ] in
-  (*
+(*
   let store_mfn =
     try Nativeint.of_string line
     with _ -> raise Domain_build_failed in
@@ -834,7 +834,7 @@ let hvm_restore (task: Xenops_task.t) ~xc ~xs ~store_domid ~console_domid ~no_in
       ~vcpus ~extras:[] xenguest_path domid fd in
   let local_stuff = [
     "serial/0/limit",    string_of_int 65536;
-    (*
+(*
     "console/port",     string_of_int console_port;
     "console/ring-ref", sprintf "%nu" console_mfn;
 *)

@@ -108,8 +108,8 @@ let rec output oz f buf pos len  =
         next_cont oz f
     ))
 
-  (* Flush oz, ie. produces a new_stream with the content of oz, cleans it
-   * and returns the continuation of the stream *)
+(* Flush oz, ie. produces a new_stream with the content of oz, cleans it
+ * and returns the continuation of the stream *)
 and flush oz cont =
   let len = oz.pos in
   let s = String.sub oz.buf 0 len in

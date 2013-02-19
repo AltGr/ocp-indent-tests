@@ -166,7 +166,7 @@ let vdi_create_destroy_plug_checksize caps session_id sr =
   && (List.mem vdi_create caps) 
   && (List.mem vdi_delete caps)
   && (List.mem vdi_attach caps) (* DummySR can't even do this *)
-  (*
+(*
     && (List.mem `vdi_create allowed_ops)  (* The Tools SR is where these two concepts diverge *)
     && (List.mem `vdi_destroy allowed_ops)
 *)

@@ -91,7 +91,7 @@ let track_http_operation ?use_existing_task fd rpc session_id (make_command: API
         (* Wait for the task to complete *)
         debug "Waiting for the task to be completed";
         wait_for_task_completion rpc session_id task_id;
-        (*
+(*
    (* Events for tasks have been deleted *)
    while Client.Task.get_status rpc session_id task_id = `pending do
      Thread.delay 5.

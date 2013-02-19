@@ -77,7 +77,7 @@ let _ =
           "center" -> D.root_mode := `CENTER
         | "random" -> D.root_mode := `RANDOM
         | _ -> raise (Failure "root mode")), ": on root [center|random]";
-      (*
+(*
       "-transition", Arg.String (function
     "myst" -> D.transition := `MYST
   | "transparent" -> D.transition := `TRANSPARENT
@@ -396,13 +396,13 @@ let _ =
   let bind () =
     let callback = fun ev ->
       begin match GdkEvent.Key.string ev with
-        (*
+(*
       | "E" -> 
     filter_toggle `ENHANCE;
     display_current true
 
 *)
-        (*
+(*
       | "N" -> 
     filter_toggle `NORMALIZE;
     display_current true
@@ -413,7 +413,7 @@ let _ =
         | " " | "n" | "f" -> next None
         | "p" | "b" -> prev None
         | "q" -> Main.quit ()
-                   (*
+(*
       | "v" -> 
   (* liv visual shell *)
       let rec func = fun file typ ->
@@ -476,7 +476,7 @@ let _ =
           | _ -> ()
         end; false));
 
-  (*
+(*
   let release _ = prerr_endline "freed string!" in
   let test () =
     let f () =

@@ -221,7 +221,7 @@ module Generic = struct
     debug "Device.Generic.hard_shutdown about to blow away backend and error paths";
     rm_device_state ~xs x
 
-  (*
+(*
 (* Assume we've told the backend to close. Watch both the error node and one other path.
    When the watch fires, call a predicate function and look for an error node.
    If an error node appears, throw Device_error. If the predicate returns true then

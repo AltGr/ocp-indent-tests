@@ -5,7 +5,7 @@ open Lwt
 open Mlnet.Types
 
 let main () =
-  (*
+(*
   let connect_thread =
     let sa = Flow.TCP (ipv4_localhost, 8080) in
     lwt ic,oc = IO.open_connection sa in

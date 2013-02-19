@@ -96,7 +96,7 @@ let all_possible_tests =
 
 let all_valid_tests = List.filter (fun t -> expected_result t <> None) all_possible_tests
 
-(*
+    (*
 let _ = 
   List.iter print_endline (map string_of_test all_valid_tests);
   Printf.printf "In total there are %d tests.\n" (List.length all_valid_tests)

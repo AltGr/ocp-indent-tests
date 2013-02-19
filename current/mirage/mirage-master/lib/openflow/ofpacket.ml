@@ -1086,7 +1086,7 @@ module Flow_mod = struct
     in
     Bitstring.concat packet
 
-    (*
+(*
   let flow_mod_of_bitstring h bits = 
     bitmatch h bits with
       | { match_data:Match.get_len:bitstring;
@@ -1594,7 +1594,7 @@ let parse h bits =
     | PORT_STATUS -> Port_status(h, (Port.status_of_bitstring bits)) 
     | _ -> raise (Unparsed ("_", bits))
   )
-(*
+          (*
           (bitmatch bits with  
           | { 1:8; 10:8; len:16; xid:32; buffer_id:32; total_len:16; in_port : 16; reason:8;
           bits:-1:bitstring}  

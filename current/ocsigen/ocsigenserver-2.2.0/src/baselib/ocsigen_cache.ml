@@ -114,10 +114,10 @@ end = struct
         mutable collection : float option; (* the timestamp for removal *)
       }
 
-      (* Doubly-linked list with maximum size.
-         The field [oldest] is the first
-         element that must be removed if the list becomes too long.
-      *)
+  (* Doubly-linked list with maximum size.
+     The field [oldest] is the first
+     element that must be removed if the list becomes too long.
+  *)
   and 'a t =
       {mutable newest : 'a node option (* None = empty *);
        mutable oldest : 'a node option;

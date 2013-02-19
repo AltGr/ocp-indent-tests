@@ -275,7 +275,7 @@ let update_env __context sync_keys =
     Storage_access.resynchronise_pbds ~__context ~pbds:(Db.Host.get_PBDs ~__context ~self:localhost);
   );
 
-  (*
+(*
   debug "resynchronising db with host physical interfaces";
   update_physical_networks ~__context;
 *)

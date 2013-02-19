@@ -19,7 +19,7 @@ type elt =
   | Str of string
   | Fun of string * expr list
 
-        (** Expression: `.body a:hover`. No commas here. *)
+(** Expression: `.body a:hover`. No commas here. *)
 and expr = elt list
 
 (** We allow nested declarations *)

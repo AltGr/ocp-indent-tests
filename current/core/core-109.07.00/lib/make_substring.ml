@@ -57,7 +57,7 @@ module F (Base : Base) : S with type base = Base.t = struct
     len : int;
   }
 
-  (*
+(*
   let invariant t =
     assert (0 <= t.pos);
     assert (0 <= t.len);
