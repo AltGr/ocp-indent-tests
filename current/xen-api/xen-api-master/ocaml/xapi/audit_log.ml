@@ -122,7 +122,7 @@ let log_timestamp_of_iso8601 iso8601_timestamp =
 
 (*
  Assume that RBAC access for the session_id already verified by xapi_http.ml
- 
+
  GET /audit_log?session_id=<session>&task_id=<task>&
                 [since=<timestamp in ISO 8601 / log.gettimestring() format>]
 

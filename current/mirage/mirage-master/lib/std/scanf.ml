@@ -1398,9 +1398,9 @@ let scan_format ib ef fmt rv f =
         let min = float_min min_opt in
         let _x = scan_Float max min ib in
         scan_fmt ir (stack f (token_float ib)) (succ i)
-        (*      | 'B' | 'b' when max = Some 0 ->
-                let _x = scan_bool max ib in
-                scan_fmt ir (stack f (token_int ib)) (succ i) *)
+      (*      | 'B' | 'b' when max = Some 0 ->
+              let _x = scan_bool max ib in
+              scan_fmt ir (stack f (token_int ib)) (succ i) *)
       | 'B' | 'b' ->
         let _x = scan_bool max ib in
         scan_fmt ir (stack f (token_bool ib)) (succ i)
@@ -1422,7 +1422,7 @@ let scan_format ib ef fmt rv f =
               | 'l' -> scan_fmt ir (stack f (token_int32 conv1 ib)) (succ i)
               | 'n' -> scan_fmt ir (stack f (token_nativeint conv1 ib)) (succ i)
               | _ -> scan_fmt ir (stack f (token_int64 conv1 ib)) (succ i) end
-            (* This is not an integer conversion, but a regular %l, %n or %L. *)
+          (* This is not an integer conversion, but a regular %l, %n or %L. *)
           | _ -> scan_fmt ir (stack f (get_count conv0 ib)) i end
       | '!' ->
         if Scanning.end_of_input ib then scan_fmt ir f (succ i)

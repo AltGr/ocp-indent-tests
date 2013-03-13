@@ -22,8 +22,8 @@
 (** Type definitions *)
 
 (** HTTP version, actually only 1.0 and 1.1 are supported. Note that
-   'supported' here means only 'accepted inside a HTTP request line', no
-   different behaviours are actually implemented depending on HTTP version *)
+    'supported' here means only 'accepted inside a HTTP request line', no
+    different behaviours are actually implemented depending on HTTP version *)
 type version =
   [ `HTTP_1_0
   | `HTTP_1_1
@@ -147,7 +147,7 @@ exception Malformed_URL of string
 exception Malformed_query of string
 
 (** invalid query string part encountered, arguments are parameter name and
-   parameter value *)
+    parameter value *)
 exception Malformed_query_part of string * string
 
 (** invalid request URI encountered *)

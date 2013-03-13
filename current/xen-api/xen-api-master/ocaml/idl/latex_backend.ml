@@ -144,12 +144,12 @@ let of_enum_alias name options = [
   "\\hline";
   "{\\tt enum " ^ (escape name) ^ "} & \\\\";
   "\\hline" ] @ 
-    (List.map (fun (option, description) ->
-       hgap ^ "{\\tt " ^ (escape option) ^ "} & " ^ (escape description) ^ " \\\\") options) @
-    [
-      "\\hline";
-      "\\end{longtable}"
-    ]
+                                 (List.map (fun (option, description) ->
+                                    hgap ^ "{\\tt " ^ (escape option) ^ "} & " ^ (escape description) ^ " \\\\") options) @
+                                 [
+                                   "\\hline";
+                                   "\\end{longtable}"
+                                 ]
 
 
 let of_content x closed = 
@@ -216,7 +216,7 @@ let latex_section_of_message closed section_prefix x =
                 "(";   
                 String.concat ", "
                   ((if x.msg_session then ["session_id s"] else []) @
-                     (List.map (fun p -> of_ty_verbatim p.param_type ^ " " ^ p.param_name) x.msg_params));
+                   (List.map (fun p -> of_ty_verbatim p.param_type ^ " " ^ p.param_name) x.msg_params));
                 ")"
               ]
            ]) in
@@ -231,36 +231,36 @@ let latex_section_of_message closed section_prefix x =
             "\\end{verbatim}\n\n"])
     ] @
 
-       (if x.msg_params=[] then []
-        else
-          [
-            "\\noindent{\\bf Arguments:}\n\n ";
-            space;
+     (if x.msg_params=[] then []
+      else
+        [
+          "\\noindent{\\bf Arguments:}\n\n ";
+          space;
 
-            "\\begin{tabular}{|c|c|p{7cm}|}\n \\hline";
-            "{\\bf type} & {\\bf name} & {\\bf description} \\\\ \\hline";
-            String.concat "\n" ((List.map mk_latex_param) x.msg_params);
-            "\\end{tabular}\n";
-          ]) @
+          "\\begin{tabular}{|c|c|p{7cm}|}\n \\hline";
+          "{\\bf type} & {\\bf name} & {\\bf description} \\\\ \\hline";
+          String.concat "\n" ((List.map mk_latex_param) x.msg_params);
+          "\\end{tabular}\n";
+        ]) @
 
-       [
-         space;
-         "\n \\noindent {\\bf Return Type:} ";      
-         "{\\tt ";
-         of_ty_opt x.msg_result; "}\n\n";
-         escape (desc_of_ty_opt x.msg_result);
-         space
-       ] @
+     [
+       space;
+       "\n \\noindent {\\bf Return Type:} ";      
+       "{\\tt ";
+       of_ty_opt x.msg_result; "}\n\n";
+       escape (desc_of_ty_opt x.msg_result);
+       space
+     ] @
 
-       (if x.msg_errors=[] then [space; space]
-        else
-          [
-            "";
-            wrap (sprintf "\\noindent{\\bf Possible Error Codes:} %s"
-                (String.concat ", " ((List.map mk_latex_error)
-                     x.msg_errors)));
-            "\\vspace{0.6cm}"
-          ]))
+     (if x.msg_errors=[] then [space; space]
+      else
+        [
+          "";
+          wrap (sprintf "\\noindent{\\bf Possible Error Codes:} %s"
+              (String.concat ", " ((List.map mk_latex_error)
+                   x.msg_errors)));
+          "\\vspace{0.6cm}"
+        ]))
 
 (* Make a load of sections for a list of functions, fb.
    if section_prefix="" then we make subsections for each function.
@@ -307,13 +307,13 @@ let class_footer =
 let field_table_of_obj newpage x closed =
   let field_tex = List.concat (List.map (fun x -> of_content (flatten x) closed) x.contents) in
   (if newpage then ["\\newpage"] else []) @
-    [
-      "\\subsection{Fields for class: "^(escape x.name)^"}";
-    ] @
-    (if x.contents=[] then
-       ["{\\bf Class "^(escape x.name)^" has no fields.}"]
-     else
-       (class_header x closed) @ field_tex @ class_footer)  
+  [
+    "\\subsection{Fields for class: "^(escape x.name)^"}";
+  ] @
+  (if x.contents=[] then
+     ["{\\bf Class "^(escape x.name)^" has no fields.}"]
+   else
+     (class_header x closed) @ field_tex @ class_footer)  
 
 let of_obj x closed =
   [ 
@@ -321,17 +321,17 @@ let of_obj x closed =
     "\\section{Class: "^(escape x.name)^"}" ]
   @ (field_table_of_obj false x closed)
   @
-    [
-      "\\subsection{RPCs associated with class: "^(escape x.name)^"}"
-    ]
+  [
+    "\\subsection{RPCs associated with class: "^(escape x.name)^"}"
+  ]
   @
-    (if x.messages=[] then
-       ["\n\n";
-        "{\\bf Class "^(escape x.name)^" has no additional RPCs associated with it.}"]
-     else
-       [
-         latex_of_funblock closed "sub" x.messages
-       ])
+  (if x.messages=[] then
+     ["\n\n";
+      "{\\bf Class "^(escape x.name)^" has no additional RPCs associated with it.}"]
+   else
+     [
+       latex_of_funblock closed "sub" x.messages
+     ])
 
 let error_signature name params =
   if params = [] then

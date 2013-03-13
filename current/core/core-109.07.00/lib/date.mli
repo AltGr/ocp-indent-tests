@@ -11,9 +11,9 @@ include Hashable_binable with type t := t
 (** converts a string to a date, in formats:
  * m/d/y
  * y-m-d (* valid iso8601_extended *)
-  * DD MMM YYYY
-  * DDMMMYYYY
-  * YYYYMMDD *)
+ * DD MMM YYYY
+ * DDMMMYYYY
+ * YYYYMMDD *)
 include Stringable with type t := t
 include Comparable_binable with type t := t
 

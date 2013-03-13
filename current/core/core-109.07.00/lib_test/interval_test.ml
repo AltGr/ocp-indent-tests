@@ -42,15 +42,15 @@ let test =
       "half_open_intervals_are_a_partition" >::
         (fun () ->
           "are_a_partition" @? Interval.half_open_intervals_are_a_partition [
-              Interval.create 0 2;
-              Interval.create 2 4;
-              Interval.create 4 8;
-            ];
+                                 Interval.create 0 2;
+                                 Interval.create 2 4;
+                                 Interval.create 4 8;
+                               ];
           "not_a_partition" @? not (Interval.half_open_intervals_are_a_partition [
-                Interval.create 0 2;
-                Interval.create 2 4;
-                Interval.create 5 8;
-              ]);
+                                      Interval.create 0 2;
+                                      Interval.create 2 4;
+                                      Interval.create 5 8;
+                                    ]);
         );
     ]
 

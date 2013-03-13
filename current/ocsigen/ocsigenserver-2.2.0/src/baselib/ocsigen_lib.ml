@@ -131,7 +131,7 @@ module Ip_address = struct
       match normalized with
         | [a; b; c; d; e; f; g; h] ->
             IPv6 (Int64.zero ++ a ++ b ++ c ++ d,
-                Int64.zero ++ e ++ f ++ g ++ h), maybe_mask
+              Int64.zero ++ e ++ f ++ g ++ h), maybe_mask
         | _ -> failwith "invalid IPv6 address: %s (%d components)" s (List.length normalized)
     else
       let (++) a b = Int32.logor (Int32.shift_left a 16) (Int32.of_int b) in
@@ -395,9 +395,9 @@ module Url = struct
       (* Note that the fragment (string after #) is not sent by browsers *)
 
       (*20110707 ' ' is encoded to '+' in queries, but not in paths.
-         Warning: if we write the URL manually, we must encode ' ' to '+' manually
-         (not done by the browser).
-         --Vincent
+        Warning: if we write the URL manually, we must encode ' ' to '+' manually
+        (not done by the browser).
+        --Vincent
       *)
 
       let get_params =

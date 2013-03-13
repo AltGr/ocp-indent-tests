@@ -44,8 +44,8 @@ let open_files ?(user = Ocsigen_config.get_user ()) ?(group = Ocsigen_config.get
     with
       | Unix.Unix_error(error,_,_) ->
           raise_lwt (Ocsigen_config.Config_file_error (
-                Printf.sprintf "can't open log file %s: %s"
-                  path (Unix.error_message error)))
+              Printf.sprintf "can't open log file %s: %s"
+                path (Unix.error_message error)))
   in
 
   lwt acc = open_log access_file in

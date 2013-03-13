@@ -16,9 +16,9 @@ let maybe_start_finaliser_thread =
   let started = ref false in
   let start_finaliser_thread () =
     ignore (Thread.create (fun () -> Fn.forever (fun () ->
-          match read_finaliser_queue () with
-          | None -> Thread.delay 1.0
-          | Some f -> Exn.handle_uncaught ~exit:false f)) ())
+                                       match read_finaliser_queue () with
+                                       | None -> Thread.delay 1.0
+                                       | Some f -> Exn.handle_uncaught ~exit:false f)) ())
   in
   (fun () ->
     if not !started then (* performance hack! *)
@@ -98,7 +98,7 @@ let tune__field logger ?(fmt = ("%d" : (_, _, _) format)) name arg current =
   | Some v ->
     Option.iter logger
       ~f:(fun f -> Printf.ksprintf f "Gc.Control.%s: %(%d%) -> %(%d%)"
-          name fmt current fmt v);
+                     name fmt current fmt v);
     v
 ;;
 
@@ -106,19 +106,19 @@ let tune__field logger ?(fmt = ("%d" : (_, _, _) format)) name arg current =
   *\(.*\) -> \1 = f "\1" \1 c.\1;
 *)
 let tune ?logger ?minor_heap_size ?major_heap_increment ?space_overhead
-    ?verbose ?max_overhead ?stack_limit ?allocation_policy () =
+      ?verbose ?max_overhead ?stack_limit ?allocation_policy () =
   let c = get () in
   let f = tune__field logger in
   set {
     minor_heap_size = f "minor_heap_size" minor_heap_size c.minor_heap_size;
     major_heap_increment = f "major_heap_increment" major_heap_increment
-        c.major_heap_increment;
+                             c.major_heap_increment;
     space_overhead = f "space_overhead" space_overhead c.space_overhead;
     verbose = f "verbose" ~fmt:"0x%x" verbose c.verbose;
     max_overhead = f "max_overhead" max_overhead c.max_overhead;
     stack_limit = f "stack_limit" stack_limit c.stack_limit;
     allocation_policy = f "allocation_policy" allocation_policy
-        c.allocation_policy
+                          c.allocation_policy
   }
 ;;
 

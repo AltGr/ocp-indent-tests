@@ -21,5 +21,5 @@ val new_tmp_file_name : string -> string
    prefix [prefix]. *)
 
 val remove_tmp_file : string -> unit
-(* [remove_tmp_file fname] removes [fname] if it can; nothing
-   happens if [fname] cannot be removed. *)
+  (* [remove_tmp_file fname] removes [fname] if it can; nothing
+     happens if [fname] cannot be removed. *)

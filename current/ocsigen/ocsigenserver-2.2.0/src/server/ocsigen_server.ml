@@ -53,7 +53,7 @@ let _ = Sys.set_signal Sys.sigpipe Sys.Signal_ignore
 let _ =
   Lwt_timeout.set_exn_handler
     (fun e -> Ocsigen_messages.errlog ("Uncaught Exception after lwt timeout: "^
-          Printexc.to_string e))
+                                       Printexc.to_string e))
 
 let make_ipv6_socket addr port =
   let socket = Lwt_unix.socket Unix.PF_INET6 Unix.SOCK_STREAM 0 in
@@ -147,7 +147,7 @@ let rec find_post_params http_frame ct filenames =
               Some (find_post_params_form_urlencoded body_gen)
           | "multipart", "form-data" ->
               Some (find_post_params_multipart_form_data
-                    body_gen ctparams filenames)
+                  body_gen ctparams filenames)
           | _ -> None
 
 and find_post_params_form_urlencoded body_gen _ =
@@ -222,7 +222,7 @@ and find_post_params_multipart_form_data body_gen ctparams filenames ci =
     | No_File (p_name, to_buf) ->
         return
           (params := !params @ [(p_name, Buffer.contents to_buf)])
-          (* à la fin ? *)
+    (* à la fin ? *)
     | A_File (p_name,fname,oname,wh, content_type) ->
         (* Ocsigen_messages.debug "closing file"; *)
         files :=
@@ -238,8 +238,8 @@ and find_post_params_multipart_form_data body_gen ctparams filenames ci =
   Multipart.scan_multipart_body_from_stream
     body bound create add stop ci.maxuploadfilesize >>= fun () ->
   (*VVV Does scan_multipart_body_from_stream read until the end or
-     only what it needs?  If we do not consume here, the following
-     request will be read only when this one is finished ...  *)
+    only what it needs?  If we do not consume here, the following
+    request will be read only when this one is finished ...  *)
   Ocsigen_stream.consume body_gen >>= fun () ->
   Lwt.return (!params, !files)
 
@@ -271,7 +271,7 @@ let get_request_infos
           server, the response MUST be a 400 (Bad Request) error message.
       *)
       (*  Here we don't trust the port information given by the request.
-         We use the port we are listening on. *)
+          We use the port we are listening on. *)
       Ocsigen_messages.debug
         (fun () ->
           "- host="^(match headerhost with None -> "<none>" | Some h -> h));
@@ -413,7 +413,7 @@ let get_request_infos
     )
     (fun e ->
       Ocsigen_messages.debug (fun () -> "~~~ Exn during get_request_infos : "^
-          Printexc.to_string e);
+                                        Printexc.to_string e);
       Lwt.fail e)
 
 
@@ -558,7 +558,7 @@ let service receiver sender_slot request meth url port sockaddr =
       | Ocsigen_http_error (cookies_to_set, i) ->
           Ocsigen_messages.debug
             (fun () -> "-> Sending HTTP error "^(string_of_int i)^" "^
-                Ocsigen_http_frame.Http_error.expl_of_code i);
+                       Ocsigen_http_frame.Http_error.expl_of_code i);
           send_error ~cookies:cookies_to_set i
       | Ocsigen_stream.Interrupted Ocsigen_stream.Already_read ->
           Ocsigen_messages.warning
@@ -825,7 +825,7 @@ let handle_connection port in_ch sockaddr =
     begin match e with
       | Lost_connection e' ->
           warn sockaddr ("connection abruptly closed by peer ("
-              ^ Printexc.to_string e' ^ ")")
+                         ^ Printexc.to_string e' ^ ")")
       | Ocsigen_http_com.Timeout ->
           warn sockaddr "timeout"
       | Ocsigen_http_com.Aborted ->
@@ -865,7 +865,7 @@ let handle_connection port in_ch sockaddr =
           warn sockaddr (Http_error.string_of_http_exception e);
           Ocsigen_http_com.start_processing receiver (fun slot ->
             (*XXX We should use the right information for clientproto
-               and head... *)
+              and head... *)
             send_error slot
               ~clientproto:Ocsigen_http_frame.Http_header.HTTP10
               ~head:false
@@ -1328,7 +1328,7 @@ let start_server () = try
                   Lwt.return ()
               | e ->
                   Ocsigen_messages.errlog ("Uncaught Exception after command: "^
-                        Printexc.to_string e);
+                                           Printexc.to_string e);
                   Lwt.fail e))
          >>= f
        in ignore (f ());
@@ -1348,9 +1348,9 @@ let start_server () = try
         | None
         | Some (None, None) -> ()
         | Some (None, _) -> raise (Ocsigen_config.Config_file_error
-                                  "SSL certificate is missing")
+                                "SSL certificate is missing")
         | Some (_, None) -> raise (Ocsigen_config.Config_file_error
-                                  "SSL key is missing")
+                                "SSL key is missing")
         | Some ((Some c), (Some k)) ->
             Ssl.set_password_callback !sslctx (ask_for_passwd sslports);
             Ssl.use_certificate !sslctx c k

@@ -37,12 +37,12 @@ let create ~id ~root =
       | OK fd ->
         (* Construct a stream that reads pages of istrings *)
         return (Some (Lwt_stream.from (fun () ->
-                let str = String.create 4096 in
-                lwt len = iobind (fun fd -> OS.Socket.read fd str 0 4096) fd in
-                match len with
-                | 0 -> close fd; return None
-                | len -> return (Some (str, 0, len*8))
-              )))
+              let str = String.create 4096 in
+              lwt len = iobind (fun fd -> OS.Socket.read fd str 0 4096) fd in
+              match len with
+              | 0 -> close fd; return None
+              | len -> return (Some (str, 0, len*8))
+            )))
 
     method iter_s fn =
       match opendir root with

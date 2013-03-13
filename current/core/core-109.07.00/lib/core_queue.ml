@@ -125,32 +125,32 @@ let singleton a =
 
 include Bin_prot.Utils.Make_iterable_binable1 (struct
 
-    type 'a t = 'a Queue.t
-    type 'a el = 'a
-    type 'a acc = 'a t
+          type 'a t = 'a Queue.t
+          type 'a el = 'a
+          type 'a acc = 'a t
 
-    let module_name = Some "Queue"
+          let module_name = Some "Queue"
 
-    let length = length
+          let length = length
 
-    let iter = iter
+          let iter = iter
 
-    let init _ = create ()
+          let init _ = create ()
 
-    (* Bin_prot reads the elements in the same order they were written out, as determined by
-       [iter].  So, we can ignore the index and just enqueue each element as it is read
-       in. *)
-    let insert t x _i = enqueue t x; t
+          (* Bin_prot reads the elements in the same order they were written out, as determined by
+             [iter].  So, we can ignore the index and just enqueue each element as it is read
+             in. *)
+          let insert t x _i = enqueue t x; t
 
-    let finish t = t
+          let finish t = t
 
-    let bin_size_el sizer = sizer
+          let bin_size_el sizer = sizer
 
-    let bin_write_el_ writer = writer
+          let bin_write_el_ writer = writer
 
-    let bin_read_el_ reader = reader
+          let bin_read_el_ reader = reader
 
-  end)
+        end)
 
 TEST_MODULE = struct
   let m =

@@ -217,12 +217,12 @@ module MyOCamlbuildFindlib = struct
   (* # 21 "/home/jdimino/.opam/4.00.1/build/oasis.0.3.0/src/plugins/ocamlbuild/MyOCamlbuildFindlib.ml" *)
 
   (** OCamlbuild extension, copied from 
-    * http://brion.inria.fr/gallium/index.php/Using_ocamlfind_with_ocamlbuild
-    * by N. Pouillard and others
-    *
-    * Updated on 2009/02/28
-    *
-    * Modified by Sylvain Le Gall 
+   * http://brion.inria.fr/gallium/index.php/Using_ocamlfind_with_ocamlbuild
+   * by N. Pouillard and others
+   *
+   * Updated on 2009/02/28
+   *
+   * Modified by Sylvain Le Gall 
   *)
   open Ocamlbuild_plugin
 
@@ -399,17 +399,17 @@ module MyOCamlbuildBase = struct
       (* Declare OCaml libraries *)
       List.iter 
         (function
-         | nm, [] ->
-           ocaml_lib nm
-         | nm, dir :: tl ->
-           ocaml_lib ~dir:dir (dir^"/"^nm);
-           List.iter 
-             (fun dir -> 
-               List.iter
-                 (fun str ->
-                   flag ["ocaml"; "use_"^nm; str] (S[A"-I"; P dir]))
-                 ["compile"; "infer_interface"; "doc"])
-             tl)
+        | nm, [] ->
+          ocaml_lib nm
+        | nm, dir :: tl ->
+          ocaml_lib ~dir:dir (dir^"/"^nm);
+          List.iter 
+            (fun dir -> 
+              List.iter
+                (fun str ->
+                  flag ["ocaml"; "use_"^nm; str] (S[A"-I"; P dir]))
+                ["compile"; "infer_interface"; "doc"])
+            tl)
         t.lib_ocaml;
 
       (* Declare directories dependencies, replace "include" in _tags. *)
@@ -547,8 +547,8 @@ let select_files dir ext =
 
 let setup_standard_build_flags () =
   begin match getconf "LFS64_CFLAGS" with
-    | None -> ()
-    | Some flags -> flag ["compile"; "c"] (S[A"-ccopt"; A flags])
+  | None -> ()
+  | Some flags -> flag ["compile"; "c"] (S[A"-ccopt"; A flags])
   end;
   let cflags =
     let flags =
@@ -578,9 +578,9 @@ let setup_standard_build_flags () =
 ;;
 
 let dispatch = function
-  | After_rules as e ->
-    setup_standard_build_flags ();
-    dispatch_default e
-  | e -> dispatch_default e
+| After_rules as e ->
+  setup_standard_build_flags ();
+  dispatch_default e
+| e -> dispatch_default e
 
 let () = Ocamlbuild_plugin.dispatch dispatch

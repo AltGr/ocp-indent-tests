@@ -106,17 +106,17 @@ end
 
 (** Usage:
 
-   On the server side :
+    On the server side :
     1) create needed channels
     2) transmit their identifiers to clients
     3) write when appropriate (using the outcome mechanism if necessary
 
-   On the client :
+    On the client :
     1) make a XmlHttpRequest (XHR) with a list of channel identifiers.
     2) wait for the reply
     3) GOTO 1
 
-   Encoding for client-to-server requests:
+    Encoding for client-to-server requests:
     * The content type header should be set to [application/x-ocsigen-comet]
       (without quotes)
     * A POST parameter is required. Its name should be [registration] and its
@@ -126,7 +126,7 @@ end
       the [escape] JavaScript primitive
 
 
-   Encoding for server-to-client answer:
+    Encoding for server-to-client answer:
     * The server answer is either empty (when no channel was written upon before
       timeout) or a list of pairs of channel identifiers and message content.
       The pairs are separated by [:] (colon) while the list elements are

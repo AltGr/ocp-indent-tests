@@ -438,7 +438,7 @@ let main () =
     p "%!PS-Adobe-3.0";
     p "%%Creator: Tiffps by Jun FURUSE";
     p ("%%Title: "^
-        (Mstring.catenate_sep "+" (List.map (fun f -> f.name) files)));
+       (Mstring.catenate_sep "+" (List.map (fun f -> f.name) files)));
     p "%%DocumentData: Clean7Bit";
     p "%%Pages: 1";
     p (sprintf "%%%%BoundingBox: %f %f %f %f" !bbx1 !bby1 !bbx2 !bby2);

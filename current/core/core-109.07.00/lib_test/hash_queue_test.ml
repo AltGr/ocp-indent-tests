@@ -27,7 +27,7 @@ let test =
         assert (try ignore (Hq.remove_exn hq "foobar"); false with | _ -> true);
         assert (Hq.replace hq "foobar" 0 = `No_such_key);
         assert (try ignore (Hq.replace_exn hq "foobar" 0); false with
-          | _ -> true);
+        | _ -> true);
         assert
           ([] = Hq.foldi hq ~init:[] ~f:(fun ac ~key:_ ~data:_ -> () :: ac));
         assert ([] = Hq.fold hq ~init:[] ~f:(fun ac _ -> () :: ac));
@@ -97,7 +97,7 @@ let test =
         | _ -> true);
         assert (Hq.lookup hq "1" = None);
         assert (try ignore (Hq.lookup_exn hq "1"); false with
-          | Not_found -> true | _ -> false);
+        | Not_found -> true | _ -> false);
 
         Hq.clear hq;
         assert (Hq.is_empty hq);

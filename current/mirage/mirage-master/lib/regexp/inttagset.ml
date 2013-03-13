@@ -294,14 +294,14 @@ struct
   let compare = compare
 
   (*i
-     let cases s a f =
+    let cases s a f =
       match s with
         | Empty -> a ()
         | _ ->
         let t = choose s in
         let r = remove t s in
         f t r
-     i*)
+    i*)
 end
 
 

@@ -23,8 +23,8 @@ let bytes (type a) (t : a t) = (Obj.size (Obj.repr (t : a t)) + 1) * bytes_per_w
 TEST_UNIT =
   assert (create 13 = None);
   begin match Sys.execution_mode () with
-    | `Bytecode -> ()
-    | `Native   -> assert (create "foo" = None)
+  | `Bytecode -> ()
+  | `Native   -> assert (create "foo" = None)
   end;
   let string = String.concat [ "foo"; "bar" ] in
   let t =

@@ -1,9 +1,9 @@
 (** In_channel collects all of the pervasive functions that work on in_channels.
-    * It adds some new functions (like [input_all] and [input_lines]).
-    * It names things using the fact that there is no worry about toplevel name
-      conflicts (since we are in a module).
-    * It uses labelled arguments.
-    * It returns an option rather than raising End_of_file. *)
+ * It adds some new functions (like [input_all] and [input_lines]).
+ * It names things using the fact that there is no worry about toplevel name
+    conflicts (since we are in a module).
+ * It uses labelled arguments.
+ * It returns an option rather than raising End_of_file. *)
 
 type t = in_channel
 

@@ -144,19 +144,19 @@ let unpack_signed_16_little_endian ~buf ~pos =
 ;;
 
 module Make_inline_tests (A: sig
-      val num_bytes: int
-      val signed: bool
-      type t
-      val ns: t list
-      val of_int64: int64 -> t
-      val to_int64: t -> int64
-      val pack: byte_order:endian -> buf:string -> pos:int -> t -> unit
-      val unpack: byte_order:endian -> buf:string -> pos:int -> t
-      val pack_big_endian: buf:string -> pos:int -> t -> unit
-      val unpack_big_endian: buf:string -> pos:int -> t
-      val pack_little_endian: buf:string -> pos:int -> t -> unit
-      val unpack_little_endian: buf:string -> pos:int -> t
-    end) = struct
+           val num_bytes: int
+           val signed: bool
+           type t
+           val ns: t list
+           val of_int64: int64 -> t
+           val to_int64: t -> int64
+           val pack: byte_order:endian -> buf:string -> pos:int -> t -> unit
+           val unpack: byte_order:endian -> buf:string -> pos:int -> t
+           val pack_big_endian: buf:string -> pos:int -> t -> unit
+           val unpack_big_endian: buf:string -> pos:int -> t
+           val pack_little_endian: buf:string -> pos:int -> t -> unit
+           val unpack_little_endian: buf:string -> pos:int -> t
+         end) = struct
   include A
   let pos = 3
   let buf_size = 13
@@ -190,101 +190,101 @@ module Make_inline_tests (A: sig
   ;;
   TEST =
     ns = List.map ns ~f:(fun n ->
-        let buf = String.make buf_size padding in
-        pack ~byte_order:`Little_endian ~buf ~pos n;
-        test_rest_of_buf buf;
-        unpack ~byte_order:`Little_endian ~buf ~pos)
+           let buf = String.make buf_size padding in
+           pack ~byte_order:`Little_endian ~buf ~pos n;
+           test_rest_of_buf buf;
+           unpack ~byte_order:`Little_endian ~buf ~pos)
   TEST =
     ns = List.map ns ~f:(fun n ->
-        let buf = String.make buf_size padding in
-        pack ~byte_order:`Big_endian ~buf ~pos n;
-        test_rest_of_buf buf;
-        unpack ~byte_order:`Big_endian ~buf ~pos)
+           let buf = String.make buf_size padding in
+           pack ~byte_order:`Big_endian ~buf ~pos n;
+           test_rest_of_buf buf;
+           unpack ~byte_order:`Big_endian ~buf ~pos)
   TEST =
     ns = List.map ns ~f:(fun n ->
-        let buf = String.make buf_size padding in
-        pack_little_endian ~buf ~pos n;
-        test_rest_of_buf buf;
-        unpack_little_endian ~buf ~pos)
+           let buf = String.make buf_size padding in
+           pack_little_endian ~buf ~pos n;
+           test_rest_of_buf buf;
+           unpack_little_endian ~buf ~pos)
   TEST =
     ns = List.map ns ~f:(fun n ->
-        let buf = String.make buf_size padding in
-        pack_big_endian ~buf ~pos n;
-        test_rest_of_buf buf;
-        unpack_big_endian ~buf ~pos)
+           let buf = String.make buf_size padding in
+           pack_big_endian ~buf ~pos n;
+           test_rest_of_buf buf;
+           unpack_big_endian ~buf ~pos)
   TEST =
     ns_rev = List.map ns ~f:(fun n ->
-        let buf = String.make buf_size padding in
-        pack_big_endian ~buf ~pos n;
-        test_rest_of_buf buf;
-        unpack_little_endian ~buf ~pos)
+               let buf = String.make buf_size padding in
+               pack_big_endian ~buf ~pos n;
+               test_rest_of_buf buf;
+               unpack_little_endian ~buf ~pos)
   TEST =
     ns_rev = List.map ns ~f:(fun n ->
-        let buf = String.make buf_size padding in
-        pack_little_endian ~buf ~pos n;
-        test_rest_of_buf buf;
-        unpack_big_endian ~buf ~pos)
+               let buf = String.make buf_size padding in
+               pack_little_endian ~buf ~pos n;
+               test_rest_of_buf buf;
+               unpack_big_endian ~buf ~pos)
   TEST =
     ns = List.map ns ~f:(fun n ->
-        let buf = String.make buf_size padding in
-        pack ~byte_order:`Big_endian ~buf ~pos n;
-        test_rest_of_buf buf;
-        unpack_big_endian ~buf ~pos)
+           let buf = String.make buf_size padding in
+           pack ~byte_order:`Big_endian ~buf ~pos n;
+           test_rest_of_buf buf;
+           unpack_big_endian ~buf ~pos)
   TEST =
     ns = List.map ns ~f:(fun n ->
-        let buf = String.make buf_size padding in
-        pack ~byte_order:`Little_endian ~buf ~pos n;
-        test_rest_of_buf buf;
-        unpack_little_endian ~buf ~pos)
+           let buf = String.make buf_size padding in
+           pack ~byte_order:`Little_endian ~buf ~pos n;
+           test_rest_of_buf buf;
+           unpack_little_endian ~buf ~pos)
   TEST =
     ns = List.map ns ~f:(fun n ->
-        let buf = String.make buf_size padding in
-        pack_big_endian ~buf ~pos n;
-        test_rest_of_buf buf;
-        unpack ~byte_order:`Big_endian ~buf ~pos)
+           let buf = String.make buf_size padding in
+           pack_big_endian ~buf ~pos n;
+           test_rest_of_buf buf;
+           unpack ~byte_order:`Big_endian ~buf ~pos)
   TEST =
     ns = List.map ns ~f:(fun n ->
-        let buf = String.make buf_size padding in
-        pack_little_endian ~buf ~pos n;
-        test_rest_of_buf buf;
-        unpack ~byte_order:`Little_endian ~buf ~pos)
+           let buf = String.make buf_size padding in
+           pack_little_endian ~buf ~pos n;
+           test_rest_of_buf buf;
+           unpack ~byte_order:`Little_endian ~buf ~pos)
 end
 
 TEST_MODULE "inline_unsigned_16" = Make_inline_tests (struct
-    let ns = [0x3f20; 0x7f20; 0xef20; 0; 0x7fff; 0x8000; 0xffff]
-    let num_bytes = 2
-    let signed = false
-    type t = int
-    let of_int64 = Int64.to_int
-    let to_int64 = Int64.of_int
-    let pack = pack_unsigned_16
-    let unpack = unpack_unsigned_16
-    let pack_big_endian = pack_unsigned_16_big_endian
-    let unpack_big_endian = unpack_unsigned_16_big_endian
-    let pack_little_endian = pack_unsigned_16_little_endian
-    let unpack_little_endian = unpack_unsigned_16_little_endian
-  end)
+                                     let ns = [0x3f20; 0x7f20; 0xef20; 0; 0x7fff; 0x8000; 0xffff]
+                                     let num_bytes = 2
+                                     let signed = false
+                                     type t = int
+                                     let of_int64 = Int64.to_int
+                                     let to_int64 = Int64.of_int
+                                     let pack = pack_unsigned_16
+                                     let unpack = unpack_unsigned_16
+                                     let pack_big_endian = pack_unsigned_16_big_endian
+                                     let unpack_big_endian = unpack_unsigned_16_big_endian
+                                     let pack_little_endian = pack_unsigned_16_little_endian
+                                     let unpack_little_endian = unpack_unsigned_16_little_endian
+                                   end)
 
 TEST_MODULE "inline_signed_16" = Make_inline_tests (struct
-    let ns = [0x3f20; 0x7f20; -0x7f20; -0x8000; 0; 1; 0x7fff]
-    let num_bytes = 2
-    let signed = true
-    type t = int
-    let of_int64 = Int64.to_int
-    let to_int64 = Int64.of_int
-    let pack = pack_signed_16
-    let unpack = unpack_signed_16
-    let pack_big_endian = pack_signed_16_big_endian
-    let unpack_big_endian = unpack_signed_16_big_endian
-    let pack_little_endian = pack_signed_16_little_endian
-    let unpack_little_endian = unpack_signed_16_little_endian
-  end)
+                                   let ns = [0x3f20; 0x7f20; -0x7f20; -0x8000; 0; 1; 0x7fff]
+                                   let num_bytes = 2
+                                   let signed = true
+                                   type t = int
+                                   let of_int64 = Int64.to_int
+                                   let to_int64 = Int64.of_int
+                                   let pack = pack_signed_16
+                                   let unpack = unpack_signed_16
+                                   let pack_big_endian = pack_signed_16_big_endian
+                                   let unpack_big_endian = unpack_signed_16_big_endian
+                                   let pack_little_endian = pack_signed_16_little_endian
+                                   let unpack_little_endian = unpack_signed_16_little_endian
+                                 end)
 
 exception Pack_unsigned_32_argument_out_of_range of int with sexp
 let check_unsigned_32_in_range n =
 IFDEF ARCH_SIXTYFOUR THEN
-  if n > unsigned_max || n < 0 then
-    raise (Pack_unsigned_32_argument_out_of_range n)
+        if n > unsigned_max || n < 0 then
+          raise (Pack_unsigned_32_argument_out_of_range n)
 ELSE
 if n < 0 then
   raise (Pack_unsigned_32_argument_out_of_range n)
@@ -318,8 +318,8 @@ let pack_unsigned_32_int_little_endian ~buf ~pos n =
 exception Pack_signed_32_argument_out_of_range of int with sexp
 let check_signed_32_in_range n =
 IFDEF ARCH_SIXTYFOUR THEN
-  if n > signed_max || n < -(signed_max + 1) then
-    raise (Pack_signed_32_argument_out_of_range n)
+        if n > signed_max || n < -(signed_max + 1) then
+          raise (Pack_signed_32_argument_out_of_range n)
 ELSE
 if false then
   raise (Pack_signed_32_argument_out_of_range n)
@@ -415,36 +415,36 @@ let unpack_signed_32_int_little_endian ~buf ~pos =
 ;;
 
 TEST_MODULE "inline_unsigned_32_int" = Make_inline_tests (struct
-    let ns = [0x3f20_3040; 0x7f20_3040;
-              signed_max; signed_max + 1; unsigned_max; 0]
-    let num_bytes = 4
-    let signed = false
-    type t = int
-    let of_int64 = Int64.to_int
-    let to_int64 = Int64.of_int
-    let pack = pack_unsigned_32_int
-    let unpack = unpack_unsigned_32_int
-    let pack_big_endian = pack_unsigned_32_int_big_endian
-    let unpack_big_endian = unpack_unsigned_32_int_big_endian
-    let pack_little_endian = pack_unsigned_32_int_little_endian
-    let unpack_little_endian = unpack_unsigned_32_int_little_endian
-  end)
+                                         let ns = [0x3f20_3040; 0x7f20_3040;
+                                                   signed_max; signed_max + 1; unsigned_max; 0]
+                                         let num_bytes = 4
+                                         let signed = false
+                                         type t = int
+                                         let of_int64 = Int64.to_int
+                                         let to_int64 = Int64.of_int
+                                         let pack = pack_unsigned_32_int
+                                         let unpack = unpack_unsigned_32_int
+                                         let pack_big_endian = pack_unsigned_32_int_big_endian
+                                         let unpack_big_endian = unpack_unsigned_32_int_big_endian
+                                         let pack_little_endian = pack_unsigned_32_int_little_endian
+                                         let unpack_little_endian = unpack_unsigned_32_int_little_endian
+                                       end)
 
 TEST_MODULE "inline_signed_32_int" = Make_inline_tests (struct
-    let ns = [0x3f20_3040; 0x7f20_3040; -0x7f20_3040;
-              signed_max; -(signed_max + 1); 0]
-    let num_bytes = 4
-    let signed = true
-    type t = int
-    let of_int64 = Int64.to_int
-    let to_int64 = Int64.of_int
-    let pack = pack_signed_32_int
-    let unpack = unpack_signed_32_int
-    let pack_big_endian = pack_signed_32_int_big_endian
-    let unpack_big_endian = unpack_signed_32_int_big_endian
-    let pack_little_endian = pack_signed_32_int_little_endian
-    let unpack_little_endian = unpack_signed_32_int_little_endian
-  end)
+                                       let ns = [0x3f20_3040; 0x7f20_3040; -0x7f20_3040;
+                                                 signed_max; -(signed_max + 1); 0]
+                                       let num_bytes = 4
+                                       let signed = true
+                                       type t = int
+                                       let of_int64 = Int64.to_int
+                                       let to_int64 = Int64.of_int
+                                       let pack = pack_signed_32_int
+                                       let unpack = unpack_signed_32_int
+                                       let pack_big_endian = pack_signed_32_int_big_endian
+                                       let unpack_big_endian = unpack_signed_32_int_big_endian
+                                       let pack_little_endian = pack_signed_32_int_little_endian
+                                       let unpack_little_endian = unpack_signed_32_int_little_endian
+                                     end)
 
 ELSE
 
@@ -541,8 +541,8 @@ IFDEF ARCH_SIXTYFOUR THEN
 
 let i1 = Int64.of_int (                                b1)
 and i2 = Int64.of_int ((b2 lsl 48) lor (b3 lsl 40) lor
-      (b4 lsl 32) lor (b5 lsl 24) lor
-      (b6 lsl 16) lor (b7 lsl  8) lor b8) in
+             (b4 lsl 32) lor (b5 lsl 24) lor
+             (b6 lsl 16) lor (b7 lsl  8) lor b8) in
 Int64.(logor i2 (shift_left i1 56))
 
 ELSE
@@ -570,8 +570,8 @@ let unpack_signed_64_little_endian ~buf ~pos =
 IFDEF ARCH_SIXTYFOUR THEN
 
 let i1 = Int64.of_int ( b1         lor (b2 lsl  8) lor
-      (b3 lsl 16) lor (b4 lsl 24) lor
-      (b5 lsl 32) lor (b6 lsl 40) lor (b7 lsl 48))
+             (b3 lsl 16) lor (b4 lsl 24) lor
+             (b5 lsl 32) lor (b6 lsl 40) lor (b7 lsl 48))
 and i2 = Int64.of_int   b8         in
 Int64.(logor i1 (shift_left i2 56))
 
@@ -610,24 +610,24 @@ let unpack_signed_64_int ~byte_order ~buf ~pos =
 ;;
 
 TEST_MODULE "inline_signed_64" = Make_inline_tests (struct
-    let ns = [0x3f20_3040_5060_7080L;
-              0x7f20_3040_5060_7080L;
-              -0x7f20_3040_5060_7080L;
-              0x7fff_ffff_ffff_ffffL;
-              0x8000_0000_0000_0000L;
-              0L]
-    let num_bytes = 8
-    let signed = true
-    type t = int64
-    let of_int64 = Fn.id
-    let to_int64 = Fn.id
-    let pack = pack_signed_64
-    let unpack = unpack_signed_64
-    let pack_big_endian = pack_signed_64_big_endian
-    let unpack_big_endian = unpack_signed_64_big_endian
-    let pack_little_endian = pack_signed_64_little_endian
-    let unpack_little_endian = unpack_signed_64_little_endian
-  end)
+                                   let ns = [0x3f20_3040_5060_7080L;
+                                             0x7f20_3040_5060_7080L;
+                                             -0x7f20_3040_5060_7080L;
+                                             0x7fff_ffff_ffff_ffffL;
+                                             0x8000_0000_0000_0000L;
+                                             0L]
+                                   let num_bytes = 8
+                                   let signed = true
+                                   type t = int64
+                                   let of_int64 = Fn.id
+                                   let to_int64 = Fn.id
+                                   let pack = pack_signed_64
+                                   let unpack = unpack_signed_64
+                                   let pack_big_endian = pack_signed_64_big_endian
+                                   let unpack_big_endian = unpack_signed_64_big_endian
+                                   let pack_little_endian = pack_signed_64_little_endian
+                                   let unpack_little_endian = unpack_signed_64_little_endian
+                                 end)
 
 let pack_float ~byte_order ~buf ~pos f =
   pack_signed_64 ~byte_order ~buf ~pos (Int64.bits_of_float f)
@@ -723,7 +723,7 @@ let test byte_order =
       let n' = u ~byte_order ~buf ~pos:0 in
       if n <> n' then
         failwith (sprintf "%s = unpack_%s (pack_%s %s)"
-            (to_string n') name name (to_string n)))
+                    (to_string n') name name (to_string n)))
   in
   test "signed_8" string_of_int
     (fun ~byte_order:_ ~buf ~pos i -> pack_signed_8 ~buf ~pos i)

@@ -7,20 +7,20 @@ include Container.S1 with type 'a t := 'a t
 val max_length : int
 
 (** [Array.get a n] returns the element number [n] of array [a].
-   The first element has number 0.
-   The last element has number [Array.length a - 1].
-   You can also write [a.(n)] instead of [Array.get a n].
+    The first element has number 0.
+    The last element has number [Array.length a - 1].
+    You can also write [a.(n)] instead of [Array.get a n].
 
-   Raise [Invalid_argument "index out of bounds"]
-   if [n] is outside the range 0 to [(Array.length a - 1)]. *)
+    Raise [Invalid_argument "index out of bounds"]
+    if [n] is outside the range 0 to [(Array.length a - 1)]. *)
 external get : 'a t -> int -> 'a = "%array_safe_get"
 
 (** [Array.set a n x] modifies array [a] in place, replacing
-   element number [n] with [x].
-   You can also write [a.(n) <- x] instead of [Array.set a n x].
+    element number [n] with [x].
+    You can also write [a.(n) <- x] instead of [Array.set a n x].
 
-   Raise [Invalid_argument "index out of bounds"]
-   if [n] is outside the range 0 to [Array.length a - 1]. *)
+    Raise [Invalid_argument "index out of bounds"]
+    if [n] is outside the range 0 to [Array.length a - 1]. *)
 external set : 'a t -> int -> 'a -> unit = "%array_safe_set"
 
 (** Unsafe version of [get].  Can cause arbitrary behavior when used to for an
@@ -40,80 +40,80 @@ val create : len:int -> 'a -> 'a t
 val init : int -> f:(int -> 'a) -> 'a t
 
 (** [Array.make_matrix dimx dimy e] returns a two-dimensional array
-   (an array of arrays) with first dimension [dimx] and
-   second dimension [dimy]. All the elements of this new matrix
-   are initially physically equal to [e].
-   The element ([x,y]) of a matrix [m] is accessed
-   with the notation [m.(x).(y)].
+    (an array of arrays) with first dimension [dimx] and
+    second dimension [dimy]. All the elements of this new matrix
+    are initially physically equal to [e].
+    The element ([x,y]) of a matrix [m] is accessed
+    with the notation [m.(x).(y)].
 
-   Raise [Invalid_argument] if [dimx] or [dimy] is negative or
-   greater than [Sys.max_array_length].
-   If the value of [e] is a floating-point number, then the maximum
-   size is only [Sys.max_array_length / 2]. *)
+    Raise [Invalid_argument] if [dimx] or [dimy] is negative or
+    greater than [Sys.max_array_length].
+    If the value of [e] is a floating-point number, then the maximum
+    size is only [Sys.max_array_length / 2]. *)
 val make_matrix : dimx:int -> dimy:int -> 'a -> 'a t t
 
 (** [Array.append v1 v2] returns a fresh array containing the
-   concatenation of the arrays [v1] and [v2]. *)
+    concatenation of the arrays [v1] and [v2]. *)
 val append : 'a t -> 'a t -> 'a t
 
 (** Same as [Array.append], but concatenates a list of arrays. *)
 val concat : 'a t list -> 'a t
 
 (** [Array.sub a start len] returns a fresh array of length [len],
-   containing the elements number [start] to [start + len - 1]
-   of array [a].
+    containing the elements number [start] to [start + len - 1]
+    of array [a].
 
-   Raise [Invalid_argument "Array.sub"] if [start] and [len] do not
-   designate a valid subarray of [a]; that is, if
-   [start < 0], or [len < 0], or [start + len > Array.length a]. *)
+    Raise [Invalid_argument "Array.sub"] if [start] and [len] do not
+    designate a valid subarray of [a]; that is, if
+    [start < 0], or [len < 0], or [start + len > Array.length a]. *)
 val sub : 'a t -> pos:int -> len:int -> 'a t
 
 (** [Array.copy a] returns a copy of [a], that is, a fresh array
-   containing the same elements as [a]. *)
+    containing the same elements as [a]. *)
 val copy : 'a t -> 'a t
 
 (** [Array.fill a ofs len x] modifies the array [a] in place,
-   storing [x] in elements number [ofs] to [ofs + len - 1].
+    storing [x] in elements number [ofs] to [ofs + len - 1].
 
-   Raise [Invalid_argument "Array.fill"] if [ofs] and [len] do not
-   designate a valid subarray of [a]. *)
+    Raise [Invalid_argument "Array.fill"] if [ofs] and [len] do not
+    designate a valid subarray of [a]. *)
 val fill : 'a t -> pos:int -> len:int -> 'a -> unit
 
 (** [Array.blit v1 o1 v2 o2 len] copies [len] elements
-   from array [v1], starting at element number [o1], to array [v2],
-   starting at element number [o2]. It works correctly even if
-   [v1] and [v2] are the same array, and the source and
-   destination chunks overlap.
+    from array [v1], starting at element number [o1], to array [v2],
+    starting at element number [o2]. It works correctly even if
+    [v1] and [v2] are the same array, and the source and
+    destination chunks overlap.
 
-   Raise [Invalid_argument "Array.blit"] if [o1] and [len] do not
-   designate a valid subarray of [v1], or if [o2] and [len] do not
-   designate a valid subarray of [v2]. *)
+    Raise [Invalid_argument "Array.blit"] if [o1] and [len] do not
+    designate a valid subarray of [v1], or if [o2] and [len] do not
+    designate a valid subarray of [v2]. *)
 val blit : src:'a t -> src_pos:int -> dst:'a t -> dst_pos:int -> len:int -> unit
 
 (** [Array.of_list l] returns a fresh array containing the elements
-   of [l]. *)
+    of [l]. *)
 val of_list : 'a list -> 'a t
 
 (** [Array.map ~f a] applies function [f] to all the elements of [a],
-   and builds an array with the results returned by [f]:
-   [[| f a.(0); f a.(1); ...; f a.(Array.length a - 1) |]]. *)
+    and builds an array with the results returned by [f]:
+    [[| f a.(0); f a.(1); ...; f a.(Array.length a - 1) |]]. *)
 val map : f:('a -> 'b) -> 'a t -> 'b t
 
 (** Same as {!Array.iter}, but the
-   function is applied to the index of the element as first argument,
-   and the element itself as second argument. *)
+    function is applied to the index of the element as first argument,
+    and the element itself as second argument. *)
 val iteri : f:(int -> 'a -> unit) -> 'a t -> unit
 
 (** Same as {!Array.map}, but the
-   function is applied to the index of the element as first argument,
-   and the element itself as second argument. *)
+    function is applied to the index of the element as first argument,
+    and the element itself as second argument. *)
 val mapi : f:(int -> 'a -> 'b) -> 'a t -> 'b t
 
 val foldi : 'a t -> init:'b -> f:(int -> 'b -> 'a -> 'b) -> 'b
 
 (** [Array.fold_right f a ~init] computes
-   [f a.(0) (f a.(1) ( ... (f a.(n-1) init) ...))],
-   where [n] is the length of the array [a]. *)
+    [f a.(0) (f a.(1) ( ... (f a.(n-1) init) ...))],
+    where [n] is the length of the array [a]. *)
 val fold_right : 'a t -> f:('a -> 'b -> 'b) -> init:'b -> 'b
 
 (* All sorting is in increasing order by default. *)

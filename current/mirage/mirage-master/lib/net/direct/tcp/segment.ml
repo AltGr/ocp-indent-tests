@@ -21,7 +21,7 @@ open State
 (* The receive queue stores out-of-order segments, and can
    coalesece them on input and pass on an ordered list up the
    stack to the application.
-   
+
    It also looks for control messages and dispatches them to
    the Rtx queue to ack messages or close channels.
 *)

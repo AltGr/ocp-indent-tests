@@ -14,26 +14,26 @@ let test =
     [ "abusive user" >::
         (fun () ->
           "add" @?
-            begin
-              let timer = Timer.create () in
-              raises_exception
-                (fun () -> Timer.add timer null_handler (sec (-1.)))
-            end;
+          begin
+            let timer = Timer.create () in
+            raises_exception
+              (fun () -> Timer.add timer null_handler (sec (-1.)))
+          end;
           "remove twice" @?
-            begin
-              let timer = Timer.create () in
-              let ev = Timer.add timer null_handler (sec 0.1) in
-              Timer.remove ev;
-              Timer.remove ev;
-              true
-            end;
+          begin
+            let timer = Timer.create () in
+            let ev = Timer.add timer null_handler (sec 0.1) in
+            Timer.remove ev;
+            Timer.remove ev;
+            true
+          end;
           "malicious handler" @?
-            begin
-              let timer = Timer.create () in
-              let _ev = Timer.add timer exception_handler (sec 0.1) in
-              Time.pause (sec 0.3);
-              true
-            end;
+          begin
+            let timer = Timer.create () in
+            let _ev = Timer.add timer exception_handler (sec 0.1) in
+            Time.pause (sec 0.3);
+            true
+          end;
         );
       "ordering of events" >::
         (fun () ->

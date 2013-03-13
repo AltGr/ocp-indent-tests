@@ -11,8 +11,8 @@ open Int_replace_polymorphic_compare
 
 module Tree0 = struct
   (* IF THIS REPRESENTATION EVER CHANGES, ENSURE THAT EITHER
-      (1) all values serialize the same way in both representations, or
-      (2) you add a new Map version to stable.ml
+     (1) all values serialize the same way in both representations, or
+     (2) you add a new Map version to stable.ml
   *)
   type ('k, 'v) t =
     | Empty
@@ -22,21 +22,21 @@ module Tree0 = struct
   type ('k, 'v) tree = ('k, 'v) t
 
   let height = function
-    | Empty -> 0
-    | Leaf _ -> 1
-    | Node(_,_,_,_,h) -> h
+  | Empty -> 0
+  | Leaf _ -> 1
+  | Node(_,_,_,_,h) -> h
   ;;
 
   let invariants t ~compare_key =
     let rec loop lower upper t =
       let in_range k =
         (match lower with
-         | None -> true
-         | Some lower -> compare_key lower k < 0
+        | None -> true
+        | Some lower -> compare_key lower k < 0
         )
         && (match upper with
-          | None -> true
-          | Some upper -> compare_key k upper < 0
+        | None -> true
+        | Some upper -> compare_key k upper < 0
         )
       in
       match t with
@@ -100,20 +100,20 @@ module Tree0 = struct
     | [||] | [|_|] -> Result.Ok (of_sorted_array_unchecked array ~compare_key)
     | _ ->
       with_return (fun r ->
-          let increasing =
-            match compare_key (fst array.(0)) (fst array.(1)) with
-            | 0 -> r.return (Or_error.error_string "of_sorted_array: duplicated elements")
-            | i -> i < 0
-          in
-          for i = 1 to Array.length array - 2 do
-            match compare_key (fst array.(i)) (fst array.(i+1)) with
-            | 0 -> r.return (Or_error.error_string "of_sorted_array: duplicated elements")
-            | i ->
-              if Pervasives.(<>) (i < 0) increasing then
-                r.return (Or_error.error_string "of_sorted_array: elements are not ordered")
-          done;
-          Result.Ok (of_sorted_array_unchecked array ~compare_key)
-        )
+        let increasing =
+          match compare_key (fst array.(0)) (fst array.(1)) with
+          | 0 -> r.return (Or_error.error_string "of_sorted_array: duplicated elements")
+          | i -> i < 0
+        in
+        for i = 1 to Array.length array - 2 do
+          match compare_key (fst array.(i)) (fst array.(i+1)) with
+          | 0 -> r.return (Or_error.error_string "of_sorted_array: duplicated elements")
+          | i ->
+            if Pervasives.(<>) (i < 0) increasing then
+              r.return (Or_error.error_string "of_sorted_array: elements are not ordered")
+        done;
+        Result.Ok (of_sorted_array_unchecked array ~compare_key)
+      )
 
   let bal l x d r =
     let hl = height l in
@@ -202,10 +202,10 @@ module Tree0 = struct
   let mem t x ~compare_key = Option.is_some (find t x ~compare_key)
 
   let rec min_elt = function
-    | Empty -> None
-    | Leaf (k, d) -> Some (k, d)
-    | Node (Empty, k, d, _, _) -> Some (k, d)
-    | Node (l, _, _, _, _) -> min_elt l
+  | Empty -> None
+  | Leaf (k, d) -> Some (k, d)
+  | Node (Empty, k, d, _, _) -> Some (k, d)
+  | Node (l, _, _, _, _) -> min_elt l
   ;;
 
   exception Map_min_elt_exn_of_empty_map with sexp
@@ -218,10 +218,10 @@ module Tree0 = struct
   ;;
 
   let rec max_elt = function
-    | Empty -> None
-    | Leaf (k, d) -> Some (k, d)
-    | Node (_, k, d, Empty, _) -> Some (k, d)
-    | Node (_, _, _, r, _) -> max_elt r
+  | Empty -> None
+  | Leaf (k, d) -> Some (k, d)
+  | Node (_, k, d, Empty, _) -> Some (k, d)
+  | Node (_, _, _, r, _) -> max_elt r
   ;;
   let max_elt_exn t =
     match max_elt t with
@@ -305,8 +305,8 @@ module Tree0 = struct
       match t with
       | Empty ->
         begin match (f None) with
-          | None -> raise Change_no_op (* equivalent to returning: Empty *)
-          | Some data -> Leaf(key, data)
+        | None -> raise Change_no_op (* equivalent to returning: Empty *)
+        | Some data -> Leaf(key, data)
         end
       | Leaf(v, d) ->
         let c = compare_key key v in
@@ -322,8 +322,8 @@ module Tree0 = struct
         let c = compare_key key v in
         if c = 0 then
           begin match (f (Some d)) with
-            | None -> merge l r
-            | Some data -> Node(l, key, data, r, h)
+          | None -> merge l r
+          | Some data -> Node(l, key, data, r, h)
           end
         else
         if c < 0 then
@@ -441,10 +441,10 @@ module Tree0 = struct
     ;;
 
     let rec iter ~f = function
-      | End -> ()
-      | More (key, data, tree, enum) ->
-        f ~key ~data;
-        iter (cons tree enum) ~f
+    | End -> ()
+    | More (key, data, tree, enum) ->
+      f ~key ~data;
+      iter (cons tree enum) ~f
     ;;
 
     let iter2 compare_key t1 t2 ~f =
@@ -471,10 +471,10 @@ module Tree0 = struct
 
     let fold tree ~init ~f =
       let rec loop acc = function
-        | End -> acc
-        | More (key, data, tree, enum) ->
-          let acc = f ~key ~data acc in
-          loop acc (cons tree enum)
+      | End -> acc
+      | More (key, data, tree, enum) ->
+        let acc = f ~key ~data acc in
+        loop acc (cons tree enum)
       in
       loop init tree
     ;;
@@ -519,9 +519,9 @@ module Tree0 = struct
   let symmetric_diff = Enum.symmetric_diff
 
   let rec length = function
-    | Empty -> 0
-    | Leaf _ -> 1
-    | Node (l, _, _, r, _) -> length l + length r + 1
+  | Empty -> 0
+  | Leaf _ -> 1
+  | Node (l, _, _, r, _) -> length l + length r + 1
   ;;
 
   let of_alist_fold alist ~init ~f ~compare_key =
@@ -621,8 +621,8 @@ module Tree0 = struct
       if c = 0 then min_elt r
       else if c < 0 then next_key r k ~compare_key
       else begin match next_key l k ~compare_key with
-        | None -> Some (k', v')
-        | Some answer -> Some answer
+      | None -> Some (k', v')
+      | Some answer -> Some answer
       end
   ;;
 
@@ -639,8 +639,8 @@ module Tree0 = struct
       if c = 0 then max_elt l
       else if c > 0 then prev_key l k ~compare_key
       else begin match prev_key r k ~compare_key with
-        | None -> Some (k', v')
-        | Some answer -> Some answer
+      | None -> Some (k', v')
+      | Some answer -> Some answer
       end
   ;;
 
@@ -669,8 +669,8 @@ module Tree0 = struct
 end
 
 (* IF THIS REPRESENTATION EVER CHANGES, ENSURE THAT EITHER
-    (1) all values serialize the same way in both representations, or
-    (2) you add a new Map version to stable.ml
+   (1) all values serialize the same way in both representations, or
+   (2) you add a new Map version to stable.ml
 *)
 type ('k, 'v, 'comparator) t =
   { tree : ('k, 'v) Tree0.t;
@@ -947,21 +947,21 @@ module Poly = struct
   let sexp_of_t = sexp_of_t
 
   include Bin_prot.Utils.Make_iterable_binable2 (struct
-      type ('a, 'b) acc = ('a , 'b) t
-      type ('a, 'b) t = ('a, 'b) acc
-      type ('a, 'b) el = 'a * 'b with bin_io
-      let _ = bin_el
-      let module_name = Some "Core.Core_map"
-      let length = length
-      let iter t ~f = iter t ~f:(fun ~key ~data -> f (key, data))
-      let init _n = empty
-      let insert acc (key, data) _i =
-        if mem acc key
-        then failwith "Map.bin_read_t_: duplicate element in map"
-        else add ~key ~data acc
-      ;;
-      let finish t = t
-    end)
+            type ('a, 'b) acc = ('a , 'b) t
+            type ('a, 'b) t = ('a, 'b) acc
+            type ('a, 'b) el = 'a * 'b with bin_io
+            let _ = bin_el
+            let module_name = Some "Core.Core_map"
+            let length = length
+            let iter t ~f = iter t ~f:(fun ~key ~data -> f (key, data))
+            let init _n = empty
+            let insert acc (key, data) _i =
+              if mem acc key
+              then failwith "Map.bin_read_t_: duplicate element in map"
+              else add ~key ~data acc
+            ;;
+            let finish t = t
+          end)
 
   module Tree = struct
     include Make_tree (Comparator.Poly)
@@ -1023,21 +1023,21 @@ module Make_binable_using_comparator (Key' : Comparator.S_binable) = struct
   include Make_using_comparator (Key')
 
   include Bin_prot.Utils.Make_iterable_binable1 (struct
-      type 'v acc = 'v t
-      type 'v t = 'v acc
-      type 'v el = Key'.t * 'v with bin_io
-      let _ = bin_el
-      let module_name = Some "Core.Core_map"
-      let length = length
-      let iter t ~f = iter t ~f:(fun ~key ~data -> f (key, data))
-      let init _n = empty
-      let insert acc (key, data) _i =
-        if mem acc key
-        then failwith "Map.bin_read_t_: duplicate element in map"
-        else add ~key ~data acc
-      ;;
-      let finish t = t
-    end)
+            type 'v acc = 'v t
+            type 'v t = 'v acc
+            type 'v el = Key'.t * 'v with bin_io
+            let _ = bin_el
+            let module_name = Some "Core.Core_map"
+            let length = length
+            let iter t ~f = iter t ~f:(fun ~key ~data -> f (key, data))
+            let init _n = empty
+            let insert acc (key, data) _i =
+              if mem acc key
+              then failwith "Map.bin_read_t_: duplicate element in map"
+              else add ~key ~data acc
+            ;;
+            let finish t = t
+          end)
 
 end
 

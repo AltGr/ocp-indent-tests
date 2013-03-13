@@ -25,7 +25,7 @@ val rev_append : 'a t -> 'a t -> 'a t
 val unordered_append : 'a t -> 'a t -> 'a t
 
 (** [List.rev_map f l] gives the same result as
-   {!List.rev}[ (]{!ListLabels.map}[ f l)], but is more efficient. *)
+    {!List.rev}[ (]{!ListLabels.map}[ f l)], but is more efficient. *)
 val rev_map : 'a t -> f:('a -> 'b) -> 'b t
 
 (* [fold_left] is the same as [fold], and one should always use [fold] rather
@@ -41,13 +41,13 @@ val fold_left : 'a t -> init:'b -> f:('b -> 'a -> 'b) -> 'b
 val iter2_exn : 'a t -> 'b t -> f:('a -> 'b -> unit) -> unit
 
 (** [List.rev_map2_exn f l1 l2] gives the same result as
-   {!List.rev}[ (]{!List.map2_exn}[ f l1 l2)], but is more efficient. *)
+    {!List.rev}[ (]{!List.map2_exn}[ f l1 l2)], but is more efficient. *)
 val rev_map2_exn: 'a t -> 'b t -> f:('a -> 'b -> 'c) -> 'c t
 
 (** [List.fold2_exn f a [b1; ...; bn] [c1; ...; cn]] is
-   [f (... (f (f a b1 c1) b2 c2) ...) bn cn].
-   Raise [Invalid_argument] if the two lists have
-   different lengths. *)
+    [f (... (f (f a b1 c1) b2 c2) ...) bn cn].
+    Raise [Invalid_argument] if the two lists have
+    different lengths. *)
 val fold2_exn :
   'a t
   -> 'b t
@@ -56,8 +56,8 @@ val fold2_exn :
   -> 'c
 
 (** Same as {!List.for_all}, but for a two-argument predicate.
-   Raise [Invalid_argument] if the two lists have
-   different lengths. *)
+    Raise [Invalid_argument] if the two lists have
+    different lengths. *)
 val for_all2_exn : 'a t -> 'b t -> f:('a -> 'b -> bool) -> bool
 
 (** Same as {!List.exists}, but for a two-argument predicate.  Raise

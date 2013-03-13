@@ -74,10 +74,10 @@ module Message = struct
     | Sexp sexp -> sexp :: ac
     | Tag_sexp (tag, sexp, here) ->
       List ( Atom tag
-          :: sexp
-          :: (match here with
-            | None -> []
-            | Some here -> [ Source_code_position0.to_sexp_hum here ]))
+        :: sexp
+        :: (match here with
+        | None -> []
+        | Some here -> [ Source_code_position0.to_sexp_hum here ]))
       :: ac
     | Tag_t (tag, t) -> List (Atom tag :: to_sexps_hum t []) :: ac
     | Tag_arg (tag, sexp, t) -> List (Atom tag :: sexp :: to_sexps_hum t []) :: ac
@@ -113,11 +113,11 @@ let t_of_sexp sexp = lazy (Message.Sexp sexp)
 let to_string_hum t = Message.to_string_hum (to_message t)
 
 include Bin_prot.Utils.Make_binable (struct
-    module Binable = Message
-    type t = t_
-    let to_binable = to_message
-    let of_binable = of_message
-  end)
+          module Binable = Message
+          type t = t_
+          let to_binable = to_message
+          let of_binable = of_message
+        end)
 
 let of_lazy l = lazy (protect (fun () -> String (Lazy.force l)))
 
@@ -144,8 +144,8 @@ let () =
      to eliminate the extra wrapping of "(Exn ...)". *)
   Sexplib.Conv.Exn_converter.add_auto (Exn (of_string "<template>"))
     (function
-     | Exn t -> sexp_of_t t
-     | _ -> assert false)
+    | Exn t -> sexp_of_t t
+    | _ -> assert false)
 ;;
 
 let to_exn t = Exn t

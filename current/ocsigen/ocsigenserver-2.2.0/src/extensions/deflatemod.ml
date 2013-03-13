@@ -278,7 +278,7 @@ let rec parse_filter = function
   |(Element ("extension",[],[PCData t]))::q ->
       (Extension t) :: parse_filter q
   |_ -> raise (Error_in_config_file
-              "Unexpected element inside contenttype (should be <type> or
+            "Unexpected element inside contenttype (should be <type> or
                   <extension>)")
 
 let rec parse_global_config = function
@@ -286,30 +286,30 @@ let rec parse_global_config = function
   | (Element ("compress", [("level", l)], []))::ll ->
       let l = try int_of_string l
       with Failure _ -> raise (Error_in_config_file
-                              "Compress level should be an integer between 0 and 9") in
+                            "Compress level should be an integer between 0 and 9") in
       compress_level := if (l <= 9 && l >= 0) then l else 6 ;
       parse_global_config ll
   | (Element ("buffer", [("size", s)], []))::ll ->
       let s = (try int_of_string s
       with Failure _ -> raise (Error_in_config_file
-                              "Buffer size should be a positive integer")) in
+                            "Buffer size should be a positive integer")) in
       buffer_size := if s > 0 then s else 8192 ;
       parse_global_config ll
-      (* TODO: Pas de filtre global pour l'instant
-       * le nom de balise contenttype est mauvais, au passage
-         | (Element ("contenttype", [("compress", b)], choices))::ll ->
-           let l = (try parse_filter choices
-                   with Not_found -> raise (Error_in_config_file
-                        "Can't parse mime-type content")) in
-           (match b with
-           |"only" -> choice_list := Compress_only l
-           |"allbut" -> choice_list := All_but l
-           | _ ->  raise (Error_in_config_file
-           "Attribute \"compress\" should be \"allbut\" or \"only\""));
-           parse_global_config ll
-      *)
+  (* TODO: Pas de filtre global pour l'instant
+   * le nom de balise contenttype est mauvais, au passage
+     | (Element ("contenttype", [("compress", b)], choices))::ll ->
+       let l = (try parse_filter choices
+               with Not_found -> raise (Error_in_config_file
+                    "Can't parse mime-type content")) in
+       (match b with
+       |"only" -> choice_list := Compress_only l
+       |"allbut" -> choice_list := All_but l
+       | _ ->  raise (Error_in_config_file
+       "Attribute \"compress\" should be \"allbut\" or \"only\""));
+       parse_global_config ll
+  *)
   | _ -> raise (Error_in_config_file
-               "Unexpected content inside deflatemod config")
+             "Unexpected content inside deflatemod config")
 
 
 
@@ -320,12 +320,12 @@ let parse_config = function
   | Element ("deflate", [("compress",b)], choices) ->
       let l = (try parse_filter choices
       with Not_found -> raise (Error_in_config_file
-                              "Can't parse filter content")) in
+                            "Can't parse filter content")) in
       (match b with
         |"only" -> filter (Compress_only l)
         |"allbut" -> filter (All_but l)
         | _ ->  raise (Error_in_config_file
-                      "Attribute \"compress\" should be \"allbut\" or \"only\""))
+                    "Attribute \"compress\" should be \"allbut\" or \"only\""))
   | Element ("deflate" as s, _, _) -> badconfig "Bad syntax for tag %s" s
 
   | Element (t, _, _) -> raise (Bad_config_tag_for_extension t)

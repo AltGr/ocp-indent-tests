@@ -29,5 +29,5 @@ val bring_pif_down : __context:Context.t -> ?force:bool -> API.ref_PIF -> unit
 val with_local_lock : (unit -> 'a) -> 'a
 
 (** [is_dom0_interface pif_r] returns true if pif_r is a network interface 
-   which has a dom0 endpoint *)
+    which has a dom0 endpoint *)
 val is_dom0_interface : API.pIF_t -> bool

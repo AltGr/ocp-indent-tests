@@ -82,7 +82,7 @@ type cdp_prep = {
 
 (** DS - a data source
     This defines how we deal with incoming data. Type is one of:
-    
+
     - Absolute: meaning that the incoming data is an absolute rate
     - Derive:   meaning that the rate must come from the difference between the 
                 incoming data and the previous value
@@ -113,7 +113,7 @@ type rra = {
   rra_row_cnt : int;                     (** number of entries to store *)
   rra_pdp_cnt : int;                     (** number of pdps per cdp *)
   rra_xff : float;                       (** proportion of missing pdps at which
-                                            we mark the cdp as unknown *)
+                                             we mark the cdp as unknown *)
   rra_data: Fring.t array;          (** stored data *)
   rra_cdps : cdp_prep array;             (** scratch area for consolidated datapoint preparation *)
 
@@ -368,7 +368,7 @@ let ds_update_named rrd timestamp ~new_domid valuesandtransforms =
   let identity x = x in
   let ds_names = Array.map (fun ds -> ds.ds_name) rrd.rrd_dss in
   (*  Array.iter (fun x -> debug "registered ds name: %s" x) ds_names;
-     List.iter (fun (x,_) -> debug "ds value name: %s" x) values; *)
+      List.iter (fun (x,_) -> debug "ds value name: %s" x) values; *)
   let ds_values = Array.map (fun name -> try fst (List.assoc name valuesandtransforms) with _ -> VT_Unknown) ds_names in
   let ds_transforms = Array.map (fun name -> try snd (List.assoc name valuesandtransforms) with _ -> identity) ds_names in
   ds_update rrd timestamp ds_values ds_transforms new_domid
@@ -561,10 +561,10 @@ let to_json rra_timestep rras first_rra last_cdp_time first_cdp_time start legen
     let time = Int64.sub (last_cdp_time) (Int64.mul (Int64.of_int i) rra_timestep) in
     if (time < start) || (i >= first_rra.rra_row_cnt) then (List.rev accum) else
       let values = "[" ^ 
-          (String.concat "," 
-             (List.concat (List.map (fun rra -> 
-                  List.map (fun ring -> f_to_s (Fring.peek ring i)) (Array.to_list rra.rra_data))
-                  rras))) ^ "]" in
+                   (String.concat "," 
+                      (List.concat (List.map (fun rra -> 
+                           List.map (fun ring -> f_to_s (Fring.peek ring i)) (Array.to_list rra.rra_data))
+                           rras))) ^ "]" in
       do_data (i+1) (("{t:"^(Printf.sprintf "%Ld" time)^",values:"^values^"}")::accum)
   in
 
@@ -572,12 +572,12 @@ let to_json rra_timestep rras first_rra last_cdp_time first_cdp_time start legen
   let data = "["^(String.concat "," rows)^"]" in
 
   "{meta: {start:"^(Printf.sprintf "%Ld" first_cdp_time)^
-    ",step:"^(Printf.sprintf "%Ld" rra_timestep)^
-    ",end:"^(Printf.sprintf "%Ld" last_cdp_time)^
-    ",rows:"^(Printf.sprintf "%d" (List.length rows))^
-    ",columns:"^(Printf.sprintf "%d" (Array.length legends))^
-    ",legend:["^(String.concat "," (List.map (fun x -> "\"" ^ x ^ "\"") (Array.to_list legends)))^"]},"^
-    "data:"^data^"}"
+  ",step:"^(Printf.sprintf "%Ld" rra_timestep)^
+  ",end:"^(Printf.sprintf "%Ld" last_cdp_time)^
+  ",rows:"^(Printf.sprintf "%d" (List.length rows))^
+  ",columns:"^(Printf.sprintf "%d" (Array.length legends))^
+  ",legend:["^(String.concat "," (List.map (fun x -> "\"" ^ x ^ "\"") (Array.to_list legends)))^"]},"^
+  "data:"^data^"}"
 
 
 let real_export marshaller prefixandrrds start interval cfopt =
@@ -605,7 +605,7 @@ let real_export marshaller prefixandrrds start interval cfopt =
 
   (* More sanity - make sure our RRAs are homogeneous *)
   (*  debug "Got %d rras..." (List.length rras);
-     List.iter (fun rra -> debug "pdp_cnt=%d row_cnt=%d" rra.rra_pdp_cnt rra.rra_row_cnt) rras;*)
+      List.iter (fun rra -> debug "pdp_cnt=%d row_cnt=%d" rra.rra_pdp_cnt rra.rra_row_cnt) rras;*)
 
   let rras = List.filter (fun rra -> rra.rra_pdp_cnt=first_rra.rra_pdp_cnt && rra.rra_row_cnt = first_rra.rra_row_cnt) rras in
   (*  debug "Got %d rras..." (List.length rras);*)
@@ -687,9 +687,9 @@ let from_xml input =
           (List.map (function 
              | El("row",cols) -> 
                Array.of_list (List.map 
-                     (function 
-                      | El ("v",[D x]) -> x 
-                      | _ -> raise Parse_error) cols) 
+                   (function 
+                    | El ("v",[D x]) -> x 
+                    | _ -> raise Parse_error) cols) 
              | _ -> raise Parse_error) elts) in
 
       for i=0 to cols-1 do
@@ -829,14 +829,14 @@ let json_to_fd rrd fd =
   let do_dss ds_list =
     "ds:["^(String.concat "," (List.map (fun ds -> 
           "{name:\""^ds.ds_name^"\",type:\""^(match ds.ds_ty with Gauge -> "GAUGE" | Absolute -> "ABSOLUTE" | Derive -> "DERIVE")^
-            "\",minimal_heartbeat:" ^(f_to_s ds.ds_mrhb)^",min:"^(f_to_s ds.ds_min)^
-            ",max:"^(f_to_s ds.ds_max)^",last_ds:0.0,value:0.0,unknown_sec:0}") ds_list))^"]"
+          "\",minimal_heartbeat:" ^(f_to_s ds.ds_mrhb)^",min:"^(f_to_s ds.ds_min)^
+          ",max:"^(f_to_s ds.ds_max)^",last_ds:0.0,value:0.0,unknown_sec:0}") ds_list))^"]"
   in
 
   let do_rra_cdps cdp_list =
     "ds:["^(String.concat "," (List.map (fun cdp -> 
           "{primary_value:0.0,secondary_value:0.0,value:"^(f_to_s cdp.cdp_value)^
-            ",unknown_datapoints:"^(Printf.sprintf "%d" cdp.cdp_unknown_pdps)^"}") cdp_list))^"]"
+          ",unknown_datapoints:"^(Printf.sprintf "%d" cdp.cdp_unknown_pdps)^"}") cdp_list))^"]"
   in
 
   let do_database rings =
@@ -858,8 +858,8 @@ let json_to_fd rrd fd =
   let do_rras rra_list =
     "rra:[{" ^ (String.concat "},{" (List.map (fun rra -> 
           "cf:\""^(cf_type_to_string rra.rra_cf)^
-            "\",pdp_per_row:"^(string_of_int rra.rra_pdp_cnt)^",params:{xff:"^(f_to_s rra.rra_xff)^"},cdp_prep:{"^(do_rra_cdps (Array.to_list rra.rra_cdps))^
-            "},database:"^(do_database rra.rra_data)) rra_list))^"}]"
+          "\",pdp_per_row:"^(string_of_int rra.rra_pdp_cnt)^",params:{xff:"^(f_to_s rra.rra_xff)^"},cdp_prep:{"^(do_rra_cdps (Array.to_list rra.rra_cdps))^
+          "},database:"^(do_database rra.rra_data)) rra_list))^"}]"
   in
 
   write "{version: \"0003\",step:";

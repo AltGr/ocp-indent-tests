@@ -66,7 +66,7 @@ let aq_expander =
                   (("",k),v)
                 with _ ->
                   raise Parsing.Parse_error in
-              
+
               let rec split ?(accu=[]) c s =
                 try
                   let i = String.index s c in
@@ -79,7 +79,7 @@ let aq_expander =
                   split ~accu:[prefix :: accu] c suffix
                 with _ ->
                   List.rev [s :: accu] in
-              
+
               match $e$ with [
                 [`Data str] -> List.map (fun x -> key_value x) (split ' ' str) 
               | _ -> raise Parsing.Parse_error ] >>

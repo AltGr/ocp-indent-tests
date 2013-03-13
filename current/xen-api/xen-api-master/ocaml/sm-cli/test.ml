@@ -95,11 +95,11 @@ let check_junk fd junk =
     match j with 
     | (extentlist,c)::rest ->
       List.iter (fun (start,len64) ->
-          let len = 512 * (Int64.to_int len64) in
-          let s = match Nbd.read fd (Int64.mul start 512L) (Int32.of_int len) with Some s -> s | None -> failwith "Failed to read" in
-          let check = String.make len c in
-          Printf.printf "Checking %d at sector offset %Ld, size %Ld sectors\n" (Char.code c) start len64;
-          if String.compare s check <> 0 then raise Bad_junk)
+        let len = 512 * (Int64.to_int len64) in
+        let s = match Nbd.read fd (Int64.mul start 512L) (Int32.of_int len) with Some s -> s | None -> failwith "Failed to read" in
+        let check = String.make len c in
+        Printf.printf "Checking %d at sector offset %Ld, size %Ld sectors\n" (Char.code c) start len64;
+        if String.compare s check <> 0 then raise Bad_junk)
         (Int64extentlist.to_list extentlist);
       inner rest
     | _ -> ()

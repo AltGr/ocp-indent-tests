@@ -1,10 +1,10 @@
 open Core.Std
 
 module Test_S1
-    (M : sig
-       include Container.S1
-       val of_list : 'a list -> 'a  t
-     end) : sig
+         (M : sig
+            include Container.S1
+            val of_list : 'a list -> 'a  t
+          end) : sig
   val test : unit -> unit
 end = struct
   let lists = List.init 10 ~f:(fun i -> List.init i ~f:ident)

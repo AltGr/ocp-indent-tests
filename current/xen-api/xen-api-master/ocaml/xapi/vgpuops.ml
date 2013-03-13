@@ -49,9 +49,9 @@ let create_vgpu ~__context ~vm vgpu available_pgpus pcis =
   match free_pgpus with
   | [] ->
     raise (Api_errors.Server_error (Api_errors.vm_requires_gpu, [
-            Ref.string_of vm;
-            Ref.string_of vgpu.gpu_group_ref
-          ]))
+          Ref.string_of vm;
+          Ref.string_of vgpu.gpu_group_ref
+        ]))
   | (pgpu, pci) :: _ ->
     List.filter (fun g -> g <> pgpu) available_pgpus,
     pci :: pcis

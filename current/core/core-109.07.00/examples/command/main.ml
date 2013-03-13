@@ -18,12 +18,12 @@ let flag_prompt_if_missing name of_string ~doc =
   let open Command.Spec in
   let arg = Arg_type.create of_string in
   map (flag ("-" ^ name) (optional arg) ~doc) ~f:(function
-    | Some v -> v
-    | None ->
-      printf "enter %s: %!" name;
-      match In_channel.input_line stdin with
-      | None -> failwith "no value entered. aborting."
-      | Some line -> (of_string line)
+  | Some v -> v
+  | None ->
+    printf "enter %s: %!" name;
+    match In_channel.input_line stdin with
+    | None -> failwith "no value entered. aborting."
+    | Some line -> (of_string line)
   )
 
 let fields_flag spec ~doc s field =
@@ -47,10 +47,10 @@ module Sing = struct
         step (fun k slow -> k ~slow)
         +> flag "slow" ~aliases:["AA";"-BB"] no_arg ~doc:" sing slow"
         +> flag "-loudness" (optional int)
-            ~doc:"N how loud to sing (number of decibels)"
+             ~doc:"N how loud to sing (number of decibels)"
         +> flag "-date" (optional date) ~doc:"DATE the date"
         +> flag "-note" (listed Note.arg_type) ~doc:"NOTE a note"
-          (* anonymous arguments *)
+        (* anonymous arguments *)
         +> anon ("NAME" %: string)
         +> anon ("FOO" %: string)
         +> anon (sequence ("BAR" %: string))
@@ -201,12 +201,12 @@ module Complex_anons = struct
         +> anon ("A" %: string)
         +> anon ("B" %: string)
         +> anon (maybe (t3
-                ("C" %: string)
-                ("D" %: string)
-                (maybe (t3
-                     ("E" %: string)
-                     ("F" %: string)
-                     (sequence ("G" %: string))))))
+                          ("C" %: string)
+                          ("D" %: string)
+                          (maybe (t3
+                                    ("E" %: string)
+                                    ("F" %: string)
+                                    (sequence ("G" %: string))))))
       )
       (fun a b rest () ->
         (* ... your code here... *)

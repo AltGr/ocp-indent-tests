@@ -89,7 +89,7 @@ let empty = Map.empty
 let find_all n h = List.rev (Map.find n h)
 
 (*XXX We currently return the last header.
-   Should we fail if there is more than one? *)
+  Should we fail if there is more than one? *)
 let find n h =
   match Map.find n h with
       v :: _ -> v

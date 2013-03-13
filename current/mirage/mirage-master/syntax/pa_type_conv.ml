@@ -342,7 +342,7 @@ let generate tp (drv_id, drv_arg) =
   try Hashtbl.find generators drv_id tp drv_arg
   with Not_found ->
     failwith (
-        "Pa_type_conv: '" ^ drv_id ^ "' is not a supported type generator.")
+      "Pa_type_conv: '" ^ drv_id ^ "' is not a supported type generator.")
 
 let gen_derived_defs _loc tp drvs =
   let coll drv der_sis = <:str_item< $der_sis$; $generate tp drv$ >> in
@@ -352,7 +352,7 @@ let generate_exn tp (drv_id, drv_arg) =
   try Hashtbl.find exn_generators drv_id tp drv_arg
   with Not_found ->
     failwith (
-        "Pa_type_conv: '" ^ drv_id ^ "' is not a supported exception generator.")
+      "Pa_type_conv: '" ^ drv_id ^ "' is not a supported exception generator.")
 
 let gen_derived_exn_defs _loc tp drvs =
   let coll drv der_sis = <:str_item< $der_sis$; $generate_exn tp drv$ >> in
@@ -362,7 +362,7 @@ let sig_generate tp (drv_id, drv_arg) =
   try Hashtbl.find sig_generators drv_id tp drv_arg
   with Not_found ->
     failwith (
-        "Pa_type_conv: '" ^ drv_id ^ "' is not a supported signature generator.")
+      "Pa_type_conv: '" ^ drv_id ^ "' is not a supported signature generator.")
 
 let gen_derived_sigs _loc tp drvs =
   let coll drv der_sis = <:sig_item< $der_sis$; $sig_generate tp drv$ >> in
@@ -372,7 +372,7 @@ let sig_exn_generate tp (drv_id, drv_arg) =
   try Hashtbl.find sig_exn_generators drv_id tp drv_arg
   with Not_found ->
     failwith (
-        "Pa_type_conv: '" ^ drv_id ^ "' is not a supported signature generator.")
+      "Pa_type_conv: '" ^ drv_id ^ "' is not a supported signature generator.")
 
 let gen_derived_exn_sigs _loc tp drvs =
   let coll drv der_sis = <:sig_item< $der_sis$; $sig_exn_generate tp drv$ >> in

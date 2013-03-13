@@ -336,11 +336,11 @@ module Url_base = struct
      then "https://"
      else "http://"
     )^
-      host^
-      (if (port = 80 && not https) || (https && port = 443)
-       then ""
-       else ":"^string_of_int port)^
-      uri
+    host^
+    (if (port = 80 && not https) || (https && port = 443)
+     then ""
+     else ":"^string_of_int port)^
+    uri
 
 
   let remove_dotdot = (* removes "../" *)

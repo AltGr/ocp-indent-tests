@@ -286,45 +286,45 @@ let add filename =
       let open Vm in
       let builder_info = match pv with
         | true -> PV {
-                      framebuffer = false;
-                      framebuffer_ip = Some "0.0.0.0";
-                      vncterm = true;
-                      vncterm_ip = Some "0.0.0.0";
-                      boot =
-                        if mem _bootloader then Indirect {
-                            bootloader = find _bootloader |> string;
-                            extra_args = "";
-                            legacy_args = "";
-                            bootloader_args = "";
-                            devices = [];
-                          } else if mem _kernel then Direct {
-                            kernel = find _kernel |> string;
-                            cmdline = if mem _root then find _root |> string else "";
-                            ramdisk = if mem _ramdisk then Some (find _ramdisk |> string) else None;
-                          } else begin
-                          List.iter (Printf.fprintf stderr "%s\n") [
-                            "I couldn't determine how to start this VM.";
-                            Printf.sprintf "A PV guest needs either %s or %s and %s" _bootloader _kernel _ramdisk
-                          ];
-                          exit 1
-                        end;
-                    }
+                    framebuffer = false;
+                    framebuffer_ip = Some "0.0.0.0";
+                    vncterm = true;
+                    vncterm_ip = Some "0.0.0.0";
+                    boot =
+                      if mem _bootloader then Indirect {
+                          bootloader = find _bootloader |> string;
+                          extra_args = "";
+                          legacy_args = "";
+                          bootloader_args = "";
+                          devices = [];
+                        } else if mem _kernel then Direct {
+                          kernel = find _kernel |> string;
+                          cmdline = if mem _root then find _root |> string else "";
+                          ramdisk = if mem _ramdisk then Some (find _ramdisk |> string) else None;
+                        } else begin
+                        List.iter (Printf.fprintf stderr "%s\n") [
+                          "I couldn't determine how to start this VM.";
+                          Printf.sprintf "A PV guest needs either %s or %s and %s" _bootloader _kernel _ramdisk
+                        ];
+                        exit 1
+                      end;
+                  }
         | false -> HVM {
-                       hap = true;
-                       shadow_multiplier = 1.;
-                       timeoffset = "";
-                       video_mib = 4;
-                       video = Cirrus;
-                       acpi = true;
-                       serial = None;
-                       keymap = None;
-                       vnc_ip = Some "0.0.0.0";
-                       pci_emulations = [];
-                       pci_passthrough = false;
-                       boot_order = if mem _boot then find _boot |> string else "cd";
-                       qemu_disk_cmdline = false;
-                       qemu_stubdom = false;
-                     } in
+                     hap = true;
+                     shadow_multiplier = 1.;
+                     timeoffset = "";
+                     video_mib = 4;
+                     video = Cirrus;
+                     acpi = true;
+                     serial = None;
+                     keymap = None;
+                     vnc_ip = Some "0.0.0.0";
+                     pci_emulations = [];
+                     pci_passthrough = false;
+                     boot_order = if mem _boot then find _boot |> string else "cd";
+                     qemu_disk_cmdline = false;
+                     qemu_stubdom = false;
+                   } in
       let uuid = if mem _uuid then find _uuid |> string else Uuid.string_of_uuid (Uuid.make_uuid ()) in
       let name = if mem _name then find _name |> string else uuid in
       let mib = if mem _memory then find _memory |> int |> Int64.of_int else 64L in

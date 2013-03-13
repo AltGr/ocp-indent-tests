@@ -81,7 +81,7 @@ let affinity_host_ids_of_guest __context guest =
   else []
 
 (** Returns a single host (from the set of all hosts) on which the given [vm]
-   can boot. @raise Api_errors.no_hosts_available if no such host exists. *)
+    can boot. @raise Api_errors.no_hosts_available if no such host exists. *)
 let select_host __context guest validate_host =
   let pool_summary = create_pool_snapshot_summary __context [guest]
       (Helpers.get_pool ~__context) in

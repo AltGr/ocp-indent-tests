@@ -78,7 +78,7 @@ let gen regexp = function
       Lwt.return Ocsigen_extensions.Ext_do_nothing
   | Ocsigen_extensions.Req_not_found (err, ri) ->
       catch
-      (* Is it a rewrite? *)
+        (* Is it a rewrite? *)
         (fun () ->
           Ocsigen_messages.debug2 "--Rewritemod: Is it a rewrite?";
           let redir, fullrewrite =
@@ -113,7 +113,7 @@ let parse_config = function
       let regexp = match atts with
         | [] ->
             raise (Error_in_config_file
-                  "regexp attribute expected for <rewrite>")
+                "regexp attribute expected for <rewrite>")
         | [("regexp", s); ("url", t)]
         | [("regexp", s); ("dest", t)] ->
             Regexp ((Netstring_pcre.regexp ("^"^s^"$")), t, false)

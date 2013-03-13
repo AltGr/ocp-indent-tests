@@ -2,9 +2,9 @@
 
 (** Invariants:
 
-      - iff queue is not empty, outlist is not empty
-      - iff queue has more than 1 element, then inlist is not empty
-      - queue.length = List.length queue.outlist + List.length queue.inlist
+    - iff queue is not empty, outlist is not empty
+    - iff queue has more than 1 element, then inlist is not empty
+    - queue.length = List.length queue.outlist + List.length queue.inlist
 *)
 
 open Std_internal

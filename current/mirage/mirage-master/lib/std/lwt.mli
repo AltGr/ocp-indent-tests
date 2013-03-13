@@ -249,9 +249,9 @@ val waiter_of_wakener : 'a u -> 'a t
 (** State of a thread *)
 type 'a state =
   | Return of 'a
-    (** The thread which has successfully terminated *)
+  (** The thread which has successfully terminated *)
   | Fail of exn
-    (** The thread raised an exception *)
+  (** The thread raised an exception *)
   | Sleep
   (** The thread is sleeping *)
 

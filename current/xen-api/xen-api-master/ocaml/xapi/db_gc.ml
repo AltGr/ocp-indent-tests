@@ -232,7 +232,7 @@ let timeout_sessions_common ~__context sessions =
               let parent = (Db.Session.get_parent ~__context ~self:s) in
               (List.for_all
                  (fun t -> task_status_is_completed
-                 (* task might not exist anymore, assume completed in this case *)
+                     (* task might not exist anymore, assume completed in this case *)
                      (try Db.Task.get_status ~__context ~self:t with _->`success)
                  ) 
                  tasks

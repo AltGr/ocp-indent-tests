@@ -149,8 +149,8 @@ module Foil : S = struct
   }
 
   let elts_to_zipper = function
-    | [] -> None
-    | hd :: tl -> Some { before = []; cursor = hd; after = tl }
+  | [] -> None
+  | hd :: tl -> Some { before = []; cursor = hd; after = tl }
 
   let elts_of_zipper z = List.rev_append z.before (z.cursor :: z.after)
 
@@ -259,10 +259,10 @@ module Both : S = struct
     let pair x y = (Ok x, Ok y)
     let pure x = pair x x
     let force = function
-      | (Ok x,    Ok y   ) -> (x, y)
-      | (Error _, Error _) -> raise Both_raised
-      | (Error _, Ok _   ) -> failwith "hero failure =/= foil success"
-      | (Ok _,    Error _) -> failwith "hero success =/= foil failure"
+    | (Ok x,    Ok y   ) -> (x, y)
+    | (Error _, Error _) -> raise Both_raised
+    | (Error _, Ok _   ) -> failwith "hero failure =/= foil success"
+    | (Ok _,    Error _) -> failwith "hero success =/= foil failure"
     let obs t =
       let (x, y) = force t in
       assert (x = y);
@@ -478,28 +478,28 @@ module Make_test (X : S) = struct
               in
               loop (first_elt t) elts;
               begin match elts with
-                | [] -> ()
-                | elt :: elts ->
-                  assert (prev t elt = None);
-                  assert (is_first t elt);
-                  assert (Option.equal Elt.equal (first_elt t) (Some elt));
-                  List.iter elts ~f:(fun elt -> assert (not (is_first t elt)));
-                  ignore
-                    (List.fold elts ~init:elt ~f:(fun prev elt ->
-                       assert (Option.equal Elt.equal (X.prev t elt)
-                           (Some prev));
-                       elt));
+              | [] -> ()
+              | elt :: elts ->
+                assert (prev t elt = None);
+                assert (is_first t elt);
+                assert (Option.equal Elt.equal (first_elt t) (Some elt));
+                List.iter elts ~f:(fun elt -> assert (not (is_first t elt)));
+                ignore
+                  (List.fold elts ~init:elt ~f:(fun prev elt ->
+                     assert (Option.equal Elt.equal (X.prev t elt)
+                               (Some prev));
+                     elt));
               end;
               begin match List.rev elts with
-                | [] -> ()
-                | elt :: elts ->
-                  assert (next t elt = None);
-                  assert (is_last t elt);
-                  assert (Option.equal Elt.equal (last_elt t) (Some elt));
-                  List.iter elts ~f:(fun elt -> assert (not (is_last t elt)));
-                  ignore (List.fold elts ~init:elt ~f:(fun next elt ->
-                      assert (Option.equal Elt.equal (X.next t elt) (Some next));
-                      elt))
+              | [] -> ()
+              | elt :: elts ->
+                assert (next t elt = None);
+                assert (is_last t elt);
+                assert (Option.equal Elt.equal (last_elt t) (Some elt));
+                List.iter elts ~f:(fun elt -> assert (not (is_last t elt)));
+                ignore (List.fold elts ~init:elt ~f:(fun next elt ->
+                          assert (Option.equal Elt.equal (X.next t elt) (Some next));
+                          elt))
               end
             in
             let elt1 = insert_first t () in
@@ -665,32 +665,32 @@ module Bisimulation = struct
 
   module Random = struct
     let prng = Random.State.make
-        [|3; 1; 4; 1; 5; 9; 2; 6; 5; 3; 5; 8; 9; 7; 9; 3; 2; 3; 8; 4;
-          6; 2; 6; 4; 3; 3; 8; 3; 2; 7; 9; 5; 0; 2; 8; 8; 4; 1; 9; 7; 1;
-          6; 9; 3; 9; 9; 3; 7; 5; 1; 0; 5; 8; 2; 0; 9; 7; 4; 9; 4; 4; 5;
-          9; 2; 3; 0; 7; 8; 1; 6; 4; 0; 6; 2; 8; 6; 2; 0; 8; 9; 9; 8; 6;
-          2; 8; 0; 3; 4; 8; 2; 5; 3; 4; 2; 1; 1; 7; 0; 6; 7; 9; 8; 2; 1;
-          4; 8; 0; 8; 6; 5; 1; 3; 2; 8; 2; 3; 0; 6; 6; 4; 7; 0; 9; 3; 8;
-          4; 4; 6; 0; 9; 5; 5; 0; 5; 8; 2; 2; 3; 1; 7; 2; 5; 3; 5; 9; 4;
-          0; 8; 1; 2; 8; 4; 8; 1; 1; 1; 7; 4; 5; 0; 2; 8; 4; 1; 0; 2; 7;
-          0; 1; 9; 3; 8; 5; 2; 1; 1; 0; 5; 5; 5; 9; 6; 4; 4; 6; 2; 2; 9;
-          4; 8; 9; 5; 4; 9; 3; 0; 3; 8; 1; 9; 6; 4; 4; 2; 8; 8; 1; 0; 9;
-          7; 5; 6; 6; 5; 9; 3; 3; 4; 4; 6; 1; 2; 8; 4; 7; 5; 6; 4; 8; 2;
-          3; 3; 7; 8; 6; 7; 8; 3; 1; 6; 5; 2; 7; 1; 2; 0; 1; 9; 0; 9; 1;
-          4; 5; 6; 4; 8; 5; 6; 6; 9; 2; 3; 4; 6; 0; 3; 4; 8; 6; 1; 0; 4;
-          5; 4; 3; 2; 6; 6; 4; 8; 2; 1; 3; 3; 9; 3; 6; 0; 7; 2; 6; 0; 2;
-          4; 9; 1; 4; 1; 2; 7; 3; 7; 2; 4; 5; 8; 7; 0; 0; 6; 6; 0; 6; 3;
-          1; 5; 5; 8; 8; 1; 7; 4; 8; 8; 1; 5; 2; 0; 9; 2; 0; 9; 6; 2; 8;
-          2; 9; 2; 5; 4; 0; 9; 1; 7; 1; 5; 3; 6; 4; 3; 6; 7; 8; 9; 2; 5;
-          9; 0; 3; 6; 0; 0; 1; 1; 3; 3; 0; 5; 3; 0; 5; 4; 8; 8; 2; 0; 4;
-          6; 6; 5; 2; 1; 3; 8; 4; 1; 4; 6; 9; 5; 1; 9; 4; 1; 5; 1; 1; 6;
-          0; 9; 4; 3; 3; 0; 5; 7; 2; 7; 0; 3; 6; 5; 7; 5; 9; 5; 9; 1; 9;
-          5; 3; 0; 9; 2; 1; 8; 6; 1; 1; 7; 3; 8; 1; 9; 3; 2; 6; 1; 1; 7;
-          9; 3; 1; 0; 5; 1; 1; 8; 5; 4; 8; 0; 7; 4; 4; 6; 2; 3; 7; 9; 9;
-          6; 2; 7; 4; 9; 5; 6; 7; 3; 5; 1; 8; 8; 5; 7; 5; 2; 7; 2; 4; 8;
-          9; 1; 2; 2; 7; 9; 3; 8; 1; 8; 3; 0; 1; 1; 9; 4; 9; 1; 2; 9; 8;
-          3; 3; 6; 7; 3; 3; 6; 2; 4; 4; 0; 6; 5; 6; 6; 4; 3; 0; 8; 6; 0;
-        |]
+                 [|3; 1; 4; 1; 5; 9; 2; 6; 5; 3; 5; 8; 9; 7; 9; 3; 2; 3; 8; 4;
+                   6; 2; 6; 4; 3; 3; 8; 3; 2; 7; 9; 5; 0; 2; 8; 8; 4; 1; 9; 7; 1;
+                   6; 9; 3; 9; 9; 3; 7; 5; 1; 0; 5; 8; 2; 0; 9; 7; 4; 9; 4; 4; 5;
+                   9; 2; 3; 0; 7; 8; 1; 6; 4; 0; 6; 2; 8; 6; 2; 0; 8; 9; 9; 8; 6;
+                   2; 8; 0; 3; 4; 8; 2; 5; 3; 4; 2; 1; 1; 7; 0; 6; 7; 9; 8; 2; 1;
+                   4; 8; 0; 8; 6; 5; 1; 3; 2; 8; 2; 3; 0; 6; 6; 4; 7; 0; 9; 3; 8;
+                   4; 4; 6; 0; 9; 5; 5; 0; 5; 8; 2; 2; 3; 1; 7; 2; 5; 3; 5; 9; 4;
+                   0; 8; 1; 2; 8; 4; 8; 1; 1; 1; 7; 4; 5; 0; 2; 8; 4; 1; 0; 2; 7;
+                   0; 1; 9; 3; 8; 5; 2; 1; 1; 0; 5; 5; 5; 9; 6; 4; 4; 6; 2; 2; 9;
+                   4; 8; 9; 5; 4; 9; 3; 0; 3; 8; 1; 9; 6; 4; 4; 2; 8; 8; 1; 0; 9;
+                   7; 5; 6; 6; 5; 9; 3; 3; 4; 4; 6; 1; 2; 8; 4; 7; 5; 6; 4; 8; 2;
+                   3; 3; 7; 8; 6; 7; 8; 3; 1; 6; 5; 2; 7; 1; 2; 0; 1; 9; 0; 9; 1;
+                   4; 5; 6; 4; 8; 5; 6; 6; 9; 2; 3; 4; 6; 0; 3; 4; 8; 6; 1; 0; 4;
+                   5; 4; 3; 2; 6; 6; 4; 8; 2; 1; 3; 3; 9; 3; 6; 0; 7; 2; 6; 0; 2;
+                   4; 9; 1; 4; 1; 2; 7; 3; 7; 2; 4; 5; 8; 7; 0; 0; 6; 6; 0; 6; 3;
+                   1; 5; 5; 8; 8; 1; 7; 4; 8; 8; 1; 5; 2; 0; 9; 2; 0; 9; 6; 2; 8;
+                   2; 9; 2; 5; 4; 0; 9; 1; 7; 1; 5; 3; 6; 4; 3; 6; 7; 8; 9; 2; 5;
+                   9; 0; 3; 6; 0; 0; 1; 1; 3; 3; 0; 5; 3; 0; 5; 4; 8; 8; 2; 0; 4;
+                   6; 6; 5; 2; 1; 3; 8; 4; 1; 4; 6; 9; 5; 1; 9; 4; 1; 5; 1; 1; 6;
+                   0; 9; 4; 3; 3; 0; 5; 7; 2; 7; 0; 3; 6; 5; 7; 5; 9; 5; 9; 1; 9;
+                   5; 3; 0; 9; 2; 1; 8; 6; 1; 1; 7; 3; 8; 1; 9; 3; 2; 6; 1; 1; 7;
+                   9; 3; 1; 0; 5; 1; 1; 8; 5; 4; 8; 0; 7; 4; 4; 6; 2; 3; 7; 9; 9;
+                   6; 2; 7; 4; 9; 5; 6; 7; 3; 5; 1; 8; 8; 5; 7; 5; 2; 7; 2; 4; 8;
+                   9; 1; 2; 2; 7; 9; 3; 8; 1; 8; 3; 0; 1; 1; 9; 4; 9; 1; 2; 9; 8;
+                   3; 3; 6; 7; 3; 3; 6; 2; 4; 4; 0; 6; 5; 6; 6; 4; 3; 0; 8; 6; 0;
+                 |]
     let int n = Random.State.int prng n
     let bool () = Random.State.bool prng
   end
@@ -848,12 +848,12 @@ module Bisimulation = struct
     let add_list l = Queue.enqueue trace (`New_list (add env.ls l, l)) in
     let add_elt e = Queue.enqueue trace (`New_elt (add env.es e, e)) in
     let add_elt_opt = function
-      | None -> ()
-      | Some e -> add_elt e
+    | None -> ()
+    | Some e -> add_elt e
     in
     let pred = function
-      | Even -> fun n -> n mod 0 = 0
-      | Odd  -> fun n -> n mod 0 = 1
+    | Even -> fun n -> n mod 0 = 0
+    | Odd  -> fun n -> n mod 0 = 1
     in
     try
       for _i = 1 to nsteps do

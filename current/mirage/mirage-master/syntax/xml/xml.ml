@@ -2,7 +2,7 @@
    Copyright (c) 2007-2009, Daniel C. Bünzli. All rights reserved.
    Distributed under a BSD license, see license at the end of the file.
    Xmlm version 1.0.2
-   ----------------------------------------------------------------------------*)
+  ----------------------------------------------------------------------------*)
 
 module Std_string = String
 module Std_buffer = Buffer
@@ -1044,7 +1044,7 @@ struct
         | '<' -> escape "&lt;"         (* Escape markup delimiters. *)
         | '>' -> escape "&gt;"
         | '&' -> escape "&amp;"
-                   (* | '\'' -> escape "&apos;" *) (* Not needed we use \x22 for attributes. *)
+        (* | '\'' -> escape "&apos;" *) (* Not needed we use \x22 for attributes. *)
         | '\x22' -> escape "&quot;"
         | _ -> incr last
       done;
@@ -1258,35 +1258,35 @@ let of_string ?entity ?(templates : (string * t) list = []) ?enc str =
     Printf.eprintf "[XMLM:%d-%d] %s: %s\n"(fst pos) (snd pos) str (error_message e);
     raise Parsing.Parse_error
 
-(*----------------------------------------------------------------------------
-   Copyright (c) 2007-2009, Daniel C. Bünzli
-   All rights reserved.
+      (*----------------------------------------------------------------------------
+        Copyright (c) 2007-2009, Daniel C. Bünzli
+        All rights reserved.
 
-   Redistribution and use in source and binary forms, with or without
-   modification, are permitted provided that the following conditions are
-   met:
-        
-   1. Redistributions of source code must retain the above copyright
-     notice, this list of conditions and the following disclaimer.
+        Redistribution and use in source and binary forms, with or without
+        modification, are permitted provided that the following conditions are
+        met:
 
-   2. Redistributions in binary form must reproduce the above copyright
-     notice, this list of conditions and the following disclaimer in the
-     documentation and/or other materials provided with the
-     distribution.
+        1. Redistributions of source code must retain the above copyright
+           notice, this list of conditions and the following disclaimer.
 
-   3. Neither the name of the Daniel C. Bünzli nor the names of
-     contributors may be used to endorse or promote products derived
-     from this software without specific prior written permission.
+        2. Redistributions in binary form must reproduce the above copyright
+           notice, this list of conditions and the following disclaimer in the
+           documentation and/or other materials provided with the
+           distribution.
 
-   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-   "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-   LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-   A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-   OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-   SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-   LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-   DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-   THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-   (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-   ----------------------------------------------------------------------------*)
+        3. Neither the name of the Daniel C. Bünzli nor the names of
+           contributors may be used to endorse or promote products derived
+           from this software without specific prior written permission.
+
+        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+        "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+        LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+        A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+        OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+        SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+        LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+        DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+        THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+        (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+        OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+        ----------------------------------------------------------------------------*)

@@ -91,7 +91,7 @@ module Entry = struct
     | DROP
     (** Optional actions *)
     | ENQUEUE of OP.Queue.h
-        (** Modify field actions *)
+    (** Modify field actions *)
     | SET_VLAN_ID of uint16
     | SET_VLAN_PRIO of uint16
     | STRIP_VLAN_HDR
@@ -189,13 +189,13 @@ let forward_frame st tupple port frame =
        return ())
     else
       return (Printf.printf "Port %d not registered \n" port)
-      (*           | Table
-       *           | Normal
-       *           | Flood
-       *           | All 
-       *           | Controller -> generate a packet out. 
-       *           | Local -> can I inject this frame to the network
-       *           stack?  *)
+  (*           | Table
+   *           | Normal
+   *           | Flood
+   *           | All 
+   *           | Controller -> generate a packet out. 
+   *           | Local -> can I inject this frame to the network
+   *           stack?  *)
   | _ -> return (Printf.printf "Not implemented output port\n")
 
 let rec apply_of_actions st tuple actions frame = 
@@ -261,7 +261,7 @@ let add_port sw mgr intf =
   Hashtbl.add sw.Switch.int_ports !portnum port; 
   Hashtbl.add sw.Switch.ports port.Switch.port_name port;
   sw.Switch.port_feat <- sw.Switch.port_feat @ 
-      [(OP.Port.init_port_phy ~port_no:(!portnum) ~name:(port.Switch.port_name) () )]
+                         [(OP.Port.init_port_phy ~port_no:(!portnum) ~name:(port.Switch.port_name) () )]
 
 let process_openflow st =
   (* this is processing from a Channel, so roughly
@@ -358,28 +358,28 @@ let listen mgr loc init =
   Channel.listen mgr (`TCPv4 (loc, controller))
 
 
-(* Switch initialization should be irrelevant to whether the switch is connected to a 
- * to a controller. *)
-(*  st <- Switch.(
-   { ports = (Hashtbl.create 0);
-   table = Table.({ tid = 0_L; entries = [] });
-   stats = { n_frags=0_L; n_hits=0_L; n_missed=0_L; n_lost=0_L };
-   p_sflow = 0_l;
-   })
-   in *)
-(* let listen mgr loc init =
+  (* Switch initialization should be irrelevant to whether the switch is connected to a 
+   * to a controller. *)
+  (*  st <- Switch.(
+      { ports = (Hashtbl.create 0);
+      table = Table.({ tid = 0_L; entries = [] });
+      stats = { n_frags=0_L; n_hits=0_L; n_missed=0_L; n_lost=0_L };
+      p_sflow = 0_l;
+      })
+      in *)
+  (* let listen mgr loc init =
 
-   let switch (rip, rpt) t = 
-    let rs = ipv4_addr_to_string rip in
-      Log.info "OpenFlow Switch" "+ %s:%d" rs rpt;
-      return ()  in    
-    Net.Channel.listen mgr (`TCPv4 (loc, switch))*)
+     let switch (rip, rpt) t = 
+      let rs = ipv4_addr_to_string rip in
+        Log.info "OpenFlow Switch" "+ %s:%d" rs rpt;
+        return ()  in    
+      Net.Channel.listen mgr (`TCPv4 (loc, switch))*)
 
-(* having initialised state, now need to 
- * + install input handler for each device
- * + wait on any device having input, and process when ready
-*)
-(*    
+  (* having initialised state, now need to 
+   * + install input handler for each device
+   * + wait on any device having input, and process when ready
+  *)
+  (*    
    let rec input device = 
    lwt frame = return () in
    process_frame st frame

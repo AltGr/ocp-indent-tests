@@ -181,96 +181,96 @@ let set_state s = State.assign default s;;
 
 (********************
 
-   (* Test functions.  Not included in the library.
+  (* Test functions.  Not included in the library.
    The [chisquare] function should be called with n > 10r.
    It returns a triple (low, actual, high).
    If low <= actual <= high, the [g] function passed the test,
    otherwise it failed.
 
-   Some results:
+  Some results:
 
-   init 27182818; chisquare int 100000 1000;;
-   init 27182818; chisquare int 100000 100;;
-   init 27182818; chisquare int 100000 5000;;
-   init 27182818; chisquare int 1000000 1000;;
-   init 27182818; chisquare int 100000 1024;;
-   init 299792643; chisquare int 100000 1024;;
-   init 14142136; chisquare int 100000 1024;;
-   init 27182818; init_diff 1024; chisquare diff 100000 1024;;
-   init 27182818; init_diff 100; chisquare diff 100000 100;;
-   init 27182818; init_diff2 1024; chisquare diff2 100000 1024;;
-   init 27182818; init_diff2 100; chisquare diff2 100000 100;;
-   init 14142136; init_diff2 100; chisquare diff2 100000 100;;
-   init 299792643; init_diff2 100; chisquare diff2 100000 100;;
-   - : float * float * float = (936.754446796632465, 997.5, 1063.24555320336754)
-   # - : float * float * float = (80., 89.7400000000052387, 120.)
-   # - : float * float * float = (4858.57864376269, 5045.5, 5141.42135623731)
-   # - : float * float * float =
-   (936.754446796632465, 944.805999999982305, 1063.24555320336754)
-   # - : float * float * float = (960., 1019.19744000000355, 1088.)
-   # - : float * float * float = (960., 1059.31776000000536, 1088.)
-   # - : float * float * float = (960., 1039.98463999999512, 1088.)
-   # - : float * float * float = (960., 1054.38207999999577, 1088.)
-   # - : float * float * float = (80., 90.096000000005, 120.)
-   # - : float * float * float = (960., 1076.78720000000612, 1088.)
-   # - : float * float * float = (80., 85.1760000000067521, 120.)
-   # - : float * float * float = (80., 85.2160000000003492, 120.)
-   # - : float * float * float = (80., 80.6220000000030268, 120.)
+  init 27182818; chisquare int 100000 1000;;
+  init 27182818; chisquare int 100000 100;;
+  init 27182818; chisquare int 100000 5000;;
+  init 27182818; chisquare int 1000000 1000;;
+  init 27182818; chisquare int 100000 1024;;
+  init 299792643; chisquare int 100000 1024;;
+  init 14142136; chisquare int 100000 1024;;
+  init 27182818; init_diff 1024; chisquare diff 100000 1024;;
+  init 27182818; init_diff 100; chisquare diff 100000 100;;
+  init 27182818; init_diff2 1024; chisquare diff2 100000 1024;;
+  init 27182818; init_diff2 100; chisquare diff2 100000 100;;
+  init 14142136; init_diff2 100; chisquare diff2 100000 100;;
+  init 299792643; init_diff2 100; chisquare diff2 100000 100;;
+  - : float * float * float = (936.754446796632465, 997.5, 1063.24555320336754)
+  # - : float * float * float = (80., 89.7400000000052387, 120.)
+  # - : float * float * float = (4858.57864376269, 5045.5, 5141.42135623731)
+  # - : float * float * float =
+  (936.754446796632465, 944.805999999982305, 1063.24555320336754)
+  # - : float * float * float = (960., 1019.19744000000355, 1088.)
+  # - : float * float * float = (960., 1059.31776000000536, 1088.)
+  # - : float * float * float = (960., 1039.98463999999512, 1088.)
+  # - : float * float * float = (960., 1054.38207999999577, 1088.)
+  # - : float * float * float = (80., 90.096000000005, 120.)
+  # - : float * float * float = (960., 1076.78720000000612, 1088.)
+  # - : float * float * float = (80., 85.1760000000067521, 120.)
+  # - : float * float * float = (80., 85.2160000000003492, 120.)
+  # - : float * float * float = (80., 80.6220000000030268, 120.)
 
  *)
 
-   (* Return the sum of the squares of v[i0,i1[ *)
-   let rec sumsq v i0 i1 =
-   if i0 >= i1 then 0.0
-   else if i1 = i0 + 1 then Pervasives.float v.(i0) *. Pervasives.float v.(i0)
-   else sumsq v i0 ((i0+i1)/2) +. sumsq v ((i0+i1)/2) i1
-   ;;
+  (* Return the sum of the squares of v[i0,i1[ *)
+  let rec sumsq v i0 i1 =
+  if i0 >= i1 then 0.0
+  else if i1 = i0 + 1 then Pervasives.float v.(i0) *. Pervasives.float v.(i0)
+  else sumsq v i0 ((i0+i1)/2) +. sumsq v ((i0+i1)/2) i1
+  ;;
 
-   let chisquare g n r =
-   if n <= 10 * r then invalid_arg "chisquare";
-   let f = Array.make r 0 in
-   for i = 1 to n do
+  let chisquare g n r =
+  if n <= 10 * r then invalid_arg "chisquare";
+  let f = Array.make r 0 in
+  for i = 1 to n do
     let t = g r in
     f.(t) <- f.(t) + 1
-   done;
-   let t = sumsq f 0 r
-   and r = Pervasives.float r
-   and n = Pervasives.float n in
-   let sr = 2.0 *. sqrt r in
-   (r -. sr,   (r *. t /. n) -. n,   r +. sr)
-   ;;
+  done;
+  let t = sumsq f 0 r
+  and r = Pervasives.float r
+  and n = Pervasives.float n in
+  let sr = 2.0 *. sqrt r in
+  (r -. sr,   (r *. t /. n) -. n,   r +. sr)
+  ;;
 
-   (* This is to test for linear dependencies between successive random numbers.
+  (* This is to test for linear dependencies between successive random numbers.
  *)
-   let st = ref 0;;
-   let init_diff r = st := int r;;
-   let diff r =
-   let x1 = !st
-   and x2 = int r
-   in
-   st := x2;
-   if x1 >= x2 then
+  let st = ref 0;;
+  let init_diff r = st := int r;;
+  let diff r =
+  let x1 = !st
+  and x2 = int r
+  in
+  st := x2;
+  if x1 >= x2 then
     x1 - x2
-   else
+  else
     r + x1 - x2
-   ;;
+  ;;
 
-   let st1 = ref 0
-   and st2 = ref 0
-   ;;
+  let st1 = ref 0
+  and st2 = ref 0
+  ;;
 
-   (* This is to test for quadratic dependencies between successive random
+  (* This is to test for quadratic dependencies between successive random
    numbers.
  *)
-   let init_diff2 r = st1 := int r; st2 := int r;;
-   let diff2 r =
-   let x1 = !st1
-   and x2 = !st2
-   and x3 = int r
-   in
-   st1 := x2;
-   st2 := x3;
-   (x3 - x2 - x2 + x1 + 2*r) mod r
-   ;;
+  let init_diff2 r = st1 := int r; st2 := int r;;
+  let diff2 r =
+  let x1 = !st1
+  and x2 = !st2
+  and x3 = int r
+  in
+  st1 := x2;
+  st2 := x3;
+  (x3 - x2 - x2 + x1 + 2*r) mod r
+  ;;
 
  ********************)

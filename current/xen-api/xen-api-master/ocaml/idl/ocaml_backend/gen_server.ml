@@ -240,16 +240,16 @@ let operation (obj: obj) (x: message) =
       (comments @ unmarshall_code @ session_check_exp @ rbac_check_begin @ (gen_body()) @ rbac_check_end) in
 
   ("    " ^ name_pattern_match ^ "\n" ^
-     ("begin\n"
-      ^ "    match __params with\n"
-      ^ "    | " ^ arg_pattern ^ " -> "
-      ^ "         begin\n " ^ all ^ "\n"
-      ^ "         end\n"
-      ^ "    | _ -> "
-      ^ "        Server_helpers.parameter_count_mismatch_failure __call " ^ 
-        "\"" ^ (string_of_int (count_mandatory_message_parameters x)) ^ "\"" ^ 
-        " (string_of_int ((List.length __params) - " ^ (if x.msg_session then "1" else "0") ^ "))"
-      ^ "\nend"))
+   ("begin\n"
+    ^ "    match __params with\n"
+    ^ "    | " ^ arg_pattern ^ " -> "
+    ^ "         begin\n " ^ all ^ "\n"
+    ^ "         end\n"
+    ^ "    | _ -> "
+    ^ "        Server_helpers.parameter_count_mismatch_failure __call " ^ 
+    "\"" ^ (string_of_int (count_mandatory_message_parameters x)) ^ "\"" ^ 
+    " (string_of_int ((List.length __params) - " ^ (if x.msg_session then "1" else "0") ^ "))"
+    ^ "\nend"))
 
 
 (* ------------------------------------------------------------------------------------------
@@ -299,11 +299,11 @@ let gen_module api : O.Module.t =
             ] @ (List.flatten (List.map obj all_objs)) @ [
               "| \"system.listMethods\" -> ";
               "  success (rpc_of_string_set [" ] @
-              begin 
-                let objmsgs obj = List.map (fun msg -> Printf.sprintf "\"%s\";" (DU.wire_name ~sync:true obj msg)) obj.messages in
-                let allmsg = List.map (fun obj -> String.concat "" (objmsgs obj)) all_objs in
-                allmsg
-              end @ [
+            begin 
+              let objmsgs obj = List.map (fun msg -> Printf.sprintf "\"%s\";" (DU.wire_name ~sync:true obj msg)) obj.messages in
+              let allmsg = List.map (fun obj -> String.concat "" (objmsgs obj)) all_objs in
+              allmsg
+            end @ [
               " ])";
               "| func -> ";
               "  if (try Scanf.sscanf func \"system.isAlive:%s\" (fun _ -> true) with _ -> false)";

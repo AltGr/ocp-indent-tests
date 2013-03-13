@@ -16,8 +16,8 @@
 *)
 
 (** We only currently support within-pool live or dead migration.
-   Unfortunately in the cross-pool case, two hosts must share the same SR and
-   co-ordinate tapdisk locking. We have not got code for this.
+    Unfortunately in the cross-pool case, two hosts must share the same SR and
+    co-ordinate tapdisk locking. We have not got code for this.
 *)
 
 open Pervasiveext
@@ -597,9 +597,9 @@ let migrate_send  ~__context ~vm ~dest ~live ~vdi_map ~vif_map ~options =
 exception Failure
 
 (** Extra parameter added in rel_mnr: memory_required_kib which is the lowest
-   upper-bound on the amount of memory we know the domain will fit in. This
-   is also used as a neutral target value post-migrate.
-   If this is missing (e.g. during rolling upgrade from George) we fall back to *static_max*.
+    upper-bound on the amount of memory we know the domain will fit in. This
+    is also used as a neutral target value post-migrate.
+    If this is missing (e.g. during rolling upgrade from George) we fall back to *static_max*.
 *)
 let _memory_required_kib = "memory_required_kib"
 

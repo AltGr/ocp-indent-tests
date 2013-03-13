@@ -132,19 +132,19 @@ let nonpersistent_rpc xml =
       exec_command cmd
     (*  with
           Cli_frontend.ParseError s ->
-       param_error "Syntax error" s;
+        param_error "Syntax error" s;
         | Cli_frontend.ParamNotFound s ->
-       param_error "Required parameter not found" s;
+        param_error "Required parameter not found" s;
         | FatalError s ->
-       param_error "Fatal error" s
+        param_error "Fatal error" s
         | Errors.Server_error(c,s) ->
-       List.iter (print_endline) s;
-       exit exit_error
+        List.iter (print_endline) s;
+        exit exit_error
         | Xml.Error exn ->
-       print_endline ("XML error!: " ^ Xml.error exn);
-       exit exit_error
+        print_endline ("XML error!: " ^ Xml.error exn);
+        exit exit_error
         | exc ->
-       print_endline ("Unhandled exception: " ^ (Printexc.to_string exc));
-       raise exc *)
+        print_endline ("Unhandled exception: " ^ (Printexc.to_string exc));
+        raise exc *)
 
     let _ = main()

@@ -11,8 +11,8 @@ module Binable = Binable0
 module Hashable = Hashtbl.Hashable
 
 (* IF THIS REPRESENTATION EVER CHANGES, ENSURE THAT EITHER
-    (1) all values serialize the same way in both representations, or
-    (2) you add a new Hash_set version to stable.ml
+   (1) all values serialize the same way in both representations, or
+   (2) you add a new Hash_set version to stable.ml
 *)
 type 'a t = ('a, unit) Hashtbl.t
 type 'a hash_set = 'a t
@@ -112,10 +112,10 @@ let of_list ?growth_allowed ?size ~hashable l =
 ;;
 
 module Creators (Elt : sig
-      type 'a t
+           type 'a t
 
-      val hashable : 'a t Hashable.t
-    end) : sig
+           val hashable : 'a t Hashable.t
+         end) : sig
 
   type 'a t_ = 'a Elt.t t
 
@@ -148,10 +148,10 @@ end = struct
         | Ok () -> ()
         | Error _ ->
           raise (Of_sexp_error
-                (Error.to_exn
-                   (Error.create "Hash_set.t_of_sexp got a duplicate element"
-                      sexp Fn.id),
-                 sexp)));
+                   (Error.to_exn
+                      (Error.create "Hash_set.t_of_sexp got a duplicate element"
+                         sexp Fn.id),
+                    sexp)));
       t
   ;;
 
@@ -166,9 +166,9 @@ module Poly = struct
   let hashable = Hashtbl.Poly.hashable
 
   include Creators (struct
-      type 'a t = 'a
-      let hashable = hashable
-    end)
+            type 'a t = 'a
+            let hashable = hashable
+          end)
 
   include Accessors
 
@@ -201,16 +201,16 @@ module Make_binable (Elt : Elt_binable) = struct
   include Make (Elt)
 
   include Bin_prot.Utils.Make_iterable_binable (struct
-      type t = elt hash_set
-      type el = Elt.t with bin_io
-      let _ = bin_el
-      type acc = t
-      let module_name = Some "Core.Hash_set"
-      let length = length
-      let iter = iter
-      let init size = create ~size ()
-      let insert acc v _i = add acc v; acc
-      let finish t = t
-    end)
+            type t = elt hash_set
+            type el = Elt.t with bin_io
+            let _ = bin_el
+            type acc = t
+            let module_name = Some "Core.Hash_set"
+            let length = length
+            let iter = iter
+            let init size = create ~size ()
+            let insert acc v _i = add acc v; acc
+            let finish t = t
+          end)
 
 end

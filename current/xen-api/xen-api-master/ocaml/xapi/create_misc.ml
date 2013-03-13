@@ -359,11 +359,11 @@ let make_packs_info () =
           in
           let param_name = originator ^ ":" ^ name in
           let value = description ^ ", version " ^ version ^
-              (match build with
-               | Some build -> ", build " ^ build
-               | None -> "") ^
-              (if homogeneous then ", homogeneous"
-               else "")
+                      (match build with
+                       | Some build -> ", build " ^ build
+                       | None -> "") ^
+                      (if homogeneous then ", homogeneous"
+                       else "")
           in
           let kv = [(param_name, value)] in
           if originator = "xs" && name = "linux" then
@@ -383,21 +383,21 @@ let make_software_version () =
   let info = read_localhost_info () in
   let v6_version = V6client.get_version "make_software_version" in
   Xapi_globs.software_version @
-    (if v6_version = "" then [] else ["dbv", v6_version]) @
-    [
-      "xapi", get_xapi_verstring ();
-      "xen", info.xen_verstring;
-      "linux", info.linux_verstring;
-      "xencenter_min", Xapi_globs.xencenter_min_verstring;
-      "xencenter_max", Xapi_globs.xencenter_max_verstring;
-      "network_backend", Netdev.string_of_kind Netdev.network.Netdev.kind;
-    ] @
-    (option_to_list "oem_manufacturer" info.oem_manufacturer) @
-    (option_to_list "oem_model" info.oem_model) @
-    (option_to_list "oem_build_number" info.oem_build_number) @
-    (option_to_list "machine_serial_number" info.machine_serial_number) @
-    (option_to_list "machine_serial_name" info.machine_serial_name) @
-    make_packs_info ()
+  (if v6_version = "" then [] else ["dbv", v6_version]) @
+  [
+    "xapi", get_xapi_verstring ();
+    "xen", info.xen_verstring;
+    "linux", info.linux_verstring;
+    "xencenter_min", Xapi_globs.xencenter_min_verstring;
+    "xencenter_max", Xapi_globs.xencenter_max_verstring;
+    "network_backend", Netdev.string_of_kind Netdev.network.Netdev.kind;
+  ] @
+  (option_to_list "oem_manufacturer" info.oem_manufacturer) @
+  (option_to_list "oem_model" info.oem_model) @
+  (option_to_list "oem_build_number" info.oem_build_number) @
+  (option_to_list "machine_serial_number" info.machine_serial_number) @
+  (option_to_list "machine_serial_name" info.machine_serial_name) @
+  make_packs_info ()
 
 let create_host_cpu ~__context =
   let get_nb_cpus () =

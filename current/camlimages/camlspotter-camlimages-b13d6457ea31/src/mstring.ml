@@ -114,12 +114,12 @@ let rem_trailing_sp s =
 let catenate_sep = String.concat;;
 
 (** Filters CRLF:
-   -  CR -> LF
-   -  CRLF -> LF
-   -  LF -> LF
-   We do this on successive chunks of a stream, so we need to consider
-   the case when the chunk finishes on CR.
-   Assume len > 0
+    -  CR -> LF
+    -  CRLF -> LF
+    -  LF -> LF
+    We do this on successive chunks of a stream, so we need to consider
+    the case when the chunk finishes on CR.
+    Assume len > 0
 *)
 
 let norm_crlf lastwascr buf offs len =

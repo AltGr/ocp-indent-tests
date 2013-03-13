@@ -170,13 +170,13 @@ let populate_audit_record_with_obj_names_of_refs line =
            |prefix, ((SExpr.Node arg_list)::[]) ->
              (* paste together the prefix of original audit record *) 
              before_sexpr_str^" "^
-               (SExpr.string_of 
-                  (SExpr.Node (
-                     prefix@
-                       ((SExpr.Node (get_obj_names_of_refs arg_list))::
-                          [])
-                   ))
-               )
+             (SExpr.string_of 
+                (SExpr.Node (
+                   prefix@
+                   ((SExpr.Node (get_obj_names_of_refs arg_list))::
+                      [])
+                 ))
+             )
            |prefix,_->line
           )
       end
@@ -310,23 +310,23 @@ let rec sexpr_args_of __context name rpc_value action =
     ( match rpc_value with
       | Rpc.String value ->
         Some (get_sexpr_arg
-              name 
-              (if is_selected_action_param action_params_zip
-               then (zip value)
-               else value
-              )
-              "" ""
-          )
+            name 
+            (if is_selected_action_param action_params_zip
+             then (zip value)
+             else value
+            )
+            "" ""
+        )
       | Rpc.Dict _ -> 
         Some (SExpr.Node
-              (
-                (SExpr.String name)
-                ::(SExpr.Node (sexpr_of_parameters __context (action^"."^name) (Some (["__structure"],[rpc_value]))))
-                ::(SExpr.String "")
-                ::(SExpr.String "")
-                ::[]
-              )
-          )
+            (
+              (SExpr.String name)
+              ::(SExpr.Node (sexpr_of_parameters __context (action^"."^name) (Some (["__structure"],[rpc_value]))))
+              ::(SExpr.String "")
+              ::(SExpr.String "")
+              ::[]
+            )
+        )
       | _-> (*D.debug "sexpr_args_of:value=%s" (Xml.to_string xml_value);*)      
         (*None*)
         Some (get_sexpr_arg name (Rpc.to_string rpc_value) "" "")

@@ -25,11 +25,11 @@ include Robustly_comparable with type t := t
 (* String converters and sexp converters allow for specifying of time spans in various
    units after a leading float (e.g. 45s, 3h, or 1d):
 
-    ms - milliseconds
-    s - seconds
-    m - minutes
-    h - hours
-    d - days
+   ms - milliseconds
+   s - seconds
+   m - minutes
+   h - hours
+   d - days
 
    The outgoing conversion functions use these units as well, choosing the largest
    available type.  For instance, if it's a bit greater than or equal to 1 hour, the span
@@ -100,10 +100,10 @@ val pp : Format.formatter -> t -> unit
     five characters if the span is positive, and six if the span is negative.
     Examples
     {ul
-       {li ["4h"] = 4 hours}
-       {li ["5m"] = 5 minutes}
-       {li ["4s"] = 4 seconds}
-       {li ["10ms"] = 10 milliseconds}
+    {li ["4h"] = 4 hours}
+    {li ["5m"] = 5 minutes}
+    {li ["4s"] = 4 seconds}
+    {li ["10ms"] = 10 milliseconds}
     }
 
     only the most significant denomination is shown.

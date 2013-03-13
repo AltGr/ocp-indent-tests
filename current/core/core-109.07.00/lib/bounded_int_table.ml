@@ -50,12 +50,12 @@ let invariant t =
     assert (num_keys = Array.length t.defined_entries);
     assert (0 <= t.length && t.length <= num_keys);
     Array.iteri t.entries_by_key ~f:(fun i -> function
-      | None -> ()
-      | Some entry ->
-        assert (i = t.key_to_int entry.key);
-        match t.defined_entries.(entry.defined_entries_index) with
-        | None -> assert false
-        | Some entry' -> assert (phys_equal entry entry'));
+    | None -> ()
+    | Some entry ->
+      assert (i = t.key_to_int entry.key);
+      match t.defined_entries.(entry.defined_entries_index) with
+      | None -> assert false
+      | Some entry' -> assert (phys_equal entry entry'));
     Array.iteri t.defined_entries ~f:(fun i entry_opt ->
       match i < t.length, entry_opt with
       | false, None -> ()
@@ -214,20 +214,20 @@ let add_exn t ~key ~data =
 
 let remove t key =
   begin match entry_opt t key with
-    | None -> ()
-    | Some entry ->
-      t.length <- t.length - 1;
-      t.entries_by_key.(t.key_to_int key) <- None;
-      let hole = entry.defined_entries_index in
-      let last = t.length in
-      if hole < last then begin
-        match t.defined_entries.(last) with
-        | None -> assert false
-        | Some entry_to_put_in_hole as entry_to_put_in_hole_opt ->
-          t.defined_entries.(hole) <- entry_to_put_in_hole_opt;
-          entry_to_put_in_hole.defined_entries_index <- hole;
-      end;
-      t.defined_entries.(last) <- None;
+  | None -> ()
+  | Some entry ->
+    t.length <- t.length - 1;
+    t.entries_by_key.(t.key_to_int key) <- None;
+    let hole = entry.defined_entries_index in
+    let last = t.length in
+    if hole < last then begin
+      match t.defined_entries.(last) with
+      | None -> assert false
+      | Some entry_to_put_in_hole as entry_to_put_in_hole_opt ->
+        t.defined_entries.(hole) <- entry_to_put_in_hole_opt;
+        entry_to_put_in_hole.defined_entries_index <- hole;
+    end;
+    t.defined_entries.(last) <- None;
   end;
   check_invariant t;
 ;;
@@ -247,11 +247,11 @@ let for_all t ~f = for_alli t ~f:(fun ~key:_ ~data -> f data)
 let equal key_equal data_equal t1 t2 =
   length t1 = length t2
   && for_alli t1 ~f:(fun ~key ~data ->
-    match entry_opt t2 key with
-    | None -> false
-    | Some entry ->
-      key_equal key entry.Entry.key
-      && data_equal data entry.Entry.data)
+       match entry_opt t2 key with
+       | None -> false
+       | Some entry ->
+         key_equal key entry.Entry.key
+         && data_equal data entry.Entry.data)
 ;;
 
 (* test [exists{,i}], [for_all{,i}] *)
@@ -295,7 +295,7 @@ TEST_MODULE = struct
   TEST = equal_of_list [1; 2] [1; 2] = true
   TEST = equal_of_list [1; 2] [2; 1] = true
 
-    (* test [equal] between tables that have different [to_int] functions. *)
+  (* test [equal] between tables that have different [to_int] functions. *)
   TEST_UNIT =
     let of_list ~offset keys =
       let t = create ~num_keys:10 ~key_to_int:(fun i -> i + offset) () in
@@ -317,9 +317,9 @@ TEST_MODULE = struct
 end
 
 module With_key (Key : sig
-      type t with bin_io, sexp
-      val to_int : t -> int
-    end) = struct
+           type t with bin_io, sexp
+           val to_int : t -> int
+         end) = struct
 
   type 'data t = (Key.t, 'data) table
   type 'data table = 'data t
@@ -352,15 +352,15 @@ module With_key (Key : sig
   ;;
 
   include Bin_prot.Utils.Make_binable1 (struct
-      module Binable = struct
-        type 'data t = (Key.t, 'data) Serialized.t with bin_io
-      end
+            module Binable = struct
+              type 'data t = (Key.t, 'data) Serialized.t with bin_io
+            end
 
-      type 'data t = 'data table
+            type 'data t = 'data table
 
-      let to_binable = to_serialized
-      let of_binable = of_serialized
-    end)
+            let to_binable = to_serialized
+            let of_binable = of_serialized
+          end)
 
 end
 

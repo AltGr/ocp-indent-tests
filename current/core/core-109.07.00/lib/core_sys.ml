@@ -39,11 +39,11 @@ let file_exists_exn = stat_check_exn (fun _ -> true)
 
 let is_directory = stat_check (fun stat -> stat.LargeFile.st_kind = Unix.S_DIR)
 let is_directory_exn = stat_check_exn
-    (fun stat -> stat.LargeFile.st_kind = Unix.S_DIR)
+                         (fun stat -> stat.LargeFile.st_kind = Unix.S_DIR)
 
 let is_file = stat_check (fun stat -> stat.LargeFile.st_kind = Unix.S_REG)
 let is_file_exn = stat_check_exn
-    (fun stat -> stat.LargeFile.st_kind = Unix.S_REG)
+                    (fun stat -> stat.LargeFile.st_kind = Unix.S_REG)
 
 include struct
   open Caml.Sys

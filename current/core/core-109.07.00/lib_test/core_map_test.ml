@@ -12,40 +12,40 @@ let test =
       "merge1" >::
         (fun () ->
           let f ~key:_ = function
-            | `Left _ | `Right _ -> None
-            | `Both (x, y) -> Some (x+y)
+          | `Left _ | `Right _ -> None
+          | `Both (x, y) -> Some (x+y)
           in
           "eq1" @? StringMap.equal (=) (StringMap.merge ~f m1 m2)
-              (StringMap.of_alist_exn ["a",2;"c",0;"d",8;]);
+                     (StringMap.of_alist_exn ["a",2;"c",0;"d",8;]);
           "eq2" @? StringMap.equal (=) (StringMap.merge ~f m2 m1)
-              (StringMap.of_alist_exn ["a",2;"c",0;"d",8;]);
+                     (StringMap.of_alist_exn ["a",2;"c",0;"d",8;]);
         );
       "merge2" >::
         (fun () ->
           let f ~key:_ = function
-            | `Left x -> Some x
-            | `Right _ -> None
-            | `Both (x, y) -> Some (x+y)
+          | `Left x -> Some x
+          | `Right _ -> None
+          | `Both (x, y) -> Some (x+y)
           in
           "eq" @? StringMap.equal (=) (StringMap.merge ~f m1 m2)
-              (StringMap.of_alist_exn ["a",2;"b",2;"c",0;"d",8;])
+                    (StringMap.of_alist_exn ["a",2;"b",2;"c",0;"d",8;])
         );
       "merge3" >::
         (fun () ->
           let f ~key:_ = function
-            | `Left x | `Right x -> Some x
-            | `Both (x, y) -> Some (x+y)
+          | `Left x | `Right x -> Some x
+          | `Both (x, y) -> Some (x+y)
           in
           "eq1" @? StringMap.equal (=) (StringMap.merge ~f m1 m2)
-              (StringMap.of_alist_exn ["a",2;"b",2;"c",0;"d",8;"e",5]);
+                     (StringMap.of_alist_exn ["a",2;"b",2;"c",0;"d",8;"e",5]);
           "eq2" @? StringMap.equal (=) (StringMap.merge ~f m2 m1)
-              (StringMap.of_alist_exn ["a",2;"b",2;"c",0;"d",8;"e",5])
+                     (StringMap.of_alist_exn ["a",2;"b",2;"c",0;"d",8;"e",5])
         );
       "merge3" >::
         (fun () ->
           let f ~key:_ = function
-            | `Left x | `Right x -> Some x
-            | `Both (x, y) -> Some (x+y)
+          | `Left x | `Right x -> Some x
+          | `Both (x, y) -> Some (x+y)
           in
           "eq1" @? StringMap.equal (=) (StringMap.merge ~f m1 StringMap.empty) m1;
           "eq2" @? StringMap.equal (=) (StringMap.merge ~f StringMap.empty m1) m1;
@@ -68,11 +68,11 @@ let test =
           "1" @? (StringMap.find_exn m "a" = 1 && StringMap.find_exn m "d" = 4);
           let a_dup = [("a", 1); ("b", 2); ("c", 3);  ("b", 4);  ("e", 5)] in
           "2" @?
-            (match StringMap.of_alist a_dup with `Ok _ -> false | `Duplicate_key x -> x = "b");
+          (match StringMap.of_alist a_dup with `Ok _ -> false | `Duplicate_key x -> x = "b");
           "3" @?
-            ((List.sort ~cmp:ascending
-                (StringMap.to_alist (StringMap.of_alist_exn a)))
-             = List.sort ~cmp:ascending a);
+          ((List.sort ~cmp:ascending
+              (StringMap.to_alist (StringMap.of_alist_exn a)))
+           = List.sort ~cmp:ascending a);
           try ignore (StringMap.of_alist_exn a_dup); assert false with _ -> ()
         );
       "for_all/exists" >:: (fun () ->

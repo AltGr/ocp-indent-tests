@@ -22,7 +22,7 @@ let ( ** ) = Int64.mul
 let ( // ) = Int64.div
 
 (** Creates a memory constraints record (with values in bytes) from the given
-   memory constraints tuple (with values in MiB). *)
+    memory constraints tuple (with values in MiB). *)
 let create (static_min, dynamic_min, target, dynamic_max, static_max) =
   let scale value = (Int64.of_int value) ** 1024L ** 1024L in
   {

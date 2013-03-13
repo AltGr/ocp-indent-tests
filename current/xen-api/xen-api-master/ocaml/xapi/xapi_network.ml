@@ -235,8 +235,8 @@ let with_networks_attached_for_vm ~__context ?host ~vm f =
       attach_for_vm ~__context ~host:(Helpers.get_localhost ~__context) ~vm
     | Some host ->
       Helpers.call_api_functions ~__context (fun rpc session_id ->
-          Client.Network.attach_for_vm ~rpc ~session_id ~host ~vm
-        )
+        Client.Network.attach_for_vm ~rpc ~session_id ~host ~vm
+      )
   end;
   try
     f ()
@@ -249,8 +249,8 @@ let with_networks_attached_for_vm ~__context ?host ~vm f =
           detach_for_vm ~__context ~host:(Helpers.get_localhost ~__context) ~vm
         | Some host ->
           Helpers.call_api_functions ~__context (fun rpc session_id ->
-              Client.Network.detach_for_vm ~rpc ~session_id ~host ~vm
-            )
+            Client.Network.detach_for_vm ~rpc ~session_id ~host ~vm
+          )
       with e ->
         error "Caught %s while detaching networks" (string_of_exn e)
     end;

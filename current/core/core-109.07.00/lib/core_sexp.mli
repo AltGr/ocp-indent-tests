@@ -55,10 +55,10 @@ end
    A common use case is to parse most of a sexp even when some small part fails to parse,
    e.g.:
    [
-     type query =
-     | Start of Initial_config.t Sexp_maybe.t
-     | Stop of  Reason_to_stop.t Sexp_maybe.t
-     with sexp
+   type query =
+   | Start of Initial_config.t Sexp_maybe.t
+   | Stop of  Reason_to_stop.t Sexp_maybe.t
+   with sexp
    ]
    If [Reason_to_stop.t_of_sexp] fails, you can still tell it was a [Stop] query.
 *)

@@ -64,8 +64,8 @@ let merge xs ys =
   List.rev (merge xs ys [])
 
 (** A total ordering on unique guest identifiers that:
-   - orders guest identifiers naturally for normal guests
-   - orders the control domain identifier before any other guest identifier. *)
+    - orders guest identifiers naturally for normal guests
+    - orders the control domain identifier before any other guest identifier. *)
 let compare_guests control_domain_id guest_id_1 guest_id_2 =
   if guest_id_1 = control_domain_id then -1 else
   if guest_id_2 = control_domain_id then  1 else compare guest_id_1 guest_id_2
@@ -294,7 +294,7 @@ let print_padded_data_line guest_ids_all line =
   try
     print_endline (pad_data_line guest_ids_all line)
   with _ -> ()
-    (* Just ignore lines that cannot be processed for any reason. *)
+(* Just ignore lines that cannot be processed for any reason. *)
 
 let range min max =
   let rec range min max list =

@@ -27,7 +27,7 @@ let alltests = [
   ("offlinedisk",Tests.offline_disk);
   ("diskguestverified",Tests.disk_guest_verified);
   (*  ("vif",Tests.vif);
-     ("onlinevif",Tests.online_vif); *)
+      ("onlinevif",Tests.online_vif); *)
   ("importexport",Tests.importexport);
   ("param",Tests.param);
   ("cd",Tests.cd_guest_verified);

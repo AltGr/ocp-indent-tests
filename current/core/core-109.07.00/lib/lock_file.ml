@@ -22,10 +22,10 @@ let lock fd =
   flocked && lockfed
 
 let create
-    ?(message = Pid.to_string (Unix.getpid ()))
-    ?(close_on_exec = true)
-    ?(unlink_on_exit = false)
-    path =
+      ?(message = Pid.to_string (Unix.getpid ()))
+      ?(close_on_exec = true)
+      ?(unlink_on_exit = false)
+      path =
   let message = sprintf "%s\n" message in
   let fd = Unix.openfile path ~mode:[Unix.O_WRONLY; Unix.O_CREAT] ~perm:0o664 in
   try

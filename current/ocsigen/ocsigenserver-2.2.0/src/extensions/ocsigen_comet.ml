@@ -308,7 +308,7 @@ end = struct
       (function
         (*when write has been made with outcome notifier*)
         | (c, _, Some x) -> (Lwt.wakeup x outcome ; Lwt.return ())
-          (*when it hasn't*)
+        (*when it hasn't*)
         | (_, _, None) -> Lwt.return ()
       )
       s
@@ -321,8 +321,8 @@ end = struct
             (match e with
               | [] -> encode s
               | e ->   encode_ended e
-                  ^ field_separator
-                  ^ encode s
+                       ^ field_separator
+                       ^ encode s
             )
         in
         OStream.add_finalizer stream (stream_result_notification s) ;

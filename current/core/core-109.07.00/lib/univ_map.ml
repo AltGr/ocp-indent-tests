@@ -1,9 +1,9 @@
 open Std_internal
 
 (* INVARIANT:
-    for each [(uid, con) : Univ_map.Key.t] and [t : Univ_map.t],
-      if [Uid.Map.find t uid = Some univ]
-      then [univ] was built using [con].
+   for each [(uid, con) : Univ_map.Key.t] and [t : Univ_map.t],
+   if [Uid.Map.find t uid = Some univ]
+   then [univ] was built using [con].
 *)
 
 module Uid = Unique_id.Int63 (struct end) (* uniqueness of ids is required *)

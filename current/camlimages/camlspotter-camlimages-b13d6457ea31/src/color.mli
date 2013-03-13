@@ -15,8 +15,8 @@
 (* $Id: color.mli,v 1.1 2006/11/28 15:43:28 rousse Exp $ *)
 
 (** Definition of colormaps, i.e. mappings from real RGB colors to
-   integers. The integer corresponding to a color [c] is an index [i]
-   into a vector of colors whose [i]th element is [c]. *)
+    integers. The integer corresponding to a color [c] is an index [i]
+    into a vector of colors whose [i]th element is [c]. *)
 
 exception Too_many_colors;;
 
@@ -27,15 +27,15 @@ val size : 'a map -> int;;
 (** Returns the size of a colormap. *)
 val find_exact : 'a map -> 'a -> int;;
 (** Finds a color in the colormap and returns its color index.
-   Raises exception [Not_found] if the color is not in the colormap. *)
+    Raises exception [Not_found] if the color is not in the colormap. *)
 val add_color : 'a map -> 'a -> int;;
 (** Add a new color into the given colormap and return its index.
-   If the color is already in the colormap, it is not
-   added again, and the corresponding color index is returned. *)
+    If the color is already in the colormap, it is not
+    added again, and the corresponding color index is returned. *)
 val add_colors : 'a map -> 'a list -> int list;;
 (** Add the list of new colors into the given colormap and return 
-   their indices. If a color is already in the colormap, it is not
-   added again, and the corresponding color index is returned. *)
+    their indices. If a color is already in the colormap, it is not
+    added again, and the corresponding color index is returned. *)
 val copy : 'a map -> 'a map;;
 (** Copy a colormap *)
 (*

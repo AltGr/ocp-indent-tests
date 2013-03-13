@@ -13,10 +13,10 @@ module type S = S
   with type 'a poly_set := 'a Set.t
 
 module Make (Bound : sig
-      (* Sexps are () for empty interval and (3 5) for an interval containing 3, 4, and 5. *)
-      type t with bin_io, sexp
-      include Comparable.S with type t := t
-    end)
+           (* Sexps are () for empty interval and (3 5) for an interval containing 3, 4, and 5. *)
+           type t with bin_io, sexp
+           include Comparable.S with type t := t
+         end)
   : S with type bound = Bound.t
 
 module Float : S with type bound = Float.t

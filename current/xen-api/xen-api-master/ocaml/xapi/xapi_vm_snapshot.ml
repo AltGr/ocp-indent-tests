@@ -204,7 +204,7 @@ let checkpoint ~__context ~vm ~new_name =
       Xapi_xenops.suspend ~__context ~self:vm;
     with
     | Api_errors.Server_error(_, _) as e -> raise e
-                                              (* | _ -> raise (Api_errors.Server_error (Api_errors.vm_checkpoint_suspend_failed, [Ref.string_of vm])) *)
+                                            (* | _ -> raise (Api_errors.Server_error (Api_errors.vm_checkpoint_suspend_failed, [Ref.string_of vm])) *)
   end;
 
   (* snapshot the disks and the suspend VDI *)

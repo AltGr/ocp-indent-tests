@@ -81,21 +81,21 @@ module Stable = struct
     ;;
 
     include (Sexpable.Of_stringable (struct
-        type t = int
-        let of_string = of_string
-        let to_string = to_string
-      end) : Sexpable.S with type t := t)
+               type t = int
+               let of_string = of_string
+               let to_string = to_string
+             end) : Sexpable.S with type t := t)
 
     let get t = reps.(t).variant
 
     let create = function
-      | `Sun -> 0
-      | `Mon -> 1
-      | `Tue -> 2
-      | `Wed -> 3
-      | `Thu -> 4
-      | `Fri -> 5
-      | `Sat -> 6
+    | `Sun -> 0
+    | `Mon -> 1
+    | `Tue -> 2
+    | `Wed -> 3
+    | `Thu -> 4
+    | `Fri -> 5
+    | `Sat -> 6
     ;;
 
     let shift t i = Int.Infix.( % ) (t + i) num_days
@@ -111,20 +111,20 @@ module Stable = struct
   end
 
   TEST_MODULE "Weekday.V1" = Stable_unit_test.Make (struct
-      include V1
+                               include V1
 
-      let equal = equal
+                               let equal = equal
 
-      let tests =
-        [ sun, "SUN", "\000"
-        ; mon, "MON", "\001"
-        ; tue, "TUE", "\002"
-        ; wed, "WED", "\003"
-        ; thu, "THU", "\004"
-        ; fri, "FRI", "\005"
-        ; sat, "SAT", "\006"
-        ]
-    end)
+                               let tests =
+                                 [ sun, "SUN", "\000"
+                                 ; mon, "MON", "\001"
+                                 ; tue, "TUE", "\002"
+                                 ; wed, "WED", "\003"
+                                 ; thu, "THU", "\004"
+                                 ; fri, "FRI", "\005"
+                                 ; sat, "SAT", "\006"
+                                 ]
+                             end)
 end
 
 include Stable.V1

@@ -149,7 +149,7 @@ let make ~xc ~xs vm_info uuid =
   let flags = if vm_info.hvm then begin
       let default_flags =
         (if vm_info.hvm then [ Xenctrl.CDF_HVM ] else []) @
-          (if (vm_info.hvm && vm_info.hap) then [ Xenctrl.CDF_HAP ] else []) in
+        (if (vm_info.hvm && vm_info.hap) then [ Xenctrl.CDF_HAP ] else []) in
       if (List.mem_assoc "hap" vm_info.platformdata) then begin
         let hap = List.assoc "hap" vm_info.platformdata in
         if hap = "false" then begin
@@ -300,7 +300,7 @@ let shutdown ~xc ~xs domid req =
     )
 
 (** If domain is PV, signal it to shutdown. If the PV domain fails to respond then throw a Watch.Timeout exception.
-   All other exceptions imply the domain has disappeared. *)
+    All other exceptions imply the domain has disappeared. *)
 let shutdown_wait_for_ack (t: Xenops_task.t) ?(timeout=60.) ~xc ~xs domid req =
   let di = Xenctrl.domain_getinfo xc domid in
   let uuid = get_uuid ~xc domid in

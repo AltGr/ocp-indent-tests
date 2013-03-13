@@ -194,7 +194,7 @@ let all (lookup: string -> string option) (list: string -> string list) ~__conte
          device_id_cached <> device_id)
     (* Nb. we're ignoring the memory updates as far as the VM_guest_metrics API object is concerned. We are putting them into an RRD instead *)
     (*     ||
-         memory_cached <> memory)*)
+           memory_cached <> memory)*)
     then 
       begin
         let gm = 

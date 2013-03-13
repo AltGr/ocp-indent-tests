@@ -60,6 +60,6 @@ val signal : 'a t -> 'a -> unit
     missed and the value discarded. *)
 
 val broadcast : 'a t -> 'a -> unit
-(** [broadcast condvar value] notifies all waiting threads. Each
-    will be awoken in turn and will receive the same notification
-    value. *)
+  (** [broadcast condvar value] notifies all waiting threads. Each
+      will be awoken in turn and will receive the same notification
+      value. *)

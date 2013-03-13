@@ -92,7 +92,7 @@ module type Accessors = sig
   val change : ('a, 'b) t -> 'a key -> ('b option -> 'b option) -> unit
 
   (** [add_multi t ~key ~data] if [key] is present in the table then cons
-     [data] on the list, otherwise add [key] with a single element list. *)
+      [data] on the list, otherwise add [key] with a single element list. *)
   val add_multi : ('a, 'b list) t -> key:'a key -> data:'b -> unit
 
   (** [remove_multi t key] updates the table, removing the head of the list bound to

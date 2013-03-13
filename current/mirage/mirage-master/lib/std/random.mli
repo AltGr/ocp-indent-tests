@@ -26,7 +26,7 @@ val full_init : int array -> unit
 
 val self_init : unit -> unit
 (** Initialize the generator with a more-or-less random seed chosen
-   in a system-dependent way. *)
+    in a system-dependent way. *)
 
 val bits : unit -> int
 (** Return 30 random bits in a nonnegative integer.
@@ -53,9 +53,9 @@ val int64 : Int64.t -> Int64.t;;
 
 val float : float -> float
 (** [Random.float bound] returns a random floating-point number
-   between 0 (inclusive) and [bound] (exclusive).  If [bound] is
-   negative, the result is negative or zero.  If [bound] is 0,
-   the result is 0. *)
+    between 0 (inclusive) and [bound] (exclusive).  If [bound] is
+    negative, the result is negative or zero.  If [bound] is 0,
+    the result is 0. *)
 
 val bool : unit -> bool
 (** [Random.bool ()] returns [true] or [false] with probability 0.5 each. *)
@@ -101,4 +101,4 @@ val get_state : unit -> State.t
 (** Return the current state of the generator used by the basic functions. *)
 
 val set_state : State.t -> unit
-(** Set the state of the generator used by the basic functions. *)
+  (** Set the state of the generator used by the basic functions. *)

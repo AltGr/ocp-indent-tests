@@ -720,7 +720,7 @@ module Vif = struct
           else
             50000L (* 50ms by default *) in
         let bytes_per_interval = ((kbytes_per_s ^* 1024L) ^* timeslice_us)
-          ^/ 1000000L in
+                                 ^/ 1000000L in
         if bytes_per_interval > 0L && bytes_per_interval < 0xffffffffL then
           [ "rate", sprintf "%Lu,%Lu" bytes_per_interval timeslice_us ]
         else (
@@ -755,13 +755,13 @@ module Vif = struct
     let extra_private_keys = List.map (fun (k, v) -> "other-config/" ^ k, v) other_config @ extra_private_keys in
     (* Add the rest of the important configuration to the private bit of xenstore so we can access it later *)
     let extra_private_keys = extra_private_keys @
-        (match mtu with | Some mtu when mtu > 0 -> [ "MTU", string_of_int mtu ] | _ -> []) @
-        (match netty with
-         | Netman.Bridge b -> [ "bridge", b; "bridge-MAC", if(Xenctrl.is_fake ()) then "fe:fe:fe:fe:fe:fe" else "fe:ff:ff:ff:ff:ff"; ]
-         | Netman.Vswitch b -> [ "bridge", b; "bridge-MAC", if(Xenctrl.is_fake ()) then "fe:fe:fe:fe:fe:fe" else "fe:ff:ff:ff:ff:ff"; ]
-         | Netman.DriverDomain -> []
-         | Netman.Nat -> []) @
-        (match rate with | None -> [] | Some(rate, timeslice) -> [ "rate", Int64.to_string rate; "timeslice", Int64.to_string timeslice ]) in
+                             (match mtu with | Some mtu when mtu > 0 -> [ "MTU", string_of_int mtu ] | _ -> []) @
+                             (match netty with
+                              | Netman.Bridge b -> [ "bridge", b; "bridge-MAC", if(Xenctrl.is_fake ()) then "fe:fe:fe:fe:fe:fe" else "fe:ff:ff:ff:ff:ff"; ]
+                              | Netman.Vswitch b -> [ "bridge", b; "bridge-MAC", if(Xenctrl.is_fake ()) then "fe:fe:fe:fe:fe:fe" else "fe:ff:ff:ff:ff:ff"; ]
+                              | Netman.DriverDomain -> []
+                              | Netman.Nat -> []) @
+                             (match rate with | None -> [] | Some(rate, timeslice) -> [ "rate", Int64.to_string rate; "timeslice", Int64.to_string timeslice ]) in
 
     Generic.add_device ~xs device back front extra_private_keys;
     Hotplug.wait_for_plug task ~xs device;

@@ -66,22 +66,22 @@ module Make (M : Basic) : S with type 'a t := 'a M.t = struct
 
   let all =
     let rec loop vs = function
-      | [] -> return (List.rev vs)
-      | t :: ts -> t >>= fun v -> loop (v :: vs) ts
+    | [] -> return (List.rev vs)
+    | t :: ts -> t >>= fun v -> loop (v :: vs) ts
     in
     fun ts -> loop [] ts
 
   let rec all_ignore = function
-    | [] -> return ()
-    | t :: ts -> t >>= fun () -> all_ignore ts
+  | [] -> return ()
+  | t :: ts -> t >>= fun () -> all_ignore ts
 
 end
 
 (**
-   Multi parameter monad.
-   The second parameter get unified across all the computation. This is used
-   to encode monads working on a multi parameter data structure like
-   ([('a,'b result)]).
+  Multi parameter monad.
+  The second parameter get unified across all the computation. This is used
+  to encode monads working on a multi parameter data structure like
+  ([('a,'b result)]).
 *)
 module type Basic2 = sig
   type ('a, 'd) t
@@ -164,13 +164,13 @@ module Make2 (M : Basic2) : S2 with type ('a, 'd) t := ('a, 'd) M.t = struct
 
   let all =
     let rec loop vs = function
-      | [] -> return (List.rev vs)
-      | t :: ts -> t >>= fun v -> loop (v :: vs) ts
+    | [] -> return (List.rev vs)
+    | t :: ts -> t >>= fun v -> loop (v :: vs) ts
     in
     fun ts -> loop [] ts
 
   let rec all_ignore = function
-    | [] -> return ()
-    | t :: ts -> t >>= fun () -> all_ignore ts
+  | [] -> return ()
+  | t :: ts -> t >>= fun () -> all_ignore ts
 
 end

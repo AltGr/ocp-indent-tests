@@ -5,8 +5,8 @@ module Result = struct
   type 'a t = Rval of 'a | Expt of exn
 
   let return = function
-    | Rval v -> v
-    | Expt e -> raise e
+  | Rval v -> v
+  | Expt e -> raise e
 
   let capture f x =
     try Rval (f x) with

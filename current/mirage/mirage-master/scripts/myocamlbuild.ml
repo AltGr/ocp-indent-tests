@@ -117,7 +117,7 @@ module Mir = struct
     Cmd (S ( A ld :: [ T(tags++"link"++"xen");
                        A"-d"; A"-nostdlib"; A"-m"; A"elf_x86_64"; A"-T";
                        Px (xenlib / "mirage-x86_64.lds");  head_obj; P arg ]
-        @ ldlibs @ [jmp_obj; A"-o"; Px out]))
+             @ ldlibs @ [jmp_obj; A"-o"; Px out]))
 
   let cc_xen_bc_link = cc_xen_link true
   let cc_xen_nc_link = cc_xen_link false
@@ -323,9 +323,9 @@ module Spec = struct
 
   (** Spec file contains key:value pairs: 
 
-     backend:xen,node,unix-direct,unix-socket
-     backend:* (short form of above)
-     no backend key results in "backend:*" being default
+      backend:xen,node,unix-direct,unix-socket
+      backend:* (short form of above)
+      no backend key results in "backend:*" being default
 
   *)
   let parse file = 
@@ -470,10 +470,10 @@ let _ = dispatch begin function
     | Before_hygiene ->
       (* Flag all the backend subdirs with a "backend:" tag *)
       List.iter (fun be ->
-          let be = Spec.backend_to_string be in
-          let betag = sprintf "backend:%s" be in
-          tag_glob (sprintf "%s/**" be) [betag];
-        ) Spec.all_backends
+        let be = Spec.backend_to_string be in
+        let betag = sprintf "backend:%s" be in
+        tag_glob (sprintf "%s/**" be) [betag];
+      ) Spec.all_backends
 
     | After_options ->
       let syntaxdir = lib / "syntax" in

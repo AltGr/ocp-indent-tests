@@ -41,8 +41,8 @@ type daemon_spec = {
 }
 
 (** internal: given a status code and an additional body return a string
-   representing an HTML document that explains the meaning of given status code.
-   Additional data can be added to the body via 'body' argument *)
+    representing an HTML document that explains the meaning of given status code.
+    Additional data can be added to the body via 'body' argument *)
 let control_body code body =
   let reason_phrase = Misc.reason_phrase_of_code code in
   sprintf "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\"><HTML><HEAD><TITLE>%d %s</TITLE></HEAD><BODY><H1>%d - %s</H1>%s</BODY></HTML>" code reason_phrase code reason_phrase body
@@ -87,8 +87,8 @@ let handle_parse_exn e =
       Some
         (`Code 400,
          ("request 1st line format should be: " ^
-            "'&lt;method&gt; &lt;url&gt; &lt;version&gt;'" ^
-            "<br />\nwhile received request 1st line was:<br />\n" ^ req))
+          "'&lt;method&gt; &lt;url&gt; &lt;version&gt;'" ^
+          "<br />\nwhile received request 1st line was:<br />\n" ^ req))
     | Invalid_HTTP_method meth ->
       Some
         (`Code 501,

@@ -200,7 +200,7 @@ let resynchronise_pif_params ~__context =
   Helpers.update_pif_addresses ~__context
 
 (** Update the database to reflect current state. Called for both start of day and after
-   an agent restart. *)
+    an agent restart. *)
 let update_env __context sync_keys =
   (* -- used this for testing uniqueness constraints executed on slave do not kill connection.
      Committing commented out vsn of this because it might be useful again..

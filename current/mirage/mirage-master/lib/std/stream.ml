@@ -61,7 +61,7 @@ let rec get_data count d = match d with
     begin match g.func count with
         None -> g.curr <- Some(None); Sempty
       | Some a -> Scons(a, d)
-                    (* Warning: anyone using g thinks that an item has been read *)
+                  (* Warning: anyone using g thinks that an item has been read *)
     end
   | Sbuffio b ->
     if b.ind >= b.len then fill_buff b;

@@ -55,10 +55,10 @@ module S_to_S1 (S : S) = struct
 end
 
 module Make1 (M : sig
-      type 'a t
-      val compare : 'a t -> 'a t -> int
-      val sexp_of_t : 'a t -> Sexp.t
-    end) = struct
+           type 'a t
+           val compare : 'a t -> 'a t -> int
+           val sexp_of_t : 'a t -> Sexp.t
+         end) = struct
   type comparator
   let comparator = let open M in { compare; sexp_of_t }
 end
@@ -66,8 +66,8 @@ end
 module Poly = struct
   type 'a t = 'a
   include Make1 (struct
-      type 'a t = 'a
-      let compare = Pervasives.compare
-      let sexp_of_t _ = Sexp.Atom ""
-    end)
+            type 'a t = 'a
+            let compare = Pervasives.compare
+            let sexp_of_t _ = Sexp.Atom ""
+          end)
 end

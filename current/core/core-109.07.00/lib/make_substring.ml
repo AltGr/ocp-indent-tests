@@ -153,9 +153,9 @@ module F (Base : Base) : S with type base = Base.t = struct
     let len = List.fold ts ~init:0 ~f:(fun len t -> len + length t) in
     let dst = create_dst len in
     ignore (List.fold ts ~init:0
-        ~f:(fun dst_pos t ->
-          blit_dst t ~dst ~dst_pos;
-          dst_pos + length t));
+              ~f:(fun dst_pos t ->
+                blit_dst t ~dst ~dst_pos;
+                dst_pos + length t));
     dst
   ;;
 

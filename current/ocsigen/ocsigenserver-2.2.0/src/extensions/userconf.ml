@@ -40,14 +40,14 @@ let err_500 =
 let handle_parsing_error req = function
   | Ocsigen_extensions.Error_in_config_file s ->
       Ocsigen_messages.errlog (Printf.sprintf
-            "Syntax error in userconf configuration file for url %s: %s"
-            req.request_info.ri_url_string s);
+          "Syntax error in userconf configuration file for url %s: %s"
+          req.request_info.ri_url_string s);
       Lwt.return err_500
 
   | Ocsigen_extensions.Error_in_user_config_file s ->
       Ocsigen_messages.errlog  (Printf.sprintf
-            "Unauthorized option in user configuration for url %s: %s"
-            req.request_info.ri_url_string s);
+          "Unauthorized option in user configuration for url %s: %s"
+          req.request_info.ri_url_string s);
       Lwt.return err_500
 
   | e -> Lwt.fail e

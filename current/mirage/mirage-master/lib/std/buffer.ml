@@ -150,7 +150,7 @@ let find_ident s start lim =
       let new_start = start + 1 in
       let stop = advance_to_closing c (closing c) 0 s new_start in
       String.sub s new_start (stop - start - 1), stop + 1
-      (* Regular ident *)
+    (* Regular ident *)
     | _ ->
       let stop = advance_to_non_alpha s (start + 1) in
       String.sub s start (stop - start), stop;;

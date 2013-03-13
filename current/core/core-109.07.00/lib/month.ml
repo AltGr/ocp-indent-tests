@@ -55,39 +55,39 @@ module Stable = struct
       | Dec -> 12
 
     include Bin_prot.Utils.Make_binable (struct
-        module Binable = Core_int
+              module Binable = Core_int
 
-        let to_binable t = to_int t - 1
-        let of_binable i = of_int_exn (i + 1)
+              let to_binable t = to_int t - 1
+              let of_binable i = of_int_exn (i + 1)
 
-        type z = t
-        type t = z
-      end)
+              type z = t
+              type t = z
+            end)
   end
 
   TEST_MODULE "Month.V1" = Stable_unit_test.Make(struct
-      include V1
-      let equal t1 t2 = Core_int.(=) 0 (compare t1 t2)
-      let tests =
-        let module V = Variantslib.Variant in
-        let c rank sexp bin_io tests variant =
-          assert (variant.V.rank = rank);
-          (variant.V.constructor, sexp, bin_io) :: tests
-        in
-        Variants.fold ~init:[]
-          ~jan:(c 0 "Jan" "\000")
-          ~feb:(c 1 "Feb" "\001")
-          ~mar:(c 2 "Mar" "\002")
-          ~apr:(c 3 "Apr" "\003")
-          ~may:(c 4 "May" "\004")
-          ~jun:(c 5 "Jun" "\005")
-          ~jul:(c 6 "Jul" "\006")
-          ~aug:(c 7 "Aug" "\007")
-          ~sep:(c 8 "Sep" "\008")
-          ~oct:(c 9 "Oct" "\009")
-          ~nov:(c 10 "Nov" "\010")
-          ~dec:(c 11 "Dec" "\011")
-    end)
+                             include V1
+                             let equal t1 t2 = Core_int.(=) 0 (compare t1 t2)
+                             let tests =
+                               let module V = Variantslib.Variant in
+                               let c rank sexp bin_io tests variant =
+                                 assert (variant.V.rank = rank);
+                                 (variant.V.constructor, sexp, bin_io) :: tests
+                               in
+                               Variants.fold ~init:[]
+                                 ~jan:(c 0 "Jan" "\000")
+                                 ~feb:(c 1 "Feb" "\001")
+                                 ~mar:(c 2 "Mar" "\002")
+                                 ~apr:(c 3 "Apr" "\003")
+                                 ~may:(c 4 "May" "\004")
+                                 ~jun:(c 5 "Jun" "\005")
+                                 ~jul:(c 6 "Jul" "\006")
+                                 ~aug:(c 7 "Aug" "\007")
+                                 ~sep:(c 8 "Sep" "\008")
+                                 ~oct:(c 9 "Oct" "\009")
+                                 ~nov:(c 10 "Nov" "\010")
+                                 ~dec:(c 11 "Dec" "\011")
+                           end)
 end
 
 module Hashtbl = Core_hashtbl
@@ -130,28 +130,28 @@ end
 include T
 
 include (Hashable.Make_binable (struct
-    include T
-  end) : Hashable.S_binable with type t := t)
+           include T
+         end) : Hashable.S_binable with type t := t)
 
 include Comparable.Make_binable (struct
-    include T
+          include T
 
-    (* In 108.06a and earlier, months in sexps of Maps and Sets were ints.  Here we override
-       [T.sexp_of_t], which uses the symbolic form, to produce the int form.  We also
-       override [t_of_sexp] to accept either form.  Someday, once we think most programs are
-       at or beyond 108.06a, and hence accept either form, we will eliminate the override of
-       [sexp_of_t] so that months in Maps and Sets are represented by the symbolic form.
-       Then, someday after that, once we believe most programs are beyond that point, we
-       will eliminate the override of [t_of_sexp], so that months in sexps of Maps and Sets
-       are required to use the symbolic format. *)
-    let sexp_of_t t = Int.sexp_of_t (to_int t - 1)
+          (* In 108.06a and earlier, months in sexps of Maps and Sets were ints.  Here we override
+             [T.sexp_of_t], which uses the symbolic form, to produce the int form.  We also
+             override [t_of_sexp] to accept either form.  Someday, once we think most programs are
+             at or beyond 108.06a, and hence accept either form, we will eliminate the override of
+             [sexp_of_t] so that months in Maps and Sets are represented by the symbolic form.
+             Then, someday after that, once we believe most programs are beyond that point, we
+             will eliminate the override of [t_of_sexp], so that months in sexps of Maps and Sets
+             are required to use the symbolic format. *)
+          let sexp_of_t t = Int.sexp_of_t (to_int t - 1)
 
-    let t_of_sexp sexp =
-      match Option.try_with (fun () -> Int.t_of_sexp sexp) with
-      | Some i -> of_int_exn (i + 1)
-      | None -> T.t_of_sexp sexp
-    ;;
-  end)
+          let t_of_sexp sexp =
+            match Option.try_with (fun () -> Int.t_of_sexp sexp) with
+            | Some i -> of_int_exn (i + 1)
+            | None -> T.t_of_sexp sexp
+          ;;
+        end)
 
 (* Replace the overriden sexp converters from [Comparable.Make_binable] with the ordinary
    symbolic converters. *)

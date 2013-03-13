@@ -80,7 +80,7 @@ module PSS = Pool_snapshot_summary
 
 let summarise_host_snapshot extra_guests host =
   let guests = host.HS.guests_resident @ host.HS.guests_scheduled @
-      extra_guests in
+               extra_guests in
   let sum host_value guest_value =
     (List.fold_left (++) host_value (List.map guest_value guests)) in
   { HSS.id = host.HS.id
@@ -101,8 +101,8 @@ let summarise_pool_snapshot extra_guests pool =
 (* === Generic list functions =============================================== *)
 
 (** Drops the first [n] elements from the given [list] and returns a new list
-   containing the remaining elements. @raise Invalid_argument if [n] is negative or
-   greater than the length of [list]. *)
+    containing the remaining elements. @raise Invalid_argument if [n] is negative or
+    greater than the length of [list]. *)
 let drop n list =
   if (n < 0 || n > (List.length list)) then raise (Invalid_argument "n");
   let rec drop n list =
@@ -111,8 +111,8 @@ let drop n list =
   drop n list
 
 (** Takes the first [n] elements from the given [list] and returns a new list
-   containing the taken elements. @raise Invalid_argument if [n] is negative or
-   greater than the length of [list]. *)
+    containing the taken elements. @raise Invalid_argument if [n] is negative or
+    greater than the length of [list]. *)
 let take n list =
   if (n < 0 || n > (List.length list)) then raise (Invalid_argument "n");
   let rec take n list acc =
@@ -121,8 +121,8 @@ let take n list =
   take n list []
 
 (** Takes the element at index [n] from the given [list] and returns a pair
-   containing the taken element and the remaining list. @raise Invalid_argument
-   if [n] is negative or greater than or equal to the length of [list].*)
+    containing the taken element and the remaining list. @raise Invalid_argument
+    if [n] is negative or greater than or equal to the length of [list].*)
 let take_nth n list =
   if (n < 0 || n >= (List.length list)) then raise (Invalid_argument "n");
   let rec take_nth n list1 list2 =
@@ -132,10 +132,10 @@ let take_nth n list =
   take_nth n [] list
 
 (** Evaluates the given function [generate_value], capable of generating a value
-   r in the range 0 ≤ r < 1, and linearly scales the result to generate an index i
-   into the given [list] where 0 ≤ i < [length list]. @raise Invalid_argument if
-   the [list] is empty or if the given [generate_value] function generates a value
-   r outside the range 0 ≤ r < 1. *)
+    r in the range 0 ≤ r < 1, and linearly scales the result to generate an index i
+    into the given [list] where 0 ≤ i < [length list]. @raise Invalid_argument if
+    the [list] is empty or if the given [generate_value] function generates a value
+    r outside the range 0 ≤ r < 1. *)
 let generate_list_index generate_value list =
   let length = List.length list in
   if (length = 0) then
@@ -146,10 +146,10 @@ let generate_list_index generate_value list =
   int_of_float (float_of_int length *. value)
 
 (** Evaluates the given function [generate_random_value], capable of generating
-   a random value r in the range 0 ≤ r < 1, and uses the result to select and take
-   a random element from the given [list]. Returns a pair containing the taken
-   element and the remaining list. @raise Invalid_argument if the [list] is empty
-   or if [generate_random_value] generates a value r outside the range 0 ≤ r < 1.*)
+    a random value r in the range 0 ≤ r < 1, and uses the result to select and take
+    a random element from the given [list]. Returns a pair containing the taken
+    element and the remaining list. @raise Invalid_argument if the [list] is empty
+    or if [generate_random_value] generates a value r outside the range 0 ≤ r < 1.*)
 let take_random_element_from_list generate_random_value list =
   let index = generate_list_index generate_random_value list in
   take_nth index list
@@ -168,17 +168,17 @@ let evaluate_sort_partition evaluate sort partition list =
 (* === Host categories======================================================= *)
 
 (** A host category defines a subset of hosts that match a set of criteria.
-   Each host category function acts as:
-   {ol
-   {- an indicator function for membership of the set, returning values:
-   {ul
-   {- ≥ 0 for hosts {i inside } the set.}
-   {- < 0 for hosts {i outside} the set.}}}
-   {- a valuation function to enable comparison between members of the set, where:
-   {ul
-   {- {i higher} values indicate {i more   } desirable hosts.}
-   {- {i lower } values indicate {i less   } desirable hosts.}
-   {- {i equal } values indicate {i equally} desirable hosts.}}}}
+    Each host category function acts as:
+    {ol
+    {- an indicator function for membership of the set, returning values:
+    {ul
+    {- ≥ 0 for hosts {i inside } the set.}
+    {- < 0 for hosts {i outside} the set.}}}
+    {- a valuation function to enable comparison between members of the set, where:
+    {ul
+    {- {i higher} values indicate {i more   } desirable hosts.}
+    {- {i lower } values indicate {i less   } desirable hosts.}
+    {- {i equal } values indicate {i equally} desirable hosts.}}}}
 *)
 type host_category = Host_snapshot_summary.t -> int64
 
@@ -186,21 +186,21 @@ type host_category = Host_snapshot_summary.t -> int64
 let compression_ratio_resolution = 1000L
 
 (** Transforms the given host category into a derived host category with bias
-   against the pool master. The derived category function assigns the pool master
-   a value v' = (v - 1) / 2, where v is the value assigned by the original category
-   function. *)
+    against the pool master. The derived category function assigns the pool master
+    a value v' = (v - 1) / 2, where v is the value assigned by the original category
+    function. *)
 let bias_away_from_pool_master : host_category -> host_category =
   fun host_category host ->
     let value = host_category host in
     if host.HSS.is_pool_master then (value --1L) // 2L else value
 
 (** The {b definite} host category. Includes:
-   {ul
-   {- hosts that don't need to compress their guests.}}
-   This function values each host according to:
-   {ul
-   {- slaves: (available_memory - Σ memory_static_max)}
-   {- master: (available_memory - Σ memory_static_max - 1) / 2}}
+    {ul
+    {- hosts that don't need to compress their guests.}}
+    This function values each host according to:
+    {ul
+    {- slaves: (available_memory - Σ memory_static_max)}
+    {- master: (available_memory - Σ memory_static_max - 1) / 2}}
 *)
 let definite_host_category : host_category =
   let unbiased_category host =
@@ -208,14 +208,14 @@ let definite_host_category : host_category =
   bias_away_from_pool_master unbiased_category
 
 (** The {b probable} host category. Includes the union of:
-   {ul
-   {- hosts that may need to compress their guests.}
-   {- hosts included in the {b definite} category.}
-   }
-   This function values each host according to:
-   {ul
-   {- slaves: (available_memory - Σ memory_dynamic_max)}
-   {- master: (available_memory - Σ memory_dynamic_max - 1) / 2}}
+    {ul
+    {- hosts that may need to compress their guests.}
+    {- hosts included in the {b definite} category.}
+    }
+    This function values each host according to:
+    {ul
+    {- slaves: (available_memory - Σ memory_dynamic_max)}
+    {- master: (available_memory - Σ memory_dynamic_max - 1) / 2}}
 *)
 let probable_host_category : host_category =
   let unbiased_category host =
@@ -223,12 +223,12 @@ let probable_host_category : host_category =
   bias_away_from_pool_master unbiased_category
 
 (** The {b possible} host category. Includes the union of:
-   {ul
-   {- hosts that do need to compress their guests.}
-   {- hosts included in the {b probable} category.}
-   }
-   This function values masters and slaves identically: in proportion to their
-   projected memory compression ratios. *)
+    {ul
+    {- hosts that do need to compress their guests.}
+    {- hosts included in the {b probable} category.}
+    }
+    This function values masters and slaves identically: in proportion to their
+    projected memory compression ratios. *)
 let possible_host_category : host_category =
   fun host ->
     let ceiling = compression_ratio_resolution in
@@ -247,12 +247,12 @@ let possible_host_category : host_category =
       (ceiling ** (available -- minimum)) // (maximum -- minimum)
 
 (** The {b affinity} host category. Includes the intersection of:
-   {ul
-   {- hosts with identifiers in the given host identifier list.}
-   {- hosts included in the {b possible} category.}
-   }
-   This function values masters and slaves identically: in proportion to their
-   projected memory compression ratios. *)
+    {ul
+    {- hosts with identifiers in the given host identifier list.}
+    {- hosts included in the {b possible} category.}
+    }
+    This function values masters and slaves identically: in proportion to their
+    projected memory compression ratios. *)
 let affinity_host_category affinity_host_ids : host_category =
   fun host ->
     if List.mem host.HSS.id affinity_host_ids
@@ -304,11 +304,11 @@ let select_host_from_summary pool affinity_host_ids
 (* === Random number generators ============================================= *)
 
 (** Generates random numbers within the range 0 ≤ r < 1 according to the
-   standard uniform random distribution. *)
+    standard uniform random distribution. *)
 let uniform_random_fn () = Random.float 1.
 
 (** Generates random numbers within the range 0 ≤ r < 1, biased towards 0 by
-   squaring the output of [uniform_random_fn]. *)
+    squaring the output of [uniform_random_fn]. *)
 let biased_random_fn () = let x = uniform_random_fn () in x *. x
 
 (** Generates zeros. *)

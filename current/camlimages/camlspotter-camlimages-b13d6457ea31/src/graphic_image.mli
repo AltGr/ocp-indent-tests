@@ -15,14 +15,14 @@
 (* $Id: graphic_image.mli,v 1.2 2009/02/08 15:00:49 weis Exp $ *)
 
 (** Interface of images from this library to images of the Caml
-   [Graphics] library. *)
+    [Graphics] library. *)
 
 val draw_image : Images.t -> int -> int -> unit;;
 (** Draw an [Images.t] value into the graphic window. *)
 
 val get_image : int -> int -> int -> int -> Rgb24.t
 (** [get_image x y w h] Capture the contents of a rectangle of the graphic
-   window with lower left corner at [x,y], width [w] and height [h] *)
+    window with lower left corner at [x,y], width [w] and height [h] *)
 
 (** lower interface *)
 

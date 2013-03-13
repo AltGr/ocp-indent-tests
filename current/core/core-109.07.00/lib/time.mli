@@ -105,7 +105,7 @@ val to_string_fix_proto : [`Utc | `Local] -> t -> string
 val of_string_fix_proto : [`Utc | `Local] -> string -> t
 
 (** [to_string_trimmed t] Same as to_string, but removes trailing seconds and
-   milliseconds if they are 0 *)
+    milliseconds if they are 0 *)
 val to_string_trimmed : t -> string
 
 (** [to_sec_string t] Same as to_string, but without milliseconds *)
@@ -116,7 +116,7 @@ val to_sec_string : t -> string
 val to_localized_string : t -> Zone.t -> string
 
 (** [of_localized_string zone str] read in the given string assuming that it represents
-   a time in zone and return the appropriate Time.t *)
+    a time in zone and return the appropriate Time.t *)
 val of_localized_string : Zone.t -> string -> t
 
 (** [to_string_deprecated] returns a string in the old format *)
@@ -149,7 +149,7 @@ val now : unit -> t
 val pause : Span.t -> unit
 
 (** [interruptible_pause span] sleeps for span time unless interrupted (e.g. by delivery
-   of a signal), in which case the remaining unslept portion of time is returned. *)
+    of a signal), in which case the remaining unslept portion of time is returned. *)
 val interruptible_pause : Span.t -> [`Ok | `Remaining of Span.t]
 
 (** [pause_forever] sleeps indefinitely. *)

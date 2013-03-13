@@ -57,7 +57,7 @@ val put : 'a t -> 'a -> unit Lwt.t
     block until it is emptied. *)
 
 val take : 'a t -> 'a Lwt.t
-(** [take mvar] will take any currently available value from the
-    mailbox variable. If no value is currently available, the
-    current thread will block, awaiting a value to be [put] by
-    another thread. *)
+    (** [take mvar] will take any currently available value from the
+        mailbox variable. If no value is currently available, the
+        current thread will block, awaiting a value to be [put] by
+        another thread. *)

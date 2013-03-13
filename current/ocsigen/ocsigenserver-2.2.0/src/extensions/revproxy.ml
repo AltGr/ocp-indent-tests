@@ -68,7 +68,7 @@ let gen dir = function
       Lwt.return Ocsigen_extensions.Ext_do_nothing
   | Ocsigen_extensions.Req_not_found (err, ri) ->
       catch
-      (* Is it a redirection? *)
+        (* Is it a redirection? *)
         (fun () ->
           Ocsigen_messages.debug2 "--Revproxy: Is it a redirection?";
           let dest =
@@ -102,18 +102,18 @@ let gen dir = function
                     in
                     (https, host, port, uri)
                 | _ -> raise (Ocsigen_extensions.Error_in_config_file
-                             ("Revproxy : error in destination URL "^dest))
-                         (*VVV catch only Neturl exceptions! *)
+                           ("Revproxy : error in destination URL "^dest))
+            (*VVV catch only Neturl exceptions! *)
             with e -> raise (Ocsigen_extensions.Error_in_config_file
-                            ("Revproxy : error in destination URL "^dest^" - "^
-                               Printexc.to_string e))
+                          ("Revproxy : error in destination URL "^dest^" - "^
+                           Printexc.to_string e))
           in
           let uri = "/"^uri in
           Ocsigen_messages.debug
             (fun () ->
               "--Revproxy: YES! Redirection to "^
-                (if https then "https://" else "http://")^host^":"^
-                (string_of_int port)^uri);
+              (if https then "https://" else "http://")^host^":"^
+              (string_of_int port)^uri);
 
           Ip_address.get_inet_addr host >>= fun inet_addr ->
 

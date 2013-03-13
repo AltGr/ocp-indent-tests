@@ -5,9 +5,9 @@ let clear_file file =
   Sys.file_exists file
   >>= fun exists ->
   begin match exists with
-    | `No      -> Deferred.unit
-    | `Unknown -> failwithf "unable to determine if %s exists" file ()
-    | `Yes     -> Unix.unlink file
+  | `No      -> Deferred.unit
+  | `Unknown -> failwithf "unable to determine if %s exists" file ()
+  | `Yes     -> Unix.unlink file
   end
 ;;
 

@@ -91,7 +91,7 @@ val replace_opt : name -> string option -> t -> t
 
 val find : name -> t -> string
 (** find one of the values bound to [name] in the HTTP header [t].
-   Raise [Not_found] if it is not bound.
+    Raise [Not_found] if it is not bound.
 *)
 
 val find_all : name -> t -> string list
@@ -103,7 +103,7 @@ val fold : (name -> string list -> 'a -> 'a) -> t -> 'a -> 'a
 
 val with_defaults : t -> t -> t
 (** [with_defaults h1 h2] adds headers from [h1] to [h2].
-   If some headers were present, the are replaced by those from [h1].
+    If some headers were present, the are replaced by those from [h1].
 *)
 
 

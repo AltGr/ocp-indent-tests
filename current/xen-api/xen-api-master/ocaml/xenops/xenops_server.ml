@@ -1279,15 +1279,15 @@ and perform ?subtask (op: operation) (t: Xenops_task.t) : unit =
       let atomics = [
         VM_hook_script(id, Xenops_hooks.VM_pre_destroy, Xenops_hooks.reason__suspend);
       ] @ (atomics_of_operation (VM_shutdown (id, None))) @ [
-          VM_hook_script(id, Xenops_hooks.VM_post_destroy, Xenops_hooks.reason__suspend);
-        ] in
+                      VM_hook_script(id, Xenops_hooks.VM_post_destroy, Xenops_hooks.reason__suspend);
+                    ] in
       perform_atomics atomics t;
       VM_DB.signal id
     | VM_receive_memory (id, memory_limit, s) ->
       debug "VM.receive_memory %s" id;
       let open Xenops_migrate in
       (*      let state = B.VM.get_state (VM_DB.read_exn id) in
-            debug "VM.receive_memory %s power_state = %s" id (state.Vm.power_state |> rpc_of_power_state |> Jsonrpc.to_string);*)
+              debug "VM.receive_memory %s power_state = %s" id (state.Vm.power_state |> rpc_of_power_state |> Jsonrpc.to_string);*)
 
       (try
         Handshake.send s Handshake.Success
@@ -1312,17 +1312,17 @@ and perform ?subtask (op: operation) (t: Xenops_task.t) : unit =
 
         perform_atomics ([
         ] @ (atomics_of_operation (VM_restore_devices id)) @ [
-            VM_unpause id;
-            VM_set_domain_action_request(id, None)
-          ]) t;
+                           VM_unpause id;
+                           VM_set_domain_action_request(id, None)
+                         ]) t;
 
         Handshake.send s Handshake.Success;
         debug "Synchronisation point 4";
       with e ->
         debug "Caught %s: cleaning up VM state" (Printexc.to_string e);
         perform_atomics (atomics_of_operation (VM_shutdown (id, None)) @ [
-            VM_remove id
-          ]) t;
+                           VM_remove id
+                         ]) t;
         Handshake.send s (Handshake.Error (Printexc.to_string e))
       end
     | VM_check_state id ->

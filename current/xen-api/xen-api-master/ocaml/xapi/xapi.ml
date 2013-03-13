@@ -344,7 +344,7 @@ let bring_up_management_if ~__context () =
     debug "Caught exception bringing up management interface: %s" (ExnHelper.string_of_exn e)
 
 (** Assuming a management interface is defined, return the IP address. Note this
-   call may block for a long time. *)
+    call may block for a long time. *)
 let wait_for_management_ip_address ~__context =
   debug "Attempting to acquire a management IP address";
   Xapi_host.set_emergency_mode_error Api_errors.host_has_no_management_ip [];
@@ -749,8 +749,8 @@ let server_init() =
                     let (name, priority) = Api_messages.auth_external_init_failed in
                     Client.Client.Message.create ~rpc ~session_id ~name ~priority ~cls:`Host ~obj_uuid ~body:(
                       "host_external_auth_type="^auth_type^
-                        ", host_external_auth_service_name="^service_name^
-                        ", error="^ (match !last_error with None -> "timeout" | Some e ->
+                      ", host_external_auth_service_name="^service_name^
+                      ", error="^ (match !last_error with None -> "timeout" | Some e ->
                         (match e with 
                          | Auth_signature.Auth_service_error (errtag,errmsg) -> errmsg (* this is the expected error msg *)
                          | e ->  (ExnHelper.string_of_exn e) (* unknown error msg *)

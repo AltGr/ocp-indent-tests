@@ -42,7 +42,7 @@ type t =
   {
 
     (* subject_id Authenticate_username_password(string username, string password)
-       
+
        Takes a username and password, and tries to authenticate against an already configured 
        auth service (see XenAPI requirements Wiki page for details of how auth service configuration 
        takes place and the appropriate vlaues are stored within the XenServer Metadata). 
@@ -54,13 +54,13 @@ type t =
     authenticate_username_password : string -> string -> string;
 
     (* subject_id Authenticate_ticket(string ticket)
-       
+
        As above but uses a ticket as credentials (i.e. for single sign-on)
     *)
     authenticate_ticket : string -> string;
 
     (* subject_id get_subject_identifier(string subject_name)
-       
+
        Takes a subject_name (as may be entered into the XenCenter UI when defining subjects -- 
        see Access Control wiki page); and resolves it to a subject_id against the external 
        auth/directory service. 
@@ -69,7 +69,7 @@ type t =
     get_subject_identifier : string -> string;
 
     (* ((string*string) list) query_subject_information(string subject_identifier)
-       
+
        Takes a subject_identifier and returns the user record from the directory service as 
        key/value pairs. In the returned string*string map, there _must_ be a key called 
        subject_name that refers to the name of the account (e.g. the user or group name as may 
@@ -81,7 +81,7 @@ type t =
     query_subject_information : string -> ((string*string) list);
 
     (* (string list) query_group_membership(string subject_identifier)
-       
+
        Takes a subject_identifier and returns its group membership (i.e. a list of subject 
        identifiers of the groups that the subject passed in belongs to). The set of groups returned 
        _must_ be transitively closed wrt the is_member_of relation if the external directory service 
@@ -94,7 +94,7 @@ type t =
       *)
 
     (* unit on_enable(((string*string) list) config_params)
-       
+
        Called internally by xapi _on each host_ when a client enables an external auth service for the 
        pool via the XenAPI [see AD integration wiki page]. The config_params here are the ones passed 
        by the client as part of the corresponding XenAPI call.
@@ -110,7 +110,7 @@ type t =
     on_enable : ((string*string) list) -> unit;
 
     (* unit on_disable()
-       
+
        Called internally by xapi _on each host_ when a client disables an auth service via the XenAPI. 
        The hook will be called _before_ the Pool configuration fields relating to the external-auth 
        service are cleared (i.e. so you can access the config params you need from the pool metadata 
@@ -119,14 +119,14 @@ type t =
     on_disable : ((string*string) list) -> unit;
 
     (* unit on_xapi_initialize(bool system_boot)
-       
+
        Called internally by xapi whenever it starts up. The system_boot flag is true iff xapi is 
        starting for the first time after a host boot
     *)
     on_xapi_initialize : bool -> unit;
 
     (* unit on_xapi_exit()
-       
+
        Called internally when xapi is doing a clean exit.
     *)
     on_xapi_exit : unit -> unit;

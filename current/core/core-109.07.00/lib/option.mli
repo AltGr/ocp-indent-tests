@@ -3,13 +3,13 @@
 
 (** Options are preferred over exceptions.  For example, use
     {[
-    let data = [(2, "two"); (5, "five"); (8, "eight")];;
-    let f x = match List.Assoc.find_opt x data with
-    | Some y -> y
-    | None -> "zero" (* where "zero" is some default value *);; ]}
+      let data = [(2, "two"); (5, "five"); (8, "eight")];;
+      let f x = match List.Assoc.find_opt x data with
+      | Some y -> y
+      | None -> "zero" (* where "zero" is some default value *);; ]}
     rather than
     {[
-    let f x = try List.Assoc.find x data with Not_found -> "zero";; ]}
+      let f x = try List.Assoc.find x data with Not_found -> "zero";; ]}
     In this case using an exception is shorter, but in nontrivial code options
     are easier to understand. *)
 type 'a t = 'a option with sexp
@@ -29,8 +29,8 @@ val is_some : 'a t -> bool
 (** [value_map t ~f ~default] is equivalent to [value (map t ~f) ~default], except that
     it is slightly faster since it avoids creating the intermediate option.  I.e.
 
-      [value_map None     ~default ~f] = [default]
-      [value_map (Some x) ~default ~f] = [f x] *)
+    [value_map None     ~default ~f] = [default]
+    [value_map (Some x) ~default ~f] = [f x] *)
 val value_map : 'a t -> default:'b -> f:('a -> 'b) -> 'b
 
 (** [map2 o f] map 'a option and 'b option to a 'c option using ~f *)

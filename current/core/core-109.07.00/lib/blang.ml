@@ -47,14 +47,14 @@ end = struct
 
   let invariant =
     let subterms = function
-      | True | False | Base _      -> []
-      | Not t1                     -> [t1]
-      | And (t1, t2) | Or (t1, t2) -> [t1; t2]
-      | If (t1, t2, t3)            -> [t1; t2; t3]
+    | True | False | Base _      -> []
+    | Not t1                     -> [t1]
+    | And (t1, t2) | Or (t1, t2) -> [t1; t2]
+    | If (t1, t2, t3)            -> [t1; t2; t3]
     in
     let rec contains_no_constants = function
-      | True | False -> assert false
-      | t -> List.iter ~f:contains_no_constants (subterms t)
+    | True | False -> assert false
+    | t -> List.iter ~f:contains_no_constants (subterms t)
     in
     fun t ->
       List.iter ~f:contains_no_constants (subterms t)
@@ -64,9 +64,9 @@ end = struct
   let base v = Base v
 
   let not_ = function
-    | True -> False
-    | False -> True
-    | t -> Not t
+  | True -> False
+  | False -> True
+  | t -> Not t
 
   let andalso t1 t2 =
     match (t1, t2) with
@@ -136,36 +136,36 @@ module Stable = struct
     (* flatten out nested and's *)
     let gather_conjuncts t =
       let rec loop acc = function
-        | True         :: ts -> loop acc ts
-        | And (t1, t2) :: ts -> loop acc (t1 :: t2 :: ts)
-        | t            :: ts -> loop (t :: acc) ts
-        | []                 -> List.rev acc
+      | True         :: ts -> loop acc ts
+      | And (t1, t2) :: ts -> loop acc (t1 :: t2 :: ts)
+      | t            :: ts -> loop (t :: acc) ts
+      | []                 -> List.rev acc
       in
       loop [] [t]
 
     (* flatten out nested or's *)
     let gather_disjuncts t =
       let rec loop acc = function
-        | False       :: ts -> loop acc ts
-        | Or (t1, t2) :: ts -> loop acc (t1 :: t2 :: ts)
-        | t           :: ts -> loop (t :: acc) ts
-        | []                -> List.rev acc
+      | False       :: ts -> loop acc ts
+      | Or (t1, t2) :: ts -> loop acc (t1 :: t2 :: ts)
+      | t           :: ts -> loop (t :: acc) ts
+      | []                -> List.rev acc
       in
       loop [] [t]
 
     let and_ ts =
       let rec loop acc = function
-        | [] -> acc
-        | False :: _ -> false_ (* short circuit evaluation *)
-        | t :: ts -> loop (andalso acc t) ts
+      | [] -> acc
+      | False :: _ -> false_ (* short circuit evaluation *)
+      | t :: ts -> loop (andalso acc t) ts
       in
       loop true_ ts
 
     let or_ ts =
       let rec loop acc = function
-        | [] -> acc
-        | True :: _ -> true_ (* short circuit evaluation *)
-        | t :: ts -> loop (orelse acc t) ts
+      | [] -> acc
+      | True :: _ -> true_ (* short circuit evaluation *)
+      | t :: ts -> loop (orelse acc t) ts
       in
       loop false_ ts
 
@@ -226,29 +226,29 @@ module Stable = struct
   end
 
   TEST_MODULE "Blang.V1" = Stable_unit_test.Make (struct
-      type t = string V1.t with sexp, bin_io
+                             type t = string V1.t with sexp, bin_io
 
-      open V1
+                             open V1
 
-      let equal = Pervasives.(=)
+                             let equal = Pervasives.(=)
 
-      let test_blang =
-        (if_ (base "foo")
-           (not_ (or_  [(base "bara"); (base "barb")]))
-           (not_ (and_ [(base "baza"); (base "bazb")])))
+                             let test_blang =
+                               (if_ (base "foo")
+                                  (not_ (or_  [(base "bara"); (base "barb")]))
+                                  (not_ (and_ [(base "baza"); (base "bazb")])))
 
-      let test_sexp = "(if foo (not (or bara barb)) (not (and baza bazb)))"
-      let test_bin =
-        "\005\006\003foo\
-         \004\003\006\004bara\006\004barb\
-         \004\002\006\004baza\006\004bazb"
+                             let test_sexp = "(if foo (not (or bara barb)) (not (and baza bazb)))"
+                             let test_bin =
+                               "\005\006\003foo\
+                                \004\003\006\004bara\006\004barb\
+                                \004\002\006\004baza\006\004bazb"
 
-      let tests =
-        [ test_blang, test_sexp, test_bin
-        ; true_, "true", "\000"
-        ; false_, "false", "\001"
-        ]
-    end)
+                             let tests =
+                               [ test_blang, test_sexp, test_bin
+                               ; true_, "true", "\000"
+                               ; false_, "false", "\001"
+                               ]
+                           end)
 end
 
 include (Stable.V1 : module type of Stable.V1 with type 'a t := private 'a t)
@@ -310,21 +310,21 @@ end
 let constant b = if b then true_ else false_
 
 let constant_value = function
-  | True -> Some true
-  | False -> Some false
-  | _ -> None
+| True -> Some true
+| False -> Some false
+| _ -> None
 
 (* [values t] lists the base predicates in [t] from left to right *)
 let values t =
   let rec loop acc = function
-    | Base v          :: ts -> loop (v :: acc) ts
-    | True            :: ts -> loop acc ts
-    | False           :: ts -> loop acc ts
-    | Not t1          :: ts -> loop acc (t1 :: ts)
-    | And (t1, t2)    :: ts -> loop acc (t1 :: t2 :: ts)
-    | Or (t1, t2)     :: ts -> loop acc (t1 :: t2 :: ts)
-    | If (t1, t2, t3) :: ts -> loop acc (t1 :: t2 :: t3 :: ts)
-    | []                    -> List.rev acc
+  | Base v          :: ts -> loop (v :: acc) ts
+  | True            :: ts -> loop acc ts
+  | False           :: ts -> loop acc ts
+  | Not t1          :: ts -> loop acc (t1 :: ts)
+  | And (t1, t2)    :: ts -> loop acc (t1 :: t2 :: ts)
+  | Or (t1, t2)     :: ts -> loop acc (t1 :: t2 :: ts)
+  | If (t1, t2, t3) :: ts -> loop acc (t1 :: t2 :: t3 :: ts)
+  | []                    -> List.rev acc
   in
   loop [] [t]
 
@@ -367,47 +367,47 @@ TEST =
     [base 1; base 2; base 3; and_ [base 4; base 5]; base 6; base 7]
 
 include Container.Make (struct
-    type 'a t = 'a T.t
-    let fold t ~init ~f =
-      let rec loop acc t pending =
-        match t with
-        | Base a -> next (f acc a) pending
-        | True | False -> next acc pending
-        | Not t -> loop acc t pending
-        | And (t1, t2) | Or (t1, t2) -> loop acc t1 (t2 :: pending)
-        | If (t1, t2, t3) -> loop acc t1 (t2 :: t3 :: pending)
-      and next acc = function
-        | [] -> acc
-        | t :: ts -> loop acc t ts
-      in
-      loop init t []
-  end)
+          type 'a t = 'a T.t
+          let fold t ~init ~f =
+            let rec loop acc t pending =
+              match t with
+              | Base a -> next (f acc a) pending
+              | True | False -> next acc pending
+              | Not t -> loop acc t pending
+              | And (t1, t2) | Or (t1, t2) -> loop acc t1 (t2 :: pending)
+              | If (t1, t2, t3) -> loop acc t1 (t2 :: t3 :: pending)
+            and next acc = function
+            | [] -> acc
+            | t :: ts -> loop acc t ts
+            in
+            loop init t []
+        end)
 
 include (Monad.Make (struct
-    type 'a t = 'a T.t
-    let return = base
-    let rec bind t k =
-      match t with
-      | Base v -> k v
-      | True -> true_
-      | False -> false_
-      | Not t1 -> not_ (bind t1 k)
-      | And (t1, t2) -> andalso (bind t1 k) (bind t2 k)
-      | Or (t1, t2) -> orelse (bind t1 k) (bind t2 k)
-      | If (t1, t2, t3) -> if_ (bind t1 k) (bind t2 k) (bind t3 k)
-  end) : Monad.S with type 'a t := 'a t)
+           type 'a t = 'a T.t
+           let return = base
+           let rec bind t k =
+             match t with
+             | Base v -> k v
+             | True -> true_
+             | False -> false_
+             | Not t1 -> not_ (bind t1 k)
+             | And (t1, t2) -> andalso (bind t1 k) (bind t2 k)
+             | Or (t1, t2) -> orelse (bind t1 k) (bind t2 k)
+             | If (t1, t2, t3) -> if_ (bind t1 k) (bind t2 k) (bind t3 k)
+         end) : Monad.S with type 'a t := 'a t)
 
 (* semantics *)
 
 let eval t base_eval =
   let rec eval = function
-    | True -> true
-    | False -> false
-    | And (t1, t2) -> eval t1 && eval t2
-    | Or (t1, t2) -> eval t1 || eval t2
-    | Not t -> not (eval t)
-    | If (t1, t2, t3) -> if eval t1 then eval t2 else eval t3
-    | Base x -> base_eval x
+  | True -> true
+  | False -> false
+  | And (t1, t2) -> eval t1 && eval t2
+  | Or (t1, t2) -> eval t1 || eval t2
+  | Not t -> not (eval t)
+  | If (t1, t2, t3) -> if eval t1 then eval t2 else eval t3
+  | Base x -> base_eval x
   in
   eval t
 

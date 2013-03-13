@@ -15,10 +15,10 @@
 
 (** MD5 message digest.
 
-   This module provides functions to compute 128-bit ``digests'' of
-   arbitrary-length strings or files. The digests are of cryptographic
-   quality: it is very hard, given a digest, to forge a string having
-   that digest. The algorithm used is MD5.
+    This module provides functions to compute 128-bit ``digests'' of
+    arbitrary-length strings or files. The digests are of cryptographic
+    quality: it is very hard, given a digest, to forge a string having
+    that digest. The algorithm used is MD5.
 *)
 
 type t = string
@@ -29,11 +29,11 @@ val string : string -> t
 
 val substring : string -> int -> int -> t
 (** [Digest.substring s ofs len] returns the digest of the substring
-   of [s] starting at character number [ofs] and containing [len]
-   characters. *)
+    of [s] starting at character number [ofs] and containing [len]
+    characters. *)
 
 val file : string -> t
 (** Return the digest of the file whose name is given. *)
 
 val to_hex : t -> string
-(** Return the printable hexadecimal representation of the given digest. *)
+  (** Return the printable hexadecimal representation of the given digest. *)

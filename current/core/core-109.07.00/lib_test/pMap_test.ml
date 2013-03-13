@@ -11,40 +11,40 @@ let test =
     [ "merge1" >::
         (fun () ->
           let f ~key:_ = function
-            | `Left _ | `Right _ -> None
-            | `Both (x, y) -> Some (x+y)
+          | `Left _ | `Right _ -> None
+          | `Both (x, y) -> Some (x+y)
           in
           "eq1" @? Map.equal (=) (Map.merge ~f m1 m2)
-              (Map.of_alist_exn ["a",2;"c",0;"d",8;]);
+                     (Map.of_alist_exn ["a",2;"c",0;"d",8;]);
           "eq2" @? Map.equal (=) (Map.merge ~f m2 m1)
-              (Map.of_alist_exn ["a",2;"c",0;"d",8;]);
+                     (Map.of_alist_exn ["a",2;"c",0;"d",8;]);
         );
       "merge2" >::
         (fun () ->
           let f ~key:_ = function
-            | `Left x -> Some x
-            | `Right _ -> None
-            | `Both (x, y) -> Some (x+y)
+          | `Left x -> Some x
+          | `Right _ -> None
+          | `Both (x, y) -> Some (x+y)
           in
           "eq" @? Map.equal (=) (Map.merge ~f m1 m2)
-              (Map.of_alist_exn ["a",2;"b",2;"c",0;"d",8;])
+                    (Map.of_alist_exn ["a",2;"b",2;"c",0;"d",8;])
         );
       "merge3" >::
         (fun () ->
           let f ~key:_ = function
-            | `Left x | `Right x -> Some x
-            | `Both (x, y) -> Some (x+y)
+          | `Left x | `Right x -> Some x
+          | `Both (x, y) -> Some (x+y)
           in
           "eq1" @? Map.equal (=) (Map.merge ~f m1 m2)
-              (Map.of_alist_exn ["a",2;"b",2;"c",0;"d",8;"e",5]);
+                     (Map.of_alist_exn ["a",2;"b",2;"c",0;"d",8;"e",5]);
           "eq2" @? Map.equal (=) (Map.merge ~f m2 m1)
-              (Map.of_alist_exn ["a",2;"b",2;"c",0;"d",8;"e",5])
+                     (Map.of_alist_exn ["a",2;"b",2;"c",0;"d",8;"e",5])
         );
       "merge3" >::
         (fun () ->
           let f ~key:_ = function
-            | `Left x | `Right x -> Some x
-            | `Both (x, y) -> Some (x+y)
+          | `Left x | `Right x -> Some x
+          | `Both (x, y) -> Some (x+y)
           in
           "eq1" @? Map.equal (=) (Map.merge ~f m1 Map.empty) m1;
           "eq2" @? Map.equal (=) (Map.merge ~f Map.empty m1) m1;
@@ -68,9 +68,9 @@ let test =
           "1" @? (Map.find_exn m "a" = 1 && Map.find_exn m "d" = 4);
           let a_dup = ["a",1;"b",2;"c",3;"b",4; "e", 5] in
           "2" @?
-            (match Map.of_alist a_dup with `Ok _ -> false | `Duplicate_key x -> x = "b");
+          (match Map.of_alist a_dup with `Ok _ -> false | `Duplicate_key x -> x = "b");
           "3" @?
-            (Map.to_alist (Map.of_alist_exn a) = List.sort ~cmp:ascending a);
+          (Map.to_alist (Map.of_alist_exn a) = List.sort ~cmp:ascending a);
           (try ignore (Map.of_alist_exn a_dup); assert false with _ -> ())
         );
       "for_all/exists" >:: (fun () ->

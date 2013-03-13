@@ -68,8 +68,8 @@ let transition state =
   let rec split (all,t) ((c0 : Cset.t),n0) = 
     let t = 
       [(Cset.difference c0 all, [n0])] @
-        List.map (fun (c,ns) -> (Cset.intersection c c0, n0::ns)) t @
-        List.map (fun (c,ns) -> (Cset.difference c c0, ns)) t in
+      List.map (fun (c,ns) -> (Cset.intersection c c0, n0::ns)) t @
+      List.map (fun (c,ns) -> (Cset.difference c c0, ns)) t in
     (Cset.union all c0,
      List.filter (fun (c,ns) -> not (Cset.is_empty c)) t) in
 

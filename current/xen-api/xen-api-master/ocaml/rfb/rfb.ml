@@ -195,8 +195,8 @@ module PixelFormat = struct
     let green_shift = String.make 1 (char_of_int x.green_shift) in
     let blue_shift = String.make 1 (char_of_int x.blue_shift) in
     bpp ^ depth ^ big_endian ^ true_colour ^ 
-      red_max ^ green_max ^ blue_max ^ red_shift ^ green_shift ^ blue_shift ^
-      "   " (* padding *)
+    red_max ^ green_max ^ blue_max ^ red_shift ^ green_shift ^ blue_shift ^
+    "   " (* padding *)
   let unmarshal (s: Unix.file_descr) =
     let buf = really_read s 16 in
     { bpp = int_of_char buf.[0];
@@ -356,7 +356,7 @@ module SetColourMapEntries = struct
     let colour (r, g, b) = 
       UInt16.marshal r ^ (UInt16.marshal g) ^ (UInt16.marshal b) in
     "\001\000" ^ first_colour ^ length ^ 
-      (String.concat "" (List.map colour x.map))
+    (String.concat "" (List.map colour x.map))
 end
 
 module KeyEvent = struct

@@ -16,24 +16,24 @@
 *)
 
 (** The general plan:
-   + Walk around the database and select the objects you want (see 'create_table')
+    + Walk around the database and select the objects you want (see 'create_table')
      and make a table mapping internal ref -> fresh external references. It would
      be nice to generate a visitor thingimy for this.  
-   + Select all the objects from each class, filter the subset you want (ie those whose
+    + Select all the objects from each class, filter the subset you want (ie those whose
      reference exists as a key in the table) and convert them into instances of the 
      intermediate record 'type obj' via the functions make_{vm,sr,vbd,vif,network}.
-     The created 'obj record' includes the class name as a string (from the datamodel), 
-     the fresh reference and the output of 'get_record' marshalled using the standard 
-     XMLRPC functions with all the references converted either to the fresh external refs
-     or NULL (so we aim not to export dangling pointers)
-   + Write out one big XML file containing an XMLRPC struct which has keys:
-     version -> a structure of system version info (API versions, internal build numbers)
-     state -> an XMLRPC array of XMLRPC serialised 'obj' records (see 'xmlrpc_of_obj')
-*)
+                                                           The created 'obj record' includes the class name as a string (from the datamodel), 
+                                                           the fresh reference and the output of 'get_record' marshalled using the standard 
+                                                           XMLRPC functions with all the references converted either to the fresh external refs
+                                                           or NULL (so we aim not to export dangling pointers)
+                                                           + Write out one big XML file containing an XMLRPC struct which has keys:
+                                                           version -> a structure of system version info (API versions, internal build numbers)
+                                                           state -> an XMLRPC array of XMLRPC serialised 'obj' records (see 'xmlrpc_of_obj')
+                                                           *)
 
 (** The specific plan for VM export:
-   Walk over the datamodel and mark VIFs, Networks connected to the VIFs, VBDs, VDIs connected
-   to the VBDs, SRs connected to the VDIs (and maybe a suspend image?). *)
+    Walk over the datamodel and mark VIFs, Networks connected to the VIFs, VBDs, VDIs connected
+    to the VBDs, SRs connected to the VDIs (and maybe a suspend image?). *)
 
 open Importexport
 open Pervasiveext
@@ -467,10 +467,10 @@ let metadata_handler (req: Request.t) s _ =
 
       let task_id = Ref.string_of (Context.get_task_id __context) in
       let headers = Http.http_200_ok ~keep_alive:false ~version:"1.0" () @
-          [ Http.Hdr.task_id ^ ": " ^ task_id;
-            "Server: "^Xapi_globs.xapi_user_agent;
-            content_type;
-            "Content-Disposition: attachment; filename=\"export.xva\""] in
+                    [ Http.Hdr.task_id ^ ": " ^ task_id;
+                      "Server: "^Xapi_globs.xapi_user_agent;
+                      content_type;
+                      "Content-Disposition: attachment; filename=\"export.xva\""] in
 
       Http_svr.headers s headers;
 
@@ -551,10 +551,10 @@ let handler (req: Request.t) s _ =
                   let all = req.Request.cookie @ req.Request.query in
                   List.mem_assoc "preserve_power_state" all && bool_of_string (List.assoc "preserve_power_state" all) in
                 let headers = Http.http_200_ok ~keep_alive:false ~version:"1.0" () @
-                    [ Http.Hdr.task_id ^ ": " ^ task_id;
-                      "Server: "^Xapi_globs.xapi_user_agent;
-                      content_type;
-                      "Content-Disposition: attachment; filename=\"export.xva\""] in
+                              [ Http.Hdr.task_id ^ ": " ^ task_id;
+                                "Server: "^Xapi_globs.xapi_user_agent;
+                                content_type;
+                                "Content-Disposition: attachment; filename=\"export.xva\""] in
 
                 with_vm_locked ~__context ~vm:vm_ref ~task_id `export
                   (fun () -> 

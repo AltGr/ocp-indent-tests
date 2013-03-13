@@ -149,5 +149,5 @@ let tick t (i:action) =
     | x, _ -> x
   in
   t.state <- tstr t.state i
-(* ;  printf "%s\n%!" (to_string t) *)
+    (* ;  printf "%s\n%!" (to_string t) *)
 

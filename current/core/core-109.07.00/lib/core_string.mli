@@ -92,11 +92,11 @@ val lsplit2_exn : t -> on:char -> t * t
 val rsplit2_exn : t -> on:char -> t * t
 
 (** [lsplit2 line ~on] optionally returns [line] split into two strings around the
-  * first appearance of [on] from the left *)
+ * first appearance of [on] from the left *)
 val lsplit2 : t -> on:char -> (t * t) option
 
 (** [rsplit2 line ~on] optionally returns [line] split into two strings around the
-  * first appearance of [on] from the right *)
+ * first appearance of [on] from the right *)
 val rsplit2 : t -> on:char -> (t * t) option
 
 (** [split s ~on] @return a list of substrings of [s] that are separated by
@@ -243,9 +243,9 @@ module Escaping : sig
 
   (** [unescape_gen_exn] is the inverse operation of [escape_gen_exn]. That is,
       {[
-      let escape = Staged.unstage (escape_gen_exn ~escapeworthy_map ~escape_char) in
-      let unescape = Staged.unstage (unescape_gen_exn ~escapeworthy_map ~escape_char) in
-      assert (s = unescape (escape s))
+        let escape = Staged.unstage (escape_gen_exn ~escapeworthy_map ~escape_char) in
+        let unescape = Staged.unstage (unescape_gen_exn ~escapeworthy_map ~escape_char) in
+        assert (s = unescape (escape s))
       ]}
       always succeed when ~escapeworthy_map is not causing exceptions. *)
   val unescape_gen_exn

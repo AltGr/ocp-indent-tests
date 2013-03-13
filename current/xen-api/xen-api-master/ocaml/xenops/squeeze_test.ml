@@ -12,16 +12,16 @@
  * GNU Lesser General Public License for more details.
  *)
 (**
-   Simulation environment and set of unit tests for the domain memory balancer.
+  Simulation environment and set of unit tests for the domain memory balancer.
 *)
 
 open Pervasiveext
 open Squeeze
 
 (**
-   Computes the memory_actual delta for a VM assuming the balloon driver
-   responds at a given speed. Warning: make sure the balloon_rate * time_passed
-   is > 0 when rounded to an integer.
+  Computes the memory_actual delta for a VM assuming the balloon driver
+  responds at a given speed. Warning: make sure the balloon_rate * time_passed
+  is > 0 when rounded to an integer.
 *)
 let compute_memory_actual_delta domain rate time =
   let max_change = Int64.of_float (time *. (Int64.to_float rate)) in
@@ -57,15 +57,15 @@ class virtual vm initial_domain = object (self)
     domain <- { domain with memory_max_kib = new_max_kib }
 
   (**
-     Given a number of time units since the last call to 'update',
-     compute the expected change in memory_actual. Note that this
-     might be unfulfilled if the host is low on memory.
+    Given a number of time units since the last call to 'update',
+    compute the expected change in memory_actual. Note that this
+    might be unfulfilled if the host is low on memory.
   *)
   method virtual compute_memory_actual_delta : float -> int64
 
   (**
-     Called by the simulator to update memory_actual. It also returns
-     memory_actual so the host free memory total can be updated.
+    Called by the simulator to update memory_actual. It also returns
+    memory_actual so the host free memory total can be updated.
   *)
   method update host_free_mem time = 
     let time_passed = time -. time_of_last_update in
@@ -91,8 +91,8 @@ class idealised_vm initial_domain balloon_rate_kib_per_unit_time = object
 end
 
 (**
-   Represents a VM whose balloon driver responds at a certain speed but which
-   has a minimum limit
+  Represents a VM whose balloon driver responds at a certain speed but which
+  has a minimum limit
 *)
 class idealised_vm_with_limit
     initial_domain balloon_rate_kib_per_unit_time minimum_memory = object
@@ -137,8 +137,8 @@ class stuck_vm initial_domain = object
 end
 
 (**
-   Represents a VM whose balloon driver moves at a constant rate
-   but gets stuck for 'interval' seconds every 'interval' seconds
+  Represents a VM whose balloon driver moves at a constant rate
+  but gets stuck for 'interval' seconds every 'interval' seconds
 *)
 class intermittently_stuck_vm
     initial_domain balloon_rate_kib_per_unit_time interval = object

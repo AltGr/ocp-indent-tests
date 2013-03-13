@@ -152,9 +152,9 @@ end
 let sexp_of_int_style : [ `Underscores | `No_underscores ] ref = ref `No_underscores
 
 module Make (I : sig
-      type t
-      val to_string : t -> string
-    end) = struct
+           type t
+           val to_string : t -> string
+         end) = struct
 
   let to_string_hum ?(delimiter='_') t = insert_delimiter (I.to_string t) ~delimiter
 
@@ -162,7 +162,7 @@ module Make (I : sig
     let s = I.to_string t in
     Sexplib.Sexp.Atom
       (match !sexp_of_int_style with
-       | `Underscores -> insert_underscores s
-       | `No_underscores -> s)
+      | `Underscores -> insert_underscores s
+      | `No_underscores -> s)
   ;;
 end

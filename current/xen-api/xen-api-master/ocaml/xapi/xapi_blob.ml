@@ -129,7 +129,7 @@ let handler (req: Http.Request.t) s _ =
               let size = (Unix.LargeFile.stat path).Unix.LargeFile.st_size in
               Http_svr.headers s ((Http.http_200_ok_with_content 
                   size ~version:"1.1" ~keep_alive:false ()) 
-                @ [Http.Hdr.content_type ^": "^(Db.Blob.get_mime_type ~__context ~self)]);
+                                  @ [Http.Hdr.content_type ^": "^(Db.Blob.get_mime_type ~__context ~self)]);
               ignore(Pervasiveext.finally 
                   (fun () -> Unixext.copy_file ifd s) 
                   (fun () -> Unix.close ifd))

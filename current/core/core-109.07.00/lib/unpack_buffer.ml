@@ -148,7 +148,7 @@ let ensure_available t len =
 ;;
 
 let feed_gen buf_length (blit_buf_to_bigstring : (_, _) Bigstring.blit)
-    ?pos ?len t buf =
+      ?pos ?len t buf =
   if !debug then invariant t;
   match t.state with
   | Dead e -> Error e
@@ -207,7 +207,7 @@ let unpack t =
                consumed more bytes than were available. *)
             if num_bytes <= 0 || num_bytes > t.len then
               error (Error.create "unpack consumed invalid amount" num_bytes
-                  (<:sexp_of< int >>))
+                       (<:sexp_of< int >>))
             else begin
               consume ~num_bytes;
               t.partial_unpack <- None;
@@ -219,7 +219,7 @@ let unpack t =
                consumed more bytes than were available. *)
             if num_bytes < 0 || num_bytes > t.len then
               error (Error.create "partial unpack consumed invalid amount" num_bytes
-                  (<:sexp_of< int >>))
+                       (<:sexp_of< int >>))
             else begin
               consume ~num_bytes;
               t.partial_unpack <- Some partial_unpack;

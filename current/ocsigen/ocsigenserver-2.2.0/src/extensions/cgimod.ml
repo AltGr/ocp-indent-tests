@@ -454,7 +454,7 @@ let rec parse_global_config = function
   | (Element ("cgitimeout", [("value", s)], []))::[] ->
       cgitimeout := int_of_string s
   | _ -> raise (Error_in_config_file
-               ("Unexpected content inside cgimod config"))
+             ("Unexpected content inside cgimod config"))
 
 
 (*****************************************************************************)
@@ -464,7 +464,7 @@ let gen reg = function
       Lwt.return Ocsigen_extensions.Ext_do_nothing
   | Ocsigen_extensions.Req_not_found (err, ri) ->
       catch
-      (* Is it a cgi page? *)
+        (* Is it a cgi page? *)
         (fun () ->
           Ocsigen_messages.debug2 "--Cgimod: Is it a cgi file?";
           let (filename, re, doc_root) =
@@ -583,7 +583,7 @@ let parse_config _ path _ _ = function
       let dir = match atts with
         | [] ->
             raise (Error_in_config_file
-                  "attributes expected for <cgi>")
+                "attributes expected for <cgi>")
         | [("root",r);("dir", s)] ->
             {
               regexp= Regexp.regexp ("^"^(good_root r)^"([^/]*)");
@@ -612,7 +612,7 @@ let parse_config _ path _ _ = function
                 |[] -> None
                 |[("exec",x)] -> Some(x)
                 |_ -> raise (Error_in_config_file
-                            "Wrong attributes for <cgi>")) ;
+                          "Wrong attributes for <cgi>")) ;
               env=set_env l}
         | _ -> raise (Error_in_config_file "Wrong attributes for <cgi>")
       in

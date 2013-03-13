@@ -21,8 +21,8 @@ let test =
           "neg" @? (nget ar1 (-3) = 8);
           "pos" @? (nget ar1 3 = ar1.(3));
           "invalid" @?
-            (try ignore (nget ar1 (-100)); false
-            with Invalid_argument _ -> true | _ -> false)
+          (try ignore (nget ar1 (-100)); false
+          with Invalid_argument _ -> true | _ -> false)
         );
       "filter_opt" >::
         (fun () ->
@@ -72,17 +72,17 @@ let test =
           let empty_list = [] in
           let one_list = [0] in
           "ordered" @?
-            (let ordered_array = Array.of_list ordered_list in
-             Array.rev_inplace ordered_array;
-             List.rev ordered_list =|= ordered_array);
+          (let ordered_array = Array.of_list ordered_list in
+           Array.rev_inplace ordered_array;
+           List.rev ordered_list =|= ordered_array);
           "empty" @?
-            (let empty_array = Array.of_list empty_list in
-             Array.rev_inplace empty_array;
-             List.rev empty_list =|= empty_array);
+          (let empty_array = Array.of_list empty_list in
+           Array.rev_inplace empty_array;
+           List.rev empty_list =|= empty_array);
           "one" @?
-            (let one_array = Array.of_list one_list in
-             Array.rev_inplace one_array;
-             List.rev one_list =|= one_array);
+          (let one_array = Array.of_list one_list in
+           Array.rev_inplace one_array;
+           List.rev one_list =|= one_array);
         );
       "replace_all" >::
         (fun () ->
@@ -93,17 +93,17 @@ let test =
           let one_list = [0] in
           let f i = i * i in
           "random" @?
-            (let random_array = Array.of_list random_list in
-             Array.replace_all ~f random_array;
-             List.map ~f random_list =|= random_array);
+          (let random_array = Array.of_list random_list in
+           Array.replace_all ~f random_array;
+           List.map ~f random_list =|= random_array);
           "empty" @?
-            (let empty_array = Array.of_list empty_list in
-             Array.replace_all ~f empty_array;
-             List.map ~f empty_list =|= empty_array);
+          (let empty_array = Array.of_list empty_list in
+           Array.replace_all ~f empty_array;
+           List.map ~f empty_list =|= empty_array);
           "one" @?
-            (let one_array = Array.of_list one_list in
-             Array.replace_all ~f one_array;
-             List.map ~f one_list =|= one_array);
+          (let one_array = Array.of_list one_list in
+           Array.replace_all ~f one_array;
+           List.map ~f one_list =|= one_array);
         );
       "cartesian_product" >::
         (fun () ->
@@ -111,6 +111,6 @@ let test =
           "empty2" @? is_empty (cartesian_product [||] [|13|]);
           "empty3" @? is_empty (cartesian_product [|13|] [||]);
           "simple" @?
-            (cartesian_product [|1; 2; 3;|] [|"a"; "b";|]
-             = [|(1, "a"); (1, "b"); (2, "a"); (2, "b"); (3, "a"); (3, "b");|]));
+          (cartesian_product [|1; 2; 3;|] [|"a"; "b";|]
+           = [|(1, "a"); (1, "b"); (2, "a"); (2, "b"); (3, "a"); (3, "b");|]));
     ]

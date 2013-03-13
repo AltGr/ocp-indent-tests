@@ -46,17 +46,17 @@ let xmlrpc_to_sexpr (root:xml) =
       let text = String.strip String.isspace text in
       SExpr.String text::[]    
 
-                         (* empty <value>s have default value '' *)
+    (* empty <value>s have default value '' *)
     | h,((Element ("value", _, []))::siblings) ->
       (SExpr.String "")::(visit (h) siblings)
 
-      (* <data>,<value>,<name> tags: ignore them and go to children *)
+    (* <data>,<value>,<name> tags: ignore them and go to children *)
     | h,((Element ("data", _, children))::siblings)
     | h,((Element ("value", _, children))::siblings)
     | h,((Element ("name", _, children))::siblings) ->
       (visit (h+1) children)@(visit (h) siblings)
 
-      (* <member> tags *)
+    (* <member> tags *)
     | h,((Element ("member", _, children))::siblings) -> 
       let (mychildren:SExpr.t list) = visit (h+1) children in
       let anode = (SExpr.Node (mychildren)) in
@@ -70,7 +70,7 @@ let xmlrpc_to_sexpr (root:xml) =
         end
       else mysiblings (*ignore incorrect member*)
 
-      (* any other element *)
+    (* any other element *)
     | h,((Element (tag, _, children))::siblings) -> 
       let tag = String.strip String.isspace tag in
       let mytag = (SExpr.String tag) in
@@ -121,30 +121,30 @@ let sexpr_to_xmlrpc (root:SExpr.t) =
         |_ -> (Element ("WRONG_SEXPR_MEMBER",[],[]))     
       end
 
-      (* member tag without values - wrong format - defaults to empty value *)
+    (* member tag without values - wrong format - defaults to empty value *)
     | h, (SExpr.Node (SExpr.String "struct"::_)), (SExpr.Node (SExpr.String name:: []))->
       (Element ("member",[],Element ("name",[],PCData name::[])::Element ("value",[],[])::[]))
 
-      (* sexpr representing array tags *)
+    (* sexpr representing array tags *)
     | h, _, (SExpr.Node (SExpr.String "array"::values)) ->
       let xmlvalues =  (List.map (visit (h+1) sexpr) values) in
       (Element ("array",[],Element ("data",[],List.map (encase_with "value") xmlvalues)::[]))
 
-      (* sexpr representing any other tag with children *)
+    (* sexpr representing any other tag with children *)
     | h, _, (SExpr.Node (SExpr.String tag::atail)) -> 
       let xmlvalues =  (List.map (visit (h+1) sexpr) atail) in
       let xml_noemptytags = List.filter (is_not_empty_tag) xmlvalues in 
       (Element (tag, [], xml_noemptytags))
 
-      (* sexpr representing a pcdata *)
+    (* sexpr representing a pcdata *)
     | h, _, (SExpr.String s) -> 
       (PCData s)
 
-      (* sexpr representing a nameless tag *)
+    (* sexpr representing a nameless tag *)
     | h, _, (SExpr.Node []) -> 
       (Element ("EMPTY_SEXPR",[],[]))
 
-      (* otherwise, we reached a senseless sexpr *)
+    (* otherwise, we reached a senseless sexpr *)
     | _ -> (Element ("WRONG_SEXPR",[],[]))
   in 
   (encase_with "value" (visit 0 (SExpr.Node []) root))

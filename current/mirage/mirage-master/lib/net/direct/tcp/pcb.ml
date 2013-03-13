@@ -414,7 +414,7 @@ let input t ~src ~dst data =
   let id = { local_port=dest_port; dest_ip=src; local_ip=dst; dest_port=source_port } in
   (* Lookup connection from the active PCB hash *)
   with_hashtbl t.channels id
-  (* PCB exists, so continue the connection state machine in tcp_input *)
+    (* PCB exists, so continue the connection state machine in tcp_input *)
     (Rx.input t data)
     (* No existing PCB, so check if it is a SYN for a listening function *)
     (input_no_pcb t data)

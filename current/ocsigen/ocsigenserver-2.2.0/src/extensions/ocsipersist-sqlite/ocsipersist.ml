@@ -41,7 +41,7 @@ let rec parse_global_config = function
   | [] -> None
   | (Element ("database", [("file", s)], []))::[] -> Some s
   | _ -> raise (Ocsigen_extensions.Error_in_config_file
-               ("Unexpected content inside Ocsipersist config"))
+             ("Unexpected content inside Ocsipersist config"))
 
 (* This reference is overwritten when the init function (at the end of the file)
    is run, which occurs when the extension is loaded *)

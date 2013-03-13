@@ -35,17 +35,17 @@ let test =
       "invariants" >::
         (fun () ->
           ignore (List.fold (List.range 0 1000) ~init:empty
-              ~f:(fun q i ->
-                let q =
-                  match Random.int 3 with
-                  | 0 -> enqueue q i
-                  | 1 ->
-                    (match dequeue q with
-                     | None -> q | Some (_,q) -> q)
-                  | 2 -> (try discard_exn q with Empty -> q)
-                  | _ -> q
-                in
-                test_invariants q;
-                q)))
+                    ~f:(fun q i ->
+                      let q =
+                        match Random.int 3 with
+                        | 0 -> enqueue q i
+                        | 1 ->
+                          (match dequeue q with
+                          | None -> q | Some (_,q) -> q)
+                        | 2 -> (try discard_exn q with Empty -> q)
+                        | _ -> q
+                      in
+                      test_invariants q;
+                      q)))
     ]
 

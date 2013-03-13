@@ -56,8 +56,8 @@ module T : sig
   val now : unit -> t
 end = struct
   (* IF THIS REPRESENTATION EVER CHANGES, ENSURE THAT EITHER
-      (1) all values serialize the same way in both representations, or
-      (2) you add a new Time version to stable.ml *)
+     (1) all values serialize the same way in both representations, or
+     (2) you add a new Time version to stable.ml *)
   include Float
   let diff t1 t2 = Span.of_sec (t1 - t2)
 
@@ -68,7 +68,7 @@ end = struct
 end
 
 (* due to precision limitations in float we can't expect better than microsecond
-    precision *)
+   precision *)
 include Float_robust_compare.Make(struct let epsilon = 1E-6 end)
 
 let float_of_hh_mm_ss hh mm ss =

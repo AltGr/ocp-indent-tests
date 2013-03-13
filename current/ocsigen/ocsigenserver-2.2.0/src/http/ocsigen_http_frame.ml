@@ -21,7 +21,7 @@
 open Ocsigen_lib
 
 (** this set of modules discribes the http protocol and
-   the operation on this protocol*)
+    the operation on this protocol*)
 
 (** this signature provides a template to discribe the content of a http
     frame *)
@@ -188,7 +188,7 @@ struct
       }
 
   (*        (** gets the url raise Not_found if Answer *)
-          let get_url header =
+            let get_url header =
             match header.mode with
             | Query (_, s) -> s
             | _ -> raise Not_found *)
@@ -211,7 +211,7 @@ struct
   let get_proto header = header.proto
 
   (*        (** gets the value of the http method used *)
-          let get_method header =
+            let get_method header =
             match header.mode with
             | Query (meth, _) -> meth
             | _ -> raise Not_found *)
@@ -308,8 +308,8 @@ type t =
       frame_content : string Ocsigen_stream.t option;
       frame_abort : unit -> unit Lwt.t
           (*VVV abort looks like a hack.
-             It has been added for the reverse proxy, to enable closing the connection
-             if the request is cancelled ...
-             à revoir...
+            It has been added for the reverse proxy, to enable closing the connection
+            if the request is cancelled ...
+            à revoir...
           *)
     }

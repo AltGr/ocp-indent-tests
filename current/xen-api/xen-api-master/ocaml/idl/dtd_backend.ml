@@ -91,19 +91,19 @@ let rec strings_of_dtd_element known_els = function
              name_of_dtd_element (List.hd els)
            else
              "(" ^
-               (String.concat ", "
-                  (List.filter (fun x -> x <> "" && x <> empty)
-                     ((name_of_dtd_element (List.hd els)) ::
-                        (List.map
-                           (fun x -> empty ^ name_of_dtd_element x)
-                           (List.tl els))))) ^
-               ")") in
+             (String.concat ", "
+                (List.filter (fun x -> x <> "" && x <> empty)
+                   ((name_of_dtd_element (List.hd els)) ::
+                      (List.map
+                         (fun x -> empty ^ name_of_dtd_element x)
+                         (List.tl els))))) ^
+             ")") in
 
         Hashtbl.remove known_els name;
         (sprintf "%s%s>" prefix body) ::
           ((strings_of_attributes name attributes) @
-             (List.concat (List.map (strings_of_dtd_element known_els)
-                  (List.filter is_element els))))
+           (List.concat (List.map (strings_of_dtd_element known_els)
+                (List.filter is_element els))))
     else
       []
 

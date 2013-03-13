@@ -75,10 +75,10 @@ type attached_vdi = {
 
 module VmExtra = struct
   (** Extra data we store per VM. The persistent data is preserved when
-     the domain is suspended so it can be re-used in the following 'create'
-     which is part of 'resume'. The non-persistent data will be regenerated.
-     When a VM is shutdown for other reasons (eg reboot) we throw all this
-     information away and generate fresh data on the following 'create' *)
+      the domain is suspended so it can be re-used in the following 'create'
+      which is part of 'resume'. The non-persistent data will be regenerated.
+      When a VM is shutdown for other reasons (eg reboot) we throw all this
+      information away and generate fresh data on the following 'create' *)
   type persistent_t = {
     build_info: Domain.build_info option;
     ty: Vm.builder_info option;
@@ -391,9 +391,9 @@ module Mem = struct
         )
 
   (** If we fail to allocate because VMs either failed to co-operate or because they are still booting
-     and haven't written their feature-balloon flag then retry for a while before finally giving up.
-     In particular this should help smooth over the period when VMs are booting and haven't loaded their balloon
-     drivers yet. *)
+      and haven't written their feature-balloon flag then retry for a while before finally giving up.
+      In particular this should help smooth over the period when VMs are booting and haven't loaded their balloon
+      drivers yet. *)
   let retry f =
     let start = Unix.gettimeofday () in
     let interval = 10. in
@@ -446,7 +446,7 @@ module Mem = struct
     ()
 
   (** Reserves memory, passes the id to [f] and cleans up afterwards. If the user
-     wants to keep the memory, then call [transfer_reservation_to_domain]. *)
+      wants to keep the memory, then call [transfer_reservation_to_domain]. *)
   let with_reservation dbg min max f =
     let amount, id = Opt.default (min, ("none", min)) (reserve_memory_range dbg min max) in
     finally
@@ -578,21 +578,21 @@ module VM = struct
       match vm.ty with
       | HVM hvm_info ->
         Domain.BuildHVM {
-            Domain.shadow_multiplier = hvm_info.shadow_multiplier;
-            video_mib = hvm_info.video_mib;
-          }
+          Domain.shadow_multiplier = hvm_info.shadow_multiplier;
+          video_mib = hvm_info.video_mib;
+        }
       | PV { boot = Direct direct } ->
         Domain.BuildPV {
-            Domain.cmdline = direct.cmdline;
-            ramdisk = direct.ramdisk;
-          }
+          Domain.cmdline = direct.cmdline;
+          ramdisk = direct.ramdisk;
+        }
       | PV { boot = Indirect { devices = [] } } ->
         raise (No_bootable_device)
       | PV { boot = Indirect ( { devices = d :: _ } ) } ->
         Domain.BuildPV {
-            Domain.cmdline = "";
-            ramdisk = None;
-          }
+          Domain.cmdline = "";
+          ramdisk = None;
+        }
     in
     let build_info = {
       Domain.memory_max = vm.memory_static_max /// 1024L;
@@ -1406,13 +1406,13 @@ module VM = struct
         | None -> raise (Does_not_exist("domain", vm.Vm.id))
         | Some di ->
           Domain.set_action_request ~xs di.domid (match request with
-              | None -> None
-              | Some Needs_poweroff -> Some "poweroff"
-              | Some Needs_reboot -> Some "reboot"
-              | _ ->
-                error "VM = %s; Unknown domain action requested. Will set to poweroff" vm.Vm.id;
-                Some "poweroff"
-            )
+            | None -> None
+            | Some Needs_poweroff -> Some "poweroff"
+            | Some Needs_reboot -> Some "reboot"
+            | _ ->
+              error "VM = %s; Unknown domain action requested. Will set to poweroff" vm.Vm.id;
+              Some "poweroff"
+          )
       )
 
   let get_domain_action_request vm =

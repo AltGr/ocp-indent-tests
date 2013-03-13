@@ -125,9 +125,9 @@ let read_partial_chunks () =
         return (`Stop ())
       | n ->
         raise (Test.Test_failure (Sexp.List [
-                Sexp.Atom "Step greater than 3";
-                sexp_of_int n;
-              ])))
+                                    Sexp.Atom "Step greater than 3";
+                                    sexp_of_int n;
+                                  ])))
   >>= fun result ->
   assert_equal (`Stopped ()) result
     ~sexp_of_t:<:sexp_of< unit Reader.read_one_chunk_at_a_time_until_eof_result >>;

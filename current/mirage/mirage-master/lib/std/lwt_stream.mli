@@ -61,11 +61,11 @@ val clone : 'a t -> 'a t
     {[
       # let st1 = Lwt_stream.of_list [1; 2; 3];;
       val st1 : int Lwt_stream.t = <abstr>
-      # let st2 = Lwt_stream.clone st1;;
+          # let st2 = Lwt_stream.clone st1;;
       val st2 : int Lwt_stream.t = <abstr>
-      # lwt x = Lwt_stream.next st1;;
+          # lwt x = Lwt_stream.next st1;;
       val x : int = 1
-      # lwt y = Lwt_stream.next st2;;
+          # lwt y = Lwt_stream.next st2;;
       val y : int = 1
     ]}
 *)
@@ -158,11 +158,11 @@ val is_empty : 'a t -> bool Lwt.t
     {[
       # let st1 = Lwt_stream.of_list [1; 2; 3];;
       val st1 : int Lwt_stream.t = <abstr>
-      # let st2 = Lwt_stream.map string_of_int st1;;
+          # let st2 = Lwt_stream.map string_of_int st1;;
       val st2 : string Lwt_stream.t = <abstr>
-      # lwt x = Lwt_stream.next st1;;
+          # lwt x = Lwt_stream.next st1;;
       val x : int = 1
-      # lwt y = Lwt_stream.next st2;;
+          # lwt y = Lwt_stream.next st2;;
       val y : string = "2"
     ]}
 *)
@@ -229,14 +229,14 @@ val parse : 'a t -> ('a t -> 'b Lwt.t) -> 'b Lwt.t
 (** {6 Misc} *)
 
 val hexdump : char t -> string t
-(** [hexdump byte_stream] returns a stream which is the same as the
-    output of [hexdump -C].
+  (** [hexdump byte_stream] returns a stream which is the same as the
+      output of [hexdump -C].
 
-    Basically, here is a simple implementation of [hexdump -C]:
+      Basically, here is a simple implementation of [hexdump -C]:
 
-    {[
-      open Lwt
-      open Lwt_io
-      let () = Lwt_main.run (write_lines stdout (Lwt_stream.hexdump (read_lines stdin)))
-    ]}
-*)
+      {[
+        open Lwt
+        open Lwt_io
+        let () = Lwt_main.run (write_lines stdout (Lwt_stream.hexdump (read_lines stdin)))
+      ]}
+  *)

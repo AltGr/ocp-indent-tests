@@ -31,7 +31,7 @@ module SectorMap = struct
     find sector x
 
   (** [transform_offset x sector_size vaddr] returns the physical address on disk
-     corresponding to virtual address [vaddr] according to SectorMap [x] *)
+      corresponding to virtual address [vaddr] according to SectorMap [x] *)
   let transform_offset (x: int t) sector_size vaddr =
     let s = Int64.of_int sector_size in
     let vsector = Int64.(div vaddr s) in
@@ -713,7 +713,7 @@ let to_bitstring = function
 let entry_size = 32 (* bytes *)
 
 (** [blocks bits] returns the directory chopped into individual bitstrings,
-   each one containing a possible Dir_entry (fragment) *)
+    each one containing a possible Dir_entry (fragment) *)
 let blocks bits =
   let list = Bitstring.bitstring_chop (8 * entry_size) bits in
   List.rev (fst (List.fold_left (fun (acc, offset) bs -> ((offset, bs)::acc, offset + entry_size)) ([], 0) list))

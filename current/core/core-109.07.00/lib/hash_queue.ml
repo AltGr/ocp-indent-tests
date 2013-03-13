@@ -40,15 +40,15 @@ module type S = sig
   val mem : 'a t -> Key.t -> bool
 
   (** [lookup t k] returns the value of the key-value pair in the queue with
-     key k, if there is one. *)
+      key k, if there is one. *)
   val lookup : 'a t -> Key.t -> 'a option
 
   val lookup_exn : 'a t -> Key.t -> 'a
 
   (* Adding, removing, and replacing elements. *)
   (** [enqueue t k v] adds the key-value pair (k, v) to the end of the queue,
-     returning `Ok if the pair was added, or `Key_already_present
-     if there is already a (k, v') in the queue.
+      returning `Ok if the pair was added, or `Key_already_present
+      if there is already a (k, v') in the queue.
   *)
   val enqueue : 'a t -> Key.t -> 'a -> [ `Ok | `Key_already_present ]
 
@@ -71,7 +71,7 @@ module type S = sig
   val dequeue_with_key_exn : 'a t -> (Key.t * 'a)
 
   (** [dequeue_all t ~f] dequeues every element of the queue and applies f to each
-     one. *)
+      one. *)
   val dequeue_all : 'a t -> f:('a -> unit) -> unit
   (** [remove q k] removes the key-value pair with key k from the queue. *)
   val remove : 'a t -> Key.t -> [ `Ok | `No_such_key ]

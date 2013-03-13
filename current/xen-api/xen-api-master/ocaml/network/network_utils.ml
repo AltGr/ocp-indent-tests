@@ -644,7 +644,7 @@ module Ovs = struct
         []
     in
     vsctl ~log:true (del_old_arg @ ["--"; "--may-exist"; "add-br"; name] @
-        vlan_arg @ mac_arg @ fail_mode_arg @ disable_in_band_arg @ external_id_arg @ vif_arg)
+                     vlan_arg @ mac_arg @ fail_mode_arg @ disable_in_band_arg @ external_id_arg @ vif_arg)
 
   let destroy_bridge name =
     vsctl ~log:true ["--"; "--if-exists"; "del-br"; name]
@@ -733,7 +733,7 @@ module Ovs = struct
       | Some mac -> ["--"; "set"; "port"; name; "MAC=\"" ^ (String.escaped mac) ^ "\""]
     in
     vsctl ~log:true (["--"; "--may-exist"; "add-bond"; bridge; name] @ interfaces @
-        mac_args @ args)
+                     mac_args @ args)
 
   let get_fail_mode bridge =
     vsctl ["get-fail-mode"; bridge]
@@ -748,11 +748,11 @@ module Ovs = struct
          Printf.sprintf "idle_timeout=0,priority=0,in_port=local,dl_src=%s,actions=%s" mac port]
       | ports ->
         List.flatten (List.map (fun port ->
-              [Printf.sprintf "idle_timeout=0,priority=0,in_port=local,arp,dl_src=%s,actions=NORMAL" mac;
-               Printf.sprintf "idle_timeout=0,priority=0,in_port=local,dl_src=%s,actions=NORMAL" mac;
-               Printf.sprintf "idle_timeout=0,priority=0,in_port=%s,arp,nw_proto=1,actions=local" port;
-               Printf.sprintf "idle_timeout=0,priority=0,in_port=%s,dl_dst=%s,actions=local" port mac]
-            ) ports)
+            [Printf.sprintf "idle_timeout=0,priority=0,in_port=local,arp,dl_src=%s,actions=NORMAL" mac;
+             Printf.sprintf "idle_timeout=0,priority=0,in_port=local,dl_src=%s,actions=NORMAL" mac;
+             Printf.sprintf "idle_timeout=0,priority=0,in_port=%s,arp,nw_proto=1,actions=local" port;
+             Printf.sprintf "idle_timeout=0,priority=0,in_port=%s,dl_dst=%s,actions=local" port mac]
+          ) ports)
     in
     List.iter (fun flow -> ignore (ofctl ~log:true ["add-flow"; bridge; flow])) flows
 end

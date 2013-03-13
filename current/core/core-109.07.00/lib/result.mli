@@ -50,9 +50,9 @@ val call : f:(('a -> unit), _) t -> 'a -> unit
 val apply : f:(('a -> 'b), 'err) t -> 'a -> ('b, 'err) t
 
 (** [ok_fst] is useful with [List.partition_map].  Continuing the above example:
-   {[
-    let rics, errors = List.partition_map ~f:Result.ok_fst
-      (List.map ~f:ric_of_ticker ["AA"; "F"; "CSCO"; "AAPL"]) ]} *)
+    {[
+      let rics, errors = List.partition_map ~f:Result.ok_fst
+                           (List.map ~f:ric_of_ticker ["AA"; "F"; "CSCO"; "AAPL"]) ]} *)
 val ok_fst : ('ok, 'err) t -> [ `Fst of 'ok | `Snd of 'err ]
 
 (* [ok_if_true] returns [Ok ()] if [bool] is true, and [Error error] if it is false *)

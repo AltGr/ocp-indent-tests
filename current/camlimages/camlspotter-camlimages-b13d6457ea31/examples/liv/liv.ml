@@ -117,10 +117,10 @@ let _ =
         match st.st_kind with
         | S_DIR ->
           Scandir.scan_dir (fun f -> 
-              try 
-                ignore (guess_extension (snd (Livmisc.get_extension f)));
-                fs := f :: !fs;
-              with _e -> (* prerr_endline ((f^": "^ Printexc.to_string e)) *) ()) f
+            try 
+              ignore (guess_extension (snd (Livmisc.get_extension f)));
+              fs := f :: !fs;
+            with _e -> (* prerr_endline ((f^": "^ Printexc.to_string e)) *) ()) f
         | _ -> fs := f :: !fs
       with
       | _ -> prerr_endline ("ERROR: " ^ f)) !files;

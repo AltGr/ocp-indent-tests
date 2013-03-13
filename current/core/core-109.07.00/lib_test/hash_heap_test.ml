@@ -47,13 +47,13 @@ let test =
       "iter" >:: (fun () ->
         let t = make () in
         "match" @?
-          (Set.compare_direct (Set.Poly.of_list s)
-             (let s = ref Set.Poly.empty in
-              Hash_heap.iter t ~f:(fun ~key ~data ->
-                s := Set.add !s key;
-                assert (key = data));
-              !s)
-           = 0));
+        (Set.compare_direct (Set.Poly.of_list s)
+           (let s = ref Set.Poly.empty in
+            Hash_heap.iter t ~f:(fun ~key ~data ->
+              s := Set.add !s key;
+              assert (key = data));
+            !s)
+         = 0));
       "remove" >:: (fun () ->
         let t = make () in
         Hash_heap.remove t 2;

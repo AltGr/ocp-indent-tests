@@ -3,19 +3,19 @@ open OUnit
 let unused_test = Timer_test.test
 
 let rec flatten_list acc = function
-  | [] -> acc
-  | (TestCase _ as r)::rest -> flatten_list (r::acc) rest
-  | (TestList l)::rest ->
-    let acc = flatten_list acc l in
-    flatten_list acc rest
-  | (TestLabel (lbl,test))::rest ->
-    flatten_list
-      (TestLabel (lbl,flatten test)::acc)
-      rest
+| [] -> acc
+| (TestCase _ as r)::rest -> flatten_list (r::acc) rest
+| (TestList l)::rest ->
+  let acc = flatten_list acc l in
+  flatten_list acc rest
+| (TestLabel (lbl,test))::rest ->
+  flatten_list
+    (TestLabel (lbl,flatten test)::acc)
+    rest
 and flatten = function
-  | TestCase _ as res  -> res
-  | TestLabel (s,test) -> TestLabel (s,flatten test)
-  | TestList l -> TestList (List.rev (flatten_list [] l))
+| TestCase _ as res  -> res
+| TestLabel (s,test) -> TestLabel (s,flatten test)
+| TestList l -> TestList (List.rev (flatten_list [] l))
 
 let all () =
   flatten

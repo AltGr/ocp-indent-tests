@@ -571,7 +571,7 @@ let set_VCPUs_at_startup ~__context ~self ~value =
   update_memory_overhead ~__context ~vm:self
 
 (** Sets the number of VCPUs for a {b Running} PV guest.
-   @raise Api_errors.operation_not_allowed if [self] is an HVM guest. *)
+    @raise Api_errors.operation_not_allowed if [self] is an HVM guest. *)
 let set_VCPUs_number_live ~__context ~self ~nvcpu =
   Xapi_xenops.set_vcpus ~__context ~self nvcpu;
   (* Strictly speaking, PV guest memory overhead depends on the number of  *)

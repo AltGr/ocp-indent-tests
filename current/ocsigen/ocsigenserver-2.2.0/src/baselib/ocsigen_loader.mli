@@ -78,6 +78,6 @@ val add_ocamlpath: string -> unit
 (** Adds a path to the Findlib library search path. *)
 
 val findfiles: string -> string list
-(** [findfiles pkg] returns the list of files needed to load Findlib
-    package [pkg], including dependencies. The archive files of
-    [pkg] will appear last in the returned result. *)
+  (** [findfiles pkg] returns the list of files needed to load Findlib
+      package [pkg], including dependencies. The archive files of
+      [pkg] will appear last in the returned result. *)

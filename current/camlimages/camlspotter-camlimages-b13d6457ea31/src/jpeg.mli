@@ -21,12 +21,12 @@ val load_thumbnail : string -> Images.load_option list -> Geometry.spec ->
 
 val save : string -> Images.save_option list -> Images.t -> unit;;
 (** Save a full-color image in jpeg format file.
-   Raises [Invalid_argument] if the image is not a full-color image. *)
+    Raises [Invalid_argument] if the image is not a full-color image. *)
 
 val save_as_cmyk : string -> Images.save_option list -> 
   (Images.rgb -> int * int * int * int) -> Images.t -> unit;;
 (** This converts RGB images to CMYK, but the color conversion is not
-   something fancy. *)
+    something fancy. *)
 
 val save_cmyk_sample : string -> Images.save_option list -> unit;;
 (** Create CMYK jpeg image sample. Just for developpers. *)

@@ -539,7 +539,7 @@ let role_record rpc session_id role =
            ~expensive:true
            ~get_set:(fun () -> try (Client.Role.get_permissions_name_label ~rpc ~session_id ~self:(!_ref))
              with _ -> [])
-           ();*)
+          ();*)
         (*make_field ~name:"is_complete"             ~get:(fun () -> string_of_bool (x ()).API.role_is_complete) ();*)
         (*make_field ~name:"is_basic"             ~get:(fun () -> string_of_bool (x ()).API.role_is_basic) ();*)
       ]}
@@ -938,7 +938,7 @@ let vm_record rpc session_id vm =
       make_field ~name:"guest-metrics-last-updated"
         ~get:(fun () -> default nid (may (fun m -> Date.to_string m.API.vM_guest_metrics_last_updated) (xgm ()) )) ();
       make_field ~name:"cooperative"
-      (* NB this can receive VM_IS_SNAPSHOT *)
+        (* NB this can receive VM_IS_SNAPSHOT *)
         ~get:(fun () -> string_of_bool (try Client.VM.get_cooperative rpc session_id vm with _ -> true))
         ~expensive:true ~deprecated:true ();
       make_field ~name:"protection-policy"
@@ -1509,7 +1509,7 @@ let dr_task_record rpc session_id dr_task =
 
 
 (*let record_from_ref rpc session_id ref =
-   let all = [
+  let all = [
     "PBD",(fun ref -> snd (pbd_record rpc session_id (Ref.of_string ref))); 
     "SR",(fun ref -> snd (sr_record rpc session_id (Ref.of_string ref))); 
     "VBD",(fun ref -> snd (vbd_record rpc session_id (Ref.of_string ref))); 
@@ -1520,16 +1520,16 @@ let dr_task_record rpc session_id dr_task =
     "Network",(fun ref -> snd (net_record rpc session_id (Ref.of_string ref))); 
     "VM",(fun ref -> snd (vm_record rpc session_id (Ref.of_string ref)));
     "Session",(fun ref -> snd (session_record rpc session_id (Ref.of_string ref)));] in
-   let findfn (name,record) =
+  let findfn (name,record) =
     let r = record ref in
     try
       let u = field_lookup r "uuid" in
       u.get ();
       true
     with
-   _ -> false
-   in
-   try let (n,r) = List.find findfn all in (n,r ref) with _ -> ("Unknown",[])
+  _ -> false
+  in
+  try let (n,r) = List.find findfn all in (n,r ref) with _ -> ("Unknown",[])
 *)
 
 let pgpu_record rpc session_id pgpu =

@@ -29,7 +29,7 @@ let test =
           let str = "xyasdfds" in
           "contents" @? (Bigbuffer.contents buf = str ^ str);
           "big_contents" @?
-            (Bigstring.to_string (Bigbuffer.big_contents buf) = str ^ str );
+          (Bigstring.to_string (Bigbuffer.big_contents buf) = str ^ str );
           "sub" @? (Bigbuffer.sub buf 5 5 = "fdsxy");
           io_test ~n:"" buf
         );

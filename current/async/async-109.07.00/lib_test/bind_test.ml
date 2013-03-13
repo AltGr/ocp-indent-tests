@@ -9,7 +9,7 @@ open Async.Std
 (* Reminder:
 
    let bind t f =
-    create (fun i -> t >>> fun a -> connect i (f a))
+   create (fun i -> t >>> fun a -> connect i (f a))
    ;;
 *)
 
@@ -17,17 +17,17 @@ let trace = ref false
 (* let trace = Deferred.debug_trace_connect *)
 
 (** Guaranteed to be filled after everything else that
-   will be scheduled this thread has been executed. *)
+    will be scheduled this thread has been executed. *)
 let tick () = Deferred.create (fun ivar ->
-    Deferred.unit >>> fun () ->
-    Deferred.unit >>> fun () ->
-    Ivar.fill ivar ())
+                Deferred.unit >>> fun () ->
+                Deferred.unit >>> fun () ->
+                Ivar.fill ivar ())
 
 let chatty f () =
   let g () = Deferred.create (fun ivar ->
-      trace := true;
-      f () >>> fun () -> (trace := false; Ivar.fill ivar ())
-    ) in
+               trace := true;
+               f () >>> fun () -> (trace := false; Ivar.fill ivar ())
+             ) in
   Monitor.protect g ~finally:(fun () -> trace := false; return ())
 ;;
 
@@ -121,15 +121,15 @@ let never_called () = assert false
 let nop () = ()
 
 (* KEY:
-     i  t <-- deferreds
+   i  t <-- deferreds
    m >>= f <-- syntax
 
    i <-- empty deferred with name i
    [ ]--(C) <-- removable callback
-    \--( ) <-- normal callback
-    \--{ } <-- inline callback
-    \-- .  <-- indicates that though there is only one
-               callback, this is a bag with one element
+   \--( ) <-- normal callback
+   \--{ } <-- inline callback
+   \-- .  <-- indicates that though there is only one
+   callback, this is a bag with one element
 
    [X] <-- full deferred
    [ ]<--[I] <-- indirection

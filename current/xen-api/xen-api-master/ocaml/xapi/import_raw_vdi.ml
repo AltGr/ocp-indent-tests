@@ -58,8 +58,8 @@ let localhost_handler rpc session_id vdi (req: Request.t) (s: Unix.file_descr) =
               Sm_fs_ops.with_open_block_attached_device __context rpc session_id vdi `RW
                 (fun fd ->
                   let headers = Http.http_200_ok ~keep_alive:false () @
-                      [ Http.Hdr.task_id ^ ":" ^ (Ref.string_of task_id);
-                        content_type ] in
+                                [ Http.Hdr.task_id ^ ":" ^ (Ref.string_of task_id);
+                                  content_type ] in
                   Http_svr.headers s headers;
                   try
                     if chunked

@@ -48,19 +48,19 @@ open Simplexmlparser
 (*****************************************************************************)
 (** Extensions may take some options from the config file.
     These options are written in xml inside the <extension> tag.
-   For example:
-   <extension module=".../extensiontemplate.cmo">
+    For example:
+    <extension module=".../extensiontemplate.cmo">
      <myoption myattr="hello">
         ...
      </myoption>
-   </extension>
+    </extension>
 *)
 
 let rec parse_global_config = function
   | [] -> ()
   | (Element ("myoption", [("myattr", s)], []))::ll -> ()
   | _ -> raise (Error_in_config_file
-               ("Unexpected content inside extensiontemplate config"))
+             ("Unexpected content inside extensiontemplate config"))
 
 
 
@@ -86,10 +86,10 @@ let gen = function
          (for the example):
       *)
       return (Ext_found
-            (fun () ->
-              let content = "Extensiontemplate page" in
-              Ocsigen_senders.Text_content.result_of_content
-                (content, "text/plain")))
+          (fun () ->
+            let content = "Extensiontemplate page" in
+            Ocsigen_senders.Text_content.result_of_content
+              (content, "text/plain")))
 
 
 
@@ -97,32 +97,32 @@ let gen = function
 (** Extensions may define new tags for configuring each site.
     These tags are inside <site ...>...</site> in the config file.
 
-   For example:
-   <site dir="">
+    For example:
+    <site dir="">
      <extensiontemplate module=".../mymodule.cmo" />
-   </site>
+    </site>
 
-   Each extension will set its own configuration options, for example:
-   <site dir="">
+    Each extension will set its own configuration options, for example:
+    <site dir="">
      <extensiontemplate module=".../mymodule.cmo" />
      <eliom module=".../myeliommodule.cmo" />
      <static dir="/var/www/plop" />
-   </extension>
+    </extension>
 
     Here parse_site is the function used to parse the config file inside this
     site. Use this if you want to put extensions config options inside
     your own option. For example:
 
-   {[
-   | Element ("iffound", [], sub) ->
-      let ext = parse_fun sub in
-   (* DANGER: parse_fun MUST be called BEFORE the function! *)
-      (fun charset -> function
-        | Ocsigen_extensions.Req_found (_, _) ->
-            Lwt.return (Ext_sub_result ext)
-        | Ocsigen_extensions.Req_not_found (err, ri) ->
-            Lwt.return (Ocsigen_extensions.Ext_not_found err))
-   ]}
+    {[
+      | Element ("iffound", [], sub) ->
+        let ext = parse_fun sub in
+        (* DANGER: parse_fun MUST be called BEFORE the function! *)
+        (fun charset -> function
+          | Ocsigen_extensions.Req_found (_, _) ->
+              Lwt.return (Ext_sub_result ext)
+          | Ocsigen_extensions.Req_not_found (err, ri) ->
+              Lwt.return (Ocsigen_extensions.Ext_not_found err))
+    ]}
 *)
 
 let parse_config path _ parse_site = function
@@ -150,7 +150,7 @@ let end_init () =
 (** A function that will create an error message from the exceptions
     that may be raised during the initialisation phase, and raise again
     all other exceptions. That function has type exn -> string. Use the
-   raise function if you don't need any. *)
+    raise function if you don't need any. *)
 let exn_handler = raise
 
 

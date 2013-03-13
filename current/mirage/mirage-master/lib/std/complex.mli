@@ -83,4 +83,4 @@ val log: t -> t
 (** Natural logarithm (in base [e]). *)
 
 val pow: t -> t -> t
-(** Power function.  [pow z1 z2] returns [z1] to the [z2] power. *)
+  (** Power function.  [pow z1 z2] returns [z1] to the [z2] power. *)

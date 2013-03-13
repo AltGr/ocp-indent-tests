@@ -465,21 +465,21 @@ let messages_of_obj (x: obj) document_order : message list =
     messages (* @ [ get_all; get_record; get_record_internal ]*)
   else if document_order then
     messages @
-      get_all_public @
-      [ get_all ] @
-      List.concat (List.map (all_new_messages_of_field x) all_fields) @
-      constructor_destructor @
-      [ uuid; get_record ] @
-      name_label @
-      [ get_record_internal ]
+    get_all_public @
+    [ get_all ] @
+    List.concat (List.map (all_new_messages_of_field x) all_fields) @
+    constructor_destructor @
+    [ uuid; get_record ] @
+    name_label @
+    [ get_record_internal ]
   else
     [ get_record; get_record_internal; get_all; uuid] @
-      constructor_destructor @
-      name_label @
-      List.concat (List.map (new_messages_of_field x 0) all_fields) @
-      List.concat (List.map (new_messages_of_field x 1) all_fields) @
-      messages @
-      get_all_public
+    constructor_destructor @
+    name_label @
+    List.concat (List.map (new_messages_of_field x 0) all_fields) @
+    List.concat (List.map (new_messages_of_field x 1) all_fields) @
+    messages @
+    get_all_public
 
 let add_implicit_messages ?(document_order = false) (api: api) = 
   let objs = objects_of_api api

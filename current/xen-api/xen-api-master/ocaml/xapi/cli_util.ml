@@ -224,8 +224,8 @@ type someone =
   | SpecificHost of API.ref_host (** I want to talk to [h] (who may be the master *)
 
 (** Return a uri prefix which will cause the CLI to talk to either the 
-   master or to a specific host (which may be the master). This will
-   work even when the management interface is disabled. *)
+    master or to a specific host (which may be the master). This will
+    work even when the management interface is disabled. *)
 let rec uri_of_someone rpc session_id = function
   | Master -> 
     (* See ocaml/xe-cli/newcli.ml:parse_url *)

@@ -67,7 +67,7 @@ module Req = struct
       (match t.op with Some x -> string_of_op x | None -> "None")
       t.handle t.id t.sector (string_of_segs t.segs)
 
-    (* The segment looks the same in both 32-bit and 64-bit versions *)
+      (* The segment looks the same in both 32-bit and 64-bit versions *)
       cstruct segment {
       uint32_t       gref;
       uint8_t        first_sector;
@@ -169,8 +169,8 @@ module Res = struct
     st: rsp option;
   }
 
-  (* The same structure is used in both the 32- and 64-bit protocol versions,
-     modulo the extra padding at the end. *)
+      (* The same structure is used in both the 32- and 64-bit protocol versions,
+         modulo the extra padding at the end. *)
       cstruct response_hdr {
       uint64_t       id;
       uint8_t        op;
@@ -505,18 +505,18 @@ let read_single_request t r =
             | Some OK ->
               (* Get the pages, and convert them into Istring views *)
               return (Lwt_stream.of_list (List.rev (snd (List.fold_left
-                          (fun (i, acc) page ->
-                            let start_offset = match i with
-                              |0 -> r.start_offset * 512
-                              |_ -> 0 in
-                            let end_offset = match i with
-                              |n when n = len-1 -> (r.end_offset + 1) * 512
-                              |_ -> 4096 in
-                            let bytes = end_offset - start_offset in
-                            let subpage = Io_page.sub page start_offset bytes in
-                            i + 1, subpage :: acc
-                          ) (0, []) pages
-                      ))))
+                        (fun (i, acc) page ->
+                          let start_offset = match i with
+                            |0 -> r.start_offset * 512
+                            |_ -> 0 in
+                          let end_offset = match i with
+                            |n when n = len-1 -> (r.end_offset + 1) * 512
+                            |_ -> 4096 in
+                          let bytes = end_offset - start_offset in
+                          let subpage = Io_page.sub page start_offset bytes in
+                          i + 1, subpage :: acc
+                        ) (0, []) pages
+                    ))))
           )
       )
 

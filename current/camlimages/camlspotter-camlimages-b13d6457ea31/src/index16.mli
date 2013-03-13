@@ -33,8 +33,8 @@ type t = {
 val to_rgb24 : ?failsafe: Color.rgb -> t -> Rgb24.t;;
 val to_rgba32 : ?failsafe: Color.rgba -> t -> Rgba32.t;;
 (** [to_rgb? ~failsafe t]: Image format conversion functions to Rgb24.t
-   and Rgba32.t images. If the color for some pixel value is not defined,
-   [failsafe] color is used as default. *)
+    and Rgba32.t images. If the color for some pixel value is not defined,
+    [failsafe] color is used as default. *)
 
 (** Generic functions. *)
 (** Please read the comments of IMAGEINDEXED in genimage.mli *)

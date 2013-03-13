@@ -32,18 +32,18 @@ module Measure = struct
   with sexp, bin_io
 
   let bytes = function
-    | `Bytes -> 1.
-    | `Kilobytes -> kbyte
-    | `Megabytes -> mbyte
-    | `Gigabytes -> gbyte
-    | `Words -> bytes_per_word
+  | `Bytes -> 1.
+  | `Kilobytes -> kbyte
+  | `Megabytes -> mbyte
+  | `Gigabytes -> gbyte
+  | `Words -> bytes_per_word
 
   let smallest = function
-    | (`Bytes, _) | (_, `Bytes) -> `Bytes
-    | (`Words, _) | (_, `Words) -> `Words
-    | (`Kilobytes, _) | (_, `Kilobytes) -> `Kilobytes
-    | (`Megabytes, _) | (_, `Megabytes) -> `Megabytes
-    | (`Gigabytes, `Gigabytes) -> `Gigabytes
+  | (`Bytes, _) | (_, `Bytes) -> `Bytes
+  | (`Words, _) | (_, `Words) -> `Words
+  | (`Kilobytes, _) | (_, `Kilobytes) -> `Kilobytes
+  | (`Megabytes, _) | (_, `Megabytes) -> `Megabytes
+  | (`Gigabytes, `Gigabytes) -> `Gigabytes
 
 end
 

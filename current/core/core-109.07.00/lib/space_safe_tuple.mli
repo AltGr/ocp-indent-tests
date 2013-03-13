@@ -1,14 +1,14 @@
 (** The raison d'etre for Space_safe_tuple<N> is that OCaml doesn't properly
     free variables matched in tuple patterns.  If one writes
 
-      let (a, b) = ... in
-      ... a ... b ...
+    let (a, b) = ... in
+    ... a ... b ...
 
     when a and b appear at most once in the subsequent expression
     then this effectively becomes
 
-      let t = ... in
-      ... (fst t) ... (snd t) ...
+    let t = ... in
+    ... (fst t) ... (snd t) ...
 
     Hence, references to [a] and [b] keep alive the entire tuple.  This can
     lead to surprising space leaks.
@@ -24,10 +24,10 @@
     selection happens, and (hopefully) causes them to think about space safety,
     and to write the following if they want to free the tuple.
 
-      let t = ... in
-      let a = Space_safe_tuple2.get1 t in
-      let b = Space_safe_tuple2.get2 t in
-      ... a ... b ...
+    let t = ... in
+    let a = Space_safe_tuple2.get1 t in
+    let b = Space_safe_tuple2.get2 t in
+    ... a ... b ...
 *)
 module T2 : sig
   type ('a, 'b) t

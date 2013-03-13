@@ -9,9 +9,9 @@ module type S = sig
 end
 
 module Of_stringable_sexpable (T : sig
-      type t with sexp
-      include Stringable.S with type t := t
-    end) = struct
+           type t with sexp
+           include Stringable.S with type t := t
+         end) = struct
   module T' = struct
     include T
     include (Binable.Of_stringable (T) : Binable.S with type t := t)

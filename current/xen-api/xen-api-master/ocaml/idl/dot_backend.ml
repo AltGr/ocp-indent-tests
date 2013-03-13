@@ -48,7 +48,7 @@ let of_objs api =
                 | `One  -> [ which ^ "=\"none\"" ]
                 | `Many -> [ which ^ "=\"crow\"" ] in
               let labels = [ (* "label=\"" ^ label ^ "\"";*) "color=\"blue\"" ] @ 
-                  (get_arrow "arrowhead" b a_field.ty) @ (get_arrow "arrowtail" a b_field.ty) in
+                           (get_arrow "arrowhead" b a_field.ty) @ (get_arrow "arrowtail" a b_field.ty) in
 
               sprintf "%s -> %s [ %s ]" a b (String.concat ", " labels)) relational in
 

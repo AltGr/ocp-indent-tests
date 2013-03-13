@@ -72,7 +72,7 @@ and rrset = {
 and rdata = 
   | A of ipv4 list (* always length = 1 *)
   | NS of dnsnode list
-      (* MD and MF are obsolete; use MX for them *)
+  (* MD and MF are obsolete; use MX for them *)
   | CNAME of dnsnode list
   | SOA of (dnsnode * dnsnode * serial * int32 * int32 * int32 * int32) list
   | MB of dnsnode list

@@ -53,68 +53,68 @@ let test =
           (fun () ->
             let (h,l) = random_heap_and_list Quickcheck.uig in
             "foo" @? (match Heap.top h with
-                None -> false
-              | Some t -> t = List.hd_exn (List.sort ~cmp:compare l));
+              None -> false
+            | Some t -> t = List.hd_exn (List.sort ~cmp:compare l));
             "didnaepop" @? (Heap.length h = List.length l)
           );
         "pop" >::
           (fun () ->
             let (h,l) = random_heap_and_list Quickcheck.uig in
             "foo" @? (match Heap.pop h with
-                None -> false
-              | Some t -> t = List.hd_exn (List.sort ~cmp:compare l));
+              None -> false
+            | Some t -> t = List.hd_exn (List.sort ~cmp:compare l));
             "popped" @? (Heap.length h = List.length l - 1)
           );
         "cond_pop" >::
           (fun () ->
             let h = Heap.of_array ~min_size:1 compare [| -1; 1; 2; 3; |] in
             "dopop" @? (match Heap.cond_pop h (fun i -> i < 0) with
-                None -> false
-              | Some t -> t = -1);
+              None -> false
+            | Some t -> t = -1);
             "afterdopop" @? (Heap.length h = 3);
             "dontpop" @? (match Heap.cond_pop h (fun i -> i < 0) with
-                None -> true
-              | Some _ -> false);
+              None -> true
+            | Some _ -> false);
             "afterdontpop" @? (Heap.length h = 3);
             let empty = Heap.create compare in
             "empty" @? (match Heap.cond_pop empty (fun _ -> true) with
-                None -> true
-              | Some _ -> false)
+              None -> true
+            | Some _ -> false)
           );
         "search functions" >::
           (fun () ->
             "yup" @? (Heap.mem float_heap 0.);
             "nope" @? not (Heap.mem float_heap 0.5);
             "find" @?
-              begin
-                let heap_el = Heap.find_heap_el_exn int_heap 2 in
-                let el = Heap.heap_el_get_el heap_el in
-                2 = el
-              end
+            begin
+              let heap_el = Heap.find_heap_el_exn int_heap 2 in
+              let el = Heap.heap_el_get_el heap_el in
+              2 = el
+            end
           );
         "iter" >::
           (fun () ->
             "content differs" @?
-              begin
-                let h,l = random_heap_and_list Quickcheck.fg in
-                (List.sort ~cmp:Float.compare l) = (to_sorted_list h)
-              end
+            begin
+              let h,l = random_heap_and_list Quickcheck.fg in
+              (List.sort ~cmp:Float.compare l) = (to_sorted_list h)
+            end
           );
         "random heap" >::
           (fun () ->
             "init" @? Heap.check_heap_property random_heap;
             "rest" @?
-              begin
-                try forever
+            begin
+              try forever
                     begin fun () ->
                       let top  = Heap.pop_exn random_heap in
                       let next = Heap.top_exn random_heap in
                       if top > next then raise Exit
                     end
-                with
-                | Heap.Empty -> true
-                | Exit -> false
-              end
+              with
+              | Heap.Empty -> true
+              | Exit -> false
+            end
           );
         "update" >::
           (fun () ->

@@ -3,7 +3,7 @@
 
 open Core.Std
 
-    hash: 'k -> int;
+       hash: 'k -> int;
   compare: 'k -> 'k -> int;
 }
 
@@ -53,12 +53,12 @@ module type S = sig
   include Core.Std.Sexpable.S2 with type ('k, 'v) sexpable = ('k, 'v) t
 
   module Specialize (Key: sig
-        type t
-        include Core.Std.Sexpable with type t := t
+             type t
+             include Core.Std.Sexpable with type t := t
 
-        val hash : t -> int
-        val compare : t -> t -> int
-      end) : sig
+             val hash : t -> int
+             val compare : t -> t -> int
+           end) : sig
 
     val hashable : Key.t hashable
 
@@ -163,8 +163,8 @@ module Make (Basic : Basic) : S with type ('k, 'v) t = ('k, 'v) Basic.t = struct
   let filter_mapi t ~f =
     let bindings =
       fold t ~init:[] ~f:(fun ~key ~data bindings -> match f ~key ~data with
-        | Some new_data -> (key,new_data) :: bindings
-        | None -> bindings)
+      | Some new_data -> (key,new_data) :: bindings
+      | None -> bindings)
     in
     let new_t = create ~params:(get_params t) (hashable t) in
     List.iter bindings ~f:(fun (key,data) -> add new_t ~key ~data);
@@ -269,10 +269,10 @@ module Make (Basic : Basic) : S with type ('k, 'v) t = ('k, 'v) Basic.t = struct
     | Sexp.List sexps ->
       let t = create poly in
       List.iter sexps ~f:(function
-        | Sexp.List [k_sexp; v_sexp] ->
-          add t ~key:(k_of_sexp k_sexp) ~data:(d_of_sexp v_sexp)
-        | Sexp.List _ | Sexp.Atom _ ->
-          Sexplib.Conv.of_sexp_error "Hashtbl.t_of_sexp: tuple list needed" sexp);
+      | Sexp.List [k_sexp; v_sexp] ->
+        add t ~key:(k_of_sexp k_sexp) ~data:(d_of_sexp v_sexp)
+      | Sexp.List _ | Sexp.Atom _ ->
+        Sexplib.Conv.of_sexp_error "Hashtbl.t_of_sexp: tuple list needed" sexp);
       t
     | Sexp.Atom _ ->
       Sexplib.Conv.of_sexp_error
@@ -290,12 +290,12 @@ module Make (Basic : Basic) : S with type ('k, 'v) t = ('k, 'v) Basic.t = struct
   ;;
 
   module Specialize (Key: sig
-        type t
-        include Sexpable with type t := t
+             type t
+             include Sexpable with type t := t
 
-        val hash : t -> int
-        val compare : t -> t -> int
-      end) = struct
+             val hash : t -> int
+             val compare : t -> t -> int
+           end) = struct
 
     let hashable = {
       hash = Key.hash;
@@ -312,10 +312,10 @@ module Make (Basic : Basic) : S with type ('k, 'v) t = ('k, 'v) Basic.t = struct
         | Sexp.List sexps ->
           let t = create hashable in
           List.iter sexps ~f:(function
-            | Sexp.List [k_sexp; v_sexp] ->
-              add t ~key:(Key.t_of_sexp k_sexp) ~data:(d_of_sexp v_sexp)
-            | Sexp.List _ | Sexp.Atom _ ->
-              Sexplib.Conv.of_sexp_error "Hashtbl.t_of_sexp: tuple list needed" sexp);
+          | Sexp.List [k_sexp; v_sexp] ->
+            add t ~key:(Key.t_of_sexp k_sexp) ~data:(d_of_sexp v_sexp)
+          | Sexp.List _ | Sexp.Atom _ ->
+            Sexplib.Conv.of_sexp_error "Hashtbl.t_of_sexp: tuple list needed" sexp);
           t
         | Sexp.Atom _ ->
           Sexplib.Conv.of_sexp_error

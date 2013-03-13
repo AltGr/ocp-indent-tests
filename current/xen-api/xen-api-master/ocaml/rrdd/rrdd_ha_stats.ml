@@ -57,7 +57,7 @@ let all () =
     if !enabled then (
       let all =
         Statefile_latency.get_all () @
-          [Heartbeat_latency.get (); Xapi_latency.get ()]
+        [Heartbeat_latency.get (); Xapi_latency.get ()]
       in
       List.map (fun x -> Rrd.Host, x) all
     ) else []

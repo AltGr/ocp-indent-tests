@@ -35,7 +35,7 @@ val storage_driver_domain_of_vbd: __context:Context.t -> vbd:API.ref_VBD -> API.
 val record_pbd_storage_driver_domain: __context:Context.t -> pbd:API.ref_PBD -> domain:API.ref_VM -> unit
 
 (** [pbd_of_vm __context vm] returns (Some pbd) if [vm] is a driver domain
-   for [pbd] and None otherwise. *)
+    for [pbd] and None otherwise. *)
 val pbd_of_vm: __context:Context.t -> vm:API.ref_VM -> API.ref_PBD option
 
 (** [is_in_use __context self] returns true if [self] is in use as a system domain *)

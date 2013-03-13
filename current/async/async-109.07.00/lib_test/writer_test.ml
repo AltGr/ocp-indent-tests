@@ -18,7 +18,7 @@ let write () =
 
 let multiple_writers n () =
   let files = Array.init n ~f:(fun i ->
-      sprintf "writer_test%d.txt" i)
+                sprintf "writer_test%d.txt" i)
   in
   let files = Array.to_list files in
   let writers = List.map ~f:Writer.open_file files in
@@ -145,7 +145,7 @@ let flush_on_close () =
     Pipe.write_without_pushback pipe_w s;
   in
   don't_wait_for (Writer.transfer writer (Pipe.map pipe_r ~f:Fn.id)
-      (fun s -> Writer.write writer s));
+                    (fun s -> Writer.write writer s));
   write "hello\n";
   Pipe.downstream_flushed pipe_w
   >>= function

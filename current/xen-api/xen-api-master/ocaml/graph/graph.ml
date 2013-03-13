@@ -102,9 +102,9 @@ let output_dot nodes edges oc =
     ) edges [] in
   let output = 
     [ "digraph g{"; ] @
-      (List.map (fun x -> Printf.sprintf "node [label=\"%s\" style=filled fillcolor=%s]; \"%s\";" x.label (colour_of_cls x.cls) x.id) labels) 
+    (List.map (fun x -> Printf.sprintf "node [label=\"%s\" style=filled fillcolor=%s]; \"%s\";" x.label (colour_of_cls x.cls) x.id) labels) 
     @
-      (List.map (fun x -> Printf.sprintf "\"%s\" -> \"%s\";" x.a x.b) edges) 
+    (List.map (fun x -> Printf.sprintf "\"%s\" -> \"%s\";" x.a x.b) edges) 
     @ [
       "}";
     ] in

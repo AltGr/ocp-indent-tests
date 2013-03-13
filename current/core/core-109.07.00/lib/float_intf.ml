@@ -137,7 +137,7 @@ module type S = sig
   end
 
   (* return the Class.t.  Excluding nan the floating-point "number line" looks like:
-       t                Class.t    example
+     t                Class.t    example
      ^ neg_infinity     Infinite   neg_infinity
      | neg normals      Normal     -3.14
      | neg subnormals   Subnormal  -.2. ** -1023.

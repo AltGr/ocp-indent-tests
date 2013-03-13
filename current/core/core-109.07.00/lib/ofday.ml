@@ -2,7 +2,7 @@ open Std_internal
 open Time_internal.Helpers
 
 (* Create an abstract type for Ofday to prevent us from confusing it with
-    other floats.
+   other floats.
 *)
 module Stable = struct
   module V1 = struct

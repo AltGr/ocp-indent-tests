@@ -249,7 +249,7 @@ module Month = struct
     Test.run
       (module Month.Stable.V1 : With_bin_io_and_sexp  with type t = Month.Stable.V1.t)
       (module Stable.V1 : With_typerep_and_typestruct with type t = Month.Stable.V1.t)
-      (* List.map ~f:Month.Stable.V1.of_current *) months;
+    (* List.map ~f:Month.Stable.V1.of_current *) months;
   ;;
 end
 
@@ -274,7 +274,7 @@ module Date = struct
     Test.run ~skip_sexp_str:true
       (module Date.Stable.V1 : With_bin_io_and_sexp   with type t = Date.Stable.V1.t)
       (module Stable.V1 : With_typerep_and_typestruct with type t = Date.Stable.V1.t)
-      (* List.map ~f:Date.Stable.V1.of_current *) dates;
+    (* List.map ~f:Date.Stable.V1.of_current *) dates;
   ;;
 end
 
@@ -299,6 +299,6 @@ module Time = struct
     Test.run ~skip_sexp_str:true
       (module Time.Stable.V1 : With_bin_io_and_sexp   with type t = Time.Stable.V1.t)
       (module Stable.V1 : With_typerep_and_typestruct with type t = Time.Stable.V1.t)
-      (* List.map ~f:Time.Stable.V1.of_current *) times;
+    (* List.map ~f:Time.Stable.V1.of_current *) times;
   ;;
 end

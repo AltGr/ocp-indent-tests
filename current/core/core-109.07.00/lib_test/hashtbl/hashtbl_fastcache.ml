@@ -93,8 +93,8 @@ module T = struct
       t.length <- 0;
       for i = 0 to Array.length old_table - 1 do
         Array.iter old_table.(i) ~f:(function
-          | None -> ()
-          | Some (key, data) -> really_add t ~key ~data)
+        | None -> ()
+        | Some (key, data) -> really_add t ~key ~data)
       done
     end
 

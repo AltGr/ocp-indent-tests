@@ -157,7 +157,7 @@ let rec descend_and_match tag_names xml =
       with
       | Not_found -> 
         raise (Xml_parse_failure 
-              (sprintf "Descend_and_match failed. Node %s not found." hd_tag))
+            (sprintf "Descend_and_match failed. Node %s not found." hd_tag))
     end      
   | _, Xml.PCData _ -> 
     assert false (*This  should never happen as a leaf node is detected in an earlier match and returned *)
@@ -573,14 +573,14 @@ let get_opt_recommendations ~__context =
       match key_value_parents with
       | Xml.Element (_, _, kvalues) :: tl ->
         List.map (
-            fun elem -> match elem with 
-              | (Xml.Element (key, _, _)) as leaf -> 
-                (key, data_from_leaf leaf)
-              | Xml.PCData _ ->
-                unexpected_data "GetOptimizationRecommendations"
-                  "PoolOptimizationRecommendation"
-                  inner_xml
-          ) kvalues :: gen_map tl
+          fun elem -> match elem with 
+            | (Xml.Element (key, _, _)) as leaf -> 
+              (key, data_from_leaf leaf)
+            | Xml.PCData _ ->
+              unexpected_data "GetOptimizationRecommendations"
+                "PoolOptimizationRecommendation"
+                inner_xml
+        ) kvalues :: gen_map tl
       | Xml.PCData _ :: tl ->
         unexpected_data "GetOptimizationRecommendations"
           "Recommendations node"
@@ -648,14 +648,14 @@ let get_evacuation_recoms ~__context ~uuid =
       match key_value_parents with
       | Xml.Element (_, _, kvalues) :: tl ->
         List.map (
-            fun elem -> match elem with 
-              | (Xml.Element (key, _, _)) as leaf -> 
-                (key, data_from_leaf leaf)
-              | Xml.PCData _ ->
-                unexpected_data "HostGetRecommendations"
-                  "HostEvacuationRecommendation"
-                  inner_xml
-          ) kvalues :: gen_map tl
+          fun elem -> match elem with 
+            | (Xml.Element (key, _, _)) as leaf -> 
+              (key, data_from_leaf leaf)
+            | Xml.PCData _ ->
+              unexpected_data "HostGetRecommendations"
+                "HostEvacuationRecommendation"
+                inner_xml
+        ) kvalues :: gen_map tl
       | Xml.PCData _ :: tl ->
         unexpected_data "HostGetRecommendations"
           "Recommendations"
@@ -715,8 +715,8 @@ let get_evacuation_recoms ~__context ~uuid =
 let make_param = function
   | (n, v) ->
     Xml.Element("ReportParameter", [],
-        [Xml.Element("ParameterName", [], [Xml.PCData n]);
-         Xml.Element("ParameterValue", [], [Xml.PCData v])])
+      [Xml.Element("ParameterName", [], [Xml.PCData n]);
+       Xml.Element("ParameterValue", [], [Xml.PCData v])])
 
 let wlb_context_request meth params ~__context ~handler =
   assert_wlb_licensed ~__context;
@@ -732,8 +732,8 @@ let wlb_report_request report params =
   let meth = "ExecuteReport" in
   let p = 
     ((Xml.to_string (Xml.Element("ReportName", [], [Xml.PCData report]))) ^
-       (Xml.to_string (Xml.Element("ReportParms", [],
-            List.map make_param params)))) 
+     (Xml.to_string (Xml.Element("ReportParms", [],
+          List.map make_param params)))) 
   in
   debug "%s" p;
   (meth, wlb_context_request meth p)

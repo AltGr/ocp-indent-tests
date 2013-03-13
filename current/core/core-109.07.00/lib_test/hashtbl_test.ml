@@ -32,29 +32,29 @@ let test =
     [ "find" >::
         (fun () ->
           "no_exception" @?
-            let found = Hashtbl.find test_hash "a" in
-            let not_found = Hashtbl.find test_hash "A" in
-            Hashtbl.invariant test_hash;
-            match found,not_found with
-            | Some _, None -> true
-            | _ -> false
+          let found = Hashtbl.find test_hash "a" in
+          let not_found = Hashtbl.find test_hash "A" in
+          Hashtbl.invariant test_hash;
+          match found,not_found with
+          | Some _, None -> true
+          | _ -> false
         );
       "add" >:: (fun () ->
         "no_exception" @?
-          let our_hash = Hashtbl.copy test_hash in
-          let duplicate = Hashtbl.add our_hash ~key:"a" ~data:4 in
-          let no_duplicate = Hashtbl.add our_hash ~key:"d" ~data:5 in
-          assert (Hashtbl.find our_hash "a" = Some 1);
-          assert (Hashtbl.find our_hash "d" = Some 5);
-          Hashtbl.invariant our_hash;
-          match duplicate, no_duplicate with
-          | `Duplicate, `Ok -> true
-          | _ -> false
+        let our_hash = Hashtbl.copy test_hash in
+        let duplicate = Hashtbl.add our_hash ~key:"a" ~data:4 in
+        let no_duplicate = Hashtbl.add our_hash ~key:"d" ~data:5 in
+        assert (Hashtbl.find our_hash "a" = Some 1);
+        assert (Hashtbl.find our_hash "d" = Some 5);
+        Hashtbl.invariant our_hash;
+        match duplicate, no_duplicate with
+        | `Duplicate, `Ok -> true
+        | _ -> false
       );
       "iter_vals" >::
         (fun () ->
           let predicted = List.sort ~cmp:Int.descending (
-              List.map test_data ~f:(fun (_,v) -> v))
+                            List.map test_data ~f:(fun (_,v) -> v))
           in
           let found = ref [] in
           Hashtbl.iter_vals test_hash ~f:(fun v -> found := v :: !found);
@@ -66,33 +66,33 @@ let test =
       "of_alist" >::
         (fun () ->
           "size" @?
-            (let predicted = List.length test_data in
-             let found = Hashtbl.length (Hashtbl.Poly.of_alist_exn test_data) in
-             predicted = found);
+          (let predicted = List.length test_data in
+           let found = Hashtbl.length (Hashtbl.Poly.of_alist_exn test_data) in
+           predicted = found);
           "right keys" @?
-            (let predicted = List.map test_data ~f:(fun (k,_) -> k) in
-             let found = Hashtbl.keys (Hashtbl.Poly.of_alist_exn test_data) in
-             let sp = List.sort ~cmp:ascending predicted in
-             let sf = List.sort ~cmp:ascending found in
-             sp = sf)
+          (let predicted = List.map test_data ~f:(fun (k,_) -> k) in
+           let found = Hashtbl.keys (Hashtbl.Poly.of_alist_exn test_data) in
+           let sp = List.sort ~cmp:ascending predicted in
+           let sf = List.sort ~cmp:ascending found in
+           sp = sf)
         );
       "keys" >::
         (fun () ->
           "size and right keys" @?
-            (let predicted = List.map test_data ~f:(fun (k,_) -> k) in
-             let found = Hashtbl.keys test_hash in
-             let sp = List.sort ~cmp:ascending predicted in
-             let sf = List.sort ~cmp:ascending found in
-             sp = sf)
+          (let predicted = List.map test_data ~f:(fun (k,_) -> k) in
+           let found = Hashtbl.keys test_hash in
+           let sp = List.sort ~cmp:ascending predicted in
+           let sf = List.sort ~cmp:ascending found in
+           sp = sf)
         );
       "data" >::
         (fun () ->
           "size and right data" @?
-            (let predicted = List.map test_data ~f:(fun (_,v) -> v) in
-             let found = Hashtbl.data test_hash in
-             let sp = List.sort ~cmp:ascending predicted in
-             let sf = List.sort ~cmp:ascending found in
-             sp = sf)
+          (let predicted = List.map test_data ~f:(fun (_,v) -> v) in
+           let found = Hashtbl.data test_hash in
+           let sp = List.sort ~cmp:ascending predicted in
+           let sf = List.sort ~cmp:ascending found in
+           sp = sf)
         );
 
       "map" >:: (fun () ->
@@ -113,7 +113,7 @@ let test =
       "filter_map" >:: (fun () ->
         begin
           let to_string h = Sexp.to_string_hum (
-              Hashtbl.Poly.sexp_of_t String.sexp_of_t Int.sexp_of_t h)
+                              Hashtbl.Poly.sexp_of_t String.sexp_of_t Int.sexp_of_t h)
           in
           let f x = Some x in
           let result = Hashtbl.filter_map test_hash ~f in
@@ -125,7 +125,7 @@ let test =
         let is_even x = x mod 2 = 0 in
         let add1_to_even x = if is_even x then Some (x + 1) else None in
         let predicted_data = List.filter_map test_data ~f:(fun (k,v) ->
-            if is_even v then Some (k, v+1) else None)
+                               if is_even v then Some (k, v+1) else None)
         in
         let found = Hashtbl.filter_map test_hash ~f:add1_to_even in
         let found_alist = List.sort ~cmp:ascending (Hashtbl.to_alist found) in
@@ -149,9 +149,9 @@ let test =
           | [] -> ()
           | l ->
             List.iter l ~f:(function
-                | `Missing k -> Printf.eprintf "missing key:%d\n" k
-                | `Wrong_data (k, d) ->
-                  Printf.eprintf "wrong data key:%d data:%d\n" k d);
+            | `Missing k -> Printf.eprintf "missing key:%d\n" k
+            | `Wrong_data (k, d) ->
+              Printf.eprintf "wrong data key:%d data:%d\n" k d);
             Printf.eprintf "missing %d of %d\n" (List.length l)
               (List.length !inserted);
             failwith "some inserts are missing"
@@ -171,8 +171,8 @@ let test =
           Hashtbl.remove t x;
           Hashtbl.invariant t;
           begin match Hashtbl.find t x with
-            | None -> ()
-            | Some _ -> failwith (sprintf "present after removal: %d" x)
+          | None -> ()
+          | Some _ -> failwith (sprintf "present after removal: %d" x)
           end;
           inserted := List.Assoc.remove !inserted x;
           verify_inserted t));

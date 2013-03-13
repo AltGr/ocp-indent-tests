@@ -185,7 +185,7 @@ let migrate_rrd _ ?(session_id : string option) ~(remote_address : string)
     log_backtrace ()
   | e ->
     (*debug "Caught exception while trying to push VM %s RRDs: %s"
-       vm_uuid (ExnHelper.string_of_exn e);*)
+      vm_uuid (ExnHelper.string_of_exn e);*)
     log_backtrace ()
 
 (* Called on host shutdown/reboot to send the Host RRD to the master for

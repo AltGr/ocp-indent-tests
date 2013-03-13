@@ -45,11 +45,11 @@ let _ =
       | 9068 -> Tc_9068.run_iscsi rpc session
       | 9069 -> Tc_9069.run_netapp rpc session
       | 9078 -> Tc_9078.run_fc rpc session
-                  (* Path fail-over time tests *)
+      (* Path fail-over time tests *)
       | 9071 -> Tc_9071.run_iscsi rpc session
       | 9072 -> Tc_9072.run_netapp rpc session
       | 9079 -> Tc_9079.run_fc rpc session
-                  (* Alert tests *)
+      (* Alert tests *)
       | 9074 -> Tc_9074.run rpc session
       | _ -> failwith "Unknown test case!"
     end;

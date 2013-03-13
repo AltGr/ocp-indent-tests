@@ -11,8 +11,8 @@ let sexp_of_t t =
     List.map (String.split t ~on:'\n') ~f:(fun s ->
       Sexp.Atom
         (match String.index s ':' with
-         | None -> s
-         | Some i -> try String.slice s (i + 2) 0 with _ -> s))
+        | None -> s
+        | Some i -> try String.slice s (i + 2) 0 with _ -> s))
   in
   Sexp.List (List.drop l 2)
 ;;

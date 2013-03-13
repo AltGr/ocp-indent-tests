@@ -192,9 +192,9 @@ let cancel_tasks ~__context ~self ~all_tasks_in_db ~task_ids =
 (*let clone_record ~uuid ?name_label ?name_description ?sR ?virtual_size ?location
     ?physical_utilisation ?_type ?sharable ?read_only ?storage_lock ?other_config ?parent
     ?xenstore_data ?sm_config ~current_operations ~__context ~original () =
-   let a = Db.VDI.get_record_internal ~__context ~self:original in
-   let r = Ref.make () in
-   Db.VDI.create ~__context ~ref:r 
+  let a = Db.VDI.get_record_internal ~__context ~self:original in
+  let r = Ref.make () in
+  Db.VDI.create ~__context ~ref:r 
     ~uuid:(Uuid.to_string uuid)
     ~name_label:(default a.Db_actions.vDI_name_label name_label)
     ~name_description:(default a.Db_actions.vDI_name_description name_description)
@@ -211,7 +211,7 @@ let cancel_tasks ~__context ~self ~all_tasks_in_db ~task_ids =
     ~xenstore_data:(default a.Db_actions.vDI_xenstore_data xenstore_data)
     ~sm_config:(default a.Db_actions.vDI_sm_config sm_config)
     ~parent:(default Ref.null parent);
-   r*)
+  r*)
 
 let require_uuid vdi_info = 
   match vdi_info.Smint.vdi_info_uuid with
@@ -420,9 +420,9 @@ let snapshot ~__context ~vdi ~driver_params =
   (* Record the fact this is a snapshot *)
 
   (*(try Db.VDI.remove_from_other_config ~__context ~self:newvdi ~key:Xapi_globs.snapshot_of with _ -> ());
-     (try Db.VDI.remove_from_other_config ~__context ~self:newvdi ~key:Xapi_globs.snapshot_time with _ -> ());
-     Db.VDI.add_to_other_config ~__context ~self:newvdi ~key:Xapi_globs.snapshot_of ~value:a.Db_actions.vDI_uuid;
-     Db.VDI.add_to_other_config ~__context ~self:newvdi ~key:Xapi_globs.snapshot_time ~value:(Date.to_string (Date.of_float (Unix.gettimeofday ())));*)
+    (try Db.VDI.remove_from_other_config ~__context ~self:newvdi ~key:Xapi_globs.snapshot_time with _ -> ());
+    Db.VDI.add_to_other_config ~__context ~self:newvdi ~key:Xapi_globs.snapshot_of ~value:a.Db_actions.vDI_uuid;
+    Db.VDI.add_to_other_config ~__context ~self:newvdi ~key:Xapi_globs.snapshot_time ~value:(Date.to_string (Date.of_float (Unix.gettimeofday ())));*)
   Db.VDI.set_is_a_snapshot ~__context ~self:newvdi ~value:true;
   Db.VDI.set_snapshot_of ~__context ~self:newvdi ~value:vdi;
   Db.VDI.set_snapshot_time ~__context ~self:newvdi ~value:(Date.of_float (Unix.gettimeofday ()));
@@ -685,4 +685,4 @@ let read_database_pool_uuid ~__context ~self =
   | Some (_, uuid) -> uuid
   | None -> ""
 
-(* let pool_migrate = "See Xapi_vm_migrate.vdi_pool_migrate!" *)
+  (* let pool_migrate = "See Xapi_vm_migrate.vdi_pool_migrate!" *)

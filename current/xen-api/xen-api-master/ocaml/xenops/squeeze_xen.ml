@@ -12,7 +12,7 @@
  * GNU Lesser General Public License for more details.
  *)
 (**
-   Interface between the abstract domain memory balancing code and Xen.
+  Interface between the abstract domain memory balancing code and Xen.
 *)
 (*
   Aims are:
@@ -233,7 +233,7 @@ module Domain = struct
       raise Xenbus.Xb.Noent
 
   (** Write a new (key, value) pair into a domain's directory in xenstore. Don't write anything
-     if the domain's directory doesn't exist. Don't throw exceptions. *)
+      if the domain's directory doesn't exist. Don't throw exceptions. *)
   let write_noexn (xc, xs) domid key value = 
     match get_per_domain (xc, xs) domid with
     | None -> ()
@@ -251,7 +251,7 @@ module Domain = struct
           (* Log but don't throw an exception *)
           error "xenstore-write %d %s = %s failed: %s" domid key value (Printexc.to_string e)
       end
-      (** Returns true if the key exists, false otherwise *)
+  (** Returns true if the key exists, false otherwise *)
   let exists (xc, xs) domid key = try ignore(read (xc, xs) domid key); true with Xenbus.Xb.Noent -> false
   (** Delete the key. Don't throw exceptions. *)
   let rm_noexn (xc, xs) domid key = 

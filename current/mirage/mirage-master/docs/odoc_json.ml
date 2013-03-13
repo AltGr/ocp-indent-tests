@@ -213,14 +213,14 @@ let rec print_one_t = function
   | Node ("", _, _) -> ""
   | Node (tag, atts, subs) ->
     "<" ^ tag ^
-      (match atts with
-       | [] -> ""
-       | _ -> " " ^
-           String.concat " " (List.map
-               (fun (a,v) -> (Printf.sprintf "%s=\"%s\" " a (escape_entities (escape_quotes v)))) atts)
-      ) ^ ">" ^
-      (print_t_list subs) ^
-      (Printf.sprintf "</%s>" tag)
+    (match atts with
+     | [] -> ""
+     | _ -> " " ^
+            String.concat " " (List.map
+                (fun (a,v) -> (Printf.sprintf "%s=\"%s\" " a (escape_entities (escape_quotes v)))) atts)
+    ) ^ ">" ^
+    (print_t_list subs) ^
+    (Printf.sprintf "</%s>" tag)
 
 and print_t_list l =
   String.concat "" (List.map print_one_t l)
@@ -338,10 +338,10 @@ class gen () =
       | Parameter.Simple_name sn ->
         Object (["name", String sn.Parameter.sn_name;
                  "type", self#json_of_type_expr sn.Parameter.sn_type] @
-              (match sn.Parameter.sn_text with
-               | None -> []
-               | Some t -> ["comment", self#json_of_comment t])
-          )
+                (match sn.Parameter.sn_text with
+                 | None -> []
+                 | Some t -> ["comment", self#json_of_comment t])
+        )
       | Parameter.Tuple (l,texpr) ->
         Object ["tuple", Object
                   ["type", self#json_of_type_expr texpr; "contents", Array (List.map self#json_of_parameter l)]]
@@ -356,8 +356,8 @@ class gen () =
       let te = "type", self#json_of_type_expr v.Value.val_type in
       let params = "params", Array (List.map self#json_of_parameter v.Value.val_parameters) in
       (*    let code = match v.Value.val_code with
-          None -> [] | Some s -> [node "code" [Leaf s]]
-          in*)
+            None -> [] | Some s -> [node "code" [Leaf s]]
+            in*)
       Object (name :: loc :: info :: te :: params :: []) (* @ code *)
 
     method json_of_exception e =
@@ -373,9 +373,9 @@ class gen () =
         | Some ea -> ["exception_alias", String ea.Exception.ea_name]
       in
       (*    let code = match e.Exception.ex_code with
-          | None -> []
-          | Some s -> [node "code" [Leaf s]]
-          in *)
+            | None -> []
+            | Some s -> [node "code" [Leaf s]]
+            in *)
       Object (name :: loc :: info :: args @ alias) (*  @ code *)
 
     method json_of_mnt_option = function
@@ -403,8 +403,8 @@ class gen () =
         | Some t -> ["manifest", self#json_of_type_expr t]
       in
       (*    let code = match t.Type.ty_code with
-          | None -> [] | Some s -> [node "code" [Leaf s]]
-          in*)
+            | None -> [] | Some s -> [node "code" [Leaf s]]
+            in*)
       Object (name :: loc :: info :: params :: kind :: manifest @ []) (* @ code *)
 
     method json_of_type_parameter (texp, covar, contravar) =
@@ -445,7 +445,7 @@ class gen () =
       in
       descr_cnt <- descr_cnt + 1;
       Object (["name", String f.Type.rf_name; "mutable", json_of_bool f.Type.rf_mutable] @
-          desc @ ["type", self#json_of_type_expr f.Type.rf_type])
+              desc @ ["type", self#json_of_type_expr f.Type.rf_type])
 
     method json_of_info_opt info =
       descr_cnt <- descr_cnt + 1;

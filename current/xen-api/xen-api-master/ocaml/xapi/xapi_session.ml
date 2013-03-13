@@ -275,7 +275,7 @@ let login_no_password ~__context ~uname ~host ~pool ~is_local_superuser ~subject
   let parent = try Context.get_session_id __context with _ -> Ref.null in
   (*match uname with   (* the user object is deprecated in favor of subject *)
       Some uname -> Helpers.get_user ~__context uname
-     | None -> Ref.null in*)
+    | None -> Ref.null in*)
   (* This info line is important for tracking, auditability and client accountability purposes on XenServer *)
   (* Never print the session id nor uuid: they are secret values that should be known only to the user that *)
   (* has just logged in. Instead, we print a non-invertible hash as the tracking id for the session id *)
@@ -521,8 +521,8 @@ let login_with_password ~__context ~uname ~pwd ~version = wipe_params_after_fn [
                                List.find (fun subj -> (* is this the subject ref that returned the non-empty intersection?*)
                                  (List.hd intersection) = (subj,(Db.Subject.get_subject_identifier ~__context ~self:subj)) 
                                ) subjects_in_db (* goes through exactly the same subject list that we went when computing the intersection, *)
-                               (* so that no one is able to undetectably remove/add another subject with the same subject_identifier *)
-                               (* between that time 2.2 and now 2.3 *)
+                             (* so that no one is able to undetectably remove/add another subject with the same subject_identifier *)
+                             (* between that time 2.2 and now 2.3 *)
                              with Not_found -> (* this should never happen, it shows an inconsistency in the db between 2.2 and 2.3 *)
                                begin
                                  let msg = (Printf.sprintf "Subject %s (identifier %s, from %s) is not present in this pool" uname subject_identifier (Context.get_origin __context)) in 
@@ -534,7 +534,7 @@ let login_with_password ~__context ~uname ~pwd ~version = wipe_params_after_fn [
                              ~pool:false ~is_local_superuser:false ~subject:subject ~auth_user_sid:subject_identifier ~auth_user_name:subject_name
                              ~rbac_permissions
                          end
-                         (* we only reach this point if for some reason a function above forgot to catch a possible exception in the Auth_signature module*)
+                 (* we only reach this point if for some reason a function above forgot to catch a possible exception in the Auth_signature module*)
                  with
                  | Not_found 
                  | Auth_signature.Subject_cannot_be_resolved -> 
@@ -568,7 +568,7 @@ let login_with_password ~__context ~uname ~pwd ~version = wipe_params_after_fn [
 let change_password  ~__context ~old_pwd ~new_pwd = wipe_params_after_fn [old_pwd;new_pwd] (fun () ->
     let session_id = Context.get_session_id __context in
     (*let user = Db.Session.get_this_user ~__context ~self:session_id in
-       let uname = Db.User.get_short_name ~__context ~self:user in*)
+      let uname = Db.User.get_short_name ~__context ~self:user in*)
     let uname = local_superuser in (* user class has been deprecated *)
 
     if (Db.Session.get_is_local_superuser ~__context ~self:session_id) then

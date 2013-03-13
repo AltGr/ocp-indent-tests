@@ -230,7 +230,7 @@ let validate_memory ~__context ~snapshot:vm_record =
   (* to have valid constraints without allowing coercion.         *)
   match Vm_memory_constraints.transform constraints with
   | Some constraints -> ()
-    (* Do nothing. *)
+  (* Do nothing. *)
   | None ->
     (* The constraints could not be coerced. *)
     raise (Api_errors.Server_error (Api_errors.memory_constraint_violation, []))
@@ -369,7 +369,7 @@ let assert_can_see_networks ~__context ~self ~host =
           ~__context
           ~self:network
           ~host
-        (* throw exception more appropriate to this context: *)
+      (* throw exception more appropriate to this context: *)
       with exn ->
         debug
           "Caught exception while checking if network %s could be attached on host %s:%s"
@@ -454,15 +454,15 @@ let assert_enough_memory_available ~__context ~self ~host ~snapshot =
 
 (** Checks to see if a VM can boot on a particular host, throws an error if not.
  * Criteria:
-   - The vCPU, memory, shadow multiplier, and actions-after-crash values must be valid.
-   - For each VBD, corresponding VDI's SR must be attached on the target host.
-   - For each VIF, either the Network has a PIF connecting to the target host,
-   OR if no PIF is connected to the Network then the host must be the same one
-   all running VMs with VIFs on the Network are running on.
-   - If the VM need PCI passthrough, check the host supports IOMMU/VT-d.
-   - For each vGPU, check whether a pGPU from the required GPU group is available.
-   - If the VM would boot HVM, check the host supports it.
-   - If the VM would boot PV, check the bootloader is supported.
+    - The vCPU, memory, shadow multiplier, and actions-after-crash values must be valid.
+    - For each VBD, corresponding VDI's SR must be attached on the target host.
+    - For each VIF, either the Network has a PIF connecting to the target host,
+    OR if no PIF is connected to the Network then the host must be the same one
+    all running VMs with VIFs on the Network are running on.
+    - If the VM need PCI passthrough, check the host supports IOMMU/VT-d.
+    - For each vGPU, check whether a pGPU from the required GPU group is available.
+    - If the VM would boot HVM, check the host supports it.
+    - If the VM would boot PV, check the bootloader is supported.
 
  * I.e. we share storage but not (internal/PIF-less) networks: the first VIF on a
  * network pins it to the host the VM is running on.
@@ -510,9 +510,9 @@ let retrieve_wlb_recommendations ~__context ~vm ~snapshot =
     Hashtbl.fold (fun k v tl -> (k,v) :: tl) recs []
 
 (** Returns the subset of all hosts to which the given function [choose_fn]
-   can be applied without raising an exception. If the optional [vm] argument is
-   present, this function additionally prints a debug message that includes the
-   names of the given VM and each of the possible hosts. *)
+    can be applied without raising an exception. If the optional [vm] argument is
+    present, this function additionally prints a debug message that includes the
+    names of the given VM and each of the possible hosts. *)
 let possible_hosts ~__context ?vm ~choose_fn () =
   (* XXXX: This function uses exceptions to control the flow of execution.  *)
   (* XXXX: This function mixes business logic with debugging functionality. *)
@@ -544,11 +544,11 @@ let possible_hosts ~__context ?vm ~choose_fn () =
   choices
 
 (** Returns a single host (from the set of all hosts) to which the given
-   function [choose_fn] can be applied without raising an exception. Raises
-   [Api_errors.no_hosts_available] if no such host exists. If the optional [vm]
-   argument is present, then this function additionally prints a debug message
-   that includes the names of the given VM and the subset of all hosts that
-   satisfy the given function [choose_fn]. *)
+    function [choose_fn] can be applied without raising an exception. Raises
+    [Api_errors.no_hosts_available] if no such host exists. If the optional [vm]
+    argument is present, then this function additionally prints a debug message
+    that includes the names of the given VM and the subset of all hosts that
+    satisfy the given function [choose_fn]. *)
 let choose_host ~__context ?vm ~choose_fn ?(prefer_slaves=false) () =
   let choices = possible_hosts ~__context ?vm ~choose_fn () in
   match choices with
@@ -563,14 +563,14 @@ let choose_host ~__context ?vm ~choose_fn ?(prefer_slaves=false) () =
     List.nth choices (Random.int (List.length choices))
 
 (** Returns the subset of all hosts on which the given [vm] can boot. This
-   function also prints a debug message identifying the given [vm] and hosts. *)
+    function also prints a debug message identifying the given [vm] and hosts. *)
 let get_possible_hosts_for_vm ~__context ~vm ~snapshot =
   possible_hosts ~__context ~vm
     ~choose_fn:(assert_can_boot_here ~__context ~self:vm ~snapshot) ()
 
 (** Performs an expensive and comprehensive check to determine whether the
-   given [guest] can run on the given [host]. Returns true if and only if the
-   guest can run on the host. *)
+    given [guest] can run on the given [host]. Returns true if and only if the
+    guest can run on the host. *)
 let vm_can_run_on_host __context vm snapshot host =
   let host_has_proper_version () =
     if Helpers.rolling_upgrade_in_progress ~__context
@@ -587,7 +587,7 @@ let vm_can_run_on_host __context vm snapshot host =
   with _ -> false
 
 (** Selects a single host from the set of all hosts on which the given [vm]
-   can boot. Raises [Api_errors.no_hosts_available] if no such host exists. *)
+    can boot. Raises [Api_errors.no_hosts_available] if no such host exists. *)
 let choose_host_for_vm_no_wlb ~__context ~vm ~snapshot =
   let validate_host = vm_can_run_on_host __context vm snapshot in
   Xapi_vm_placement.select_host __context vm validate_host
@@ -735,14 +735,14 @@ let allowed_VIF_devices_HVM_PP = vif_inclusive_range 0 6
 let allowed_VIF_devices_PV     = vif_inclusive_range 0 6
 
 (** [possible_VBD_devices_of_string s] returns a list of Device_number.t which
-   represent possible interpretations of [s]. *)
+    represent possible interpretations of [s]. *)
 let possible_VBD_devices_of_string s =
   (* NB userdevice fields are arbitrary strings and device fields may be "" *)
   let parse hvm x = try Some (Device_number.of_string hvm x) with _ -> None in
   Listext.List.unbox_list [ parse true s; parse false s ]
 
 (** [all_used_VBD_devices __context self] returns a list of Device_number.t
-   which are considered to be already in-use in the VM *)
+    which are considered to be already in-use in the VM *)
 let all_used_VBD_devices ~__context ~self =
   let all = Db.VM.get_VBDs ~__context ~self in
 

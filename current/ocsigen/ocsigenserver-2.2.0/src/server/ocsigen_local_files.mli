@@ -37,8 +37,8 @@ val default_options : options
 
 
 (** Local file corresponding to a request. The string argument
-   represents the real file or directory to serve, eg. foo/index.html
-   instead of foo *)
+    represents the real file or directory to serve, eg. foo/index.html
+    instead of foo *)
 type resolved =
     | RFile of string
     | RDir of string

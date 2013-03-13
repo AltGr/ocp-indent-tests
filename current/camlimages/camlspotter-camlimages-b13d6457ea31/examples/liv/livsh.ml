@@ -156,8 +156,8 @@ and icon ~dir ~name (req : icon_creator) =
         begin match !info_icon with
           | Mylazy.Delayed _ ->
             req#add (fun () ->
-                if !!button#misc#visible then
-                  (try ignore (self#icon) with _ -> ()))
+              if !!button#misc#visible then
+                (try ignore (self#icon) with _ -> ()))
           | _ -> ()
         end;
         v) in
@@ -338,7 +338,7 @@ class livsh init_dir func =
                         let typ = box#typ in
                         prerr_endline
                           ("Pressed " ^ file ^
-                             " (" ^ fst typ ^ "/" ^ snd typ ^ ")");
+                           " (" ^ fst typ ^ "/" ^ snd typ ^ ")");
                         match typ with
                         | "special", "dir"
                         | "special", "lnkdir" ->

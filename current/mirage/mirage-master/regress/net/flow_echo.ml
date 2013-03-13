@@ -27,9 +27,9 @@ let rec echo (dip,dpt) flow  =
   match_lwt Net.Flow.read flow with
   | None
     -> return (
-           Log.info "Flow_echo" "rem:%s:%d end"
-             (Net.Nettypes.ipv4_addr_to_string dip) dpt;
-         )
+         Log.info "Flow_echo" "rem:%s:%d end"
+           (Net.Nettypes.ipv4_addr_to_string dip) dpt;
+       )
   | Some buf 
     -> (let s = Bitstring.string_of_bitstring buf in
         if s.[(String.length s) - 1] = '\x04' then (

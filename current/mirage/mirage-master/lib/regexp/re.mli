@@ -1,7 +1,7 @@
 (** This module provides functions for creating and using Regular Expression.
 
-   It is in pure OCaml (unlike Pcre_Ocaml) and thus more portable. It is
-   reentrant (unlike Str) but not thread-safe in case of preemptive schedulling.
+    It is in pure OCaml (unlike Pcre_Ocaml) and thus more portable. It is
+    reentrant (unlike Str) but not thread-safe in case of preemptive schedulling.
 *)
 
 
@@ -52,25 +52,25 @@ val some : regexp -> regexp
 (** [from_string_raw s] parses the string [s] and returns the associated regexp.
 
     The following constructions can be used in the given string:
-   {v
-   ________________________________________________________________
-   |                                                              |
-   | The following constructions can be used in the string [s]:   |
-   |______________________________________________________________|_______________________________________________
-   | char             |   denotes the character char for all non-special chars                                    |
-   | \char            |   denotes the character char for special characters ., \, *, +, ?, |, [, ], ( and )       |
-   | [set]            |   denotes any single-character word belonging to set. Intervals may be given as in [a-z]. |
-   | [^set]           |   denotes any single-character word not belonging to set.                                 |
-   | .                |   denotes any single-character word (complete set of characters)                          |
-   | regexp*          |   denotes the Kleene star of regexp                                                       |
-   | regexp+          |   denotes any concatenation of one or more words of regexp                                |
-   | regexp?          |   denotes the empty word or any word denoted by regexp                                    |
-   | regexp1|regexp2  |   denotes any words in regexp1 or in regexp2                                              |
-   | regexp1regexp2   |   denotes any contecatenation of a word of regexp1 and a word of regexp2                  |
-   | (regexp)         |   parentheses, denotes the same words as regexp.                                          |
-   |__________________|___________________________________________________________________________________________|
+{v
+ ________________________________________________________________
+ |                                                              |
+ | The following constructions can be used in the string [s]:   |
+ |______________________________________________________________|_______________________________________________
+ | char             |   denotes the character char for all non-special chars                                    |
+ | \char            |   denotes the character char for special characters ., \, *, +, ?, |, [, ], ( and )       |
+ | [set]            |   denotes any single-character word belonging to set. Intervals may be given as in [a-z]. |
+ | [^set]           |   denotes any single-character word not belonging to set.                                 |
+ | .                |   denotes any single-character word (complete set of characters)                          |
+ | regexp*          |   denotes the Kleene star of regexp                                                       |
+ | regexp+          |   denotes any concatenation of one or more words of regexp                                |
+ | regexp?          |   denotes the empty word or any word denoted by regexp                                    |
+ | regexp1|regexp2  |   denotes any words in regexp1 or in regexp2                                              |
+ | regexp1regexp2   |   denotes any contecatenation of a word of regexp1 and a word of regexp2                  |
+ | (regexp)         |   parentheses, denotes the same words as regexp.                                          |
+ |__________________|___________________________________________________________________________________________|
 
-   v}
+ v}
 
 *)
 val from_string_raw : string -> regexp

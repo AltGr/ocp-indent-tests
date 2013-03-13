@@ -231,29 +231,29 @@ let parse_config parse_fun = function
       (function
         | Ocsigen_extensions.Req_found (_, r) ->
             Lwt.return (Ocsigen_extensions.Ext_found_stop 
-                  (fun () -> Lwt.return r))
+                (fun () -> Lwt.return r))
         | Ocsigen_extensions.Req_not_found (err, ri) ->
             Lwt.return (Ocsigen_extensions.Ext_stop_site 
-                  (Ocsigen_cookies.Cookies.empty, 404)))
+                (Ocsigen_cookies.Cookies.empty, 404)))
 
   | Element ("nexthost", [], []) ->
       (function
         | Ocsigen_extensions.Req_found (_, r) ->
             Lwt.return (Ocsigen_extensions.Ext_found_stop
-                  (fun () -> Lwt.return r))
+                (fun () -> Lwt.return r))
         | Ocsigen_extensions.Req_not_found (err, ri) ->
             Lwt.return (Ocsigen_extensions.Ext_stop_host
-                  (Ocsigen_cookies.Cookies.empty, 404)))
+                (Ocsigen_cookies.Cookies.empty, 404)))
   | Element ("nextsite" as s, _, _) -> badconfig "Bad syntax for tag %s" s
 
   | Element ("stop", [], []) ->
       (function
         | Ocsigen_extensions.Req_found (_, r) ->
             Lwt.return (Ocsigen_extensions.Ext_found_stop
-                  (fun () -> Lwt.return r))
+                (fun () -> Lwt.return r))
         | Ocsigen_extensions.Req_not_found (err, ri) ->
             Lwt.return (Ocsigen_extensions.Ext_stop_all
-                  (Ocsigen_cookies.Cookies.empty, 404)))
+                (Ocsigen_cookies.Cookies.empty, 404)))
   | Element ("stop" as s, _, _) -> badconfig "Bad syntax for tag %s" s
 
   | Element ("forbidden", [], []) ->
@@ -277,7 +277,7 @@ let parse_config parse_fun = function
       (function
         | Ocsigen_extensions.Req_found (_, r) ->
             Lwt.return (Ocsigen_extensions.Ext_found
-                  (fun () -> Lwt.return r))
+                (fun () -> Lwt.return r))
         | Ocsigen_extensions.Req_not_found (err, ri) ->
             Lwt.return (Ext_sub_result ext))
   | Element ("ifnotfound", [("code", s)], sub) ->
@@ -286,7 +286,7 @@ let parse_config parse_fun = function
       (function
         | Ocsigen_extensions.Req_found (_, r) ->
             Lwt.return (Ocsigen_extensions.Ext_found
-                  (fun () -> Lwt.return r))
+                (fun () -> Lwt.return r))
         | Ocsigen_extensions.Req_not_found (err, ri) ->
             if Netstring_pcre.string_match r (string_of_int err) 0 <> None then
               Lwt.return (Ext_sub_result ext)

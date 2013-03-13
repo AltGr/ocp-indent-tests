@@ -56,8 +56,8 @@ let dm_to_string tys : O.Module.t =
       | DT.Enum(name, cs) ->
         let aux (c, _) = (OU.constructor_of c)^" -> \""^c^"\"" in
         "\n    fun v -> match v with\n      "^
-          String.concat "\n    | " (List.map aux cs)
-          (* ^"\n    | _ -> raise (StringEnumTypeError \""^name^"\")" *)
+        String.concat "\n    | " (List.map aux cs)
+      (* ^"\n    | _ -> raise (StringEnumTypeError \""^name^"\")" *)
       | DT.Float -> "Printf.sprintf \"%0.18g\""
       | DT.Int -> "Int64.to_string"
       | DT.Map(key, value) ->
@@ -97,8 +97,8 @@ let string_to_dm tys : O.Module.t =
       | DT.Enum(name, cs) ->
         let aux (c, _) = "\""^c^"\" -> "^(OU.constructor_of c) in
         "\n    fun v -> match v with\n      "^
-          String.concat "\n    | " (List.map aux cs)^
-          "\n    | _ -> raise (StringEnumTypeError \""^name^"\")"
+        String.concat "\n    | " (List.map aux cs)^
+        "\n    | _ -> raise (StringEnumTypeError \""^name^"\")"
       | DT.Float -> "float_of_string"
       | DT.Int -> "Int64.of_string"
       | DT.Map(key, value) ->
@@ -217,7 +217,7 @@ let ocaml_of_tbl_fields xs =
 
 let open_db_module = 
   "let __t = Context.database_of __context in\n" ^
-    "let module DB = (val (Db_cache.get __t) : Db_interface.DB_ACCESS) in\n"
+  "let module DB = (val (Db_cache.get __t) : Db_interface.DB_ACCESS) in\n"
 
 let db_action api : O.Module.t =
   let api = make_db_api api in
@@ -244,7 +244,7 @@ let db_action api : O.Module.t =
           (Escaping.escape_id full_name)
       | f ->
         _string_to_dm ^ "." ^ (OU.alias_of_ty f.DT.ty) ^
-          "(List.assoc \"" ^ (Escaping.escape_id f.full_name) ^ "\" __regular_fields)" in
+        "(List.assoc \"" ^ (Escaping.escape_id f.full_name) ^ "\" __regular_fields)" in
     let make_field f = Printf.sprintf "        %s%s = %s;" m (OU.ocaml_of_record_field (obj.DT.name :: f.DT.full_name)) (of_field f) in
     let fields = List.map make_field all_fields in
     let mk_rec = [ "{" ] @ fields @ [ "    }"] in
@@ -460,8 +460,8 @@ let db_defaults api : O.Signature.t =
     let args = Gen_common.context_arg :: (args_of_message obj x) in
     { O.Val.name = x.msg_name;
       params = args @
-          [ O.Anon(None, match x.msg_result with Some (ty,_) -> OU.alias_of_ty ty
-                                               | None -> "unit") ]
+               [ O.Anon(None, match x.msg_result with Some (ty,_) -> OU.alias_of_ty ty
+                                                    | None -> "unit") ]
     } in
 
   let obj (obj: obj) =

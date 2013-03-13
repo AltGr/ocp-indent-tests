@@ -27,20 +27,20 @@ open Types;;
 val string_of_version: version -> string
 
 (** parse an HTTP version from a string
-   @raise Invalid_HTTP_version if given string doesn't represent a supported HTTP
-   version *)
+    @raise Invalid_HTTP_version if given string doesn't represent a supported HTTP
+    version *)
 val version_of_string: string -> version
 
 (** pretty print an HTTP method *)
 val string_of_method: meth -> string
 
 (** parse an HTTP method from a string
-   @raise Invalid_HTTP_method if given string doesn't represent a supported
-   method *)
+    @raise Invalid_HTTP_method if given string doesn't represent a supported
+    method *)
 val method_of_string: string -> meth
 
 (** converts an integer HTTP status to the corresponding status value
-   @raise Invalid_code if given integer isn't a valid HTTP status code *)
+    @raise Invalid_code if given integer isn't a valid HTTP status code *)
 val status_of_code: int -> status
 
 (** converts an HTTP status to the corresponding integer value *)
@@ -62,6 +62,6 @@ val is_client_error: int -> bool
 val is_server_error: int -> bool
 
 (** @return true on "client error" and "server error" status code, false
-   elsewhere *)
+    elsewhere *)
 val is_error: int -> bool
 

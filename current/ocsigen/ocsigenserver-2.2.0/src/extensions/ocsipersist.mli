@@ -37,7 +37,7 @@
 type 'a t
 
 (** Data are divided into stores.
-   Create one store for your project, where you will save all your data. *)
+    Create one store for your project, where you will save all your data. *)
 type store
 
 (** Open a store (and create it if it does not exist)  *)
@@ -76,19 +76,19 @@ val open_table : string -> 'value table
 
 val find : 'value table -> string -> 'value Lwt.t
 (** [find table key] gives the value associated to [key].
-   Fails with [Not_found] if not found. *)
+    Fails with [Not_found] if not found. *)
 
 val add : 'value table -> string -> 'value -> unit Lwt.t
 (** [add table key value] associates [value] to [key].
-   If the database already contains data associated with [key],
-   that data is discarded and silently replaced by the new data.
+    If the database already contains data associated with [key],
+    that data is discarded and silently replaced by the new data.
 *)
 
 val replace_if_exists : 'value table -> string -> 'value -> unit Lwt.t
 (** [replace_if_exists table key value]
-   associates [value] to [key] only if [key] is already bound.
-   If the database does not contain any data associated with [key],
-   fails with [Not_found].
+    associates [value] to [key] only if [key] is already bound.
+    If the database does not contain any data associated with [key],
+    fails with [Not_found].
 *)
 
 val remove : 'value table -> string -> unit Lwt.t
@@ -121,11 +121,11 @@ val fold_table : (string -> 'a -> 'b -> 'b Lwt.t) ->
 
 (**/**)
 val iter_block : (string -> 'a -> unit) -> 'a table -> unit Lwt.t
-(** MAJOR WARNING: Unlike iter_step, this iterator won't miss any
-    entry and will run in one shot. It is therefore more efficient, BUT:
-    it will lock the WHOLE database during its execution,
-    thus preventing ANYBODY from accessing it (including the function f
-    which is iterated).
-    As a consequence : you MUST NOT use any function from ocsipersist in f,
-    otherwise you would lock yourself and everybody else ! Be VERY cautious.
-*)
+    (** MAJOR WARNING: Unlike iter_step, this iterator won't miss any
+        entry and will run in one shot. It is therefore more efficient, BUT:
+        it will lock the WHOLE database during its execution,
+        thus preventing ANYBODY from accessing it (including the function f
+        which is iterated).
+        As a consequence : you MUST NOT use any function from ocsipersist in f,
+        otherwise you would lock yourself and everybody else ! Be VERY cautious.
+    *)

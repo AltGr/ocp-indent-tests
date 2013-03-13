@@ -158,8 +158,8 @@ let list_domains ~xc ~verbose =
     let state =
       let bool ch = function true -> ch | _ -> " " in
       (bool "D" x.dying) ^ (bool "S" x.shutdown) ^
-        (bool "P" x.paused) ^ (bool "B" x.blocked) ^
-        (bool "R" x.running) ^ (bool "H" x.hvm_guest) in
+      (bool "P" x.paused) ^ (bool "B" x.blocked) ^
+      (bool "R" x.running) ^ (bool "H" x.hvm_guest) in
     let shutdown_code     = int x.shutdown_code in
     let tot_memory_mib    = page_to_mib x.total_memory_pages in
     let max_memory_mib    = page_to_mib x.max_memory_pages in

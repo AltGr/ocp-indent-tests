@@ -16,10 +16,10 @@
 *)
 
 (** Here we define a template to be a VM with 'is_a_template = true' which,
-   when initially booted after having been cloned, inspects its own
-   configuration (stored by the UI/CLI in VM.other_config) and uses the API
-   to provision disks, make filesystems, perform any install steps and then
-   leave the VM in a state such that it comes up properly on subsequent reboots. *)
+    when initially booted after having been cloned, inspects its own
+    configuration (stored by the UI/CLI in VM.other_config) and uses the API
+    to provision disks, make filesystems, perform any install steps and then
+    leave the VM in a state such that it comes up properly on subsequent reboots. *)
 
 (** Should make a dummy one of these for in-guest installers: *)
 module D = Debug.Debugger(struct let name="xapi" end)

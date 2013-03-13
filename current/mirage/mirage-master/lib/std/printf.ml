@@ -67,7 +67,7 @@ end
 let bad_conversion sfmt i c =
   invalid_arg
     ("Printf: bad conversion %" ^ String.make 1 c ^ ", at char number " ^
-       string_of_int i ^ " in format string ``" ^ sfmt ^ "''")
+     string_of_int i ^ " in format string ``" ^ sfmt ^ "''")
 ;;
 
 let bad_conversion_format fmt i c =
@@ -77,7 +77,7 @@ let bad_conversion_format fmt i c =
 let incomplete_format fmt =
   invalid_arg
     ("Printf: premature end of format string ``" ^
-       Sformat.to_string fmt ^ "''")
+     Sformat.to_string fmt ^ "''")
 ;;
 
 (* Parses a string conversion to return the specified length and the padding direction. *)
@@ -207,7 +207,7 @@ let iter_on_format_args fmt add_conv add_char =
     if i > lim then incomplete_format fmt else
       match Sformat.unsafe_get fmt i with
       | '*' -> scan_flags skip (add_conv skip i 'i')
-                 (* | '$' -> scan_flags skip (succ i) *** PR#4321 *)
+      (* | '$' -> scan_flags skip (succ i) *** PR#4321 *)
       | '#' | '-' | ' ' | '+' -> scan_flags skip (succ i)
       | '_' -> scan_flags true (succ i)
       | '0'..'9'
@@ -328,32 +328,32 @@ let kapr kpr fmt =
   match count_arguments_of_format fmt with
   | 0 -> kpr fmt [||]
   | 1 -> Obj.magic (fun x ->
-             let a = Array.make 1 (Obj.repr 0) in
-             a.(0) <- x;
-             kpr fmt a)
+           let a = Array.make 1 (Obj.repr 0) in
+           a.(0) <- x;
+           kpr fmt a)
   | 2 -> Obj.magic (fun x y ->
-             let a = Array.make 2 (Obj.repr 0) in
-             a.(0) <- x; a.(1) <- y;
-             kpr fmt a)
+           let a = Array.make 2 (Obj.repr 0) in
+           a.(0) <- x; a.(1) <- y;
+           kpr fmt a)
   | 3 -> Obj.magic (fun x y z ->
-             let a = Array.make 3 (Obj.repr 0) in
-             a.(0) <- x; a.(1) <- y; a.(2) <- z;
-             kpr fmt a)
+           let a = Array.make 3 (Obj.repr 0) in
+           a.(0) <- x; a.(1) <- y; a.(2) <- z;
+           kpr fmt a)
   | 4 -> Obj.magic (fun x y z t ->
-             let a = Array.make 4 (Obj.repr 0) in
-             a.(0) <- x; a.(1) <- y; a.(2) <- z;
-             a.(3) <- t;
-             kpr fmt a)
+           let a = Array.make 4 (Obj.repr 0) in
+           a.(0) <- x; a.(1) <- y; a.(2) <- z;
+           a.(3) <- t;
+           kpr fmt a)
   | 5 -> Obj.magic (fun x y z t u ->
-             let a = Array.make 5 (Obj.repr 0) in
-             a.(0) <- x; a.(1) <- y; a.(2) <- z;
-             a.(3) <- t; a.(4) <- u;
-             kpr fmt a)
+           let a = Array.make 5 (Obj.repr 0) in
+           a.(0) <- x; a.(1) <- y; a.(2) <- z;
+           a.(3) <- t; a.(4) <- u;
+           kpr fmt a)
   | 6 -> Obj.magic (fun x y z t u v ->
-             let a = Array.make 6 (Obj.repr 0) in
-             a.(0) <- x; a.(1) <- y; a.(2) <- z;
-             a.(3) <- t; a.(4) <- u; a.(5) <- v;
-             kpr fmt a)
+           let a = Array.make 6 (Obj.repr 0) in
+           a.(0) <- x; a.(1) <- y; a.(2) <- z;
+           a.(3) <- t; a.(4) <- u; a.(5) <- v;
+           kpr fmt a)
   | nargs ->
     let rec loop i args =
       if i >= nargs then
@@ -403,13 +403,13 @@ let scan_positional_spec fmt got_spec n i =
         if accu = 0 then
           failwith "printf: bad positional specification (0)." else
           got_spec (Spec_index (Sformat.index_of_literal_position accu)) (succ j)
-          (* Not a positional specification: tell so the caller, and go back to
-             scanning the format from the original [i] position we were called at
-             first. *)
+      (* Not a positional specification: tell so the caller, and go back to
+         scanning the format from the original [i] position we were called at
+         first. *)
       | _ -> got_spec Spec_none i in
     get_int_literal (int_of_char d - 48) (succ i)
-    (* No positional specification: tell so the caller, and go back to scanning
-       the format from the original [i] position. *)
+  (* No positional specification: tell so the caller, and go back to scanning
+     the format from the original [i] position. *)
   | _ -> got_spec Spec_none i
 ;;
 

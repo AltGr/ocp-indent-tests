@@ -26,10 +26,10 @@ val save : string -> Images.save_option list -> Images.t -> unit;;
 (** The type of bmp images. *)
 
 (**
-   The Caml representation of a bmp bit map image.
-   Fields are Caml values, the decoded versions of raw data in the file.
+  The Caml representation of a bmp bit map image.
+  Fields are Caml values, the decoded versions of raw data in the file.
 
-   Structure of bitmaps files on disk :
+  Structure of bitmaps files on disk :
    - BITMAPFILEHEADER    : bytes 0 to 14 excluded
    - BITMAPINFOHEADER    : bytes 14 to 54 excluded
    - RGBQUAD []          : color map
@@ -71,13 +71,13 @@ and bicompression =
   (** Specifies that the bitmap is not compressed. *)
   | BI_RLE8
   (** Specifies a run-length encoded format for bitmaps with 8 bits
-     per pixel. The compression format is a two-bytes format
-     consisting of a count byte followed by a byte containing a color
-     index. *)
+      per pixel. The compression format is a two-bytes format
+      consisting of a count byte followed by a byte containing a color
+      index. *)
   | BI_RLE4
   (** Specifies a run-length encoded format for bitmaps with 4 bits
-     per pixel. The compression format is a two-byte format consisting of
-     a count byte followed by two word-length color indexes. *)
+      per pixel. The compression format is a two-byte format consisting of
+      a count byte followed by two word-length color indexes. *)
 
 and bibitcount =
   | Monochrome

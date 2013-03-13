@@ -103,8 +103,8 @@ let find_static_page ~request ~usermode ~dir ~err ~pathstring =
                 Some r
             | Some _, Some _ ->
                 raise (Ocsigen_extensions.Error_in_user_config_file
-                      "Staticmod: cannot specify option 'root' in \
-                       user configuration files")
+                    "Staticmod: cannot specify option 'root' in \
+                     user configuration files")
             | None, None -> None
             | Some rc, None ->
                 Some (Ocsigen_extensions.replace_user_dir source rc pathstring)
@@ -161,8 +161,8 @@ let gen ~usermode ?cache dir = function
 
         (function
           | Ocsigen_local_files.Failed_403 -> return (Ext_next 403)
-                                                (* XXX We should try to leave an information about this
-                                                   error for later *)
+          (* XXX We should try to leave an information about this
+             error for later *)
           | Ocsigen_local_files.NotReadableDirectory ->
               return (Ext_next err)
           | NoSuchUser | Not_concerned
@@ -249,7 +249,7 @@ let parse_config userconf _ : parse_config_aux = fun _ _ _ ->
           match opt.opt_dir, opt.opt_regexp, opt.opt_code, opt.opt_dest, opt.opt_root_checks with
             | (None, None, None, _, _) ->
                 raise (Error_in_config_file
-                      "Missing attribute dir, regexp, or code for <static>")
+                    "Missing attribute dir, regexp, or code for <static>")
 
             | (Some d, None, None, None, None) ->
                 Dir (Url.remove_end_slash d)

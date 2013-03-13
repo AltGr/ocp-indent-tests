@@ -76,7 +76,7 @@ let select_range length beg endopt skipfun stream =
     )
     (function
       | Ocsigen_stream.Stream_too_small -> Lwt.fail Range_416
-                                             (* RFC 2616 A server SHOULD return a response with this status code if a request included a Range request-header field, and none of the range-specifier values in this field overlap the current extent of the selected resource, and the request did not include an If-Range request-header field. (For byte-ranges, this means that the first- byte-pos of all of the byte-range-spec values were greater than the current length of the selected resource.) *)
+      (* RFC 2616 A server SHOULD return a response with this status code if a request included a Range request-header field, and none of the range-specifier values in this field overlap the current extent of the selected resource, and the request did not include an If-Range request-header field. (For byte-ranges, this means that the first- byte-pos of all of the byte-range-spec values were greater than the current length of the selected resource.) *)
       | e -> Lwt.fail e)
 
 
@@ -149,8 +149,8 @@ let compute_range ri res =
                            Http_headers.replace 
                              Http_headers.content_range
                              ("bytes "^Int64.to_string beg^"-"^
-                                Int64.to_string endc^"/"^
-                                Int64.to_string cl)
+                              Int64.to_string endc^"/"^
+                              Int64.to_string cl)
                              res.Ocsigen_http_frame.res_headers;
                          Ocsigen_http_frame.res_content_length = Some length
                       }

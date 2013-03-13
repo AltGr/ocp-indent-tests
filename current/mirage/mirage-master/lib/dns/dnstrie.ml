@@ -46,7 +46,7 @@ let canon2key string_list =
 
 (* A "compressed" 256-way radix trie, with edge information provided
    explicitly in the trie nodes rather than with forward pointers. 
-   
+
    For more details, read:
    Robert Sedgewick, "Algorithms", Addison Welsey, 1988. 
    Mehta and Sahni, eds., "Handbook of Data Structures and Applications", 
@@ -149,7 +149,7 @@ let child_delete node char =
   try 
     let i = String.index node.ch_key char in 
     node.ch_key <- ((String.sub node.ch_key 0 i) 
-      ^ (String.sub node.ch_key (i+1) (ch_count - (i+1))));
+                    ^ (String.sub node.ch_key (i+1) (ch_count - (i+1))));
     node.children <- (Array.append
         (Array.sub node.children 0 i) 
         (Array.sub node.children (i+1) (ch_count - (i+1))));
@@ -290,8 +290,8 @@ let lookup key trie =
         let nsec1 = lookup_nsec key in
         match lookup_wildcard key last_branch with 
           (_, Some dnsnode) -> `WildcardNSEC (dnsnode, 
-                                   not_optional !last_soa.data,
-                                   not_optional nsec1.data)
+                                 not_optional !last_soa.data,
+                                 not_optional nsec1.data)
         | (ss_key, None) -> let nsec2 = lookup_nsec ss_key in 
           `NXDomainNSEC (not_optional !last_soa.data,
             not_optional nsec1.data, not_optional nsec2.data)
@@ -435,7 +435,7 @@ let rec fix_flags key node =
     match rrset.rdata with 
       SOA _   -> soa := true 
     | NS _    -> ns := true 
-      (* | DNSKEY _ -> dnskey := true *)
+    (* | DNSKEY _ -> dnskey := true *)
     | _        -> ()
   in
 

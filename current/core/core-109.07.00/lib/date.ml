@@ -28,17 +28,17 @@ module Stable = struct
         if year < 0 || year > 9999 then invalid "year outside of [0..9999]";
         if day <= 0 then invalid "day <= 0";
         begin match month with
-          | Month.Apr | Month.Jun | Month.Sep | Month.Nov ->
-            if day > 30 then invalid "30 day month violation"
-          | Month.Feb ->
-            if is_leap_year year then begin
-              if day > 29 then invalid "29 day month violation" else ()
-            end else if day > 28 then begin
-              invalid "28 day month violation"
-            end else ()
-          | Month.Jan | Month.Mar | Month.May | Month.Jul | Month.Aug | Month.Oct
-          | Month.Dec ->
-            if day > 31 then invalid "31 day month violation"
+        | Month.Apr | Month.Jun | Month.Sep | Month.Nov ->
+          if day > 30 then invalid "30 day month violation"
+        | Month.Feb ->
+          if is_leap_year year then begin
+            if day > 29 then invalid "29 day month violation" else ()
+          end else if day > 28 then begin
+            invalid "28 day month violation"
+          end else ()
+        | Month.Jan | Month.Mar | Month.May | Month.Jul | Month.Aug | Month.Oct
+        | Month.Dec ->
+          if day > 31 then invalid "31 day month violation"
         end;
         { y = year; m = month; d = day; }
     end
@@ -164,8 +164,8 @@ module Stable = struct
       end
 
       let t_of_sexp = function
-        | Sexp.Atom s -> of_string s
-        | Sexp.List _ as sexp -> Old_date.to_date (Old_date.t_of_sexp sexp)
+      | Sexp.Atom s -> of_string s
+      | Sexp.List _ as sexp -> Old_date.to_date (Old_date.t_of_sexp sexp)
       ;;
 
       let t_of_sexp s =
@@ -181,44 +181,44 @@ module Stable = struct
     include Sexpable
 
     include Comparable.Make_binable (struct
-        include T
-        include Sexpable
-        include Binable
+              include T
+              include Sexpable
+              include Binable
 
-        let compare t1 t2 =
-          let n = Int.compare t1.y t2.y in
-          if n <> 0 then n
-          else
-            let n = Month.compare t1.m t2.m in
-            if n <> 0 then n
-            else Int.compare t1.d t2.d
-        ;;
-      end)
+              let compare t1 t2 =
+                let n = Int.compare t1.y t2.y in
+                if n <> 0 then n
+                else
+                  let n = Month.compare t1.m t2.m in
+                  if n <> 0 then n
+                  else Int.compare t1.d t2.d
+              ;;
+            end)
   end
 
   TEST_MODULE "Date.V1" = Stable_unit_test.Make (struct
-      include V1
+                            include V1
 
-      let equal = (=)
+                            let equal = (=)
 
-      let tests =
-        let date y m d = create_exn ~y ~m ~d in
-        [ date 1066 Month.Oct 16, "1066-10-16", "\254\042\004\009\016";
-          date 1955 Month.Nov  5, "1955-11-05", "\254\163\007\010\005";
-          date 2012 Month.Apr 19, "2012-04-19", "\254\220\007\003\019";
-        ]
-    end)
+                            let tests =
+                              let date y m d = create_exn ~y ~m ~d in
+                              [ date 1066 Month.Oct 16, "1066-10-16", "\254\042\004\009\016";
+                                date 1955 Month.Nov  5, "1955-11-05", "\254\163\007\010\005";
+                                date 2012 Month.Apr 19, "2012-04-19", "\254\220\007\003\019";
+                              ]
+                          end)
 end
 
 include Stable.V1
 
 include (Hashable.Make_binable (struct
-    include T
-    include Sexpable
-    include Binable
-    let compare = compare
-    let hash (t : t) = Hashtbl.hash t
-  end) : Hashable.S_binable with type t := t)
+           include T
+           include Sexpable
+           include Binable
+           let compare = compare
+           let hash (t : t) = Hashtbl.hash t
+         end) : Hashable.S_binable with type t := t)
 
 let pp ppf date = Format.pp_print_string ppf (to_string date)
 let () = Pretty_printer.register "Core.Date.pp"
@@ -363,7 +363,7 @@ let weekdays_between ~min ~max =
     ~default:[]
     ~f:(fun first_date ->
       (* to avoid a system call on every date, we just get the weekday for the first
-          date and use it to get all the other weekdays *)
+         date and use it to get all the other weekdays *)
       let first_weekday = day_of_week first_date in
       let date_and_weekdays =
         List.mapi all_dates

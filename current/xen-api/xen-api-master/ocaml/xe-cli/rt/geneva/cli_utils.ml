@@ -104,7 +104,7 @@ let is_success rc s =
     Unix.WEXITED i ->
     if i<>0 then
       report_failure ("Expected rc==0; actual rc=="^(string_of_int i)
-        ^". cmd returned: "^(String.concat "" s))
+                      ^". cmd returned: "^(String.concat "" s))
   | _ -> ()
 
 let expect_success f =

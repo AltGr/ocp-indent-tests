@@ -60,16 +60,16 @@ let run_timer timer =
         end else begin
           (* Update event on the heap as necessary *)
           begin match ev.interval with
-            | INone -> Heap.remove event
-            | INormal span ->
-              ev.time <- Time.add now span;
-              Heap.update event ev
-            | IRandom (span, max_ratio) ->
-              let p2 = Random.float 2.0 in
-              let p = p2 -. 1. in
-              let confusion = Span.scale span (max_ratio *. p) in
-              ev.time <- Time.add (Time.add now span) confusion;
-              Heap.update event ev
+          | INone -> Heap.remove event
+          | INormal span ->
+            ev.time <- Time.add now span;
+            Heap.update event ev
+          | IRandom (span, max_ratio) ->
+            let p2 = Random.float 2.0 in
+            let p = p2 -. 1. in
+            let confusion = Span.scale span (max_ratio *. p) in
+            ev.time <- Time.add (Time.add now span) confusion;
+            Heap.update event ev
           end;
           Mutex.unlock mtx;
           begin
@@ -123,16 +123,16 @@ let check_span loc span =
     invalid_arg (sprintf "Timer.%s: span < 0" loc)
 
 let get_interval_param loc randomize = function
-  | None -> INone
-  | Some span ->
-    check_span loc span;
-    match randomize with
-    | None -> INormal span
-    | Some max_ratio ->
-      if max_ratio < 0. || 1. < max_ratio then
-        invalid_arg (
-          sprintf "Timer.%s: max_ratio not in range [0.0, 1.0]" loc);
-      IRandom (span, max_ratio)
+| None -> INone
+| Some span ->
+  check_span loc span;
+  match randomize with
+  | None -> INormal span
+  | Some max_ratio ->
+    if max_ratio < 0. || 1. < max_ratio then
+      invalid_arg (
+        sprintf "Timer.%s: max_ratio not in range [0.0, 1.0]" loc);
+    IRandom (span, max_ratio)
 
 (* Makes sure that the timer thread gets signaled only if the element
    at the top of the heap requires earlier wakeups *)
@@ -185,9 +185,9 @@ let remove { timer; t_event_opt; time=_; interval=_; handler=_ } =
   match t_event_opt with
   | Some t_event ->
     wrap_update timer ~f:(fun () ->
-        if timer.status <> Activated then
-          failwith "Timer.remove: timer deactivated";
-        if Heap.heap_el_is_valid t_event then Heap.remove t_event)
+      if timer.status <> Activated then
+        failwith "Timer.remove: timer deactivated";
+      if Heap.heap_el_is_valid t_event then Heap.remove t_event)
   | None -> assert false  (* impossible *)
 
 let reschedule ({ timer; t_event_opt; time=_; interval=_; handler=_; } as ev) ?randomize ?interval span =

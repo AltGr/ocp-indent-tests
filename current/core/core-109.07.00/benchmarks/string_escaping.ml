@@ -30,12 +30,12 @@ let () =
     ]
   in
   Bench.bench (List.concat_map strings ~f:(fun str ->
-      let go name escape unescape =
-        Bench.Test.create ~name:(sprintf "%s-%s" name str)
-          (fun () -> assert (unescape (escape str) = str))
-      in
-      [ go "String.Escaping" escape unescape
-      ; go "Pcre" escape_pcre unescape_pcre
-      ])
+                 let go name escape unescape =
+                   Bench.Test.create ~name:(sprintf "%s-%s" name str)
+                     (fun () -> assert (unescape (escape str) = str))
+                 in
+                 [ go "String.Escaping" escape unescape
+                 ; go "Pcre" escape_pcre unescape_pcre
+                 ])
   )
 ;;

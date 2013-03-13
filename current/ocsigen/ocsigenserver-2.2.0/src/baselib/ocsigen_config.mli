@@ -81,7 +81,7 @@ val get_max_number_of_connections : unit -> int
 val get_client_timeout : unit -> int
 val get_server_timeout : unit -> int
 (*val get_keepalive_timeout : unit -> int
-   val get_keepopen_timeout : unit -> int*)
+  val get_keepopen_timeout : unit -> int*)
 val get_netbuffersize : unit -> int
 val get_filebuffersize : unit -> int
 val get_maxrequestbodysize : unit -> int64 option

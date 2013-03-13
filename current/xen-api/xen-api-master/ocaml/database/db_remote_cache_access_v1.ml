@@ -48,8 +48,8 @@ module DBCacheRemoteListener = struct
   module DBCache : Db_interface.DB_ACCESS = Db_cache_impl
 
   (** Unmarshals the request, calls the DBCache function and marshals the result.
-     Note that, although the messages still contain the pool_secret for historical reasons,
-     access has already been applied by the RBAC code in Xapi_http.add_handler. *)
+      Note that, although the messages still contain the pool_secret for historical reasons,
+      access has already been applied by the RBAC code in Xapi_http.add_handler. *)
   let process_xmlrpc xml =
     Mutex.execute ctr_mutex
       (fun () -> calls_processed := !calls_processed + 1);

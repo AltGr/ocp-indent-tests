@@ -107,11 +107,11 @@ module HashRegexp =
 let compile r =
 
   (*[hashtabl] to avoid several compilation of the same regexp,
-     [transtable] is the transition table to fill, and
-     [acceptable] is the table of accepting states.
+    [transtable] is the transition table to fill, and
+    [acceptable] is the table of accepting states.
 
-     [transtable] maps any state into a [CharMap.t], which itself maps characters
-     to states. *)
+    [transtable] maps any state into a [CharMap.t], which itself maps characters
+    to states. *)
 
   let hashtable = HashRegexp.create 257
   and transtable = ref IntMap.empty

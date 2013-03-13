@@ -77,15 +77,15 @@ ENDIF
 
 
 module Epoll_flags(Flag_values : sig
-      val in_     : Int63.t
-      val out     : Int63.t
-      (* val rdhup   : Int63.t *)
-      val pri     : Int63.t
-      val err     : Int63.t
-      val hup     : Int63.t
-      val et      : Int63.t
-      val oneshot : Int63.t
-    end) = struct
+           val in_     : Int63.t
+           val out     : Int63.t
+           (* val rdhup   : Int63.t *)
+           val pri     : Int63.t
+           val err     : Int63.t
+           val hup     : Int63.t
+           val et      : Int63.t
+           val oneshot : Int63.t
+         end) = struct
   (* We use [Int63] rather than [Int] because these flags use 32 bits. *)
   include Int63
 
@@ -128,8 +128,8 @@ module Epoll_flags(Flag_values : sig
         <:sexp_of< string list * [ `unrecognized_bits of string ] >>
           (flag_names,
            `unrecognized_bits (match to_int leftover with
-             | None -> to_string leftover
-             | Some i -> sprintf "0x%x" i))
+           | None -> to_string leftover
+           | Some i -> sprintf "0x%x" i))
   ;;
 
 end
@@ -198,23 +198,23 @@ module Sysinfo = struct
   external raw_sysinfo : unit -> Raw_sysinfo.t = "linux_sysinfo"
 
   let sysinfo = Ok (fun () ->
-      let raw = raw_sysinfo () in
-      {
-        uptime = Span.of_int_sec raw.Raw_sysinfo.uptime;
-        load1 = raw.Raw_sysinfo.load1;
-        load5 = raw.Raw_sysinfo.load5;
-        load15 = raw.Raw_sysinfo.load15;
-        total_ram = raw.Raw_sysinfo.total_ram;
-        free_ram = raw.Raw_sysinfo.free_ram;
-        shared_ram = raw.Raw_sysinfo.shared_ram;
-        buffer_ram = raw.Raw_sysinfo.buffer_ram;
-        total_swap = raw.Raw_sysinfo.total_swap;
-        free_swap = raw.Raw_sysinfo.free_swap;
-        procs = raw.Raw_sysinfo.procs;
-        totalhigh = raw.Raw_sysinfo.totalhigh;
-        freehigh = raw.Raw_sysinfo.freehigh;
-        mem_unit = raw.Raw_sysinfo.mem_unit;
-      })
+                  let raw = raw_sysinfo () in
+                  {
+                    uptime = Span.of_int_sec raw.Raw_sysinfo.uptime;
+                    load1 = raw.Raw_sysinfo.load1;
+                    load5 = raw.Raw_sysinfo.load5;
+                    load15 = raw.Raw_sysinfo.load15;
+                    total_ram = raw.Raw_sysinfo.total_ram;
+                    free_ram = raw.Raw_sysinfo.free_ram;
+                    shared_ram = raw.Raw_sysinfo.shared_ram;
+                    buffer_ram = raw.Raw_sysinfo.buffer_ram;
+                    total_swap = raw.Raw_sysinfo.total_swap;
+                    free_swap = raw.Raw_sysinfo.free_swap;
+                    procs = raw.Raw_sysinfo.procs;
+                    totalhigh = raw.Raw_sysinfo.totalhigh;
+                    freehigh = raw.Raw_sysinfo.freehigh;
+                    mem_unit = raw.Raw_sysinfo.mem_unit;
+                  })
 end
 
 external gettcpopt_bool :
@@ -324,12 +324,12 @@ let cores =
     let num_cores =
       In_channel.with_file "/proc/cpuinfo" ~f:In_channel.input_lines
       |! List.fold_left ~init:0 ~f:(fun count line ->
-        count +
-          (match Core_string.lsplit2 ~on:':' line with
-           | None -> 0
-           | Some (label, _) ->
-             if Core_string.(=) (Core_string.rstrip label) "processor" then 1
-             else 0))
+           count +
+             (match Core_string.lsplit2 ~on:':' line with
+             | None -> 0
+             | Some (label, _) ->
+               if Core_string.(=) (Core_string.rstrip label) "processor" then 1
+               else 0))
     in
     if num_cores > 0 then num_cores
     else failwith "Linux_ext.cores: failed to parse /proc/cpuinfo")
@@ -354,15 +354,15 @@ module Epoll = struct
   external flag_epolloneshot : unit -> Int63.t  = "linux_epoll_EPOLLONESHOT_flag"
 
   module Flags = Epoll_flags(struct
-      let in_     = flag_epollin ()
-      let out     = flag_epollout ()
-      (* let rdhup   = flag_epollrdhup () *)
-      let pri     = flag_epollpri ()
-      let err     = flag_epollerr ()
-      let hup     = flag_epollhup ()
-      let et      = flag_epollet ()
-      let oneshot = flag_epolloneshot ()
-    end)
+                   let in_     = flag_epollin ()
+                   let out     = flag_epollout ()
+                   (* let rdhup   = flag_epollrdhup () *)
+                   let pri     = flag_epollpri ()
+                   let err     = flag_epollerr ()
+                   let hup     = flag_epollhup ()
+                   let et      = flag_epollet ()
+                   let oneshot = flag_epolloneshot ()
+                 end)
 
   external sizeof_epoll_event : unit -> int   = "linux_sizeof_epoll_event" "noalloc"
 
@@ -484,17 +484,17 @@ let create ~num_file_descrs ~max_ready_events =
     failwiths "Epoll.create got nonpositive max_ready_events" max_ready_events
       (<:sexp_of< int >>);
   ref (`In_use
-      { epollfd = epoll_create max_ready_events;
-        flags_by_fd =
-          Table.create
-            ~num_keys:num_file_descrs
-            ~key_to_int:File_descr.to_int
-            ~sexp_of_key:File_descr.sexp_of_t
-            ();
-        max_ready_events;
-        num_ready_events = 0;
-        ready_events = Bigstring.create (sizeof_epoll_event () * max_ready_events);
-      })
+         { epollfd = epoll_create max_ready_events;
+           flags_by_fd =
+             Table.create
+               ~num_keys:num_file_descrs
+               ~key_to_int:File_descr.to_int
+               ~sexp_of_key:File_descr.sexp_of_t
+               ();
+           max_ready_events;
+           num_ready_events = 0;
+           ready_events = Bigstring.create (sizeof_epoll_event () * max_ready_events);
+         })
 ;;
 
 let use t ~f =
@@ -611,40 +611,40 @@ TEST_MODULE = struct
       ((Or_error.ok_exn Epoll.create) ~num_file_descrs:1024 ~max_ready_events:256)
 
   TEST_UNIT "epoll errors" = with_epoll ~f:(fun t ->
-      let tmp = "temporary-file-for-testing-epoll" in
-      let fd = Unix.openfile tmp ~mode:[Unix.O_CREAT; Unix.O_WRONLY] in
-      (* Epoll does not support ordinary files, and so should fail if you ask it to watch
-         one. *)
-      assert (Result.is_error (Result.try_with (fun () -> Epoll.set t fd Flags.none)));
-      Unix.close fd;
-      Unix.unlink tmp)
+                               let tmp = "temporary-file-for-testing-epoll" in
+                               let fd = Unix.openfile tmp ~mode:[Unix.O_CREAT; Unix.O_WRONLY] in
+                               (* Epoll does not support ordinary files, and so should fail if you ask it to watch
+                                  one. *)
+                               assert (Result.is_error (Result.try_with (fun () -> Epoll.set t fd Flags.none)));
+                               Unix.close fd;
+                               Unix.unlink tmp)
   ;;
 
   TEST_UNIT "epoll test" = with_epoll ~f:(fun epset ->
-      let timeout = Span.of_sec 0.1 in
-      let sock1 = udp_listener ~port:7070 in
-      let sock2 = udp_listener ~port:7071 in
-      Epoll.set epset sock1 Flags.in_;
-      Epoll.set epset sock2 Flags.in_;
-      let _sent = send sock2 "TEST" ~port:7070 in
-      begin match Epoll.wait epset ~timeout:(`After timeout) with
-        | `Timeout -> assert false
-        | `Ok ->
-          let ready =
-            Epoll.fold_ready epset ~init:[] ~f:(fun ac fd flags ->
-              if flags = Flags.in_ then fd :: ac else ac)
-          in
-          (* Explanation of the test:
-             1) I create two udp sockets, sock1 listening on 7070 and sock2, on 7071
-             2) These two sockets are both added to epoll for read notification
-             3) I send a packet, _using_ sock2 to sock1 (who is listening on 7070)
-             4) epoll_wait should return, with [ sock1 ] ready to be read.
-          *)
-          match ready with
-          | [ sock ] when sock = sock1 -> ()
-          | [_] -> failwith  "wrong socket is ready"
-          | xs  -> failwithf "%d sockets are ready" (List.length xs) ()
-      end)
+                             let timeout = Span.of_sec 0.1 in
+                             let sock1 = udp_listener ~port:7070 in
+                             let sock2 = udp_listener ~port:7071 in
+                             Epoll.set epset sock1 Flags.in_;
+                             Epoll.set epset sock2 Flags.in_;
+                             let _sent = send sock2 "TEST" ~port:7070 in
+                             begin match Epoll.wait epset ~timeout:(`After timeout) with
+                             | `Timeout -> assert false
+                             | `Ok ->
+                               let ready =
+                                 Epoll.fold_ready epset ~init:[] ~f:(fun ac fd flags ->
+                                   if flags = Flags.in_ then fd :: ac else ac)
+                               in
+                               (* Explanation of the test:
+                                  1) I create two udp sockets, sock1 listening on 7070 and sock2, on 7071
+                                  2) These two sockets are both added to epoll for read notification
+                                  3) I send a packet, _using_ sock2 to sock1 (who is listening on 7070)
+                                  4) epoll_wait should return, with [ sock1 ] ready to be read.
+                               *)
+                               match ready with
+                               | [ sock ] when sock = sock1 -> ()
+                               | [_] -> failwith  "wrong socket is ready"
+                               | xs  -> failwithf "%d sockets are ready" (List.length xs) ()
+                             end)
   ;;
 end
 
@@ -703,15 +703,15 @@ let settcpopt_bool                 = unimplemented "Linux_ext.settcpopt_bool"
 
 module Epoll = struct
   module Flags = Epoll_flags(struct
-      let in_     = Int63.of_int (1 lsl 0)
-      let out     = Int63.of_int (1 lsl 1)
-      (* let rdhup   = Int63.of_int (1 lsl 2) *)
-      let pri     = Int63.of_int (1 lsl 3)
-      let err     = Int63.of_int (1 lsl 4)
-      let hup     = Int63.of_int (1 lsl 5)
-      let et      = Int63.of_int (1 lsl 6)
-      let oneshot = Int63.of_int (1 lsl 7)
-    end)
+                   let in_     = Int63.of_int (1 lsl 0)
+                   let out     = Int63.of_int (1 lsl 1)
+                   (* let rdhup   = Int63.of_int (1 lsl 2) *)
+                   let pri     = Int63.of_int (1 lsl 3)
+                   let err     = Int63.of_int (1 lsl 4)
+                   let hup     = Int63.of_int (1 lsl 5)
+                   let et      = Int63.of_int (1 lsl 6)
+                   let oneshot = Int63.of_int (1 lsl 7)
+                 end)
 
   type t = [ `Epoll_is_not_implemented ] with sexp_of
   let create = unimplemented "Linux_ext.Epoll.create"

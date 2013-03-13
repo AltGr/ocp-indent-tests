@@ -106,13 +106,13 @@ let connection_table = T.create 100
   The connection table associates to each incoming connection
   (called "client") the thread and information about the output requests,
   in order to try to pipeline them on the same output connection.
-  
+
   If the client parameter is not present, we do the
   requests independantly.
   We try to find a free connection to the right server
   or we create one if there is none.
   In that case, the distant server may have the request in wrong order.
-  
+
   If there is a body in the request we want to do,
   we do not try to pipeline, even if it comes from the same client.
   We use a free (or new) connection.
@@ -235,14 +235,14 @@ let appreciate_server_pipeline inet_addr port =
         | No t ->
             Ocsigen_messages.warning
               ("--Ocsigen_http_client will give to server "^
-                 (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
+               (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
                ^" a new probing period for pipelining.");
             Some purgatory_time (* second chance *)
         | Probing n -> Some (n-1)
     with Not_found ->
         Ocsigen_messages.warning
           ("--Ocsigen_http_client will give to server "^
-             (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
+           (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
            ^" a first probing period for pipelining.");
         Some probing_time
   with
@@ -251,7 +251,7 @@ let appreciate_server_pipeline inet_addr port =
         if n < 0 then begin
           Ocsigen_messages.warning
             ("--Ocsigen_http_client now trusts server "^
-               (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
+             (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
              ^" for pipelining. He passed the probing period.");
           KT.replace pipelining_table key Yes
         end
@@ -262,7 +262,7 @@ let boycott_server_pipeline server_do_keepalive inet_addr port =
   if server_do_keepalive then
     Ocsigen_messages.warning
       ("--Ocsigen_http_client does not trust server "^
-         (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
+       (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
        ^" any more for pipelining. He just closed the connection!");
   KT.replace pipelining_table (inet_addr, port) (No (Unix.time ()))
 
@@ -274,14 +274,14 @@ let keep_alive_server inet_addr port =
       | No _ ->
           Ocsigen_messages.debug
             (fun () -> "--Ocsigen_http_client does not trust server "^
-                (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
-              ^" for pipelining.");
+                       (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
+                       ^" for pipelining.");
           false
       | Probing _ ->
           Ocsigen_messages.debug
             (fun () -> "--Ocsigen_http_client is currently probing server "^
-                (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
-              ^" for pipelining. No pipeline for now.");
+                       (Unix.string_of_inet_addr inet_addr)^":"^(string_of_int port)
+                       ^" for pipelining. No pipeline for now.");
           false
   with Not_found -> false
 
@@ -292,14 +292,14 @@ let handle_connection_error fd exn = match exn with
   | Unix.Unix_error (Unix.ECONNREFUSED, _, _) ->
       Lwt_unix.close fd
       >>= fun () -> Lwt.fail
-                      (Ocsigen_http_frame.Http_error.Http_exception
-                         (502, Some "Connection refused by distant server", None))
+        (Ocsigen_http_frame.Http_error.Http_exception
+           (502, Some "Connection refused by distant server", None))
   | Unix.Unix_error (Unix.ECONNRESET, _, _) ->
       (* Caused by shutting down the file descriptor after a timeout *)
       Lwt_unix.close fd
       >>= fun () ->  Lwt.fail
-                       (Ocsigen_http_frame.Http_error.Http_exception
-                          (504, Some "Distant server closed connection", None))
+        (Ocsigen_http_frame.Http_error.Http_exception
+           (504, Some "Distant server closed connection", None))
   | e -> Lwt_unix.close fd >>= fun () ->  Lwt.fail e
 
 
@@ -359,8 +359,8 @@ let raw_request
             | e ->
                 Ocsigen_messages.warning
                   ("--Ocsigen_http_client: exception caught while receiving frame: "^
-                     Printexc.to_string e^
-                     " - closing connection to the server.");
+                   Printexc.to_string e^
+                   " - closing connection to the server.");
                 Lwt_ssl.close (Ocsigen_http_com.connection_fd conn)
           )))
   in

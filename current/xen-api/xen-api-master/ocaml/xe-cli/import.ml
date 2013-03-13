@@ -81,7 +81,7 @@ let stream_from_xva_dir dir oc =
     let chunk_number = ref 0 in
 
     (** Construct a new header, add any necessary zero-padding for the previous header
-       and send the new header if size <> 0 *)
+        and send the new header if size <> 0 *)
     let make_hdr =
       let last_hdr = ref None in
       fun size -> 

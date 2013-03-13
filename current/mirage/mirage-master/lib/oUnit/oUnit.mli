@@ -8,7 +8,7 @@
 (***********************************************************************)
 
 (** Unit test building blocks
-   
+
     @author Maas-Maarten Zeeman
     @author Sylvain Le Gall
 *)
@@ -25,7 +25,7 @@ val assert_failure : string -> 'a Lwt.t
 
 (** Signals a failure when bool is false. The string identifies the 
     failure.
-    
+
     @raise Failure signal a failure *)
 val assert_bool : string -> bool -> unit Lwt.t
 
@@ -36,7 +36,7 @@ val ( @? ) : string -> bool -> unit Lwt.t
 
 (** Signals a failure when the string is non-empty. The string identifies the
     failure. 
-    
+
     @raise Failure signal a failure *) 
 val assert_string : string -> unit Lwt.t
 
@@ -50,7 +50,7 @@ val assert_string : string -> unit Lwt.t
     @param msg custom message to identify the failure
 
     @raise Failure signal a failure 
-    
+
     @version 1.1.0
 *)
 val assert_equal : 
@@ -60,31 +60,31 @@ val assert_equal :
   ?msg:string -> 'a -> 'a -> unit Lwt.t
 
 (** Asserts if the expected exception was raised. 
-   
+
     @param msg identify the failure
 
     @raise Failure description *)
 val assert_raises : ?msg:string -> exn -> (unit -> 'a Lwt.t) -> unit Lwt.t
 
 (** {2 Skipping tests } 
-   
-   In certain condition test can be written but there is no point running it, because they
-   are not significant (missing OS features for example). In this case this is not a failure
-   nor a success. Following functions allow you to escape test, just as assertion but without
-   the same error status.
-   
-   A test skipped is counted as success. A test todo is counted as failure.
+
+    In certain condition test can be written but there is no point running it, because they
+    are not significant (missing OS features for example). In this case this is not a failure
+    nor a success. Following functions allow you to escape test, just as assertion but without
+    the same error status.
+
+    A test skipped is counted as success. A test todo is counted as failure.
 *)
 
 (** [skip cond msg] If [cond] is true, skip the test for the reason explain in [msg].
     For example [skip_if (Sys.os_type = "Win32") "Test a doesn't run on windows"].
-    
+
     @since 1.0.3
 *)
 val skip_if : bool -> string -> unit
 
 (** The associated test is still to be done, for the reason given.
-    
+
     @since 1.0.3
 *)
 val todo : string -> unit
@@ -92,7 +92,7 @@ val todo : string -> unit
 (** {2 Compare Functions} *)
 
 (** Compare floats up to a given relative error. 
-    
+
     @param epsilon if the difference is smaller [epsilon] values are equal
 *)
 val cmp_float : ?epsilon:float -> float -> float -> bool
@@ -103,7 +103,7 @@ val cmp_float : ?epsilon:float -> float -> float -> bool
     setUp and tearDown feature in unittests. It can be used like this:
 
     ["MyTestCase" >:: (bracket test_set_up test_fun test_tear_down)] 
-    
+
 *)
 
 (** [bracket set_up test tear_down] The [set_up] function runs first, then
@@ -135,24 +135,24 @@ val (>:::) : string -> test list -> test
 
 (** Some shorthands which allows easy test construction.
 
-   Examples:
+    Examples:
 
-   - ["test1" >: TestCase((fun _ -> ()))] =>  
-   [TestLabel("test2", TestCase((fun _ -> ())))]
-   - ["test2" >:: (fun _ -> ())] => 
-   [TestLabel("test2", TestCase((fun _ -> ())))]
-   - ["test-suite" >::: ["test2" >:: (fun _ -> ());]] =>
-   [TestLabel("test-suite", TestSuite([TestLabel("test2", TestCase((fun _ -> ())))]))]
+    - ["test1" >: TestCase((fun _ -> ()))] =>  
+    [TestLabel("test2", TestCase((fun _ -> ())))]
+    - ["test2" >:: (fun _ -> ())] => 
+    [TestLabel("test2", TestCase((fun _ -> ())))]
+    - ["test-suite" >::: ["test2" >:: (fun _ -> ());]] =>
+    [TestLabel("test-suite", TestSuite([TestLabel("test2", TestCase((fun _ -> ())))]))]
 *)
 
 (** [test_decorate g tst] Apply [g] to test function contains in [tst] tree.
-    
+
     @since 1.0.3
 *)
 val test_decorate : (test_fun -> test_fun) -> test -> test
 
 (** [test_filter paths tst] Filter test based on their path string representation. 
-    
+
     @param skip] if set, just use [skip_if] for the matching tests.
     @since 1.0.3
 *)

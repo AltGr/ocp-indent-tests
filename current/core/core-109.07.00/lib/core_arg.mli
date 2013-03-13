@@ -12,10 +12,10 @@
 
 (** Parsing of command line arguments.
 
-   This module provides a general mechanism for extracting options and
-   arguments from the command line to the program.
+    This module provides a general mechanism for extracting options and
+    arguments from the command line to the program.
 
-   Syntax of command lines:
+    Syntax of command lines:
     A keyword is a character string starting with a [-].
     An option is a keyword alone or followed by an argument.
     The types of keywords are: [Unit], [Bool], [Set], [Clear],
@@ -27,14 +27,14 @@
     as argument.
     Arguments not preceded by a keyword are called anonymous arguments.
 
-   Examples ([cmd] is assumed to be the command name):
-   -   [cmd -flag           ](a unit option)
-   -   [cmd -int 1          ](an int option with argument [1])
-   -   [cmd -string foobar  ](a string option with argument ["foobar"])
-   -   [cmd -float 12.34    ](a float option with argument [12.34])
-   -   [cmd a b c           ](three anonymous arguments: ["a"], ["b"], and ["c"])
-   -   [cmd a b -- c d      ](two anonymous arguments and a rest option with
-                           two arguments)
+    Examples ([cmd] is assumed to be the command name):
+    -   [cmd -flag           ](a unit option)
+    -   [cmd -int 1          ](an int option with argument [1])
+    -   [cmd -string foobar  ](a string option with argument ["foobar"])
+    -   [cmd -float 12.34    ](a float option with argument [12.34])
+    -   [cmd a b c           ](three anonymous arguments: ["a"], ["b"], and ["c"])
+    -   [cmd a b -- c d      ](two anonymous arguments and a rest option with
+    two arguments)
 *)
 
 type spec = Arg.spec =
@@ -51,12 +51,12 @@ type spec = Arg.spec =
   | Tuple of spec list         (** Take several arguments according to the
                                    spec list *)
   | Symbol of string list * (string -> unit)
-      (** Take one of the symbols as argument and
-          call the function with the symbol *)
+  (** Take one of the symbols as argument and
+      call the function with the symbol *)
   | Rest of (string -> unit)   (** Stop interpreting keywords and call the
                                    function with each remaining argument *)
 (** The concrete type describing the behavior associated
-   with a keyword. *)
+    with a keyword. *)
 
 type key = string
 type doc = string
@@ -77,9 +77,9 @@ val parse :
 
     If an error occurs, [Arg.parse] exits the program, after printing
     to standard error an error message as follows:
-   -   The reason for the error: unknown option, invalid or missing argument, etc.
-   -   [usage_msg]
-   -   The list of options, each followed by the corresponding [doc] string.
+    -   The reason for the error: unknown option, invalid or missing argument, etc.
+    -   [usage_msg]
+    -   The list of options, each followed by the corresponding [doc] string.
 
     For the user to be able to specify anonymous arguments starting with a
     [-], include for example [("-", String anon_fun, doc)] in [speclist].
@@ -93,14 +93,14 @@ val parse :
 val parse_argv : ?current: int ref -> string array ->
   (key * spec * doc) list -> anon_fun -> usage_msg -> unit
 (** [Arg.parse_argv ~current args speclist anon_fun usage_msg] parses
-   the array [args] as if it were the command line.  It uses and updates
-   the value of [~current] (if given), or [Arg.current].  You must set
-   it before calling [parse_argv].  The initial value of [current]
-   is the index of the program name (argument 0) in the array.
-   If an error occurs, [Arg.parse_argv] raises [Arg.Bad] with
-   the error message as argument.  If option [-help] or [--help] is
-   given, [Arg.parse_argv] raises [Arg.Help] with the help message
-   as argument.
+    the array [args] as if it were the command line.  It uses and updates
+    the value of [~current] (if given), or [Arg.current].  You must set
+    it before calling [parse_argv].  The initial value of [current]
+    is the index of the program name (argument 0) in the array.
+    If an error occurs, [Arg.parse_argv] raises [Arg.Bad] with
+    the error message as argument.  If option [-help] or [--help] is
+    given, [Arg.parse_argv] raises [Arg.Help] with the help message
+    as argument.
 *)
 
 exception Help of string

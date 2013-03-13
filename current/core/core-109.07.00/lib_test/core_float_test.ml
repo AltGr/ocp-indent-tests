@@ -129,7 +129,7 @@ let test =
           "min_int iround_nearest" @? iround_nearest_test (Float.of_int Int.min_value);
           "random round" @? (randoms |! List.for_all ~f:round_test);
           "random iround_towards_zero_exn" @?
-            (randoms |! List.for_all ~f:iround_towards_zero_test);
+          (randoms |! List.for_all ~f:iround_towards_zero_test);
           "random iround_down_exn" @? (randoms |! List.for_all ~f:iround_down_test);
           "random iround_up_exn" @? (randoms |! List.for_all ~f:iround_up_test);
           "special values" @? special_values_test ();

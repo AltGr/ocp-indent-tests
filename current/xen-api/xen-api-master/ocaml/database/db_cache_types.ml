@@ -1,7 +1,7 @@
 open Db_exn
 
 (** Database tables, columns and rows are all indexed by string, each
-   using a specialised StringMap *)
+    using a specialised StringMap *)
 module StringMap = struct
   include Map.Make(struct
       type t = string
@@ -32,18 +32,18 @@ module Map2 = functor(V: VAL) -> struct
   let remove = StringMap.remove
   let update_generation generation key default f row =
     StringMap.update key {created=generation; updated=generation; v=default} (fun x -> {x with updated=generation; v=f x.v}) row
-  let update generation key default f row = 
-    let updatefn () = StringMap.update key {created=generation; updated=generation; v=default} (fun x -> {x with updated=generation; v=f x.v}) row in
-    if mem key row 
-    then
-      let old = find key row in
-      let newv = f old in
-      if newv == old 
-      then row 
-      else updatefn ()        
-    else
-      updatefn ()
-  let fold_over_recent since f = StringMap.fold (fun x y z -> if y.updated > since then f y.created y.updated 0L x y.v z else z)
+let update generation key default f row = 
+  let updatefn () = StringMap.update key {created=generation; updated=generation; v=default} (fun x -> {x with updated=generation; v=f x.v}) row in
+if mem key row 
+then
+  let old = find key row in
+  let newv = f old in
+  if newv == old 
+  then row 
+  else updatefn ()        
+else
+  updatefn ()
+let fold_over_recent since f = StringMap.fold (fun x y z -> if y.updated > since then f y.created y.updated 0L x y.v z else z)
 end
 
 module StringStringMap = Map2(struct type v = string end)

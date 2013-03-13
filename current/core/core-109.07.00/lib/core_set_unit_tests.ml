@@ -3,38 +3,38 @@ open Std
 open Core_set_intf
 
 module Unit_tests
-    (Elt : sig
-       type 'a t with sexp
+         (Elt : sig
+            type 'a t with sexp
 
-       val of_int : int -> int t
-       val to_int : int t -> int
-     end)
-    (Set : sig
-       type ('a, 'b) t_
-       type ('a, 'b) tree
-       type ('a, 'b) set
+            val of_int : int -> int t
+            val to_int : int t -> int
+          end)
+         (Set : sig
+            type ('a, 'b) t_
+            type ('a, 'b) tree
+            type ('a, 'b) set
 
-       type ('a, 'b, 'c) create_options
+            type ('a, 'b, 'c) create_options
 
-       include Creators
-         with type ('a, 'b) t    := ('a, 'b) t_
-         with type ('a, 'b) set  := ('a, 'b) set
-         with type ('a, 'b) tree := ('a, 'b) tree
-         with type 'a elt := 'a Elt.t
-         with type ('a, 'b, 'c) options := ('a, 'b, 'c) create_options
+            include Creators
+              with type ('a, 'b) t    := ('a, 'b) t_
+              with type ('a, 'b) set  := ('a, 'b) set
+              with type ('a, 'b) tree := ('a, 'b) tree
+              with type 'a elt := 'a Elt.t
+              with type ('a, 'b, 'c) options := ('a, 'b, 'c) create_options
 
-       val simplify_creator : (int, Int.comparator, 'c) create_options -> 'c
+            val simplify_creator : (int, Int.comparator, 'c) create_options -> 'c
 
-       type ('a, 'b, 'c) access_options
+            type ('a, 'b, 'c) access_options
 
-       include Accessors
-         with type ('a, 'b) t    := ('a, 'b) t_
-         with type ('a, 'b) tree := ('a, 'b) tree
-         with type 'a elt := 'a Elt.t
-         with type ('a, 'b, 'c) options := ('a, 'b, 'c) access_options
+            include Accessors
+              with type ('a, 'b) t    := ('a, 'b) t_
+              with type ('a, 'b) tree := ('a, 'b) tree
+              with type 'a elt := 'a Elt.t
+              with type ('a, 'b, 'c) options := ('a, 'b, 'c) access_options
 
-       val simplify_accessor : (int, Int.comparator, 'c) access_options -> 'c
-     end)
+            val simplify_accessor : (int, Int.comparator, 'c) access_options -> 'c
+          end)
 
   : Creators_and_accessors = struct
 
@@ -58,7 +58,7 @@ module Unit_tests
     let of_list        = simplify_creator of_list
     let of_sorted_array = simplify_creator of_sorted_array
     let of_sorted_array_unchecked = simplify_creator of_sorted_array_unchecked
-      (* let of_tree        = simplify_creator of_tree *)
+                                    (* let of_tree        = simplify_creator of_tree *)
   end
 
   type ('a, 'b) t = Unit_test_follows
@@ -182,9 +182,9 @@ module Unit_tests
       Set.iter2 (set_of_list l1) (set_of_list l2) ~f:(fun a -> result := a :: !result);
       let result =
         List.rev_map !result ~f:(function
-          | `Left a -> `Left (Elt.to_int a)
-          | `Right a -> `Right (Elt.to_int a)
-          | `Both (a, b) -> `Both (Elt.to_int a, Elt.to_int b)
+        | `Left a -> `Left (Elt.to_int a)
+        | `Right a -> `Right (Elt.to_int a)
+        | `Both (a, b) -> `Both (Elt.to_int a, Elt.to_int b)
         )
       in
       assert (result = expected)
@@ -276,44 +276,44 @@ module Access_options_with_comparator = struct
 end
 
 TEST_MODULE "Set" = Unit_tests (Elt_poly) (struct
-    include Set
-    type ('a, 'b) t_  = ('a, 'b) t
-    type ('a, 'b) set = ('a, 'b) t
-    include Create_options_with_comparator
-    include Access_options_without_comparator
-  end)
+                      include Set
+                      type ('a, 'b) t_  = ('a, 'b) t
+                      type ('a, 'b) set = ('a, 'b) t
+                      include Create_options_with_comparator
+                      include Access_options_without_comparator
+                    end)
 
 TEST_MODULE "Set.Poly" = Unit_tests (Elt_poly) (struct
-    include Set.Poly
-    type ('a, 'b) set = 'a t
-    include Create_options_without_comparator
-    include Access_options_without_comparator
-  end)
+                           include Set.Poly
+                           type ('a, 'b) set = 'a t
+                           include Create_options_without_comparator
+                           include Access_options_without_comparator
+                         end)
 
 TEST_MODULE "Int.Set" = Unit_tests (Elt_int) (struct
-    include Int.Set
-    include Create_options_without_comparator
-    include Access_options_without_comparator
-  end)
+                          include Int.Set
+                          include Create_options_without_comparator
+                          include Access_options_without_comparator
+                        end)
 
 TEST_MODULE "Set.Tree" = Unit_tests (Elt_poly) (struct
-    include Set.Tree
-    type ('a, 'b) t_   = ('a, 'b) t
-    include Create_options_with_comparator
-    include Access_options_with_comparator
-  end)
+                           include Set.Tree
+                           type ('a, 'b) t_   = ('a, 'b) t
+                           include Create_options_with_comparator
+                           include Access_options_with_comparator
+                         end)
 
 TEST_MODULE "Set.Poly.Tree" = Unit_tests (Elt_poly) (struct
-    include Set.Poly.Tree
-    type ('a, 'b) set = 'a Set.Poly.Tree.t
-    include Create_options_without_comparator
-    include Access_options_without_comparator
-  end)
+                                include Set.Poly.Tree
+                                type ('a, 'b) set = 'a Set.Poly.Tree.t
+                                include Create_options_without_comparator
+                                include Access_options_without_comparator
+                              end)
 
 TEST_MODULE "Int.Set.Tree" = Unit_tests (Elt_int) (struct
-    include Int.Set.Tree
-    type ('a, 'b) set  = ('a, 'b) Int.Set.tree
-    type ('a, 'b) tree = ('a, 'b) Int.Set.tree
-    include Create_options_without_comparator
-    include Access_options_without_comparator
-  end)
+                               include Int.Set.Tree
+                               type ('a, 'b) set  = ('a, 'b) Int.Set.tree
+                               type ('a, 'b) tree = ('a, 'b) Int.Set.tree
+                               include Create_options_without_comparator
+                               include Access_options_without_comparator
+                             end)

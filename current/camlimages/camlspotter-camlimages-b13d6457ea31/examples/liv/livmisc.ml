@@ -54,7 +54,7 @@ let normalize_filename file =
         | tkn -> tkn :: acc)
       [] tkns in
   (if is_absolute then "/" else "") ^
-    Mstring.catenate_sep "/" (List.rev tkns);;
+  Mstring.catenate_sep "/" (List.rev tkns);;
 
 type 'a result =
   | Ok of 'a

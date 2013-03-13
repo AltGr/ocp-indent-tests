@@ -265,7 +265,7 @@ let _ =
       end else
         (*  if Filename.check_suffix filename ".mli" then
             Printf.fprintf stderr "Discarding interface file %s\n%!" filename
-           else *)
+            else *)
         error (Printf.sprintf "Don't know what to do with anonymous argument [%s]" filename)
     ) !sources_arg;
     close_ns_open ns;

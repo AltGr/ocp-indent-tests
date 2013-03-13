@@ -6,19 +6,19 @@ let my_tz = Time.Zone.machine_zone ()
 (* We don't test Feb 29th because generating proper leap year dates is
    trickier.  Also, there are no time zone changes on leap dates. *)
 let month_limits = Map.Poly.of_alist_exn [
-    1, 31;
-    2, 28;
-    3, 31;
-    4, 30;
-    5, 31;
-    6, 30;
-    7, 31;
-    8, 31;
-    9, 30;
-    10, 31;
-    11, 30;
-    12, 31
-  ]
+                     1, 31;
+                     2, 28;
+                     3, 31;
+                     4, 30;
+                     5, 31;
+                     6, 30;
+                     7, 31;
+                     8, 31;
+                     9, 30;
+                     10, 31;
+                     11, 30;
+                     12, 31
+                   ]
 
 let random_time () =
   (* dpowers: if we go out much further then floating point errors at the microsecond
@@ -100,17 +100,17 @@ let add_roundtrip_conversion_test (zone_name,(zone:Zone.t)) =
       Time.of_local_date_ofday round_date round_ofday
     in
     "time" @?
-      (if time = round_trip_time then true
-       else begin
-         failwith (String.concat [
-             sprintf "tm: %s\n" (Sexp.to_string_hum (Unix.sexp_of_tm tm));
-             sprintf "unix_time: %0.20f\n" unix_time;
-             sprintf "our_time: %0.20f\n" (Time.to_float time);
-             sprintf "date, ofday: %s, %s\n"
-               (Date.to_string zone_date) (Time.Ofday.to_string zone_ofday);
-             sprintf "round_trip: %0.20f\n" (Time.to_float round_trip_time)
-           ])
-       end))
+    (if time = round_trip_time then true
+     else begin
+       failwith (String.concat [
+                   sprintf "tm: %s\n" (Sexp.to_string_hum (Unix.sexp_of_tm tm));
+                   sprintf "unix_time: %0.20f\n" unix_time;
+                   sprintf "our_time: %0.20f\n" (Time.to_float time);
+                   sprintf "date, ofday: %s, %s\n"
+                     (Date.to_string zone_date) (Time.Ofday.to_string zone_ofday);
+                   sprintf "round_trip: %0.20f\n" (Time.to_float round_trip_time)
+                 ])
+     end))
 
 module Localtime_test_data = struct
   type t = {
@@ -153,19 +153,19 @@ let add_random_localtime_tests () =
         }
       in
       "date" @?
-        (if Localtime_test_data.(
-            test_data.localtime_date_string = test_data.our_date_string)
-         then
-           true
-         else
-           failwith (Sexp.to_string (Localtime_test_data.sexp_of_t test_data)));
+      (if Localtime_test_data.(
+          test_data.localtime_date_string = test_data.our_date_string)
+       then
+         true
+       else
+         failwith (Sexp.to_string (Localtime_test_data.sexp_of_t test_data)));
       "ofday" @?
-        (if Localtime_test_data.(
-            test_data.localtime_ofday_string = test_data.our_ofday_string)
-         then
-           true
-         else
-           failwith (Sexp.to_string (Localtime_test_data.sexp_of_t test_data)))))
+      (if Localtime_test_data.(
+          test_data.localtime_ofday_string = test_data.our_ofday_string)
+       then
+         true
+       else
+         failwith (Sexp.to_string (Localtime_test_data.sexp_of_t test_data)))))
 ;;
 
 let add_roundtrip_conversion_tests () =

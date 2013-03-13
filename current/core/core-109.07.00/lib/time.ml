@@ -56,26 +56,26 @@ module Stable = struct
 
     let write_new_string_and_sexp_formats__read_both () =
       modify_string_and_sexp_format (function
-        | `Force_old ->
-          failwith "write_new_string_and_sexp_formats__read_both called after \
-                    forbid_new_string_and_sexp_formats"
-        | _ -> `Write_new_read_both)
+      | `Force_old ->
+        failwith "write_new_string_and_sexp_formats__read_both called after \
+                  forbid_new_string_and_sexp_formats"
+      | _ -> `Write_new_read_both)
     ;;
 
     let write_new_string_and_sexp_formats__read_only_new () =
       modify_string_and_sexp_format (function
-        | `Force_old ->
-          failwith "write_new_string_and_sexp_formats__read_only_new called after \
-                    forbid_new_string_and_sexp_formats"
-        | _ -> `Write_new_read_only_new)
+      | `Force_old ->
+        failwith "write_new_string_and_sexp_formats__read_only_new called after \
+                  forbid_new_string_and_sexp_formats"
+      | _ -> `Write_new_read_only_new)
     ;;
 
     let forbid_new_string_and_sexp_formats () =
       modify_string_and_sexp_format (function
-        | `Old | `Force_old -> `Force_old
-        | _ ->
-          failwith "use_new_string_and_sexp_formats called before \
-                    forbid_new_string_and_sexp_formats"
+      | `Old | `Force_old -> `Force_old
+      | _ ->
+        failwith "use_new_string_and_sexp_formats called before \
+                  forbid_new_string_and_sexp_formats"
       )
     ;;
 
@@ -197,7 +197,7 @@ module Stable = struct
     let to_filename_string t =
       let date, ofday = to_local_date_ofday t in
       (Date.to_string date) ^ "_" ^
-        (String.tr ~target:':' ~replacement:'-' (Ofday.to_string ofday))
+      (String.tr ~target:':' ~replacement:'-' (Ofday.to_string ofday))
     ;;
 
     let to_string_fix_proto utc t =
@@ -318,8 +318,8 @@ module Stable = struct
           | [date; ofday]     -> (date, ofday, None)
           | [s]              ->
             begin match String.rsplit2 ~on:'T' s with
-              | Some (date, ofday) -> (date, ofday, None)
-              | None -> failwith "no spaces or T found"
+            | Some (date, ofday) -> (date, ofday, None)
+            | None -> failwith "no spaces or T found"
             end
           | _ -> failwith "too many spaces"
         in
@@ -528,28 +528,28 @@ module Stable = struct
         "(1985-06-05 05:25:00.000000-04:00)",
         "\000\000\000\108\039\004\189\065";
       ] @ if Int.(Sys.c_int_size () < 64) then [] else [
-          time ~y:2222 ~m:Month.Nov ~d:22 (Ofday.create ~hr:17 ~min:17 ~sec:17 ()),
-          "(2222-11-22 17:17:17.000000-05:00)",
-          "\000\000\208\230\204\186\253\065";
-        ]
+        time ~y:2222 ~m:Month.Nov ~d:22 (Ofday.create ~hr:17 ~min:17 ~sec:17 ()),
+        "(2222-11-22 17:17:17.000000-05:00)",
+        "\000\000\208\230\204\186\253\065";
+      ]
 
     TEST_MODULE "Time.V1 functor application" = Stable_unit_test.Make (struct
-        include V1
-        (* for testing purposes *)
-        let sexp_of_t_with_zone ?zone t =
-          match String.lsplit2 ~on:' ' (to_string_abs ?zone t) with
-          | Some (date,ofday) ->
-            Sexp.List [Sexp.Atom date; Sexp.Atom ofday]
-          | None ->
-            failwith "Time.sexp_of_t: unexpected None"
+                                                  include V1
+                                                  (* for testing purposes *)
+                                                  let sexp_of_t_with_zone ?zone t =
+                                                    match String.lsplit2 ~on:' ' (to_string_abs ?zone t) with
+                                                    | Some (date,ofday) ->
+                                                      Sexp.List [Sexp.Atom date; Sexp.Atom ofday]
+                                                    | None ->
+                                                      failwith "Time.sexp_of_t: unexpected None"
 
-        let zone = Zone.find_office `nyc
-        let sexp_of_t t = sexp_of_t_with_zone ~zone t
-        let equal = equal
-        let tests = tests
-      end)
+                                                  let zone = Zone.find_office `nyc
+                                                  let sexp_of_t t = sexp_of_t_with_zone ~zone t
+                                                  let equal = equal
+                                                  let tests = tests
+                                                end)
 
-      (* test that t_of_sexp accepts sexps qualified with time zones in two formats *)
+    (* test that t_of_sexp accepts sexps qualified with time zones in two formats *)
     TEST_UNIT =
       ignore (V1.t_of_sexp (Sexp.of_string "(2012-04-09 12:00:00.000000-04:00:00)"))
 

@@ -90,13 +90,13 @@ class img_button ?label ?frames ?border_width ?width ?height ?packing ?show () =
     | Some [] | None -> None
     | Some frames ->
       Some (GMisc.pixmap (fst (List.hd frames))
-            ~packing: (vbox#pack ~expand: true ~fill: true) ())
+          ~packing: (vbox#pack ~expand: true ~fill: true) ())
   in
   let _ = 
     match label with
     | Some label -> 
       Some (GMisc.label ~text: label
-            ~packing: (vbox#pack ~expand: false ~fill: true) ())
+          ~packing: (vbox#pack ~expand: false ~fill: true) ())
     | None -> None
   in
   object (self)

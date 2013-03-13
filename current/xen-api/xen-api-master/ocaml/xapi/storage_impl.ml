@@ -59,7 +59,7 @@
       VDI_1_a, VDI_1, b, ... VDI_n_z: one lock per VDI for serialising all VDI.* ops per-SR
       + various locks to protect accesses to individual tables
 
-   We hold locks in one of the following sequences:
+    We hold locks in one of the following sequences:
       VDI_p_q : for a VDI operation
       SR_p    : for an SR.attach
       SR_p, VDI_p_a, VDI_p_b, ..., VDI_p_z : for an SR.detach (to "quiesce" the SR)
@@ -365,29 +365,29 @@ module Wrapper = functor(Impl: Server_impl) -> struct
       | None -> raise (Sr_not_attached sr)
       | Some sr_t ->
         Opt.iter (fun vdi_t -> 
-            let current_state = Vdi.get_dp_state dp vdi_t in
-            let desired_state = Vdi_automaton.Detached in
-            let ops = List.map fst (Vdi_automaton.(-) current_state desired_state) in
-            begin 
-              try
-                ignore(List.fold_left (fun _ op ->
-                    perform_nolock context ~dbg ~dp ~sr ~vdi op
-                  ) vdi_t ops)
-              with e -> 
-                if not allow_leak 
-                then (ignore(Vdi.add_leaked dp vdi_t); raise e)
-                else begin
-                  (* allow_leak means we can forget this dp *)
-                  info "setting dp:%s state to %s, even though operation failed because allow_leak set" dp (Vdi_automaton.string_of_state desired_state);
-                  let vdi_t = Vdi.set_dp_state dp desired_state vdi_t in
+          let current_state = Vdi.get_dp_state dp vdi_t in
+          let desired_state = Vdi_automaton.Detached in
+          let ops = List.map fst (Vdi_automaton.(-) current_state desired_state) in
+          begin 
+            try
+              ignore(List.fold_left (fun _ op ->
+                  perform_nolock context ~dbg ~dp ~sr ~vdi op
+                ) vdi_t ops)
+            with e -> 
+              if not allow_leak 
+              then (ignore(Vdi.add_leaked dp vdi_t); raise e)
+              else begin
+                (* allow_leak means we can forget this dp *)
+                info "setting dp:%s state to %s, even though operation failed because allow_leak set" dp (Vdi_automaton.string_of_state desired_state);
+                let vdi_t = Vdi.set_dp_state dp desired_state vdi_t in
 
-                  if Vdi.superstate vdi_t = Vdi_automaton.Detached
-                  then Sr.remove vdi sr_t
-                  else Sr.replace vdi vdi_t sr_t;
+                if Vdi.superstate vdi_t = Vdi_automaton.Detached
+                then Sr.remove vdi sr_t
+                else Sr.replace vdi vdi_t sr_t;
 
-                  Everything.to_file !host_state_path (Everything.make ());
-                end
-            end) (Sr.find vdi sr_t)
+                Everything.to_file !host_state_path (Everything.make ());
+              end
+          end) (Sr.find vdi sr_t)
 
     (* Attempt to clear leaked datapaths associed with this vdi *)
     let remove_datapaths_andthen_nolock context ~dbg ~sr ~vdi which next =

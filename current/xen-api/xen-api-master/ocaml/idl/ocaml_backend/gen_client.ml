@@ -155,12 +155,12 @@ let gen_module api : O.Module.t =
       ~params:(_rpc :: args)
       ~ty:return_type
       ~body:(List.map to_rpc args @ [
-          if is_ctor then ctor_record else "";
-          Printf.sprintf "rpc_wrapper rpc \"%s\" [ %s ] >>= fun x -> return (%s x)"
-            wire_name
-            (String.concat "; " rpc_args)
-            (from_xmlrpc x.msg_result)
-        ]) () in
+               if is_ctor then ctor_record else "";
+               Printf.sprintf "rpc_wrapper rpc \"%s\" [ %s ] >>= fun x -> return (%s x)"
+                 wire_name
+                 (String.concat "; " rpc_args)
+                 (from_xmlrpc x.msg_result)
+             ]) () in
 
   (* Convert an object into a Module *)
   let obj ~sync (obj: obj) =

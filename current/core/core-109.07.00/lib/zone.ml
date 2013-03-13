@@ -13,11 +13,11 @@ module Hashtbl = Core_hashtbl
 module Unix = Core_unix
 
 let likely_machine_zones = ref [
-    "America/New_York";
-    "Europe/London";
-    "Asia/Hong_Kong";
-    "America/Chicago"
-  ]
+                             "America/New_York";
+                             "Europe/London";
+                             "Asia/Hong_Kong";
+                             "America/Chicago"
+                           ]
 
 
 exception Unknown_zone of string with sexp
@@ -28,15 +28,15 @@ module Stable = struct
       include Digest
 
       include Bin_prot.Utils.Make_binable (struct
-          module Binable = struct
-            type t = string with bin_io
-          end
+                module Binable = struct
+                  type t = string with bin_io
+                end
 
-          let to_binable str = str
-          let of_binable str = str
+                let to_binable str = str
+                let of_binable str = str
 
-          type t = string
-        end)
+                type t = string
+              end)
 
       let sexp_of_t t = Sexp.Atom (Digest.to_hex t)
     end
@@ -151,16 +151,16 @@ module Stable = struct
         let raw_abbrvs = input_list ic ~len ~f:(input_char) in
         let buf = Buffer.create len in
         let _,indexed_abbrvs = List.fold raw_abbrvs ~init:(0, Map.Poly.empty)
-            ~f:(fun (index,abbrvs) c ->
-              match c with
-              | '\000' ->
-                let data = Buffer.contents buf in
-                let next_index = index + (String.length data) + 1 in
-                let abbrvs = Map.add abbrvs ~key:index ~data in
-                Buffer.clear buf;
-                (next_index,abbrvs)
-              | c -> Buffer.add_char buf c; (index,abbrvs)
-            )
+                                 ~f:(fun (index,abbrvs) c ->
+                                   match c with
+                                   | '\000' ->
+                                     let data = Buffer.contents buf in
+                                     let next_index = index + (String.length data) + 1 in
+                                     let abbrvs = Map.add abbrvs ~key:index ~data in
+                                     Buffer.clear buf;
+                                     (next_index,abbrvs)
+                                   | c -> Buffer.add_char buf c; (index,abbrvs)
+                                 )
         in
         if Buffer.length buf <> 0 then
           raise
@@ -202,10 +202,10 @@ module Stable = struct
         in
         let regimes =
           Array.of_list (List.map regimes
-              ~f:(fun (lt,abbrv_index) ->
-                let abbrv = Map.find_exn abbreviations abbrv_index in
-                lt abbrv
-              ))
+                           ~f:(fun (lt,abbrv_index) ->
+                             let abbrv = Map.find_exn abbreviations abbrv_index in
+                             lt abbrv
+                           ))
         in
         let raw_transitions =
           List.map2_exn transition_times transition_indices
@@ -404,7 +404,7 @@ module Stable = struct
                 let relative_fn = String.drop_prefix full_fn basedir_len in
                 if Sys.is_directory fn = `Yes then begin
                   if not (List.exists skip_prefixes ~f:(fun prefix ->
-                        String.is_prefix ~prefix relative_fn)) then
+                            String.is_prefix ~prefix relative_fn)) then
                     dfs fn (depth - 1)
                 end else
                   f relative_fn
@@ -557,33 +557,33 @@ module Stable = struct
     ;;
 
     include (Bin_prot.Utils.Make_binable (struct
-        type t' = t
-        type t = t'
-        module Binable = struct
-          type t = string with bin_io
-        end
+               type t' = t
+               type t = t'
+               module Binable = struct
+                 type t = string with bin_io
+               end
 
-        let to_binable t =
-          if t.name = "/etc/localtime" then
-            failwith "the Zone.t returned from Zone.machine_zone cannot be serialized";
-          t.name
+               let to_binable t =
+                 if t.name = "/etc/localtime" then
+                   failwith "the Zone.t returned from Zone.machine_zone cannot be serialized";
+                 t.name
 
-        let of_binable s = t_of_sexp (Sexp.Atom s)
-      end) : Binable.S with type t := t)
+               let of_binable s = t_of_sexp (Sexp.Atom s)
+             end) : Binable.S with type t := t)
   end
 
   TEST_MODULE "Zone.V1" = Stable_unit_test.Make (struct
-      include V1
+                            include V1
 
-      let equal z1 z2 = z1.name = z2.name
+                            let equal z1 z2 = z1.name = z2.name
 
-      let tests =
-        let zone = find_exn in
-        [ zone "nyc", "America/New_York", "\016America/New_York";
-          zone "ldn", "Europe/London",    "\013Europe/London";
-          zone "hkg", "Asia/Hong_Kong",   "\014Asia/Hong_Kong";
-        ]
-    end)
+                            let tests =
+                              let zone = find_exn in
+                              [ zone "nyc", "America/New_York", "\016America/New_York";
+                                zone "ldn", "Europe/London",    "\013Europe/London";
+                                zone "hkg", "Asia/Hong_Kong",   "\014Asia/Hong_Kong";
+                              ]
+                          end)
 end
 
 include Stable.V1

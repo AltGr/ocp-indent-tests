@@ -110,13 +110,13 @@ let xml_of_scenario s =
       (Printf.sprintf " <interfaces_per_host>%d</interfaces_per_host>" s.interfaces_per_host);
       (Printf.sprintf " <vms>")]
      @ 
-       (List.map (fun vm -> Printf.sprintf "  <vm vbds=\"%d\" vifs=\"%d\" tag=\"%s\" num=\"%d\" has_affinity=\"%b\" />" vm.vbds vm.vifs vm.tag vm.num vm.has_affinity) s.vms)
+     (List.map (fun vm -> Printf.sprintf "  <vm vbds=\"%d\" vifs=\"%d\" tag=\"%s\" num=\"%d\" has_affinity=\"%b\" />" vm.vbds vm.vifs vm.tag vm.num vm.has_affinity) s.vms)
      @ 
-       [" </vms>";
-        Printf.sprintf " <bonds>%d</bonds>" s.bonds;
-        Printf.sprintf " <ipbase>%d</ipbase>" s.ipbase;
-        "</scenario>"
-       ])
+     [" </vms>";
+      Printf.sprintf " <bonds>%d</bonds>" s.bonds;
+      Printf.sprintf " <ipbase>%d</ipbase>" s.ipbase;
+      "</scenario>"
+     ])
 
 
 let oc_key = "perftestsetup"

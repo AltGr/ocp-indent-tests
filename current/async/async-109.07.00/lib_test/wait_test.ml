@@ -46,13 +46,13 @@ let wait_on_slow_child wait_on =
 let unsafe_tests =
   ("Wait_test.raises_echild", test_raises_echild)
   :: (List.concat_map [
-      ("any", (fun _ -> `Any));
-      ("my_group", (fun _ -> `My_group));
-      ("pid", (fun pid -> `Pid pid));
-    ] ~f:(fun (name, wait_on) -> [
-      "Wait_test.fast_child_" ^ name, (fun () -> wait_on_fast_child wait_on);
-      "Wait_test.slow_child_" ^ name, (fun () -> wait_on_slow_child wait_on);
-    ]))
+        ("any", (fun _ -> `Any));
+        ("my_group", (fun _ -> `My_group));
+        ("pid", (fun pid -> `Pid pid));
+      ] ~f:(fun (name, wait_on) -> [
+        "Wait_test.fast_child_" ^ name, (fun () -> wait_on_fast_child wait_on);
+        "Wait_test.slow_child_" ^ name, (fun () -> wait_on_slow_child wait_on);
+      ]))
 ;;
 
 (* Clear wait-status for any children spawned by previous tests. *)
@@ -66,6 +66,6 @@ let rec clear_wait_status () =
   if continue then clear_wait_status ()
 
 let tests = List.map unsafe_tests ~f:(fun (name, test) -> name, (fun () ->
-      clear_wait_status ();
-      test ()))
+                clear_wait_status ();
+                test ()))
 ;;

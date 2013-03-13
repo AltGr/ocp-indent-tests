@@ -57,7 +57,7 @@ let permanent_vdi_detach_by_uuid ~__context ~uuid =
   ignore(Helpers.call_script static_vdis [ "del"; uuid ])
 
 (** Added for CA-48539. Deactivates a vdi. You should probably follow
-   this call with one of the previous vdi_detach functions. *)
+    this call with one of the previous vdi_detach functions. *)
 let permanent_vdi_deactivate_by_uuid ~__context ~uuid =
   info "permanent_vdi_detach: vdi-uuid = %s" uuid ;
   try
@@ -83,7 +83,7 @@ let gc () =
       ) (list ()))
 
 (** If we just rebooted and failed to attach our static VDIs then this can be called to reattempt the attach:
-   this is necessary for HA to start. *)
+    this is necessary for HA to start. *)
 let reattempt_on_boot_attach () =
   let script = "/etc/init.d/attach-static-vdis" in
   try

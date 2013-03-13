@@ -438,18 +438,18 @@ let save_image name opts image =
   match image with
   | Index8 bmp ->
     save name opts {
-        screen_width = bmp.width;
-        screen_height = bmp.height;
-        screen_colormap = bmp.colormap;
-        frames = [ {
-                   frame_left = 0;
-                   frame_top = 0;
-                   frame_bitmap = bmp;
-                   frame_extensions = []; (* not implemented *)
-                   frame_delay = 0;
-                 }; ];
-        loops = 0;
-      }
+      screen_width = bmp.width;
+      screen_height = bmp.height;
+      screen_colormap = bmp.colormap;
+      frames = [ {
+                 frame_left = 0;
+                 frame_top = 0;
+                 frame_bitmap = bmp;
+                 frame_extensions = []; (* not implemented *)
+                 frame_delay = 0;
+               }; ];
+      loops = 0;
+    }
   | _ -> raise Wrong_image_type;;
 
 let check_header filename =

@@ -38,15 +38,15 @@ type -'a u
 
 type 'a thread_state =
   | Return of 'a
-    (* [Return v] a terminated thread which has successfully
-       terminated with the value [v] *)
+  (* [Return v] a terminated thread which has successfully
+     terminated with the value [v] *)
   | Fail of exn
-    (* [Fail exn] a terminated thread which has failed with the
-       exception [exn] *)
+  (* [Fail exn] a terminated thread which has failed with the
+     exception [exn] *)
   | Sleep of 'a sleeper
-      (* [Sleep sleeper] is a sleeping thread *)
+  (* [Sleep sleeper] is a sleeping thread *)
   | Repr of 'a thread_repr
-      (* [Repr t] a thread which behaves the same as [t] *)
+  (* [Repr t] a thread which behaves the same as [t] *)
 
 and 'a thread_repr = {
   mutable state : 'a thread_state;
@@ -73,9 +73,9 @@ and 'a waiter_set =
 
 and cancel =
   | Cancel_func of (unit -> unit)
-    (* A cancel function. *)
+  (* A cancel function. *)
   | Cancel_repr of cancel ref
-      (* Behave has this canceler. *)
+  (* Behave has this canceler. *)
 
 external thread_repr : 'a t -> 'a thread_repr = "%identity"
 external thread : 'a thread_repr -> 'a t = "%identity"
@@ -298,8 +298,8 @@ let connect t1 t2 =
 
            {[
              let rec loop ()==
-               lwt () = Lwt_unix.yield () in
-               loop ()
+                 lwt () = Lwt_unix.yield () in
+                 loop ()
 
              lwt () =
                let t = loop () in
@@ -905,9 +905,9 @@ let npick threads =
 
 let join l =
   let res = temp (ref (Cancel_func(fun () -> List.iter cancel l)))
-(* Number of threads still sleeping: *)
+  (* Number of threads still sleeping: *)
   and sleeping = ref 0
-(* The state that must be returned: *)
+  (* The state that must be returned: *)
   and return_state = ref (Return ()) in
   let rec waiter = ref (Some handle_result)
   and handle_result state =

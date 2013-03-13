@@ -56,8 +56,8 @@ module S_to_S1 (S : S) : S1
   with type comparator = S.comparator
 
 module Make1 (M : sig
-      type 'a t
-      val compare : 'a t -> 'a t -> int
-      val sexp_of_t : _ t -> Sexp.t (* not the usual type for [sexp_of_t] *)
-    end) : S1 with type 'a t := 'a M.t
+           type 'a t
+           val compare : 'a t -> 'a t -> int
+           val sexp_of_t : _ t -> Sexp.t (* not the usual type for [sexp_of_t] *)
+         end) : S1 with type 'a t := 'a M.t
 

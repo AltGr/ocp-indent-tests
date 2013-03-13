@@ -54,48 +54,48 @@ module Stable = struct
     V1.T.Variants.fold
       ~init:[]
       ~interval:(c (fun interval ->
-          assert (interval.V.rank = 0);
-          List.map non_empty ~f:(fun ((lbound, ubound), sexp, bin_io) ->
-            interval.V.constructor lbound ubound, sexp, bin_io)))
+                   assert (interval.V.rank = 0);
+                   List.map non_empty ~f:(fun ((lbound, ubound), sexp, bin_io) ->
+                     interval.V.constructor lbound ubound, sexp, bin_io)))
       ~empty:(c (fun empty ->
-          assert (empty.V.rank = 1);
-          [ empty.V.constructor, "()", "\001" ]))
+                assert (empty.V.rank = 1);
+                [ empty.V.constructor, "()", "\001" ]))
 
   TEST_MODULE "Interval.V1.Float" = Stable_unit_test.Make(struct
-      include V1.Float
-      let equal x1 x2 = (V1.T.compare Float.compare x1 x2) = 0
+                                      include V1.Float
+                                      let equal x1 x2 = (V1.T.compare Float.compare x1 x2) = 0
 
-      module V = V1.T.Variants
-      let tests = make_tests_v1
-          ~non_empty:
-          [ (1.5, 120.), "(1.5 120)",
-            "\000\000\000\000\000\000\000\248?\000\000\000\000\000\000^@"
-          ]
-    end)
+                                      module V = V1.T.Variants
+                                      let tests = make_tests_v1
+                                                    ~non_empty:
+                                                    [ (1.5, 120.), "(1.5 120)",
+                                                      "\000\000\000\000\000\000\000\248?\000\000\000\000\000\000^@"
+                                                    ]
+                                    end)
 
   TEST_MODULE "Interval.V1.Int" = Stable_unit_test.Make(struct
-      include V1.Int
-      let equal x1 x2 = (V1.T.compare Int.compare x1 x2) = 0
+                                    include V1.Int
+                                    let equal x1 x2 = (V1.T.compare Int.compare x1 x2) = 0
 
-      module V = V1.T.Variants
-      let tests = make_tests_v1
-          ~non_empty: [ (-5, 789), "(-5 789)", "\000\255\251\254\021\003" ]
-    end)
+                                    module V = V1.T.Variants
+                                    let tests = make_tests_v1
+                                                  ~non_empty: [ (-5, 789), "(-5 789)", "\000\255\251\254\021\003" ]
+                                  end)
 
   TEST_MODULE "Interval.V1.Ofday" = Stable_unit_test.Make(struct
-      include V1.Ofday
-      let equal x1 x2 = (V1.T.compare Ofday.compare x1 x2) = 0
+                                      include V1.Ofday
+                                      let equal x1 x2 = (V1.T.compare Ofday.compare x1 x2) = 0
 
-      module V = V1.T.Variants
-      let tests =
-        let t1 = Ofday.create ~hr:7 ~min:30 ~sec:7 ~ms:12 ~us:5 () in
-        let t2 = Ofday.create ~hr:9 ~min:45 ~sec:8 ~ms:0 ~us:1 () in
-        make_tests_v1
-          ~non_empty:
-          [ (t1, t2) , "(07:30:07.012005 09:45:08.000001)",
-            "\000\153\158\176\196\192_\218@\223\024\002\000\128$\225@"
-          ]
-    end)
+                                      module V = V1.T.Variants
+                                      let tests =
+                                        let t1 = Ofday.create ~hr:7 ~min:30 ~sec:7 ~ms:12 ~us:5 () in
+                                        let t2 = Ofday.create ~hr:9 ~min:45 ~sec:8 ~ms:0 ~us:1 () in
+                                        make_tests_v1
+                                          ~non_empty:
+                                          [ (t1, t2) , "(07:30:07.012005 09:45:08.000001)",
+                                            "\000\153\158\176\196\192_\218@\223\024\002\000\128$\225@"
+                                          ]
+                                    end)
 end
 
 open Stable.V1.T
@@ -124,68 +124,68 @@ module Raw_make (T : Bound) = struct
     let empty = Empty
 
     let is_malformed = function
-      | Empty -> false
-      | Interval (x,y) -> T.(>) x y
+    | Empty -> false
+    | Interval (x,y) -> T.(>) x y
 
     let empty_cvt = function
-      | Empty -> Empty
-      | Interval (x,y) as i -> if T.(>) x y then Empty else i
+    | Empty -> Empty
+    | Interval (x,y) as i -> if T.(>) x y then Empty else i
 
     let create x y =
       (* if x > y, then this is just the Empty interval. *)
       empty_cvt (Interval (x,y))
 
     let intersect i1 i2 = match i1,i2 with
-      | Empty,_ | _,Empty -> Empty
-      | Interval (l1,u1), Interval (l2,u2) -> empty_cvt (Interval (T.max l1 l2, T.min u1 u2))
+    | Empty,_ | _,Empty -> Empty
+    | Interval (l1,u1), Interval (l2,u2) -> empty_cvt (Interval (T.max l1 l2, T.min u1 u2))
 
     let is_empty = function Empty -> true | _ -> false
 
     let is_empty_or_singleton = function
-      | Empty -> true
-      | Interval (x,y) -> T.(=) x y
+    | Empty -> true
+    | Interval (x,y) -> T.(=) x y
 
     let bounds = function Empty -> None | Interval (l, u) -> Some (l,u)
     let lbound = function Empty -> None | Interval (l, _) -> Some l
     let ubound = function Empty -> None | Interval (_, u) -> Some u
 
     let bounds_exn = function
-      | Empty -> invalid_arg "Interval.bounds_exn: empty interval"
-      | Interval (l,u) -> (l,u)
+    | Empty -> invalid_arg "Interval.bounds_exn: empty interval"
+    | Interval (l,u) -> (l,u)
 
     let lbound_exn = function
-      | Empty -> invalid_arg "Interval.lbound_exn: empty interval"
-      | Interval (l,_) -> l
+    | Empty -> invalid_arg "Interval.lbound_exn: empty interval"
+    | Interval (l,_) -> l
 
     let ubound_exn = function
-      | Empty -> invalid_arg "Interval.ubound_exn: empty interval"
-      | Interval (_,u) -> u
+    | Empty -> invalid_arg "Interval.ubound_exn: empty interval"
+    | Interval (_,u) -> u
 
     let compare_value i x = match i with
-      | Empty -> `Interval_is_empty
-      | Interval (l,u) ->
-        if T.(<) x l
-        then `Below
-        else if T.(>) x u
-        then `Above
-        else `Within
+    | Empty -> `Interval_is_empty
+    | Interval (l,u) ->
+      if T.(<) x l
+      then `Below
+      else if T.(>) x u
+      then `Above
+      else `Within
 
     let contains i x = Pervasives.(=) (compare_value i x) `Within
 
     let bound i x = match i with
-      | Empty -> None
-      | Interval (l,u) ->
-        let bounded_value =
-          if T.(<) x l then l
-          else if T.(<) u x then u
-          else x in
-        Some bounded_value
+    | Empty -> None
+    | Interval (l,u) ->
+      let bounded_value =
+        if T.(<) x l then l
+        else if T.(<) u x then u
+        else x in
+      Some bounded_value
 
     let is_superset i1 ~of_:i2 = match i1,i2 with
-      | Interval (l1,u1), Interval (l2,u2) ->
-        T.(<=) l1 l2 && T.(>=) u1 u2
-      | _, Empty -> true
-      | Empty, Interval (_, _) -> false
+    | Interval (l1,u1), Interval (l2,u2) ->
+      T.(<=) l1 l2 && T.(>=) u1 u2
+    | _, Empty -> true
+    | Empty, Interval (_, _) -> false
 
     let is_subset i1 ~of_:i2 =
       is_superset i2 ~of_:i1
@@ -239,8 +239,8 @@ module Raw_make (T : Bound) = struct
       let intervals = List.sort ~cmp:interval_compare intervals in
       (* requires sorted list of intervals *)
       let rec is_partition a = function
-        | [] -> true
-        | b :: tl -> T.(=) (ubound_exn a) (lbound_exn b) && is_partition b tl
+      | [] -> true
+      | b :: tl -> T.(=) (ubound_exn a) (lbound_exn b) && is_partition b tl
       in
       match intervals with
       | [] -> true
@@ -252,7 +252,7 @@ module Raw_make (T : Bound) = struct
   module Set = struct
     let create_from_intervals intervals =
       let intervals = List.filter intervals
-          ~f:(fun i -> not (Interval.is_empty i))
+                        ~f:(fun i -> not (Interval.is_empty i))
       in
       let intervals =
         let lb i = Interval.lbound_exn i in
@@ -265,7 +265,7 @@ module Raw_make (T : Bound) = struct
 
     let create pair_list =
       let intervals = List.map pair_list
-          ~f:(fun (lbound, ubound) -> Interval.create lbound ubound)
+                        ~f:(fun (lbound, ubound) -> Interval.create lbound ubound)
       in
       create_from_intervals intervals
     ;;
@@ -315,9 +315,9 @@ type 'a t = 'a interval with bin_io, sexp
 type 'a bound_ = 'a
 
 module C = Raw_make (struct
-    type 'a bound = 'a
-    include Pervasives
-  end)
+             type 'a bound = 'a
+             include Pervasives
+           end)
 
 include C.Interval
 
@@ -334,9 +334,9 @@ module Set = struct
 end
 
 module Make (Bound : sig
-      type t with bin_io, sexp
-      include Comparable.S with type t := t
-    end) = struct
+           type t with bin_io, sexp
+           include Comparable.S with type t := t
+         end) = struct
 
   type t = Bound.t interval with bin_io, sexp
   type 'a t_ = t
@@ -345,10 +345,10 @@ module Make (Bound : sig
   type 'a bound_ = bound
 
   module C = Raw_make (struct
-      type 'a bound = Bound.t
-      let compare = Bound.compare
-      include (Bound : Comparable.Infix with type t := Bound.t)
-    end)
+               type 'a bound = Bound.t
+               let compare = Bound.compare
+               include (Bound : Comparable.Infix with type t := Bound.t)
+             end)
 
   include C.Interval
 
@@ -394,7 +394,7 @@ module Time = struct
     create open_time close_time
 
   let create_ending_before ?(zone = Zone.machine_zone ())
-      (open_ofday, close_ofday) ~ubound =
+        (open_ofday, close_ofday) ~ubound =
     let close_time =
       Time.occurrence `Last_before_or_at ubound ~zone ~ofday:close_ofday
     in

@@ -45,13 +45,13 @@ struct
         debug "External authentication is disabled.";
         raise Extauth_is_disabled
       end 
-      (* our "local" authentication plugin *)
+    (* our "local" authentication plugin *)
     | "PAM" -> (*pam/nss unix services*)
       Authx.AuthX.methods
-      (* the Likewise authentication plugin *)
+    (* the Likewise authentication plugin *)
     | "AD" -> (*windows active directory*)
       Extauth_plugin_ADlikewise.AuthADlw.methods
-      (* if no other auth_type fits, then we don't know what to do *) 
+    (* if no other auth_type fits, then we don't know what to do *) 
     | _ as uat -> (*error*)
       begin
         debug "Unknown external authentication type: %s" uat;

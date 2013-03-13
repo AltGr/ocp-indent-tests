@@ -102,11 +102,11 @@ let rtc_timeoffset_of_vm ~__context (vm, vm_t) vbds =
     timeoffset
   | reference_timeoffset_pairs ->
     raise (Api_errors.Server_error (
-          (Api_errors.vm_attached_to_more_than_one_vdi_with_timeoffset_marked_as_reset_on_boot),
-          (Ref.string_of vm) ::
-            (reference_timeoffset_pairs
-             |> List.map fst
-             |> List.map Ref.string_of)))
+        (Api_errors.vm_attached_to_more_than_one_vdi_with_timeoffset_marked_as_reset_on_boot),
+        (Ref.string_of vm) ::
+          (reference_timeoffset_pairs
+           |> List.map fst
+           |> List.map Ref.string_of)))
 
 (* /boot/ contains potentially sensitive files like xen-initrd, so we will only*)
 (* allow directly booting guests from the subfolder /boot/guest/ *) 
@@ -134,27 +134,27 @@ let builder_of_vm ~__context ~vm timeoffset pci_passthrough =
 
   match Helpers.boot_method_of_vm ~__context ~vm with
   | Helpers.HVM { Helpers.timeoffset = t } -> HVM {
-                                                  hap = true;
-                                                  shadow_multiplier = vm.API.vM_HVM_shadow_multiplier;
-                                                  timeoffset = timeoffset;
-                                                  video_mib = int vm.API.vM_platform 4 "videoram";
-                                                  video = begin match string vm.API.vM_platform "cirrus" "vga" with
-                                                    | "std" -> Standard_VGA
-                                                    | "cirrus" -> Cirrus
-                                                    | x ->
-                                                      error "Unknown platform/vga option: %s (expected 'std' or 'cirrus')" x;
-                                                      Cirrus
-                                                  end;
-                                                  acpi = bool vm.API.vM_platform true "acpi";
-                                                  serial = Some (string vm.API.vM_other_config "pty" "hvm_serial");
-                                                  keymap = Some (string vm.API.vM_platform "en-us" "keymap");
-                                                  vnc_ip = Some "0.0.0.0" (*None PR-1255*);
-                                                  pci_emulations = pci_emulations;
-                                                  pci_passthrough = pci_passthrough;
-                                                  boot_order = string vm.API.vM_HVM_boot_params "cd" "order";
-                                                  qemu_disk_cmdline = bool vm.API.vM_platform false "qemu_disk_cmdline";
-                                                  qemu_stubdom = bool vm.API.vM_platform false "qemu_stubdom";
-                                                }
+                                                hap = true;
+                                                shadow_multiplier = vm.API.vM_HVM_shadow_multiplier;
+                                                timeoffset = timeoffset;
+                                                video_mib = int vm.API.vM_platform 4 "videoram";
+                                                video = begin match string vm.API.vM_platform "cirrus" "vga" with
+                                                  | "std" -> Standard_VGA
+                                                  | "cirrus" -> Cirrus
+                                                  | x ->
+                                                    error "Unknown platform/vga option: %s (expected 'std' or 'cirrus')" x;
+                                                    Cirrus
+                                                end;
+                                                acpi = bool vm.API.vM_platform true "acpi";
+                                                serial = Some (string vm.API.vM_other_config "pty" "hvm_serial");
+                                                keymap = Some (string vm.API.vM_platform "en-us" "keymap");
+                                                vnc_ip = Some "0.0.0.0" (*None PR-1255*);
+                                                pci_emulations = pci_emulations;
+                                                pci_passthrough = pci_passthrough;
+                                                boot_order = string vm.API.vM_HVM_boot_params "cd" "order";
+                                                qemu_disk_cmdline = bool vm.API.vM_platform false "qemu_disk_cmdline";
+                                                qemu_stubdom = bool vm.API.vM_platform false "qemu_stubdom";
+                                              }
   | Helpers.DirectPV { Helpers.kernel = k; kernel_args = ka; ramdisk = initrd } ->
     let k = if is_boot_file_whitelisted k then k else begin
         debug "kernel %s is not in the whitelist: ignoring" k;
@@ -175,12 +175,12 @@ let builder_of_vm ~__context ~vm timeoffset pci_passthrough =
     }
   | Helpers.IndirectPV { Helpers.bootloader = b; extra_args = e; legacy_args = l; pv_bootloader_args = p; vdis = vdis } ->
     PV {
-        boot = Indirect { bootloader = b; extra_args = e; legacy_args = l; bootloader_args = p; devices = List.filter_map (fun x -> disk_of_vdi ~__context ~self:x) vdis };
-        framebuffer = bool vm.API.vM_platform false "pvfb";
-        framebuffer_ip = Some "0.0.0.0"; (* None PR-1255 *)
-        vncterm = true;
-        vncterm_ip = Some "0.0.0.0" (*None PR-1255*);
-      }
+      boot = Indirect { bootloader = b; extra_args = e; legacy_args = l; bootloader_args = p; devices = List.filter_map (fun x -> disk_of_vdi ~__context ~self:x) vdis };
+      framebuffer = bool vm.API.vM_platform false "pvfb";
+      framebuffer_ip = Some "0.0.0.0"; (* None PR-1255 *)
+      vncterm = true;
+      vncterm_ip = Some "0.0.0.0" (*None PR-1255*);
+    }
 
 let pass_through_pif_carrier = ref false
 
@@ -494,7 +494,7 @@ let metadata_m = Mutex.create ()
 
 module Xapi_cache = struct
   (** Keep a cache of the "xenops-translation" of XenAPI VM configuration,
-     updated whenever we receive an event from xapi. *)
+      updated whenever we receive an event from xapi. *)
 
   let cache = Hashtbl.create 10 (* indexed by Vm.id *)
 
@@ -524,8 +524,8 @@ end
 
 module Xenops_cache = struct
   (** Remember the last events received from xenopsd so we can compute
-     field-level differences. This allows us to minimise the number of
-     database writes we issue upwards. *)
+      field-level differences. This allows us to minimise the number of
+      database writes we issue upwards. *)
 
   type t = {
     vm: Vm.state option;
@@ -1676,9 +1676,9 @@ let set_vcpus ~__context ~self n =
       with
       | Invalid_vcpus n ->
         raise (Api_errors.Server_error(Api_errors.invalid_value, [
-                "VCPU values must satisfy: 0 < VCPUs ≤ VCPUs_max";
-                string_of_int n
-              ]))
+              "VCPU values must satisfy: 0 < VCPUs ≤ VCPUs_max";
+              string_of_int n
+            ]))
       | Unimplemented _ ->
         error "VM.set_VCPUs_number_live: HVM VMs cannot hotplug cpus";
         raise (Api_errors.Server_error (Api_errors.operation_not_allowed,

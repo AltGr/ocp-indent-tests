@@ -126,7 +126,7 @@ module From = struct
           | (_, name), _ -> 
             raise (Unmarshall_error (Printf.sprintf "Unexpected tag: %s" name))
         end
-        (* On reading an end tag... *)
+      (* On reading an end tag... *)
       | `El_end ->
         let tag = Stack.pop tags in
         begin match tag with

@@ -242,7 +242,7 @@ let check ?(extra_dmsg="") ?(extra_msg="") ?args ?(keys=[]) ~__context ~fn sessi
         let allowed_roles = Xapi_role.get_by_permission_name_label ~__context ~label:permission in
         List.fold_left
           (fun acc allowed_role -> acc ^ (if acc = "" then "" else ", ") ^
-              (Xapi_role.get_name_label ~__context ~self:allowed_role))
+                                   (Xapi_role.get_name_label ~__context ~self:allowed_role))
           "" allowed_roles
       with e -> debug "Could not obtain allowed roles for %s (%s)" permission (ExnHelper.string_of_exn e);
         "<Could not obtain the list.>"
@@ -259,7 +259,7 @@ let check ?(extra_dmsg="") ?(extra_msg="") ?args ?(keys=[]) ~__context ~fn sessi
 let get_session_of_context ~__context ~permission =
   try (Context.get_session_id __context)
   with Failure _ -> raise (Api_errors.Server_error
-                          (Api_errors.rbac_permission_denied,[permission;"no session in context"]))
+                        (Api_errors.rbac_permission_denied,[permission;"no session in context"]))
 
 let assert_permission_name ~__context ~permission =
   let session_id = get_session_of_context ~__context ~permission in

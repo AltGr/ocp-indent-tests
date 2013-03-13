@@ -2,12 +2,12 @@
     follows Core idioms and adds some functions.
 
     Differences from the standard module:
-      [enqueue] replaces [push], [add], and takes the queue first.
-      [dequeue] replaces [pop], [take], takes the queue first, and returns an
-        option rather than raising [Empty].
-      [dequeue_exn] is available if you want to raise [Empty].
-      [iter] takes a labeled argument.
-      [transfer]'s arguments are labeled.
+    [enqueue] replaces [push], [add], and takes the queue first.
+    [dequeue] replaces [pop], [take], takes the queue first, and returns an
+    option rather than raising [Empty].
+    [dequeue_exn] is available if you want to raise [Empty].
+    [iter] takes a labeled argument.
+    [transfer]'s arguments are labeled.
 *)
 
 type 'a t with bin_io, sexp
@@ -41,7 +41,7 @@ val filter_inplace : 'a t -> f:('a -> bool) -> unit
 
 (** [transfer ~src ~dst] adds all of the elements of [src] to the end of [dst],
     then clears [src]. It is equivalent to the sequence
-      [iter ~src ~f:(enqueue dst); clear src]
+    [iter ~src ~f:(enqueue dst); clear src]
     but runs in constant time. *)
 val transfer : src:'a t -> dst:'a t -> unit
 

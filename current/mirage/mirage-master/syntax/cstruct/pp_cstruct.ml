@@ -164,10 +164,10 @@ let output_struct _loc s =
   (* Generate functions of the form {get/set}_<struct>_<field> *)
   let expr = List.fold_left (fun a f ->
       <:str_item< 
-          $a$ ;; 
-          $output_sizeof _loc s$ ;;
-          $output_get _loc s f$ ;; 
-          $output_set _loc s f$ 
+                 $a$ ;; 
+                 $output_sizeof _loc s$ ;;
+                 $output_get _loc s f$ ;; 
+                 $output_set _loc s f$ 
       >>
     ) <:str_item< >> s.fields
   in

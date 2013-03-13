@@ -19,8 +19,8 @@ let test =
           "neg" @? (S.nget str1 (-3) = '8');
           "pos" @? (S.nget str1 3 = str1.[3]);
           "invalid" @?
-            (try ignore (S.nget str1 (-100)); false
-            with Invalid_argument _ -> true | _ -> false)
+          (try ignore (S.nget str1 (-100)); false
+          with Invalid_argument _ -> true | _ -> false)
         );
       "lsplit2_exn" >::
         (fun () ->
@@ -72,7 +72,7 @@ let test =
         (fun () ->
           "empty" @? (S.map ~f:(fun x -> x) "" = "");
           "1" @? (S.map ~f:(function 'a' -> 'b' | 'b' -> 'a' | x -> x)
-              "faboo" = "fbaoo");
+                    "faboo" = "fbaoo");
         );
       "split" >::
         (fun () ->
@@ -96,8 +96,8 @@ let test =
           "consecutive_delims" @? (S.split_on_chars "bocci ball" ~on:['c']
             = ["bo"; ""; "i ball"]);
           "consecutive_delims-grouped" @?
-            (S.split_on_chars "bocci ball" ~on:['c';' ';'i'] =
-               ["bo"; ""; ""; ""; "ball"]);
+          (S.split_on_chars "bocci ball" ~on:['c';' ';'i'] =
+             ["bo"; ""; ""; ""; "ball"]);
         );
       "fold" >::
         (fun () ->

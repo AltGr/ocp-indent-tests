@@ -30,7 +30,7 @@ let read_config filename =
     Config.read filename configargs (fun _ _ -> ())
   with Config.Error ls ->
     List.iter (fun (p,s) ->
-        eprintf "config file error: %s: %s\n" p s) ls;
+      eprintf "config file error: %s: %s\n" p s) ls;
     exit 2
 
 let log_if_not_empty format_string value =
@@ -46,4 +46,4 @@ let dump_config () =
   debug "git changeset: %s" Version.git_id;
   debug "version: %d.%d" version_major version_minor;
   debug "use-xenopsd: %b" !Xapi_globs.use_xenopsd
-(* debug "License filename: %s" !License_file.filename *)
+    (* debug "License filename: %s" !License_file.filename *)

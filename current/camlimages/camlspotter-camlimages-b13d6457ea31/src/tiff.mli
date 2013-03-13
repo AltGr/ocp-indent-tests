@@ -22,7 +22,7 @@ val load : string -> Images.load_option list -> Images.t;;
 
 val save : string -> Images.save_option list -> Images.t -> unit;;
 (** Save a full-color image in tiff format file.
-   Raises [Invalid_argument] if the image is not a full-color image. *)
+    Raises [Invalid_argument] if the image is not a full-color image. *)
 
 (** Scanline based I/O functions *)
 

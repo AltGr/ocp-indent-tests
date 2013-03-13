@@ -21,18 +21,18 @@ val   pack_unsigned_8    :                      buf:string -> pos:int -> int -> 
 (* The functions ending with [_big_endian] or [_little_endian] are faster
    than the ones with explicit [byte_order] argument:
 
-                                Name | Run time | S. dev. | Warnings
+   Name | Run time | S. dev. | Warnings
    ---------------------------------- | -------- | ------- | --------
-        pack_signed_16_little_endian |     4 ns |    0 ns |
-      unpack_signed_16_little_endian |     5 ns |    0 ns |
-                  pack_signed_32_int |    12 ns |    0 ns |
-                unpack_signed_32_int |    12 ns |    0 ns |
-    pack_signed_32_int_little_endian |     4 ns |    0 ns |
+   pack_signed_16_little_endian |     4 ns |    0 ns |
+   unpack_signed_16_little_endian |     5 ns |    0 ns |
+   pack_signed_32_int |    12 ns |    0 ns |
+   unpack_signed_32_int |    12 ns |    0 ns |
+   pack_signed_32_int_little_endian |     4 ns |    0 ns |
    unpack_signed_32_int_little_endian |     5 ns |    0 ns |        M
-                  pack_signed_64_int |    21 ns |    0 ns |        M
-                unpack_signed_64_int |    21 ns |    0 ns |        M
-        pack_signed_64_little_endian |     8 ns |    0 ns |
-      unpack_signed_64_little_endian |     9 ns |    0 ns |        M
+   pack_signed_64_int |    21 ns |    0 ns |        M
+   unpack_signed_64_int |    21 ns |    0 ns |        M
+   pack_signed_64_little_endian |     8 ns |    0 ns |
+   unpack_signed_64_little_endian |     9 ns |    0 ns |        M
 *)
 val unpack_signed_16     : byte_order:endian -> buf:string -> pos:int -> int
 val   pack_signed_16     : byte_order:endian -> buf:string -> pos:int -> int -> unit

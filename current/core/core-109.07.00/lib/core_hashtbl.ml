@@ -27,8 +27,8 @@ module Array = Core_array
 let phys_equal = (==)
 
 (* IF THIS REPRESENTATION EVER CHANGES, ENSURE THAT EITHER
-    (1) all values serialize the same way in both representations, or
-    (2) you add a new Hashtbl version to stable.ml
+   (1) all values serialize the same way in both representations, or
+   (2) you add a new Hashtbl version to stable.ml
 *)
 type ('k, 'v) t =
   { mutable table : ('k, 'v) Avltree.t array;
@@ -246,9 +246,9 @@ let find_exn t id =
 ;;
 
 (*let find_default t key ~default =
-   match find t key with
-   | None -> default ()
-   | Some a -> a*)
+  match find t key with
+  | None -> default ()
+  | Some a -> a*)
 
 let existsi t ~f =
   with_return (fun r ->
@@ -362,8 +362,8 @@ let change t id f =
 let incr ?(by = 1) t key =
   change t key
     (function
-     | None -> Some by
-     | Some i -> Some (i + by))
+    | None -> Some by
+    | Some i -> Some (i + by))
 
 let add_multi t ~key ~data =
   match find t key with
@@ -395,18 +395,18 @@ let create_mapped ?growth_allowed ?size ~hashable ~get_key ~get_data rows =
 ;;
 
 (*let create_mapped_exn ?growth_allowed ?size ~hashable ~get_key ~get_data rows =
-   let size = match size with Some s -> s | None -> List.length rows in
-   let res = create ?growth_allowed ~size ~hashable () in
-   List.iter rows ~f:(fun r ->
-    let key = get_key r in
-    let data = get_data r in
-    if mem res key then
-      let sexp_of_key = hashable.Hashable.sexp_of_t in
-      failwiths "Hashtbl.create_mapped_exn: duplicate key" key <:sexp_of< key >>
-    else
-      replace res ~key ~data);
-   res
-   ;;*)
+  let size = match size with Some s -> s | None -> List.length rows in
+  let res = create ?growth_allowed ~size ~hashable () in
+  List.iter rows ~f:(fun r ->
+  let key = get_key r in
+  let data = get_data r in
+  if mem res key then
+  let sexp_of_key = hashable.Hashable.sexp_of_t in
+  failwiths "Hashtbl.create_mapped_exn: duplicate key" key <:sexp_of< key >>
+  else
+  replace res ~key ~data);
+  res
+  ;;*)
 
 let create_mapped_multi ?growth_allowed ?size ~hashable ~get_key ~get_data rows =
   let size = match size with Some s -> s | None -> List.length rows in
@@ -583,10 +583,10 @@ module type Key = Key
 module type Key_binable = Key_binable
 
 module Creators (Key : sig
-      type 'a t
+           type 'a t
 
-      val hashable : 'a t Hashable.t
-    end) : sig
+           val hashable : 'a t Hashable.t
+         end) : sig
 
   type ('a, 'b) t_ = ('a Key.t, 'b) t
 
@@ -652,33 +652,33 @@ module Poly = struct
   let hashable = Hashable.poly
 
   include Creators (struct
-      type 'a t = 'a
-      let hashable = hashable
-    end)
+            type 'a t = 'a
+            let hashable = hashable
+          end)
 
   include Accessors
 
   let sexp_of_t = sexp_of_t
 
   include Bin_prot.Utils.Make_iterable_binable2 (struct
-      type ('a, 'b) z = ('a, 'b) t
-      type ('a, 'b) t = ('a, 'b) z
-      type ('a, 'b) el = 'a * 'b with bin_io
-      type ('a, 'b) acc = ('a, 'b) t
+            type ('a, 'b) z = ('a, 'b) t
+            type ('a, 'b) t = ('a, 'b) z
+            type ('a, 'b) el = 'a * 'b with bin_io
+            type ('a, 'b) acc = ('a, 'b) t
 
-      let module_name = Some "Core_hashtbl"
-      let length = length
-      let iter t ~f = iter t ~f:(fun ~key ~data -> f (key, data))
-      let init size = create ~size ()
+            let module_name = Some "Core_hashtbl"
+            let length = length
+            let iter t ~f = iter t ~f:(fun ~key ~data -> f (key, data))
+            let init size = create ~size ()
 
-      let insert t (key, data) _i =
-        match find t key with
-        | None -> replace t ~key ~data; t
-        | Some _ -> failwith "Core_hashtbl.bin_read_t_: duplicate key"
-      ;;
+            let insert t (key, data) _i =
+              match find t key with
+              | None -> replace t ~key ~data; t
+              | Some _ -> failwith "Core_hashtbl.bin_read_t_: duplicate key"
+            ;;
 
-      let finish = Fn.id
-    end)
+            let finish = Fn.id
+          end)
 
 end
 
@@ -698,9 +698,9 @@ module Make (Key : Key) = struct
   type 'a key_ = key
 
   include Creators (struct
-      type 'a t = Key.t
-      let hashable = hashable
-    end)
+            type 'a t = Key.t
+            let hashable = hashable
+          end)
 
   include Accessors
 
@@ -715,22 +715,22 @@ module Make_binable (Key : Key_binable) = struct
   include Make (Key)
 
   include Bin_prot.Utils.Make_iterable_binable1 (struct
-      type 'a acc = 'a t
-      type 'a t = 'a acc
-      type 'a el = Key.t * 'a with bin_io
+            type 'a acc = 'a t
+            type 'a t = 'a acc
+            type 'a el = Key.t * 'a with bin_io
 
-      let module_name = Some "Core_hashtbl"
-      let length = length
-      let iter t ~f = iter t ~f:(fun ~key ~data -> f (key, data))
-      let init size = create ~size ()
+            let module_name = Some "Core_hashtbl"
+            let length = length
+            let iter t ~f = iter t ~f:(fun ~key ~data -> f (key, data))
+            let init size = create ~size ()
 
-      let insert t (key, data) _i =
-        match find t key with
-        | None -> replace t ~key ~data; t
-        | Some _ -> failwiths "Hashtbl.bin_read_t: duplicate key" key <:sexp_of< Key.t >>
-      ;;
+            let insert t (key, data) _i =
+              match find t key with
+              | None -> replace t ~key ~data; t
+              | Some _ -> failwiths "Hashtbl.bin_read_t: duplicate key" key <:sexp_of< Key.t >>
+            ;;
 
-      let finish = Fn.id
-    end)
+            let finish = Fn.id
+          end)
 
 end

@@ -167,8 +167,8 @@ module Stats = struct
 
   let print t =
     let get_float = function
-      | Error _ -> failwith "Couldn't get float"
-      | Ok f -> f
+    | Error _ -> failwith "Couldn't get float"
+    | Ok f -> f
     in
     Printf.printf "%f,%f,%f,%f,%f,%f,%f,%f\n%!"
       (Rstats.mean t.rstats)

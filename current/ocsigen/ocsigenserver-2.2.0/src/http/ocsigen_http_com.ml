@@ -302,8 +302,8 @@ let rec find_line buf pos rem =
 let wait_line receiver = wait_pattern find_line receiver 0
 
 (** extract chunked data in destructive way from the buffer.
-   The optional [?finish] parameter is an action that
-   will be executed when the stream is finished.
+    The optional [?finish] parameter is an action that
+    will be executed when the stream is finished.
 *)
 let extract_chunked receiver =
   let ec_fail e =
@@ -370,7 +370,7 @@ let parse_http_header mode s =
          Http_lexer.header lexbuf)
   with Parsing.Parse_error ->
       Lwt.fail (Ocsigen_http_frame.Http_error.Http_exception
-            (400, Some "parse error", None))
+          (400, Some "parse error", None))
 
 let get_maxsize = function
   | Nofirstline
@@ -561,7 +561,7 @@ let wait_all_senders conn =
   Lwt.finalize
     (fun () ->
       Lwt.catch
-      (*XXX Do we need a flush here?  Are we properly flushing in case of an error? *)
+        (*XXX Do we need a flush here?  Are we properly flushing in case of an error? *)
         (fun () ->
           conn.senders.w_wait >>= fun () ->
           Lwt_chan.flush conn.chan)
@@ -708,8 +708,8 @@ let rec write_stream_raw out_ch stream =
         write_stream_raw out_ch next
 
 (*XXX We should check the length of the stream:
-   - do not send more than expected
-   - abort the connection before the right length is emitted so that
+  - do not send more than expected
+  - abort the connection before the right length is emitted so that
     the client can know something wrong happened
 *)
 let write_stream ?(chunked=false) out_ch stream =
@@ -855,8 +855,8 @@ let send
                         | _ ->
                             Ocsigen_messages.warning
                               ("Ocsigen_http_com: reopening after exception "^
-                                 (Printexc.to_string e)^
-                                 " (Is that right?) Please report this error.");
+                               (Printexc.to_string e)^
+                               " (Is that right?) Please report this error.");
                             ignore (reopen ());
                             Lwt.fail e
               )
@@ -921,15 +921,15 @@ let send
   in
   let mkcook path exp name c secure =
     Format.sprintf "%s=%s%s%s" name c
-    (*VVV encode = true? *)
+      (*VVV encode = true? *)
       ("; path=/" ^ Url.string_of_url_path ~encode:true path)
       (if secure && slot.sl_ssl then "; secure" else "")^
-      (match exp with
-        | Some s -> "; expires=" ^
-              Netdate.format
-                "%a, %d-%b-%Y %H:%M:%S GMT"
-                (Netdate.create s)
-        | None   -> "")
+    (match exp with
+      | Some s -> "; expires=" ^
+                  Netdate.format
+                    "%a, %d-%b-%Y %H:%M:%S GMT"
+                    (Netdate.create s)
+      | None   -> "")
   in
   let mkcookl path t hds =
     CookiesTable.fold
@@ -952,7 +952,7 @@ let send
        match res.res_etag with
          | None   ->  None
          | Some l ->  Some (Format.sprintf "\"%s\"" l))
-      (*XXX Is it the right place to perform quoting?*)
+    (*XXX Is it the right place to perform quoting?*)
     <<?
       (Http_headers.content_type,
        match res.res_content_type with

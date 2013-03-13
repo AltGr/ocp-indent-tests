@@ -92,12 +92,12 @@ let draw_rotated_gen render_mode face (func : 'a -> int -> 'a)
     (image : 'a OImages.map) px py rot renderf string =
 
   (*let putpixel px py level =
-     try
+    try
       let orgcolor = image#get px py in
       image#set px py (func orgcolor level);
-     with
+    with
       Out_of_image -> ()
-     in*)
+    in*)
 
   let face = face#face in
   let matrix = matrix_rotate rot in

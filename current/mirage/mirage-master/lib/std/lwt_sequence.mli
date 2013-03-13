@@ -147,9 +147,9 @@ val fold_l : ('a -> 'b -> 'b) -> 'a t -> 'b -> 'b
 *)
 
 val fold_r : ('a -> 'b -> 'b) -> 'a t -> 'b -> 'b
-(** [fold_r f s] is:
-    {[
-      fold_r f s x = f e1 (f e2 (... (f en x)))
-    ]}
-    where [e1], [e2], ..., [en] are the elements of [s]
-*)
+  (** [fold_r f s] is:
+      {[
+        fold_r f s x = f e1 (f e2 (... (f en x)))
+      ]}
+      where [e1], [e2], ..., [en] are the elements of [s]
+  *)

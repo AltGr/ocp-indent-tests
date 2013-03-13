@@ -103,7 +103,7 @@ let parse_config = function
               with
                 | Invalid_argument _ ->
                     raise (Error_in_config_file
-                          (Printf.sprintf "Wrong value for attribute replace of <outputfilter/>: %s. is should be true or false" replace))
+                        (Printf.sprintf "Wrong value for attribute replace of <outputfilter/>: %s. is should be true or false" replace))
             in
             parse_attrs (h, r, d, Some replace ) l
         | _ -> raise (Error_in_config_file "Wrong attribute for <outputfilter header=... dest=... (regexp=... / replace=...)/>")

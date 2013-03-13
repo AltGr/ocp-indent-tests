@@ -142,7 +142,7 @@ let gen_html (_loc, n, t_exp) =
   let id = <:expr< $lid:n$ >> in
   let typ = html_type _loc "t" in
   <:binding< $lid:html_of n$ ?id $lid:n$ : $typ$ =
-      [ $create_id_class _loc n id (aux id t)$ ]
+            [ $create_id_class _loc n id (aux id t)$ ]
   >>
 
 let () =

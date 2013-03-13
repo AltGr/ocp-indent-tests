@@ -40,8 +40,8 @@ type t =
 val is_mutable : t -> bool
 
 (** [free_vars t] returns all the free variables of type [t].
-   If [t] is unfolded (as it should be when calling [type_of_t],
-   this call should return an empty list. *)
+    If [t] is unfolded (as it should be when calling [type_of_t],
+    this call should return an empty list. *)
 val free_vars : t -> string list
 
 (** [foreigns t] returns all the type variables appearing in [t]. *)
@@ -54,8 +54,8 @@ val unroll : (string * t) list -> t -> t
 (** {2 Sub-typing} *)
 
 (** [is_subtype_of s t] checks whether [s] is a sub-type of [t]. Sub-typing relation is based on
-   naming. Basically, [s] is a sub-type of [t] if (i) named attributes have either compatible types
-   (ii) or some fields/methods defined in [t] do not appear in [s]. *)
+    naming. Basically, [s] is a sub-type of [t] if (i) named attributes have either compatible types
+    (ii) or some fields/methods defined in [t] do not appear in [s]. *)
 val is_subtype_of : t -> t -> bool
 
 (** [s <: t] is a short-cut for [is_subtype_of s t] *)
@@ -74,5 +74,5 @@ val to_string : t -> string
 exception Parse_error of string
 
 (** [of_string str] returns the type [t] corresponding to the pretty-printed string [str]. Raises [!Parse_error]
-   if is not a valid string *)
+    if is not a valid string *)
 val of_string : string -> t

@@ -327,15 +327,15 @@ let _ =
       fun x -> mode := Some x),
     "set the mode of operation";
   ] @ (get_args ()) @ [
-      "-controlinfd", Arg.Set_int controlinfd,
-      "set the fd on which to receive the control commands (defaults to stdin)";
-      "-controloutfd", Arg.Set_int controloutfd,
-      "set the fd on which to send responses (defaults to stdout)";
-      "-debuglog", Arg.String openlog,
-      "Append debug logging direct to a file";
-      "-fake", Arg.Set fake,
-      "Use Fake calls";
-    ]) (fun x -> print_endline ("Ignoring argument: " ^ x))
+               "-controlinfd", Arg.Set_int controlinfd,
+               "set the fd on which to receive the control commands (defaults to stdin)";
+               "-controloutfd", Arg.Set_int controloutfd,
+               "set the fd on which to send responses (defaults to stdout)";
+               "-debuglog", Arg.String openlog,
+               "Append debug logging direct to a file";
+               "-fake", Arg.Set fake,
+               "Use Fake calls";
+             ]) (fun x -> print_endline ("Ignoring argument: " ^ x))
     "Helper program to interface with libxenguest";
 
   if !controlinfd = -1
@@ -348,9 +348,9 @@ let _ =
 
   let fds_to_keep =
     List.map file_descr_of_int [  !controlinfd; !controloutfd ] @
-      [ Unix.stdout; Unix.stderr ] @
-      (if has_param "fd" then [ file_descr_of_int (int_of_string (get_param "fd")) ] else []) @
-      (match !debug_fd with Some x -> [ x ] | None -> []) in
+    [ Unix.stdout; Unix.stderr ] @
+    (if has_param "fd" then [ file_descr_of_int (int_of_string (get_param "fd")) ] else []) @
+    (match !debug_fd with Some x -> [ x ] | None -> []) in
 
   (* Prevent accidentally inheriting someone elses fd *)
   close_all_fds_except fds_to_keep;
@@ -483,7 +483,7 @@ let _ =
               (Printexc.to_string e)))
     | e ->
       control_write (Error (sprintf "caught exception: %s"
-              (Printexc.to_string e)))
+            (Printexc.to_string e)))
   end;
   closelog ()
 

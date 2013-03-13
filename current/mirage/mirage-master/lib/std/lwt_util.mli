@@ -77,4 +77,4 @@ val run_in_region : region -> int -> (unit -> 'a Lwt.t) -> 'a Lwt.t
 (**/**)
 
 val join : unit Lwt.t list -> unit Lwt.t
-(** Same as [Lwt.join] *)
+    (** Same as [Lwt.join] *)

@@ -12,10 +12,10 @@ val root : string
 val realpath : string -> string
 
 (** [is_posix_pathname_component f]
-   @return true if [f] is a valid filename in a POSIX compliant OS (a path
-   component and not a full path).
+    @return true if [f] is a valid filename in a POSIX compliant OS (a path
+    component and not a full path).
 
-   http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap03.html#tag_03_169
+    http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap03.html#tag_03_169
 *)
 val is_posix_pathname_component : string -> bool
 
@@ -61,7 +61,7 @@ val open_temp_file :
 val current_dir_name : string
 
 (** The conventional name for the parent of the current directory
-   (e.g. [..] in Unix). *)
+    (e.g. [..] in Unix). *)
 val parent_dir_name : string
 
 (** The directory separator (e.g. [/] in Unix). *)
@@ -80,33 +80,33 @@ val dir_sep : string
 val concat : string -> string -> string
 
 (** Return [true] if the file name is relative to the current
-   directory, [false] if it is absolute (i.e. in Unix, starts
-   with [/]). *)
+    directory, [false] if it is absolute (i.e. in Unix, starts
+    with [/]). *)
 val is_relative : string -> bool
 
 val is_absolute : string -> bool
 
 (** Return [true] if the file name is relative and does not start
-   with an explicit reference to the current directory ([./] or
-   [../] in Unix), [false] if it starts with an explicit reference
-   to the root directory or the current directory. *)
+    with an explicit reference to the current directory ([./] or
+    [../] in Unix), [false] if it starts with an explicit reference
+    to the root directory or the current directory. *)
 val is_implicit : string -> bool
 
 (** [check_suffix name suff] returns [true] if the filename [name]
-   ends with the suffix [suff]. *)
+    ends with the suffix [suff]. *)
 val check_suffix : string -> string -> bool
 
 (** [chop_suffix name suff] removes the suffix [suff] from
-   the filename [name]. The behavior is undefined if [name] does not
-   end with the suffix [suff]. *)
+    the filename [name]. The behavior is undefined if [name] does not
+    end with the suffix [suff]. *)
 val chop_suffix : string -> string -> string
 
 (** Return the given file name without its extension. The extension
-   is the shortest suffix starting with a period and not including
-   a directory separator, [.xyz] for instance.
+    is the shortest suffix starting with a period and not including
+    a directory separator, [.xyz] for instance.
 
-   Raise [Invalid_argument] if the given name does not contain
-   an extension. *)
+    Raise [Invalid_argument] if the given name does not contain
+    an extension. *)
 val chop_extension : string -> string
 
 (** [split_extension fn] return the portion of the filename before the
@@ -120,15 +120,15 @@ val split_extension : string -> (string * string option)
 
 (** Respects the posix semantic.
 
-   Split a file name into directory name / base file name.
-   [concat (dirname name) (basename name)] returns a file name
-   which is equivalent to [name]. Moreover, after setting the
-   current directory to [dirname name] (with {!Sys.chdir}),
-   references to [basename name] (which is a relative file name)
-   designate the same file as [name] before the call to {!Sys.chdir}.
+    Split a file name into directory name / base file name.
+    [concat (dirname name) (basename name)] returns a file name
+    which is equivalent to [name]. Moreover, after setting the
+    current directory to [dirname name] (with {!Sys.chdir}),
+    references to [basename name] (which is a relative file name)
+    designate the same file as [name] before the call to {!Sys.chdir}.
 
-   The result is not specified if the argument is not a valid file name
-   (for example, under Unix if there is a NUL character in the string). *)
+    The result is not specified if the argument is not a valid file name
+    (for example, under Unix if there is a NUL character in the string). *)
 val basename : string -> string
 
 (** See {!Filename.basename}. *)
@@ -138,7 +138,7 @@ val dirname : string -> string
 val split : string -> string * string
 
 (** [parts filename] returns a list of path components in order.  For instance:
-   /tmp/foo/bar/baz -> ["/"; "tmp"; "foo"; "bar"; "baz" ] *)
+    /tmp/foo/bar/baz -> ["/"; "tmp"; "foo"; "bar"; "baz" ] *)
 val parts : string -> string list
 
 (** Return a quoted version of a file name, suitable for use as

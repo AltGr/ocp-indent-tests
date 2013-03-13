@@ -41,8 +41,8 @@ let safe_unplug rpc session_id self =
     end
 
 (** For a VBD attached to a control domain, it may correspond to a running task
-   (if so the task will be linked via an other_config key) or it may be a qemu
-   frontend (if so it will be linked to another frontend) *)
+    (if so the task will be linked via an other_config key) or it may be a qemu
+    frontend (if so it will be linked to another frontend) *)
 let has_vbd_leaked __context vbd =
   let other_config = Db.VBD.get_other_config ~__context ~self:vbd in
   let device = Db.VBD.get_device ~__context ~self:vbd in

@@ -15,9 +15,9 @@ let test ~imp1 ~imp2 ~state1 ~state2 ~f2 () =
   let s imp =
     if List.length imp > 0
     then Some (
-        Rpc.Implementations.create_exn
-          ~implementations:imp
-          ~on_unknown_rpc:`Ignore)
+           Rpc.Implementations.create_exn
+             ~implementations:imp
+             ~on_unknown_rpc:`Ignore)
     else None
   in
   let s1 = s imp1 in

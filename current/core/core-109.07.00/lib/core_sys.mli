@@ -13,13 +13,13 @@ val executable_name : string
 
 (** [file_exists ~follow_symlinks path]
 
-   Test whether the file in [path] exists on the file system.
-   If [follow_symlinks] is [true] and [path] is a symlink the result concerns
-   the target of the symlink.
+    Test whether the file in [path] exists on the file system.
+    If [follow_symlinks] is [true] and [path] is a symlink the result concerns
+    the target of the symlink.
 
-   [`Unknown] is returned for files for which we cannot successfully determine
-   whether they are on the system or not (e.g. files in directories to which we
-   do not have read permission). *)
+    [`Unknown] is returned for files for which we cannot successfully determine
+    whether they are on the system or not (e.g. files in directories to which we
+    do not have read permission). *)
 val file_exists
   : ?follow_symlinks:bool (* defaults to true *) -> string ->  [ `Yes | `No | `Unknown ]
 
@@ -79,7 +79,7 @@ val readdir : string -> string array
 val fold_dir : init:'acc -> f:('acc -> string -> 'acc) -> string -> 'acc
 
 (**
-   Same as readder, but return a list rather than an array.
+  Same as readder, but return a list rather than an array.
 *)
 val ls_dir : string -> string list
 
@@ -109,7 +109,7 @@ exception Break
     all you want to do is terminate on CTRL-C you don't have to do any special setup,
     that's the default behavior.
 
-   [catch_break] governs whether interactive interrupt (ctrl-C) terminates the
+    [catch_break] governs whether interactive interrupt (ctrl-C) terminates the
     program or raises the [Break] exception.  Call [catch_break true] to enable
     raising [Break], and [catch_break false] to let the system terminate the
     program on user interrupt.

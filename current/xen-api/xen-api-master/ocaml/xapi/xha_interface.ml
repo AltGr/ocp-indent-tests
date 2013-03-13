@@ -51,9 +51,9 @@ let first_xml_element_with_name elements name =
 let hash_table_entry_of_leaf_xml_element = function
   | Xml.Element (name, _, Xml.PCData (value) :: values) ->
     Some (
-        String.strip String.isspace name, 
-        String.strip String.isspace value
-      )
+      String.strip String.isspace name, 
+      String.strip String.isspace value
+    )
   | Xml.Element (name, _, []) -> Some (String.strip String.isspace name, "")
   | _ -> None
 
@@ -194,25 +194,25 @@ module DaemonConfiguration = struct
           xml_leaf_element "GenerationUUID" (              config.common_generation_uuid) ::
             xml_leaf_element "UDPport"        (string_of_int config.common_udp_port       ) ::
             List.map Host.to_xml_element config.common_hosts @
-            [
-              Xml.Element ("parameters", [],
-                List.concat (List.map int_parameter
-                    [ "HeartbeatInterval",        config.heart_beat_interval;
-                      "HeartbeatTimeout",         config.heart_beat_timeout;
-                      "StateFileInterval",        config.state_file_interval;
-                      "StateFileTimeout",         config.state_file_timeout;
-                      "HeartbeatWatchdogTimeout", config.heart_beat_watchdog_timeout;
-                      "StateFileWatchdogTimeout", config.state_file_watchdog_timeout;
-                      "BootJoinTimeout",          config.boot_join_timeout;
-                      "EnableJoinTimeout",        config.enable_join_timeout;
-                      "XapiHealthCheckInterval",  config.xapi_healthcheck_interval;
-                      "XapiHealthCheckTimeout",   config.xapi_healthcheck_timeout;
-                      "XapiRestartAttempts",      config.xapi_restart_attempts;
-                      "XapiRestartTimeout",       config.xapi_restart_timeout;
-                      "XapiLicenseCheckTimeout",  config.xapi_licensecheck_timeout;
-                    ])
-              )
-            ]
+          [
+            Xml.Element ("parameters", [],
+              List.concat (List.map int_parameter
+                  [ "HeartbeatInterval",        config.heart_beat_interval;
+                    "HeartbeatTimeout",         config.heart_beat_timeout;
+                    "StateFileInterval",        config.state_file_interval;
+                    "StateFileTimeout",         config.state_file_timeout;
+                    "HeartbeatWatchdogTimeout", config.heart_beat_watchdog_timeout;
+                    "StateFileWatchdogTimeout", config.state_file_watchdog_timeout;
+                    "BootJoinTimeout",          config.boot_join_timeout;
+                    "EnableJoinTimeout",        config.enable_join_timeout;
+                    "XapiHealthCheckInterval",  config.xapi_healthcheck_interval;
+                    "XapiHealthCheckTimeout",   config.xapi_healthcheck_timeout;
+                    "XapiRestartAttempts",      config.xapi_restart_attempts;
+                    "XapiRestartTimeout",       config.xapi_restart_timeout;
+                    "XapiLicenseCheckTimeout",  config.xapi_licensecheck_timeout;
+                  ])
+            )
+          ]
         );
         Xml.Element (
           "local-config", [],
@@ -543,7 +543,7 @@ module DaemonConfigurationTest = struct
   end
 
   let ($) a b = b a
-  
+
   let _ =
     {
       common_hosts               = HostTest.mock_hosts                   ;
@@ -592,7 +592,7 @@ module LiveSetInformationTest = struct
     "}"
 
   let ($) f a = a f
-  
+
   let _ =
     if Array.length Sys.argv != 2 then
       print_endline "usage: xha_interface <path-to-xml-file>"

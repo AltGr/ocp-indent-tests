@@ -85,7 +85,7 @@ val extension : format -> string;;
 (** returns the corresponding extension "gif", "bmp" etc. for given format *)
 val guess_format : string -> format
 (** returns the image format guessed from the file extension of
-   a given file name *)
+    a given file name *)
 
 (** Lower interface *)
 val get_extension : string -> string * string;;
@@ -116,11 +116,11 @@ type header = {
 
 val file_format : string -> format * header
 (** [file_format filename] reads the header of image file [filename]
-   and returns its format and some useful information found in the
-   header (ex. width, height). [file_format] does not read image
-   contents, but just quickly returns file header information.
+    and returns its format and some useful information found in the
+    header (ex. width, height). [file_format] does not read image
+    contents, but just quickly returns file header information.
 
-   [file_format] does not depend on any external libraries *)
+    [file_format] does not depend on any external libraries *)
 
 (**************************************************** Image file I/O options *)
 
@@ -157,22 +157,22 @@ type format_methods = {
 
 val add_methods : format -> format_methods -> unit
 (** If you write new drivers for some image format, use this function
-   to register their loading/saving functions into the libaray *)
+    to register their loading/saving functions into the libaray *)
 
 val load : string -> load_option list -> t;;
 (** [load filename options] read the header of an image file [filename],
-   loads the image by calling corresponding loading method, and
-   returns it. If the file format is not supported by the library,
-   a Wrong_file_type exception will be raised. You can specify loading
-   options in [options] such as progressive meter function. *)
+    loads the image by calling corresponding loading method, and
+    returns it. If the file format is not supported by the library,
+    a Wrong_file_type exception will be raised. You can specify loading
+    options in [options] such as progressive meter function. *)
 
 val save : string -> format option -> save_option list -> t -> unit;;
 (** [save filename formatopt options image] saves [image] into a file
-   [filename]. The image format can be specified by [formatopt].
-   If [formatopt] is [Some format], then [format] is used. If it is
-   [None], then the image format is guessed from [filename].
-   You can specify some saving parameters [options]. Some options are
-   specific to some image formats and do not work with the others. *)
+    [filename]. The image format can be specified by [formatopt].
+    If [formatopt] is [Some format], then [format] is used. If it is
+    [None], then the image format is guessed from [filename].
+    You can specify some saving parameters [options]. Some options are
+    specific to some image formats and do not work with the others. *)
 
 val load_sequence : string -> load_option list -> sequence;;
 val save_sequence :
@@ -184,16 +184,16 @@ val size : t -> int * int;;
 
 val destroy : t -> unit;;
 (** Free the image. If you turn on image swapping (see bitmap.mli),
-   you can call this function explicitly to tell the library that this image
-   is no longer used. (This is not required, though.) *)
+    you can call this function explicitly to tell the library that this image
+    is no longer used. (This is not required, though.) *)
 
 val sub : t -> int -> int -> int -> int -> t;;
 (** [sub dst x y width height] returns sub-bitmap of [dst],
-   at (x, y) - (x + width - 1, y + height - 1). *)
+    at (x, y) - (x + width - 1, y + height - 1). *)
 
 val blit : t -> int -> int -> t -> int -> int -> int -> int -> unit;;
 (** [blit src sx sy dst dx dy width height] copies the rectangle
-   region of [src] at (sx, sy) - (sx + width - 1, sy + height - 1) to [dst], at
-   (dx, dy) - (dx + width - 1, dy + height - 1). *)
+    region of [src] at (sx, sy) - (sx + width - 1, sy + height - 1) to [dst], at
+    (dx, dy) - (dx + width - 1, dy + height - 1). *)
 
 val blocks : t -> int * int;;

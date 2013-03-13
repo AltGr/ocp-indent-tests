@@ -51,9 +51,9 @@ let error_of_exn e =
   | Db_actions.String_to_DM.StringEnumTypeError s ->
     invalid_value, [ s ]
 
-                   (* These are the two catch-all patterns. If ever an Errors.Server_error exception    *)
-                   (* is raised, this is assumed to be an API error, and passed straight on. Any other *)
-                   (* exception at this point is regarded as an 'internal error', and returned as such *)
+  (* These are the two catch-all patterns. If ever an Errors.Server_error exception    *)
+  (* is raised, this is assumed to be an API error, and passed straight on. Any other *)
+  (* exception at this point is regarded as an 'internal error', and returned as such *)
 
   | Api_errors.Server_error (e,l) ->
     e,l

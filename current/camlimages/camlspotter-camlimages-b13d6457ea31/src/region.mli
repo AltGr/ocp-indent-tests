@@ -16,8 +16,8 @@
 
 val check : int -> int -> int -> int -> unit;;
 (** [check width height x y] checks whether the point (x,y) is in the
-   region of (0, 0) - ([width] - 1, [height] - 1).
-   If not, it raises [Images.Out_of_image]. *)
+    region of (0, 0) - ([width] - 1, [height] - 1).
+    If not, it raises [Images.Out_of_image]. *)
 
 val error : (unit -> unit) ref;;
 (* just for system use *)

@@ -288,7 +288,7 @@ let string_to_on_crash_behaviour s=
   | "preserve" -> `preserve
   | "rename_restart" -> `rename_restart
   | _ -> raise (Record_failure ("Expected 'destroy', 'coredump_and_destroy'," ^
-                 "'restart', 'coredump_and_restart', 'preserve' or 'rename_restart', got "^s))
+                                "'restart', 'coredump_and_restart', 'preserve' or 'rename_restart', got "^s))
 
 let boot_type_to_string x =
   match x with

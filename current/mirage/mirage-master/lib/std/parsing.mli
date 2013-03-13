@@ -17,20 +17,20 @@
 
 val symbol_start : unit -> int
 (** [symbol_start] and {!Parsing.symbol_end} are to be called in the
-   action part of a grammar rule only. They return the offset of the
-   string that matches the left-hand side of the rule: [symbol_start()]
-   returns the offset of the first character; [symbol_end()] returns the
-   offset after the last character. The first character in a file is at
-   offset 0. *)
+    action part of a grammar rule only. They return the offset of the
+    string that matches the left-hand side of the rule: [symbol_start()]
+    returns the offset of the first character; [symbol_end()] returns the
+    offset after the last character. The first character in a file is at
+    offset 0. *)
 
 val symbol_end : unit -> int
 (** See {!Parsing.symbol_start}. *)
 
 val rhs_start : int -> int
 (** Same as {!Parsing.symbol_start} and {!Parsing.symbol_end}, but
-   return the offset of the string matching the [n]th item on the
-   right-hand side of the rule, where [n] is the integer parameter
-   to [rhs_start] and [rhs_end]. [n] is 1 for the leftmost item. *)
+    return the offset of the string matching the [n]th item on the
+    right-hand side of the rule, where [n] is the integer parameter
+    to [rhs_start] and [rhs_end]. [n] is 1 for the leftmost item. *)
 
 val rhs_end : int -> int
 (** See {!Parsing.rhs_start}. *)
@@ -49,15 +49,15 @@ val rhs_end_pos : int -> Lexing.position
 
 val clear_parser : unit -> unit
 (** Empty the parser stack. Call it just after a parsing function
-   has returned, to remove all pointers from the parser stack
-   to structures that were built by semantic actions during parsing.
-   This is optional, but lowers the memory requirements of the
-   programs. *)
+    has returned, to remove all pointers from the parser stack
+    to structures that were built by semantic actions during parsing.
+    This is optional, but lowers the memory requirements of the
+    programs. *)
 
 exception Parse_error
 (** Raised when a parser encounters a syntax error.
-   Can also be raised from the action part of a grammar rule,
-   to initiate error recovery. *)
+    Can also be raised from the action part of a grammar rule,
+    to initiate error recovery. *)
 
 val set_trace: bool -> bool
 (** Control debugging support for [ocamlyacc]-generated parsers.
@@ -74,7 +74,7 @@ val set_trace: bool -> bool
 (** {6  } *)
 
 (** The following definitions are used by the generated parsers only.
-   They are not intended to be used by user programs. *)
+    They are not intended to be used by user programs. *)
 
 type parser_env
 

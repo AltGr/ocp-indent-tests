@@ -17,9 +17,9 @@ let make_int1_table n = ();
 
 let make_int2_table n = ();
   let module I = Hashable.Make(struct
-      include Int
-      let hash = Hashtbl.hash
-    end)
+                   include Int
+                   let hash = Hashtbl.hash
+                 end)
   in
   fun () -> gen_test_int (I.Table.create ~size:(2*n) ()) n
 

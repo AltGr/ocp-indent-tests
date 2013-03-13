@@ -134,7 +134,7 @@ let host_param_list printer rpc session_id params =
       "Installed","<unknown>";
       "Product version/build",
       (List.assoc "product_version" host_r.API.host_software_version)^"/"^
-        (List.assoc "build_number" host_r.API.host_software_version);
+      (List.assoc "build_number" host_r.API.host_software_version);
       "Sockets per node",string_of_int (List.length host_r.API.host_host_CPUs);
       "Cores per socket","<unknown>";
       "Threads per core","<unknown>"]] in
@@ -412,9 +412,9 @@ let host_bridge_list vbridge printer rpc session_id params =
     let name = try List.assoc "geneva-name" other_config with _ -> Client.Network.get_bridge rpc session_id pbridge in 
     [((if vbridge then "Virtual bridge" else "Physical bridge"),name);
      ("Description",Client.Network.get_name_description rpc session_id pbridge)] @
-      (if not vbridge then [("NIC",if vbridge then "" else Client.PIF.get_device rpc session_id (List.hd pifs))] else []) @
-      [("VLAN",if vbridge then "(null)" else Int64.to_string (Client.PIF.get_VLAN rpc session_id (List.hd pifs)));
-       ("Auto add to VM",try List.assoc "auto_add_to_VM" other_config with _ -> "false")]
+    (if not vbridge then [("NIC",if vbridge then "" else Client.PIF.get_device rpc session_id (List.hd pifs))] else []) @
+    [("VLAN",if vbridge then "(null)" else Int64.to_string (Client.PIF.get_VLAN rpc session_id (List.hd pifs)));
+     ("Auto add to VM",try List.assoc "auto_add_to_VM" other_config with _ -> "false")]
   in
   printer (Cli_printer.PTable (List.map bridge_to_printer_record pbridges))
 

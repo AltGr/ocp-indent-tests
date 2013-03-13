@@ -179,23 +179,23 @@ let create (type a) () : a t = ref None
 let equal (t : _ t) t' = phys_equal t t'
 
 let of_list = function
-  | [] -> create ()
-  | x :: xs ->
-    let first = Elt.create x in
-    let _last = List.fold xs ~init:first ~f:Elt.insert_after in
-    ref (Some first)
+| [] -> create ()
+| x :: xs ->
+  let first = Elt.create x in
+  let _last = List.fold xs ~init:first ~f:Elt.insert_after in
+  ref (Some first)
 
 let fold_elt t ~init ~f =
   match !t with
   | None -> init
   | Some first ->
     Header.with_iteration (Elt.header first) (fun () ->
-        let rec loop acc elt =
-          let acc = f acc elt in
-          let next = Elt.next elt in
-          if phys_equal next first then acc else loop acc next
-        in
-        loop init first)
+      let rec loop acc elt =
+        let acc = f acc elt in
+        let next = Elt.next elt in
+        if phys_equal next first then acc else loop acc next
+      in
+      loop init first)
 ;;
 
 let iter_elt t ~f = fold_elt t ~init:() ~f:(fun () elt -> f elt)
@@ -221,10 +221,10 @@ let find_elt t ~f =
     None)
 
 include Container.Make (struct
-    type 'a t_ = 'a t
-    type 'a t = 'a t_
-    let fold t ~init ~f = fold_elt t ~init ~f:(fun acc elt -> f acc (Elt.value elt))
-  end)
+          type 'a t_ = 'a t
+          type 'a t = 'a t_
+          let fold t ~init ~f = fold_elt t ~init ~f:(fun acc elt -> f acc (Elt.value elt))
+        end)
 
 let is_empty t = Option.is_none !t (* more efficient than what Container.Make returns *)
 
@@ -233,15 +233,15 @@ let fold_right t ~init ~f =
   | None -> init
   | Some first ->
     Header.with_iteration (Elt.header first) (fun () ->
-        let rec loop acc elt =
-          let prev = Elt.prev elt in
-          let acc = f (Elt.value prev) acc in
-          if phys_equal prev first
-          then acc
-          else loop acc prev
-        in
-        loop init first
-      )
+      let rec loop acc elt =
+        let prev = Elt.prev elt in
+        let acc = f (Elt.value prev) acc in
+        if phys_equal prev first
+        then acc
+        else loop acc prev
+      in
+      loop init first
+    )
 
 let to_list t = fold_right t ~init:[] ~f:(fun x tl -> x :: tl)
 

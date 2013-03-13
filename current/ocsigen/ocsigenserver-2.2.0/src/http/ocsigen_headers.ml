@@ -116,7 +116,7 @@ let rec parse_cookies s =
       CookiesTable.empty
       splitted
   with _ -> CookiesTable.empty
-      (*VVV Actually the real syntax of cookies is more complex! *)
+(*VVV Actually the real syntax of cookies is more complex! *)
 (*
 http://www.w3.org/Protocols/rfc2109/rfc2109
 Mozilla spec + RFC2109
@@ -133,23 +133,23 @@ let get_keepalive http_header =
     <> "close"
   with Not_found ->
       true
-      (* 06/02/2008
-         If HTTP/1.0, we do not keep alive, even if the client asks so.
-         It would be possible, but only if the content-length is known.
-         Chunked encoding is not possible with HTTP/1.0.
-         As we cannot know if the output will be chunked or not,
-         we decided that we won't keep the connection open at all for
-         HTTP/1.0.
-         Another solution would be to keep it open if the client asks so,
-         and answer connection:close (and close) if we don't know the size
-         of the document. In that case, all requests that have been pipelined
-         would be processed by the server, but not sent back to the client.
-         Which one is the best? It really depends on the client.
-         If the client waits the answer before doing the following request,
-         it would be ok to keep the connection opened,
-         otherwise it is better not.
-         (+ pb with non-idempotent requests, that should not be pipelined)
-      *)
+(* 06/02/2008
+   If HTTP/1.0, we do not keep alive, even if the client asks so.
+   It would be possible, but only if the content-length is known.
+   Chunked encoding is not possible with HTTP/1.0.
+   As we cannot know if the output will be chunked or not,
+   we decided that we won't keep the connection open at all for
+   HTTP/1.0.
+   Another solution would be to keep it open if the client asks so,
+   and answer connection:close (and close) if we don't know the size
+   of the document. In that case, all requests that have been pipelined
+   would be processed by the server, but not sent back to the client.
+   Which one is the best? It really depends on the client.
+   If the client waits the answer before doing the following request,
+   it would be ok to keep the connection opened,
+   otherwise it is better not.
+   (+ pb with non-idempotent requests, that should not be pipelined)
+*)
 
 
 
@@ -247,7 +247,7 @@ let parse_content_type = function
               (*VVV If syntax error, we return no parameter at all *)
               Some ((typ, subtype), params)
             with Not_found -> None
-            (*VVV If syntax error in type, we return None *)
+(*VVV If syntax error in type, we return None *)
 
 
 let get_content_length http_frame =

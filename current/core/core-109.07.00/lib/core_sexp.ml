@@ -56,10 +56,10 @@ module Sexp_maybe = struct
     | Result.Ok a -> sexp_of_a a
     | Result.Error (sexp, err) ->
       Sexp.List [
-          Sexp.Atom "sexp_parse_error";
-          sexp;
-          Error.sexp_of_t err;
-        ]
+        Sexp.Atom "sexp_parse_error";
+        sexp;
+        Error.sexp_of_t err;
+      ]
 
   let t_of_sexp a_of_sexp sexp =
     match sexp with
@@ -82,6 +82,6 @@ let sexp_of_no_raise sexp_of_a a =
 ;;
 
 include Comparable.Make (struct
-    type t = Sexp.t
-    include T
-  end)
+          type t = Sexp.t
+          include T
+        end)

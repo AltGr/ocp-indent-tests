@@ -108,7 +108,7 @@ let pre_join_checks ~__context ~rpc ~session_id ~force =
     let string_of_patches ps = (String.concat " " (List.map (fun patch -> patch) ps)) in
     let set_difference a b = List.filter (fun x -> not(List.mem x b)) a in
     let diff = (set_difference host_patches pool_patches) @ 
-        (set_difference pool_patches host_patches)in
+               (set_difference pool_patches host_patches)in
     if (List.length diff > 0) then begin
       error "Pool.join failed because of patches mismatch";
       error "Remote has %s" (string_of_patches pool_patches);
@@ -826,13 +826,13 @@ let eject ~__context ~host =
         (Record_util.primary_address_type_to_string primary_address_type);
       let configuration_file_contents = begin
         "LABEL='" ^ management_device ^ "'\nMODE=" ^ mode ^
-          if mode = "static" then
-            "\nIP=" ^ pif.API.pIF_IP ^
-              "\nNETMASK=" ^ pif.API.pIF_netmask ^
-              "\nGATEWAY=" ^ pif.API.pIF_gateway ^
-              "\nDNS=" ^ pif.API.pIF_DNS ^ "\n"
-          else
-            "\n"
+        if mode = "static" then
+          "\nIP=" ^ pif.API.pIF_IP ^
+          "\nNETMASK=" ^ pif.API.pIF_netmask ^
+          "\nGATEWAY=" ^ pif.API.pIF_gateway ^
+          "\nDNS=" ^ pif.API.pIF_DNS ^ "\n"
+        else
+          "\n"
       end in
       Unixext.write_string_to_file
         (Xapi_globs.first_boot_dir ^ "data/management.conf")

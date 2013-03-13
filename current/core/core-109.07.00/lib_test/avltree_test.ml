@@ -6,8 +6,8 @@ let test_f t s test_data f =
   let is_present i =
     assert (Avltree.mem !t ~compare i);
     begin match Avltree.find !t ~compare i with
-      | None -> assert false
-      | Some j -> assert (i = j)
+    | None -> assert false
+    | Some j -> assert (i = j)
     end;
   in
   Avltree.invariant !t ~compare;
@@ -43,7 +43,7 @@ let test_add t s test_data =
 let do_add_if_not_exists ~set ~t ~present ~i ~added =
   added := present;
   let res = Avltree.add !t ~replace:false ~compare ~added ~key:i
-      ~data:(if present then i+1 else i) in
+              ~data:(if present then i+1 else i) in
   if present
   then assert (not !added)
   else assert (!added);

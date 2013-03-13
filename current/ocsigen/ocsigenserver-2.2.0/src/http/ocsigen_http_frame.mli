@@ -24,11 +24,11 @@ open Ocsigen_cookies
 type etag = string
 
 (** [compute_new_ri_cookies now path ri_cookies cookies_to_set]
-   adds the cookies from [cookies_to_set]
-   to [ri_cookies], as if the cookies
-   had been send to the browser and the browser
-   was doing a new request to the url [path].
-   Only the cookies that match [path] (current path) are added. *)
+    adds the cookies from [cookies_to_set]
+    to [ri_cookies], as if the cookies
+    had been send to the browser and the browser
+    was doing a new request to the url [path].
+    Only the cookies that match [path] (current path) are added. *)
 val compute_new_ri_cookies :
   float ->
   string list ->
@@ -112,11 +112,11 @@ end
 
 
 (** The type of HTTP frames.
-   The content may be void (no body) or a stream.
-   While sending, a stream will be sent with chunked encoding if no
-   content-length is supplied.
-   abort is the function to be called if you want to cancel the stream
-   reading (closes the connection).
+    The content may be void (no body) or a stream.
+    While sending, a stream will be sent with chunked encoding if no
+    content-length is supplied.
+    abort is the function to be called if you want to cancel the stream
+    reading (closes the connection).
 *)
 type t =
     { frame_header : Http_header.http_header;

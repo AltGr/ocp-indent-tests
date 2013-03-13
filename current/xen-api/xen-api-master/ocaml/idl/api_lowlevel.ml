@@ -32,17 +32,17 @@ let wire_name_of_operation ~sync operation =
   (if sync 
    then ""
    else "Async.") ^
-    String.capitalize ((obj_of_operation operation).DT.name) ^ "." ^
-    (match operation with
-     | Field(op, obj, fld) -> 
-       (match op with
-        | Get -> "get_" | Set -> "set_" 
-        | Add -> "add_" | Remove -> "remove_") ^
-         (String.concat "__" fld.DT.full_name) 
-     | Object(Make, obj) -> "make"
-     | Object(Delete, obj) -> "delete"
-     | Object(GetAll, _) -> failwith "GetAll not implemented yet"
-     | Msg(obj, msg) -> "do_" ^ msg.DT.msg_name)
+  String.capitalize ((obj_of_operation operation).DT.name) ^ "." ^
+  (match operation with
+   | Field(op, obj, fld) -> 
+     (match op with
+      | Get -> "get_" | Set -> "set_" 
+      | Add -> "add_" | Remove -> "remove_") ^
+     (String.concat "__" fld.DT.full_name) 
+   | Object(Make, obj) -> "make"
+   | Object(Delete, obj) -> "delete"
+   | Object(GetAll, _) -> failwith "GetAll not implemented yet"
+   | Msg(obj, msg) -> "do_" ^ msg.DT.msg_name)
 
 (** A flat list of all the possible operations concerning an object.
     Ideally filter the datamodel on release (opensource, closed) first

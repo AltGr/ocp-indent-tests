@@ -255,7 +255,7 @@ let forget  ~__context ~sr =
   Db.SR.destroy ~__context ~self:sr
 
 (** Remove SR from disk and remove SR record from database. (This operation uses the SR's associated
-   PBD record on current host to determine device_config reqd by sr backend) *)
+    PBD record on current host to determine device_config reqd by sr backend) *)
 let destroy  ~__context ~sr =
   check_no_pbds_attached ~__context ~sr;
   let pbds = Db.SR.get_PBDs ~__context ~self:sr in

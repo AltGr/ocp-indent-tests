@@ -142,16 +142,16 @@ let marshall_pifs pifs =
   let f x = match x with
     | pif ->
       XMLRPC.To.array [
-          XMLRPC.To.string pif.pif_name;
-          XMLRPC.To.string (string_of_float pif.pif_tx);
-          XMLRPC.To.string (string_of_float pif.pif_rx);
-          XMLRPC.To.string (string_of_bool pif.pif_carrier);
-          XMLRPC.To.string (string_of_int pif.pif_speed);
-          XMLRPC.To.string (Network_interface.string_of_duplex pif.pif_duplex);
-          XMLRPC.To.string pif.pif_pci_bus_path;
-          XMLRPC.To.string pif.pif_vendor_id;
-          XMLRPC.To.string pif.pif_device_id;
-        ] in
+        XMLRPC.To.string pif.pif_name;
+        XMLRPC.To.string (string_of_float pif.pif_tx);
+        XMLRPC.To.string (string_of_float pif.pif_rx);
+        XMLRPC.To.string (string_of_bool pif.pif_carrier);
+        XMLRPC.To.string (string_of_int pif.pif_speed);
+        XMLRPC.To.string (Network_interface.string_of_duplex pif.pif_duplex);
+        XMLRPC.To.string pif.pif_pci_bus_path;
+        XMLRPC.To.string pif.pif_vendor_id;
+        XMLRPC.To.string pif.pif_device_id;
+      ] in
   XMLRPC.To.array (List.map f pifs)
 
 let unmarshall_pifs xml =

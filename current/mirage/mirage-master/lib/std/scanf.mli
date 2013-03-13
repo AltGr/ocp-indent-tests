@@ -127,8 +127,8 @@ module Scanning : sig
 
   val close_in : in_channel -> unit;;
   (** Close the [Pervasives.input_channel] associated with the given
-     [Scanning.in_channel].
-     @since 3.12.0
+      [Scanning.in_channel].
+      @since 3.12.0
   *)
 
   val from_file : string -> in_channel;;

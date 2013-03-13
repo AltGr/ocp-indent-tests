@@ -54,7 +54,7 @@ type metadata_options = {
 type import_type =
   (* Import the metadata of a VM whose disks already exist. *)
   | Metadata_import of metadata_options
-    (* Import a VM and stream its disks into the specified SR. *)
+  (* Import a VM and stream its disks into the specified SR. *)
   | Full_import of API.ref_SR
 
 (** Allows the import to be customised *)
@@ -720,7 +720,7 @@ module GPUGroup : HandlerTools = struct
       handle_dry_run __context config rpc session_id state x precheck_result
     | Create gpu_group_record ->
       let group = log_reraise ("Unable to create GPU group with GPU_types = '[%s]'" ^
-            (String.concat "," gpu_group_record.API.gPU_group_GPU_types)) (fun value ->
+                               (String.concat "," gpu_group_record.API.gPU_group_GPU_types)) (fun value ->
           let group = Client.GPU_group.create ~rpc ~session_id
               ~name_label:value.API.gPU_group_name_label
               ~name_description:value.API.gPU_group_name_description
@@ -1168,8 +1168,8 @@ let metadata_handler (req: Request.t) s _ =
           force = force
         } in
         let headers = Http.http_200_ok ~keep_alive:false () @
-            [ Http.Hdr.task_id ^ ":" ^ (Ref.string_of (Context.get_task_id __context));
-              content_type ] in
+                      [ Http.Hdr.task_id ^ ":" ^ (Ref.string_of (Context.get_task_id __context));
+                        content_type ] in
         Http_svr.headers s headers;
         with_open_archive s
           (fun metadata s ->
@@ -1292,8 +1292,8 @@ let handler (req: Request.t) s _ =
                   raise (IFailure Cannot_handle_chunked)
                 | None, _ ->
                   let headers = Http.http_200_ok ~keep_alive:false () @
-                      [ Http.Hdr.task_id ^ ":" ^ (Ref.string_of (Context.get_task_id __context));
-                        content_type ] in
+                                [ Http.Hdr.task_id ^ ":" ^ (Ref.string_of (Context.get_task_id __context));
+                                  content_type ] in
                   Http_svr.headers s headers;
                   debug "Reading XML";
                   with_open_archive s

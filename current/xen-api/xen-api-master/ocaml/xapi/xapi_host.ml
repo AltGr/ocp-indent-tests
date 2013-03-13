@@ -45,11 +45,11 @@ let set_power_on_mode ~__context ~self ~power_on_mode ~power_on_config =
   Xapi_host_helpers.update_allowed_operations ~__context ~self
 
 (** Before we re-enable this host we make sure it's safe to do so. It isn't if:
-   + we're in the middle of an HA shutdown/reboot and have our fencing temporarily disabled.
-   + xapi hasn't properly started up yet.
-   + HA is enabled and this host has broken storage or networking which would cause protected VMs
-   to become non-agile
-   + our license doesn't support pooling and we're a slave
+    + we're in the middle of an HA shutdown/reboot and have our fencing temporarily disabled.
+    + xapi hasn't properly started up yet.
+    + HA is enabled and this host has broken storage or networking which would cause protected VMs
+    to become non-agile
+    + our license doesn't support pooling and we're a slave
 *)
 let assert_safe_to_reenable ~__context ~self =
   assert_startup_complete ();
@@ -96,12 +96,12 @@ let bugreport_upload ~__context ~host ~url ~options =
     end
 
 (** Check that a) there are no running VMs present on the host, b) there are no VBDs currently
-   attached to dom0, c) host is disabled.
+    attached to dom0, c) host is disabled.
 
-   This is approximately maintainance mode as defined by the gui. However, since
-   we haven't agreed on an exact definition of this mode, we'll not call this maintainance mode here, but we'll
-   use a synonym. According to http://thesaurus.com/browse/maintenance, bacon is a synonym
-   for maintainance, hence the name of the following function.
+    This is approximately maintainance mode as defined by the gui. However, since
+    we haven't agreed on an exact definition of this mode, we'll not call this maintainance mode here, but we'll
+    use a synonym. According to http://thesaurus.com/browse/maintenance, bacon is a synonym
+    for maintainance, hence the name of the following function.
 *)
 let assert_bacon_mode ~__context ~host =
   if Db.Host.get_enabled ~__context ~self:host
@@ -185,7 +185,7 @@ let string_of_per_vm_plan p =
     String.concat "," (e :: t)
 
 (** Return a table mapping VMs to 'per_vm_plan' types indicating either a target
-   Host or a reason why the VM cannot be migrated. *)
+    Host or a reason why the VM cannot be migrated. *)
 let compute_evacuation_plan_no_wlb ~__context ~host =
   let all_hosts = Db.Host.get_all ~__context in
   let enabled_hosts = List.filter (fun self -> Db.Host.get_enabled ~__context ~self) all_hosts in
@@ -342,7 +342,7 @@ let compute_evacuation_plan_wlb ~__context ~self =
       Hashtbl.replace recs v (Migrate (Db.Host.get_by_uuid ~__context ~uuid:host_uuid))
     | _ ->
       raise (Api_errors.Server_error
-            (Api_errors.wlb_malformed_response, ["WLB gave malformed details for VM evacuation."]))) vm_recoms;
+          (Api_errors.wlb_malformed_response, ["WLB gave malformed details for VM evacuation."]))) vm_recoms;
 
   Hashtbl.iter (fun v detail ->
     match detail with
@@ -701,7 +701,7 @@ let syslog_config_write host host_only enable_remote =
       Printf.sprintf "SYSLOG_HOST=\"%s\"\nSYSLOG_REMOTE_ONLY=\"%s\"\n"
         host (if host_only then "1" else "0")
     else "") ^
-      (if enable_remote then "SYSLOGD_OPTIONS=\"-r $SYSLOGD_OPTIONS\"\n" else "")
+            (if enable_remote then "SYSLOGD_OPTIONS=\"-r $SYSLOGD_OPTIONS\"\n" else "")
   in
   let fd = Unix.openfile (Filename.concat Fhs.etcdir "syslog.conf")
       [ Unix.O_WRONLY; Unix.O_CREAT; Unix.O_TRUNC; ]
@@ -1007,9 +1007,9 @@ let detect_nonhomogeneous_external_auth_in_host ~__context ~host =
           Client.Client.Message.create ~rpc ~session_id ~name ~priority
             ~cls:`Host ~obj_uuid:host_uuid ~body:(
             "host_external_auth_type="^host_external_auth_type^
-              ", host_external_auth_service_name="^host_external_auth_service_name^
-              ", master_external_auth_type="^master_external_auth_type^
-              ", master_external_auth_service_name="^master_external_auth_service_name
+            ", host_external_auth_service_name="^host_external_auth_service_name^
+            ", master_external_auth_type="^master_external_auth_type^
+            ", master_external_auth_service_name="^master_external_auth_service_name
           )
         )
       end
@@ -1490,7 +1490,7 @@ let sync_tunnels ~__context ~host =
         | [(pif_ref,_)] ->
           (* this is the PIF on which we want as transport PIF; let's make it *)
           ignore (Xapi_tunnel.create_internal ~__context ~transport_PIF:pif_ref
-                ~network:master_pif_rec.API.pIF_network ~host)
+              ~network:master_pif_rec.API.pIF_network ~host)
         | _ ->
           (* This should never happen cos we should never have more than one of _our_ pifs
            * on the same nework *)

@@ -17,9 +17,9 @@ end
 (** {6 Error report} *)
 
 (** The type of error codes.
-   Errors defined in the POSIX standard
-   and additional errors, mostly BSD.
-   All other errors are mapped to EUNKNOWNERR.
+    Errors defined in the POSIX standard
+    and additional errors, mostly BSD.
+    All other errors are mapped to EUNKNOWNERR.
 *)
 type error =
     Unix.error =
@@ -102,9 +102,9 @@ module Error : sig
 end
 
 (** Raised by the system calls below when an error is encountered.
-   The first component is the error code; the second component
-   is the function name; the third component is the string parameter
-   to the function, if it has one, or the empty string otherwise. *)
+    The first component is the error code; the second component
+    is the function name; the third component is the string parameter
+    to the function, if it has one, or the empty string otherwise. *)
 exception Unix_error of error * string * string
 
 (** @raise Unix_error with a given errno, function name and argument *)
@@ -129,15 +129,15 @@ val retry_until_no_eintr : (unit -> 'a) -> 'a
 val environment : unit -> string array
 
 (** [Unix.putenv ~key ~data] sets the value associated to a
-   variable in the process environment.
-   [key] is the name of the environment variable,
-   and [data] its new associated value. *)
+    variable in the process environment.
+    [key] is the name of the environment variable,
+    and [data] its new associated value. *)
 val putenv : key : string -> data : string -> unit
 
 (**
-   [unsetenv name] deletes the variable [name] from the environment.
+  [unsetenv name] deletes the variable [name] from the environment.
 
-   EINVAL [name] contained an ’=’ or an '\000' character.
+  EINVAL [name] contained an ’=’ or an '\000' character.
 *)
 val unsetenv : string -> unit
 
@@ -188,7 +188,7 @@ end
     The first element in args should be the program itself; the correct way to call [exec]
     is:
 
-      exec ~prog ~args:[ prog; arg1; arg2; ...] () *)
+    exec ~prog ~args:[ prog; arg1; arg2; ...] () *)
 val exec
   :  prog:string
   -> args:string list
@@ -265,8 +265,8 @@ val getppid : unit -> Pid.t option
 val getppid_exn : unit -> Pid.t
 
 (** Change the process priority. The integer argument is added to the
-   ``nice'' value. (Higher values of the ``nice'' value mean
-   lower priorities.) Return the new nice value. *)
+    ``nice'' value. (Higher values of the ``nice'' value mean
+    lower priorities.) Return the new nice value. *)
 val nice : int -> int
 
 (** {6 Basic file input/output} *)
@@ -324,7 +324,7 @@ with sexp
 
 ENDIF (* OCAML_4 *)
 
-  (** The type of file access rights. *)
+(** The type of file access rights. *)
 type file_perm = int with sexp
 
 (** Open the named file with the given flags. Third argument is the permissions to give to
@@ -371,7 +371,7 @@ val read
 val write : ?pos:int -> ?len:int -> File_descr.t -> buf:string -> int
 
 (** Same as [write] but ensures that all errors are reported and
-   that no character has ever been written when an error is reported. *)
+    that no character has ever been written when an error is reported. *)
 val single_write
   :  ?restart:bool (* defaults to false *)
   -> ?pos:int
@@ -384,13 +384,13 @@ val single_write
 
 
 (** Create an input channel reading from the given descriptor.
-   The channel is initially in binary mode; use
-   [set_binary_mode_in ic false] if text mode is desired. *)
+    The channel is initially in binary mode; use
+    [set_binary_mode_in ic false] if text mode is desired. *)
 val in_channel_of_descr : File_descr.t -> In_channel.t
 
 (** Create an output channel writing on the given descriptor.
-   The channel is initially in binary mode; use
-   [set_binary_mode_out oc false] if text mode is desired. *)
+    The channel is initially in binary mode; use
+    [set_binary_mode_out oc false] if text mode is desired. *)
 val out_channel_of_descr : File_descr.t -> Out_channel.t
 
 (** Return the descriptor corresponding to an input channel. *)
@@ -417,7 +417,7 @@ val lseek : File_descr.t -> int64 -> mode:seek_command -> int64
 val truncate : string -> len:int64 -> unit
 
 (** Truncates the file corresponding to the given descriptor
-   to the given size. *)
+    to the given size. *)
 val ftruncate : File_descr.t -> len:int64 -> unit
 
 (** {6 File statistics} *)
@@ -456,11 +456,11 @@ type stats =
 val stat : string -> stats
 
 (** Same as {!UnixLabels.stat}, but in case the file is a symbolic link,
-   return the information for the link itself. *)
+    return the information for the link itself. *)
 val lstat : string -> stats
 
 (** Return the information for the file associated with the given
-   descriptor. *)
+    descriptor. *)
 val fstat : File_descr.t -> stats
 
 (* This sub-module provides the normal OCaml Unix functions that deal with file size
@@ -490,11 +490,11 @@ module Native_file : sig
   val stat : string -> stats
 
   (** Same as {!UnixLabels.stat}, but in case the file is a symbolic link,
-     return the information for the link itself. *)
+      return the information for the link itself. *)
   val lstat : string -> stats
 
   (** Return the information for the file associated with the given
-     descriptor. *)
+      descriptor. *)
   val fstat : File_descr.t -> stats
 
   val lseek : File_descr.t -> int -> mode:seek_command -> int
@@ -535,7 +535,7 @@ end
 val flock : File_descr.t -> Flock_command.t -> bool
 
 (** Return [true] if the given file descriptor refers to a terminal or
-   console window, [false] otherwise. *)
+    console window, [false] otherwise. *)
 val isatty : File_descr.t -> bool
 
 (* {6 Seeking, truncating and statistics on large files} *)
@@ -592,33 +592,33 @@ val access_exn :
 (** {6 Operations on file descriptors} *)
 
 (** Return a new file descriptor referencing the same file as
-   the given descriptor. *)
+    the given descriptor. *)
 val dup : File_descr.t -> File_descr.t
 
 (** [dup2 fd1 fd2] duplicates [fd1] to [fd2], closing [fd2] if already
-   opened. *)
+    opened. *)
 val dup2 : src:File_descr.t -> dst:File_descr.t -> unit
 
 (** Set the ``non-blocking'' flag on the given descriptor.
-   When the non-blocking flag is set, reading on a descriptor
-   on which there is temporarily no data available raises the
-   [EAGAIN] or [EWOULDBLOCK] error instead of blocking;
-   writing on a descriptor on which there is temporarily no room
-   for writing also raises [EAGAIN] or [EWOULDBLOCK]. *)
+    When the non-blocking flag is set, reading on a descriptor
+    on which there is temporarily no data available raises the
+    [EAGAIN] or [EWOULDBLOCK] error instead of blocking;
+    writing on a descriptor on which there is temporarily no room
+    for writing also raises [EAGAIN] or [EWOULDBLOCK]. *)
 val set_nonblock : File_descr.t -> unit
 
 (** Clear the ``non-blocking'' flag on the given descriptor.
-   See {!UnixLabels.set_nonblock}.*)
+    See {!UnixLabels.set_nonblock}.*)
 val clear_nonblock : File_descr.t -> unit
 
 (** Set the ``close-on-exec'' flag on the given descriptor.
-   A descriptor with the close-on-exec flag is automatically
-   closed when the current process starts another program with
-   one of the [exec] functions. *)
+    A descriptor with the close-on-exec flag is automatically
+    closed when the current process starts another program with
+    one of the [exec] functions. *)
 val set_close_on_exec : File_descr.t -> unit
 
 (** Clear the ``close-on-exec'' flag on the given descriptor.
-   See {!UnixLabels.set_close_on_exec}.*)
+    See {!UnixLabels.set_close_on_exec}.*)
 val clear_close_on_exec : File_descr.t -> unit
 
 (** {6 Directories} *)
@@ -650,7 +650,7 @@ type dir_handle = Unix.dir_handle
 val opendir : ?restart:bool (* defaults to false *) -> string -> dir_handle
 
 (** Return the next entry in a directory.
-   @raise End_of_file when the end of the directory has been reached. *)
+    @raise End_of_file when the end of the directory has been reached. *)
 val readdir : dir_handle -> string
 
 (** Reposition the descriptor to the beginning of the directory *)
@@ -662,8 +662,8 @@ val closedir : dir_handle -> unit
 (** {6 Pipes and redirections} *)
 
 (** Create a pipe. The first component of the result is opened
-   for reading, that's the exit to the pipe. The second component is
-   opened for writing, that's the entrance to the pipe. *)
+    for reading, that's the exit to the pipe. The second component is
+    opened for writing, that's the entrance to the pipe. *)
 val pipe : unit -> File_descr.t * File_descr.t
 
 (** Create a named pipe with the given permissions. *)
@@ -724,9 +724,9 @@ val open_process_out : string -> out_channel
 val open_process : string -> in_channel * out_channel
 
 (** Similar to {!UnixLabels.open_process}, but the second argument specifies
-   the environment passed to the command.  The result is a triple
-   of channels connected to the standard output, standard input,
-   and standard error of the command. *)
+    the environment passed to the command.  The result is a triple
+    of channels connected to the standard output, standard input,
+    and standard error of the command. *)
 module Process_channels : sig
   type t =
     { stdin : out_channel;
@@ -753,19 +753,19 @@ val close_process_in : in_channel -> Exit_or_signal.t
 val close_process_out : out_channel -> Exit_or_signal.t
 
 (** Close channels opened by {!UnixLabels.open_process},
-   wait for the associated command to terminate,
-   and return its termination status. *)
+    wait for the associated command to terminate,
+    and return its termination status. *)
 val close_process : in_channel * out_channel -> Exit_or_signal.t
 
 (** Close channels opened by {!UnixLabels.open_process_full},
-   wait for the associated command to terminate,
-   and return its termination status. *)
+    wait for the associated command to terminate,
+    and return its termination status. *)
 val close_process_full : Process_channels.t -> Exit_or_signal.t
 
 (** {6 Symbolic links} *)
 
 (** [symlink source dest] creates the file [dest] as a symbolic link
-   to the file [source]. *)
+    to the file [source]. *)
 val symlink : src:string -> dst:string -> unit
 
 (** Read the contents of a link. *)
@@ -774,15 +774,15 @@ val readlink : string -> string
 (** {6 Polling} *)
 
 (** Wait until some input/output operations become possible on
-   some channels. The three list arguments are, respectively, a set
-   of descriptors to check for reading (first argument), for writing
-   (second argument), or for exceptional conditions (third argument).
-   The fourth argument is the maximal timeout, in seconds; a
-   negative fourth argument means no timeout (unbounded wait).
-   The result is composed of three sets of descriptors: those ready
-   for reading (first component), ready for writing (second component),
-   and over which an exceptional condition is pending (third
-   component). *)
+    some channels. The three list arguments are, respectively, a set
+    of descriptors to check for reading (first argument), for writing
+    (second argument), or for exceptional conditions (third argument).
+    The fourth argument is the maximal timeout, in seconds; a
+    negative fourth argument means no timeout (unbounded wait).
+    The result is composed of three sets of descriptors: those ready
+    for reading (first component), ready for writing (second component),
+    and over which an exceptional condition is pending (third
+    component). *)
 module Select_fds : sig
   type t =
     { read : File_descr.t list;
@@ -845,21 +845,21 @@ val time : unit -> float
 val gettimeofday : unit -> float
 
 (** Convert a time in seconds, as returned by {!UnixLabels.time}, into a date and
-   a time. Assumes UTC. *)
+    a time. Assumes UTC. *)
 val gmtime : float -> tm
 
 (** Convert a UTC time in a tm record to a time in seconds *)
 val timegm : tm -> float
 
 (** Convert a time in seconds, as returned by {!UnixLabels.time}, into a date and
-   a time. Assumes the local time zone. *)
+    a time. Assumes the local time zone. *)
 val localtime : float -> tm
 
 (** Convert a date and time, specified by the [tm] argument, into
-   a time in seconds, as returned by {!UnixLabels.time}. Also return a normalized
-   copy of the given [tm] record, with the [tm_wday], [tm_yday],
-   and [tm_isdst] fields recomputed from the other fields.
-   The [tm] argument is interpreted in the local time zone. *)
+    a time in seconds, as returned by {!UnixLabels.time}. Also return a normalized
+    copy of the given [tm] record, with the [tm_wday], [tm_yday],
+    and [tm_isdst] fields recomputed from the other fields.
+    The [tm] argument is interpreted in the local time zone. *)
 val mktime : tm -> float * tm
 
 (** Convert a date and time, specified by the [tm] argument, into a formatted string.
@@ -877,8 +877,8 @@ val alarm : int -> int
 val sleep : int -> unit
 
 (** [nanosleep f] delays execution of the program for at least [f] seconds.  The function
-   can return earlier if a signal has been delivered, in which case the number of
-   seconds left is returned.  Any other failure raises an exception.
+    can return earlier if a signal has been delivered, in which case the number of
+    seconds left is returned.  Any other failure raises an exception.
 *)
 val nanosleep : float -> float
 
@@ -886,21 +886,21 @@ val nanosleep : float -> float
 val times : unit -> process_times
 
 (** Set the last access time (second arg) and last modification time
-   (third arg) for a file. Times are expressed in seconds from
-   00:00:00 GMT, Jan. 1, 1970. *)
+    (third arg) for a file. Times are expressed in seconds from
+    00:00:00 GMT, Jan. 1, 1970. *)
 val utimes : string -> access:float -> modif:float -> unit
 
 (** The three kinds of interval timers. *)
 type interval_timer =
     Unix.interval_timer =
     ITIMER_REAL
-    (** decrements in real time, and sends the signal [SIGALRM] when expired.*)
+  (** decrements in real time, and sends the signal [SIGALRM] when expired.*)
   | ITIMER_VIRTUAL
   (**  decrements in process virtual time, and sends [SIGVTALRM] when expired. *)
   | ITIMER_PROF
   (** (for profiling) decrements both when the process
-     is running and when the system is running on behalf of the
-     process; it sends [SIGPROF] when expired. *)
+      is running and when the system is running on behalf of the
+      process; it sends [SIGPROF] when expired. *)
 with sexp
 
 (** The type describing the status of an interval timer *)
@@ -915,13 +915,13 @@ with sexp
 val getitimer : interval_timer -> interval_timer_status
 
 (** [setitimer t s] sets the interval timer [t] and returns
-   its previous status. The [s] argument is interpreted as follows:
-   [s.it_value], if nonzero, is the time to the next timer expiration;
-   [s.it_interval], if nonzero, specifies a value to
-   be used in reloading it_value when the timer expires.
-   Setting [s.it_value] to zero disable the timer.
-   Setting [s.it_interval] to zero causes the timer to be disabled
-   after its next expiration. *)
+    its previous status. The [s] argument is interpreted as follows:
+    [s.it_value], if nonzero, is the time to the next timer expiration;
+    [s.it_interval], if nonzero, specifies a value to
+    be used in reloading it_value when the timer expires.
+    Setting [s.it_value] to zero disable the timer.
+    Setting [s.it_interval] to zero causes the timer to be disabled
+    after its next expiration. *)
 val setitimer :
   interval_timer -> interval_timer_status -> interval_timer_status
 
@@ -1050,7 +1050,7 @@ type socket_domain = Unix.socket_domain =
 with sexp, bin_io
 
 (** The type of socket kinds, specifying the semantics of
-   communications. *)
+    communications. *)
 type socket_type = Unix.socket_type =
   | SOCK_STREAM                         (** Stream socket *)
   | SOCK_DGRAM                          (** Datagram socket *)
@@ -1059,10 +1059,10 @@ type socket_type = Unix.socket_type =
 with sexp, bin_io
 
 (** The type of socket addresses. [ADDR_UNIX name] is a socket
-   address in the Unix domain; [name] is a file name in the file
-   system. [ADDR_INET(addr,port)] is a socket address in the Internet
-   domain; [addr] is the Internet address of the machine, and
-   [port] is the port number. *)
+    address in the Unix domain; [name] is a file name in the file
+    system. [ADDR_INET(addr,port)] is a socket address in the Internet
+    domain; [addr] is the Internet address of the machine, and
+    [port] is the port number. *)
 type sockaddr = Unix.sockaddr =
   | ADDR_UNIX of string
   | ADDR_INET of Inet_addr.t * int
@@ -1072,8 +1072,8 @@ with sexp, bin_io
 val domain_of_sockaddr: sockaddr -> socket_domain
 
 (** Create a new socket in the given domain, and with the
-   given kind. The third argument is the protocol type; 0 selects
-   the default protocol for that kind of sockets. *)
+    given kind. The third argument is the protocol type; 0 selects
+    the default protocol for that kind of sockets. *)
 val socket :
   domain:socket_domain -> kind:socket_type -> protocol:int -> File_descr.t
 
@@ -1083,8 +1083,8 @@ val socketpair :
   File_descr.t * File_descr.t
 
 (** Accept connections on the given socket. The returned descriptor
-   is a socket connected to the client; the returned address is
-   the address of the connecting client. *)
+    is a socket connected to the client; the returned address is
+    the address of the connecting client. *)
 val accept : File_descr.t -> File_descr.t * sockaddr
 
 (** Bind a socket to an address. *)
@@ -1094,7 +1094,7 @@ val bind : File_descr.t -> addr:sockaddr -> unit
 val connect : File_descr.t -> addr:sockaddr -> unit
 
 (** Set up a socket for receiving connection requests. The integer
-   argument is the maximal number of pending requests. *)
+    argument is the maximal number of pending requests. *)
 val listen : File_descr.t -> max:int -> unit
 
 (** The type of commands for [shutdown]. *)
@@ -1106,10 +1106,10 @@ type shutdown_command =
 with sexp
 
 (** Shutdown a socket connection. [SHUTDOWN_SEND] as second argument
-   causes reads on the other end of the connection to return
-   an end-of-file condition.
-   [SHUTDOWN_RECEIVE] causes writes on the other end of the connection
-   to return a closed pipe condition ([SIGPIPE] signal). *)
+    causes reads on the other end of the connection to return
+    an end-of-file condition.
+    [SHUTDOWN_RECEIVE] causes writes on the other end of the connection
+    to return a closed pipe condition ([SIGPIPE] signal). *)
 val shutdown : File_descr.t -> mode:shutdown_command -> unit
 
 (** Return the address of the given socket. *)
@@ -1119,7 +1119,7 @@ val getsockname : File_descr.t -> sockaddr
 val getpeername : File_descr.t -> sockaddr
 
 (** The flags for {!UnixLabels.recv},  {!UnixLabels.recvfrom},
-   {!UnixLabels.send} and {!UnixLabels.sendto}. *)
+    {!UnixLabels.send} and {!UnixLabels.sendto}. *)
 type msg_flag = Unix.msg_flag =
     MSG_OOB
   | MSG_DONTROUTE
@@ -1149,8 +1149,8 @@ val sendto :
 
 
 (** The socket options that can be consulted with {!UnixLabels.getsockopt}
-   and modified with {!UnixLabels.setsockopt}.  These options have a boolean
-   ([true]/[false]) value. *)
+    and modified with {!UnixLabels.setsockopt}.  These options have a boolean
+    ([true]/[false]) value. *)
 type socket_bool_option =
     SO_DEBUG               (** Record debugging information *)
   | SO_BROADCAST           (** Permit sending of broadcast messages *)
@@ -1164,8 +1164,8 @@ type socket_bool_option =
 with sexp
 
 (** The socket options that can be consulted with {!UnixLabels.getsockopt_int}
-   and modified with {!UnixLabels.setsockopt_int}.  These options have an
-   integer value. *)
+    and modified with {!UnixLabels.setsockopt_int}.  These options have an
+    integer value. *)
 type socket_int_option =
     SO_SNDBUF              (** Size of send buffer *)
   | SO_RCVBUF              (** Size of received buffer *)
@@ -1176,24 +1176,24 @@ type socket_int_option =
 with sexp
 
 (** The socket options that can be consulted with {!UnixLabels.getsockopt_optint}
-   and modified with {!UnixLabels.setsockopt_optint}.  These options have a
-   value of type [int option], with [None] meaning ``disabled''. *)
+    and modified with {!UnixLabels.setsockopt_optint}.  These options have a
+    value of type [int option], with [None] meaning ``disabled''. *)
 type socket_optint_option =
     SO_LINGER              (** Whether to linger on closed connections
-                              with sexp                      that have data present, and for how long
+                               with sexp                      that have data present, and for how long
                                (in seconds) *)
 
 (** The socket options that can be consulted with {!UnixLabels.getsockopt_float}
-   and modified with {!UnixLabels.setsockopt_float}.  These options have a
-   floating-point value representing a time in seconds.
-   The value 0 means infinite timeout. *)
+    and modified with {!UnixLabels.setsockopt_float}.  These options have a
+    floating-point value representing a time in seconds.
+    The value 0 means infinite timeout. *)
 type socket_float_option =
     SO_RCVTIMEO            (** Timeout for input operations *)
   | SO_SNDTIMEO            (** Timeout for output operations *)
 with sexp
 
 (** Return the current status of a boolean-valued option
-   in the given socket. *)
+    in the given socket. *)
 val getsockopt : File_descr.t -> socket_bool_option -> bool
 
 (** Set or clear a boolean-valued option in the given socket. *)
@@ -1225,21 +1225,21 @@ val setsockopt_float :
 
 
 (** Connect to a server at the given address.
-   Return a pair of buffered channels connected to the server.
-   Remember to call {!Pervasives.flush} on the output channel at the right times
-   to ensure correct synchronization. *)
+    Return a pair of buffered channels connected to the server.
+    Remember to call {!Pervasives.flush} on the output channel at the right times
+    to ensure correct synchronization. *)
 val open_connection : sockaddr -> in_channel * out_channel
 
 (** ``Shut down'' a connection established with {!UnixLabels.open_connection};
-   that is, transmit an end-of-file condition to the server reading
-   on the other side of the connection. *)
+    that is, transmit an end-of-file condition to the server reading
+    on the other side of the connection. *)
 val shutdown_connection : in_channel -> unit
 
 (** Establish a server on the given address.
-   The function given as first argument is called for each connection
-   with two buffered channels connected to the client. A new process
-   is created for each connection. The function {!UnixLabels.establish_server}
-   never returns normally. *)
+    The function given as first argument is called for each connection
+    with two buffered channels connected to the client. A new process
+    is created for each connection. The function {!UnixLabels.establish_server}
+    never returns normally. *)
 val establish_server :
   (in_channel -> out_channel -> unit) -> addr:sockaddr -> unit
 
@@ -1330,7 +1330,7 @@ type getaddrinfo_option =
   | AI_CANONNAME                        (** Fill the [ai_canonname] field
                                             of the result *)
   | AI_PASSIVE                          (* Set address to ``any'' address
-                                            for use with {!Unix.bind} *)
+                                           for use with {!Unix.bind} *)
 with sexp
 
 (** [getaddrinfo host service opts] returns a list of {!Unix.addr_info}
@@ -1366,7 +1366,7 @@ type getnameinfo_option =
   | NI_NAMEREQD          (** Fail if host name cannot be determined *)
   | NI_NUMERICSERV       (** Always return service as port number *)
   | NI_DGRAM             (* Consider the service as UDP-based
-                             instead of the default TCP *)
+                            instead of the default TCP *)
 with sexp
 
 (** [getnameinfo addr opts] returns the host name and service name
@@ -1382,9 +1382,9 @@ val getnameinfo : sockaddr -> getnameinfo_option list -> name_info
 (** {6 Terminal interface} *)
 
 (** The following functions implement the POSIX standard terminal
-   interface. They provide control over asynchronous communication ports
-   and pseudo-terminals. Refer to the [termios] man page for a complete
-   description. *)
+    interface. They provide control over asynchronous communication ports
+    and pseudo-terminals. Refer to the [termios] man page for a complete
+    description. *)
 
 module Terminal_io : sig
   type t = Unix.terminal_io = {
@@ -1415,7 +1415,7 @@ module Terminal_io : sig
     (* Local modes: *)
     mutable c_isig : bool;    (** Generate signal on INTR, QUIT, SUSP. *)
     mutable c_icanon : bool;  (** Enable canonical processing
-                                 (line buffering and editing) *)
+                                  (line buffering and editing) *)
     mutable c_noflsh : bool;  (** Disable flush after INTR, QUIT, SUSP. *)
     mutable c_echo : bool;    (** Echo input characters. *)
     mutable c_echoe : bool;   (** Echo ERASE (to erase previous character). *)
@@ -1429,7 +1429,7 @@ module Terminal_io : sig
     mutable c_veof : char;    (** End-of-file character (usually ctrl-D). *)
     mutable c_veol : char;    (** Alternate end-of-line char. (usually none). *)
     mutable c_vmin : int;     (** Minimum number of characters to read
-                                 before the read request is satisfied. *)
+                                  before the read request is satisfied. *)
     mutable c_vtime : int;    (** Maximum read wait (in 0.1s units). *)
     mutable c_vstart : char;  (** Start character (usually ctrl-Q). *)
     mutable c_vstop : char;   (** Stop character (usually ctrl-S). *)
@@ -1443,22 +1443,22 @@ module Terminal_io : sig
   val tcgetattr : File_descr.t -> t
 
   (** Set the status of the terminal referred to by the given
-     file descriptor. The second argument indicates when the
-     status change takes place: immediately ([TCSANOW]),
-     when all pending output has been transmitted ([TCSADRAIN]),
-     or after flushing all input that has been received but not
-     read ([TCSAFLUSH]). [TCSADRAIN] is recommended when changing
-     the output parameters; [TCSAFLUSH], when changing the input
-     parameters. *)
+      file descriptor. The second argument indicates when the
+      status change takes place: immediately ([TCSANOW]),
+      when all pending output has been transmitted ([TCSADRAIN]),
+      or after flushing all input that has been received but not
+      read ([TCSAFLUSH]). [TCSADRAIN] is recommended when changing
+      the output parameters; [TCSAFLUSH], when changing the input
+      parameters. *)
   val tcsetattr : t -> File_descr.t -> mode:setattr_when -> unit
 
   (** Send a break condition on the given file descriptor.
-     The second argument is the duration of the break, in 0.1s units;
-     0 means standard duration (0.25s). *)
+      The second argument is the duration of the break, in 0.1s units;
+      0 means standard duration (0.25s). *)
   val tcsendbreak : File_descr.t -> duration:int -> unit
 
   (** Waits until all output written on the given file descriptor
-     has been transmitted. *)
+      has been transmitted. *)
   val tcdrain : File_descr.t -> unit
 
   type flush_queue =
@@ -1469,10 +1469,10 @@ module Terminal_io : sig
   with sexp
 
   (** Discard data written on the given file descriptor but not yet
-     transmitted, or data received but not yet read, depending on the
-     second argument: [TCIFLUSH] flushes data received but not read,
-     [TCOFLUSH] flushes data written but not transmitted, and
-     [TCIOFLUSH] flushes both. *)
+      transmitted, or data received but not yet read, depending on the
+      second argument: [TCIFLUSH] flushes data received but not read,
+      [TCOFLUSH] flushes data written but not transmitted, and
+      [TCIOFLUSH] flushes both. *)
   val tcflush : File_descr.t -> mode:flush_queue -> unit
 
   type flow_action
@@ -1484,14 +1484,14 @@ module Terminal_io : sig
     with sexp
 
   (** Suspend or restart reception or transmission of data on
-     the given file descriptor, depending on the second argument:
-     [TCOOFF] suspends output, [TCOON] restarts output,
-     [TCIOFF] transmits a STOP character to suspend input,
-     and [TCION] transmits a START character to restart input. *)
+      the given file descriptor, depending on the second argument:
+      [TCOOFF] suspends output, [TCOON] restarts output,
+      [TCIOFF] transmits a STOP character to suspend input,
+      and [TCION] transmits a START character to restart input. *)
   val tcflow : File_descr.t -> mode:flow_action -> unit
 
   (** Put the calling process in a new session and detach it from
-     its controlling terminal. *)
+      its controlling terminal. *)
   val setsid : unit -> int
 end
 
@@ -1760,7 +1760,7 @@ val mkstemp : string -> string * File_descr.t
     the name unique.
 
     @raise Unix_error on errors.
-   k*)
+    k*)
 val mkdtemp : string -> string
 
 (** {2 Signal handling} *)

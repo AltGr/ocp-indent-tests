@@ -26,7 +26,7 @@ open Ocsidbmtypes
 open Lwt
 
 (** Data are divided into stores.
-   Create one store for your project, where you will save all your data.
+    Create one store for your project, where you will save all your data.
 *)
 type store = string
 
@@ -79,7 +79,7 @@ let rec try_connect sname =
       return socket)
     (fun _ ->
       Ocsigen_messages.warning ("Launching a new Ocsidbm process: "^(!ocsidbm)^
-          " on directory "^(!directory)^".");
+                                " on directory "^(!directory)^".");
       let param = [|!ocsidbm; !directory|] in
       let child () =
         let log =
@@ -119,12 +119,12 @@ let rec get_indescr i =
          Ocsigen_messages.errlog ("Cannot connect to Ocsidbm. Will continue \
                                    without persistent session support. \
                                    Error message is: "^
-             (match e with
-               | Unix.Unix_error (a,b,c) ->
-                   (Unix.error_message a)^" in "^b^"("^c^")"
-               | _ -> Printexc.to_string e)^
-             ". Have a look at the logs to see if there is an \
-              error message from the Ocsidbm process.");
+                                  (match e with
+                                    | Unix.Unix_error (a,b,c) ->
+                                        (Unix.error_message a)^" in "^b^"("^c^")"
+                                    | _ -> Printexc.to_string e)^
+                                  ". Have a look at the logs to see if there is an \
+                                   error message from the Ocsidbm process.");
          fail e
        end
        else (Lwt_unix.sleep 2.1) >>= (fun () -> get_indescr (i-1))))

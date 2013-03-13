@@ -54,7 +54,7 @@ let parse_response_fst_line ic =
     (match Re.split_delim pieces_sep response_line with
      | version_raw :: code_raw :: _ ->
        return (version_of_string version_raw,      (* method *)
-           status_of_code (int_of_string code_raw))    (* status *)
+         status_of_code (int_of_string code_raw))    (* status *)
      | _ ->
        fail (Malformed_response response_line))
   with 

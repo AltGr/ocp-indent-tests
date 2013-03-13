@@ -30,8 +30,8 @@ let blah_of_string f tag s =
   try
     f (String.remove_spaces s 0 ((String.length s) -1))
   with Failure _ -> raise (Ocsigen_config.Config_file_error
-                          ("While parsing <"^tag^"> - "^s^
-                             " is not a valid value."))
+                        ("While parsing <"^tag^"> - "^s^
+                         " is not a valid value."))
 
 let int_of_string = blah_of_string int_of_string
 let float_of_string = blah_of_string float_of_string
@@ -48,12 +48,12 @@ let default_default_hostname =
   with Failure _ ->
       let warning =
         "Cannot determine default host name. Will use \""^hostname^
-          "\" to create absolute links or redirections dynamically if you do not set <host defaulthostname=\"...\" ...> in config file."
+        "\" to create absolute links or redirections dynamically if you do not set <host defaulthostname=\"...\" ...> in config file."
       in
       Ocsigen_messages.warning warning;
       (*VVV Is it the right behaviour? *)
       hostname
-      (*****************************************************************************)
+(*****************************************************************************)
 
 let parse_size =
   let kilo = Int64.of_int 1000 in
@@ -185,11 +185,11 @@ let rec parser_config =
           | [] -> ()
           | _ ->
               ignore (Ocsigen_messages.warning
-                    "At most one <server> tag possible in config file. \
-                     Ignoring trailing data."));
+                  "At most one <server> tag possible in config file. \
+                   Ignoring trailing data."));
         parse_servers (n@[nouveau]) [] (* ll *)
-                                    (* Multiple server not supported any more *)
-                                    (* nouveau at the end *)
+    (* Multiple server not supported any more *)
+    (* nouveau at the end *)
     | _ -> raise (Config_file_error ("syntax error inside <ocsigen>"))
   in function
     | (Element ("ocsigen", [], l))::ll ->
@@ -330,22 +330,22 @@ let parse_server isreloading c =
         set_maxretries (int_of_string st (parse_string_tag st p));
         parse_server_aux ll
     | (Element ("timeout" as st, [], p))::ll
-      (*VVV timeout: backward compatibility with <= 0.99.4 *)
+    (*VVV timeout: backward compatibility with <= 0.99.4 *)
     | (Element ("clienttimeout" as st, [], p))::ll ->
         set_client_timeout (int_of_string st (parse_string_tag st p));
         parse_server_aux ll
     | (Element ("servertimeout" as st, [], p))::ll ->
         set_server_timeout (int_of_string st (parse_string_tag st p));
         parse_server_aux ll
-        (*VVV For now we use silentservertimeout and silentclienttimeout also
-           for keep alive :-(
-              | (Element ("keepalivetimeout" as st, [], p))::ll ->
-                  set_keepalive_timeout (int_of_string st (parse_string_tag st p));
-                  parse_server_aux ll
-              | (Element ("keepopentimeout" as st, [], p))::ll ->
-                  set_keepopen_timeout (int_of_string st (parse_string_tag st p));
-                  parse_server_aux ll
-        *)
+    (*VVV For now we use silentservertimeout and silentclienttimeout also
+      for keep alive :-(
+          | (Element ("keepalivetimeout" as st, [], p))::ll ->
+              set_keepalive_timeout (int_of_string st (parse_string_tag st p));
+              parse_server_aux ll
+          | (Element ("keepopentimeout" as st, [], p))::ll ->
+              set_keepopen_timeout (int_of_string st (parse_string_tag st p));
+              parse_server_aux ll
+    *)
     | (Element ("netbuffersize" as st, [], p))::ll ->
         set_netbuffersize (int_of_string st (parse_string_tag st p));
         parse_server_aux ll
@@ -357,7 +357,7 @@ let parse_server isreloading c =
         parse_server_aux ll
     | (Element ("maxuploadfilesize" as st, [], p))::ll ->
         set_maxuploadfilesize (parse_size_tag st
-              (parse_string_tag st p));
+            (parse_string_tag st p));
         parse_server_aux ll
     | (Element ("commandpipe" as st, [], p))::ll ->
         set_command_pipe (parse_string_tag st p);
@@ -435,19 +435,19 @@ let parse_server isreloading c =
           | ("hostfilter", s)::suite ->
               (match name with
                 | None -> parse_attrs ((Some s), charset, 
-                              defaulthostname, 
-                              defaulthttpport, 
-                              defaulthttpsport) suite
+                            defaulthostname, 
+                            defaulthttpport, 
+                            defaulthttpsport) suite
                 | _ -> raise (Ocsigen_config.Config_file_error
-                             ("Duplicate attribute name in <host>")))
+                           ("Duplicate attribute name in <host>")))
           | ("charset", s)::suite ->
               (match charset with
                 | None -> parse_attrs (name, Some s, 
-                              defaulthostname, 
-                              defaulthttpport, 
-                              defaulthttpsport) suite
+                            defaulthostname, 
+                            defaulthttpport, 
+                            defaulthttpsport) suite
                 | _ -> raise (Ocsigen_config.Config_file_error
-                             ("Duplicate attribute charset in <host>")))
+                           ("Duplicate attribute charset in <host>")))
           | ("defaulthostname", s)::suite ->
               (match defaulthostname with
                 | None ->
@@ -460,26 +460,26 @@ let parse_server isreloading c =
                       raise (Ocsigen_config.Config_file_error
                           ("Incorrect hostname " ^ s))
                 | _ -> raise (Ocsigen_config.Config_file_error
-                             ("Duplicate attribute defaulthostname in <host>")))
+                           ("Duplicate attribute defaulthostname in <host>")))
           | ("defaulthttpport", s)::suite ->
               (match defaulthttpport with
                 | None -> parse_attrs (name, charset, 
-                              defaulthostname, 
-                              (Some s), 
-                              defaulthttpsport) suite
+                            defaulthostname, 
+                            (Some s), 
+                            defaulthttpsport) suite
                 | _ -> raise (Ocsigen_config.Config_file_error
-                             ("Duplicate attribute defaulthttpport in <host>")))
+                           ("Duplicate attribute defaulthttpport in <host>")))
           | ("defaulthttpsport", s)::suite ->
               (match defaulthttpsport with
                 | None -> parse_attrs (name, charset, 
-                              defaulthostname, 
-                              defaulthttpport, 
-                              Some s) suite
+                            defaulthostname, 
+                            defaulthttpport, 
+                            Some s) suite
                 | _ -> raise (Ocsigen_config.Config_file_error
-                             ("Duplicate attribute defaulthttpsport in <host>")))
+                           ("Duplicate attribute defaulthttpsport in <host>")))
           | (s, _)::_ ->
               raise (Ocsigen_config.Config_file_error
-                    ("Wrong attribute for <host>: "^s))
+                  ("Wrong attribute for <host>: "^s))
         in
         let host, charset, defaulthostname, defaulthttpport,defaulthttpsport =
           parse_attrs (None, None, None, None, None) atts
@@ -540,12 +540,12 @@ let parse_server isreloading c =
                   let filecont =
                     try
                       Ocsigen_messages.debug (fun () -> "Parsing configuration file "^
-                          filename);
+                                                        filename);
                       parse_ext filename
                     with e ->
                         Ocsigen_messages.errlog
                           ("Error while loading configuration file "^filename^
-                             ": "^(Printexc.to_string e)^" (ignored)");
+                           ": "^(Printexc.to_string e)^" (ignored)");
                         []
                   in
                   (match filecont with
@@ -560,13 +560,13 @@ let parse_server isreloading c =
             | Sys_error _ as e ->
                 Ocsigen_messages.errlog
                   ("Error while loading configuration file: "^
-                     ": "^(Printexc.to_string e)^" (ignored)");
+                   ": "^(Printexc.to_string e)^" (ignored)");
                 []
         in
         one@(parse_server_aux ll)
     | (Element (tag, _, _))::_ ->
         raise (Config_file_error
-              ("tag <"^tag^"> unexpected inside <server>"))
+            ("tag <"^tag^"> unexpected inside <server>"))
     | _ ->
         raise (Config_file_error "Syntax error")
   in Ocsigen_extensions.set_hosts (parse_server_aux c)
@@ -609,13 +609,13 @@ let extract_info c =
             None ->
               parse_ssl (Some (parse_string_tag st p)) privatekey l
           | _ -> raise (Config_file_error
-                       "Two certificates inside <ssl>"))
+                     "Two certificates inside <ssl>"))
     | (Element ("privatekey" as st, [], p))::l ->
         (match privatekey with
             None ->
               parse_ssl certificate (Some (parse_string_tag st p)) l
           | _ -> raise (Config_file_error
-                       "Two private keys inside <ssl>"))
+                     "Two private keys inside <ssl>"))
     | (Element (tag,_,_))::l ->
         raise (Config_file_error ("<"^tag^"> tag unexpected inside <ssl>"))
     | _ -> raise (Config_file_error ("Unexpected content inside <ssl>"))
@@ -663,14 +663,14 @@ let extract_info c =
               aux (Some (parse_string_tag st p)) group ssl ports sslports
                 minthreads maxthreads ll
           | _ -> raise (Config_file_error
-                       "Only one <user> tag for each server allowed"))
+                     "Only one <user> tag for each server allowed"))
     | (Element ("group" as st, [], p))::ll ->
         (match group with
             None ->
               aux user (Some (parse_string_tag st p)) ssl ports sslports
                 minthreads maxthreads ll
           | _ -> raise (Config_file_error
-                       "Only one <group> tag for each server allowed"))
+                     "Only one <group> tag for each server allowed"))
     | (Element ("commandpipe" as st, [], p))::ll ->
         set_command_pipe (parse_string_tag st p);
         aux user group ssl ports sslports minthreads maxthreads ll
@@ -706,4 +706,4 @@ let parse_config ?file () =
   in
   parser_config (Simplexmlparser.xmlparser_file file)
 
-(******************************************************************)
+  (******************************************************************)

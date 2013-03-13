@@ -46,10 +46,10 @@ module Examples (I : Int_intf.S) = struct
 end
 
 module Inverses (X : Int_intf.S) (Y : Int_intf.S)
-    (Conv : sig
-       val x_to_y : X.t -> Y.t
-       val y_to_x : Y.t -> X.t option
-     end) = struct
+         (Conv : sig
+            val x_to_y : X.t -> Y.t
+            val y_to_x : Y.t -> X.t option
+          end) = struct
   open Conv
   let xs = let module E = Examples (X) in E.examples
   let ys = let module E = Examples (Y) in E.examples
@@ -68,16 +68,16 @@ module Inverses (X : Int_intf.S) (Y : Int_intf.S)
 end
 
 module Inverses' (X : Int_intf.S) (Y : Int_intf.S)
-    (Conv : sig
-       val x_to_y : X.t -> Y.t option
-       val y_to_x : Y.t -> X.t option
-     end) = struct
+         (Conv : sig
+            val x_to_y : X.t -> Y.t option
+            val y_to_x : Y.t -> X.t option
+          end) = struct
   open Conv
   let xs = let module E = Examples (X) in E.examples
   let ys = let module E = Examples (Y) in E.examples
   let get = function
-    | Some z -> z
-    | None -> failwith "Out_of_range"
+  | Some z -> z
+  | None -> failwith "Out_of_range"
   let y_to_x_exn y = get (y_to_x y)
   let x_to_y_exn x = get (x_to_y x)
   let x_out_of_range x =
@@ -100,64 +100,64 @@ module Inverses' (X : Int_intf.S) (Y : Int_intf.S)
 end
 
 module Ii6 = Inverses (Int) (Int64) (struct
-    let x_to_y = Int.to_int64
-    let y_to_x = Int.of_int64
-  end)
+               let x_to_y = Int.to_int64
+               let y_to_x = Int.of_int64
+             end)
 
 module Ii6' = Inverses (Int) (Int64) (struct
-    let x_to_y = Int64.of_int
-    let y_to_x = Int64.to_int
-  end)
+                let x_to_y = Int64.of_int
+                let y_to_x = Int64.to_int
+              end)
 
 module Iin = Inverses (Int) (Nativeint) (struct
-    let x_to_y = Int.to_nativeint
-    let y_to_x = Int.of_nativeint
-  end)
+               let x_to_y = Int.to_nativeint
+               let y_to_x = Int.of_nativeint
+             end)
 
 module Iin' = Inverses (Int) (Nativeint) (struct
-    let x_to_y = Nativeint.of_int
-    let y_to_x = Nativeint.to_int
-  end)
+                let x_to_y = Nativeint.of_int
+                let y_to_x = Nativeint.to_int
+              end)
 
 module I36 = Inverses (Int32) (Int64) (struct
-    let x_to_y = Int32.to_int64
-    let y_to_x = Int32.of_int64
-  end)
+               let x_to_y = Int32.to_int64
+               let y_to_x = Int32.of_int64
+             end)
 
 module I36' = Inverses (Int32) (Int64) (struct
-    let x_to_y = Int64.of_int32
-    let y_to_x = Int64.to_int32
-  end)
+                let x_to_y = Int64.of_int32
+                let y_to_x = Int64.to_int32
+              end)
 
 module I3n = Inverses (Int32) (Nativeint) (struct
-    let x_to_y = Int32.to_nativeint
-    let y_to_x = Int32.of_nativeint
-  end)
+               let x_to_y = Int32.to_nativeint
+               let y_to_x = Int32.of_nativeint
+             end)
 
 module I3n' = Inverses (Int32) (Nativeint) (struct
-    let x_to_y = Nativeint.of_int32
-    let y_to_x = Nativeint.to_int32
-  end)
+                let x_to_y = Nativeint.of_int32
+                let y_to_x = Nativeint.to_int32
+              end)
 
 module In6 = Inverses (Nativeint) (Int64) (struct
-    let x_to_y = Int64.of_nativeint
-    let y_to_x = Int64.to_nativeint
-  end)
+               let x_to_y = Int64.of_nativeint
+               let y_to_x = Int64.to_nativeint
+             end)
 
 module In6' = Inverses (Nativeint) (Int64) (struct
-    let x_to_y = Nativeint.to_int64
-    let y_to_x = Nativeint.of_int64
-  end)
+                let x_to_y = Nativeint.to_int64
+                let y_to_x = Nativeint.of_int64
+              end)
 
 module Ii3 = Inverses' (Int) (Int32) (struct
-    let x_to_y = Int.to_int32
-    let y_to_x = Int.of_int32
-  end)
+               let x_to_y = Int.to_int32
+               let y_to_x = Int.of_int32
+             end)
 
 module Ii3' = Inverses' (Int) (Int32) (struct
-    let x_to_y = Int32.of_int
-    let y_to_x = Int32.to_int
-  end)
+                let x_to_y = Int32.of_int
+                let y_to_x = Int32.to_int
+              end)
 
 let test =
   TestList

@@ -14,8 +14,8 @@ let speq s1 s2 = round (Time.Span.to_ms s1) = round (Time.Span.to_ms s2)
 let convtest ?tol f1 f2 =
   let x = float (Random.int 1_000_000) /. 1000. in
   let tol = match tol with
-    | None -> Float.epsilon
-    | Some pct -> x *. pct
+  | None -> Float.epsilon
+  | Some pct -> x *. pct
   in
   Float.abs (f1 (f2 x) -. x) <= tol
 
@@ -37,32 +37,32 @@ let test_list = ref []
 let add name test = test_list := (name >:: test) :: !test_list
 
 let () = add "t"
-    (fun () ->
-      let s1 = "2005-05-25 12:46" in
-      let s2 = "2005-05-25 12:46:15" in
-      let s3 = "2005-05-25 12:46:15.232" in
-      let time1 = Time.of_string s1 in
-      let time2 = Time.of_string s2 in
-      let time3 = Time.of_string s3 in
-      let now1 = Time.now () in
-      let now2 = Time.now () in
-      "diff1" @? (Float.iround_exn ~dir:`Nearest (Time.Span.to_sec (Time.diff time2 time1)) = 15);
-      "diff1'" @? (Float.iround_exn ~dir:`Nearest (Time.Span.to_ms (Time.diff time2 time1)) = 15 * 1000);
-      "diff2" @? (Float.iround_exn ~dir:`Nearest (Time.Span.to_ms (Time.diff time3 time2)) = 232);
-      "conv1" @? (Time.to_string time1 = s1 ^ ":00.000000");
-      "conv2" @? (Time.to_string time2 = s2 ^ ".000000");
-      "conv3" @? (Time.to_string time3 = s3 ^ "000");
-      "ord" @? (now2 >= now1);
-      "sexp1" @? (Time.t_of_sexp (Time.sexp_of_t time1) = time1);
-      "sexp2" @? (Time.t_of_sexp (Time.sexp_of_t time2) = time2);
-      "sexp3" @? (Time.t_of_sexp (Time.sexp_of_t time3) = time3);
-      let date, ofday = Time.to_local_date_ofday time3 in
-      "date" @? (date = Date.of_string "2005-05-25");
-      "ofday" @? (Ofday.(=.) ofday (Time.Ofday.of_string "12:46:15.232"));
-      "ofday1" @? (Time.Ofday.of_string "09:13" = Time.Ofday.of_string "0913");
-      "add1" @? teq (Time.add time1 (sec 15.)) time2;
-      "add2" @? teq (Time.add time2 (Time.Span.of_ms 232.)) time3;
-    )
+           (fun () ->
+             let s1 = "2005-05-25 12:46" in
+             let s2 = "2005-05-25 12:46:15" in
+             let s3 = "2005-05-25 12:46:15.232" in
+             let time1 = Time.of_string s1 in
+             let time2 = Time.of_string s2 in
+             let time3 = Time.of_string s3 in
+             let now1 = Time.now () in
+             let now2 = Time.now () in
+             "diff1" @? (Float.iround_exn ~dir:`Nearest (Time.Span.to_sec (Time.diff time2 time1)) = 15);
+             "diff1'" @? (Float.iround_exn ~dir:`Nearest (Time.Span.to_ms (Time.diff time2 time1)) = 15 * 1000);
+             "diff2" @? (Float.iround_exn ~dir:`Nearest (Time.Span.to_ms (Time.diff time3 time2)) = 232);
+             "conv1" @? (Time.to_string time1 = s1 ^ ":00.000000");
+             "conv2" @? (Time.to_string time2 = s2 ^ ".000000");
+             "conv3" @? (Time.to_string time3 = s3 ^ "000");
+             "ord" @? (now2 >= now1);
+             "sexp1" @? (Time.t_of_sexp (Time.sexp_of_t time1) = time1);
+             "sexp2" @? (Time.t_of_sexp (Time.sexp_of_t time2) = time2);
+             "sexp3" @? (Time.t_of_sexp (Time.sexp_of_t time3) = time3);
+             let date, ofday = Time.to_local_date_ofday time3 in
+             "date" @? (date = Date.of_string "2005-05-25");
+             "ofday" @? (Ofday.(=.) ofday (Time.Ofday.of_string "12:46:15.232"));
+             "ofday1" @? (Time.Ofday.of_string "09:13" = Time.Ofday.of_string "0913");
+             "add1" @? teq (Time.add time1 (sec 15.)) time2;
+             "add2" @? teq (Time.add time2 (Time.Span.of_ms 232.)) time3;
+           )
 
 let () =
   add "Ofday_string_conversion"
@@ -224,7 +224,7 @@ let () =
     (fun () ->
       let test lbl d1 n d2 =
         lbl @? (Date.add_weekdays
-            (Date.of_string d1) n = Date.of_string d2)
+                  (Date.of_string d1) n = Date.of_string d2)
       in
       test "one" "2009-01-01" 1 "2009-01-02";
       test "one_weekend" "2009-01-02" 1 "2009-01-05";
@@ -242,10 +242,10 @@ let () =
       let test lbl d1 n d2 =
         let is_holiday d =
           List.mem (List.map [
-              "2009-01-01";
-              "2009-03-01";
-              "2009-03-02";
-            ] ~f:Date.of_string) d
+                      "2009-01-01";
+                      "2009-03-01";
+                      "2009-03-02";
+                    ] ~f:Date.of_string) d
         in
         let res = Date.add_business_days ~is_holiday (Date.of_string d1) n in
         lbl @? (res = Date.of_string d2)
@@ -275,9 +275,9 @@ let () =
         "min" @? convtest (fun x -> Time.Span.to_sec x /. 60.) Span.of_min;
         "hr" @? convtest (fun x -> Time.Span.to_sec x /. 60. /. 60.) Span.of_hr;
         "sexp" @?
-          convtest ~tol:0.0001
-            (fun x -> Time.Span.to_sec (Time.Span.t_of_sexp x))
-            (fun x -> Span.sexp_of_t (sec x));
+        convtest ~tol:0.0001
+          (fun x -> Time.Span.to_sec (Time.Span.t_of_sexp x))
+          (fun x -> Span.sexp_of_t (sec x));
       done
     );
   add "date"
@@ -376,10 +376,10 @@ let () =
         && same (Time.Span.to_sec (Time.Ofday.small_diff t2 t1)) (~-. d)
       in
       "foo" @? List.for_all ~f:check
-          ["10:00:01.298", "14:59:55.000", 6.298;
-           "08:59:54.000", "10:00:01.555", (-7.555);
-           "12:48:55.787", "17:48:55.000", 0.787;
-          ]);
+                 ["10:00:01.298", "14:59:55.000", 6.298;
+                  "08:59:54.000", "10:00:01.555", (-7.555);
+                  "12:48:55.787", "17:48:55.000", 0.787;
+                 ]);
   add "occurrence_right_side"
     (fun () ->
       let times = [
@@ -404,9 +404,9 @@ let () =
           Time.occurrence `Last_before_or_at now ~zone:(Zone.machine_zone ()) ~ofday:ut)
       in
       "right-side-after" @? List.for_all after_times
-          ~f:(fun t -> Time.to_float t >= now_f);
+                              ~f:(fun t -> Time.to_float t >= now_f);
       "right-side-before" @? List.for_all before_times
-          ~f:(fun t -> Time.to_float t <= now_f);
+                               ~f:(fun t -> Time.to_float t <= now_f);
     );
   add "occurrence_distance"
     (fun () ->
@@ -432,8 +432,8 @@ let () =
           Time.occurrence `First_after_or_at now ~zone:(Zone.machine_zone ()) ~ofday:od
         in
         ("right-distance - " ^ od_s ^ "," ^ prediction_s) @?
-          if Time.Span.to_ms (Time.diff prediction real) = 0. then true
-          else false
+        if Time.Span.to_ms (Time.diff prediction real) = 0. then true
+        else false
       );
       List.iter before_times ~f:(fun (od_s,prediction_s) ->
         let od         = Time.Ofday.of_string od_s in
@@ -442,8 +442,8 @@ let () =
           Time.occurrence `Last_before_or_at now ~zone:(Zone.machine_zone ()) ~ofday:od
         in
         ("right-distance - " ^ od_s ^ "," ^ prediction_s) @?
-          if Time.Span.to_ms (Time.diff prediction real) = 0. then true
-          else false
+        if Time.Span.to_ms (Time.diff prediction real) = 0. then true
+        else false
       )
     );
   add "diff"
@@ -461,9 +461,9 @@ let () =
 let roundtrip s =
   let t = Span.of_string s in
   ("string roundtrip " ^ s) @?
-    Span.(=) t (Time.Span.of_string (Time.Span.to_string t));
+  Span.(=) t (Time.Span.of_string (Time.Span.to_string t));
   ("span roundtrip " ^ s) @?
-    String.(=) s (Time.Span.to_string (Time.Span.of_string s))
+  String.(=) s (Time.Span.to_string (Time.Span.of_string s))
 ;;
 
 

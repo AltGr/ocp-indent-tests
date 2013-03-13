@@ -62,15 +62,15 @@ end
    When thinking about the implementation, it is helpful to remember the following
    desiderata:
 
-   * Safety -- only one thread can acquire the lock at a time.  This is accomplished
+ * Safety -- only one thread can acquire the lock at a time.  This is accomplished
    usng a test-and-set to set [id_of_thread_holding_lock].
 
-   * Liveness -- if the mutex is unlocked and some threads are waiting on it, then one of
+ * Liveness -- if the mutex is unlocked and some threads are waiting on it, then one of
    those threads will be woken up and given a chance to acquire it.  This is accomplished
    by only waiting when we can ensure that there will be a [signal] of the condition
    variable in the future.  See the more detailed comment in [lock].
 
-   * Performance -- do not spin trying to acquire the lock.  This is accomplished by
+ * Performance -- do not spin trying to acquire the lock.  This is accomplished by
    waiting on a condition variable if a lock is contended. *)
 type t =
   { mutable id_of_thread_holding_lock : int;
@@ -233,10 +233,10 @@ let unlock t =
       Result.ok_unit;
     end else
       Error (Error.create "attempt to unlock mutex held by another thread"
-          { current_thread_id; mutex = t } <:sexp_of< message >>)
+               { current_thread_id; mutex = t } <:sexp_of< message >>)
   end else
     Error (Error.create "attempt to unlock an unlocked mutex"
-        { current_thread_id; mutex = t } <:sexp_of< message >>)
+             { current_thread_id; mutex = t } <:sexp_of< message >>)
 ;;
 
 let unlock_exn t = ok_exn (unlock t)

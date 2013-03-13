@@ -20,7 +20,7 @@ module Dummy = Debug.Debugger(struct let name = "dummytaskhelper" end)
 
 (** Every operation has an origin: either the HTTP connection it came from or
     an internal subsystem (eg synchroniser thread / event handler
-   thread) *)
+    thread) *)
 type origin = 
   | Http of Http.Request.t * Unix.file_descr
   | Internal

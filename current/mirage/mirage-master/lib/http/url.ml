@@ -19,9 +19,9 @@ open Regexp (*makes module Re accessible*)
 (* From http://www.blooberry.com/indexdot/html/topics/urlencoding.htm#how *)
 let url_encoding = Re.from_string (
     "[\x00-\x1F\x7F" ^                                       (* ASCII control *)
-      "\x80-\xFF" ^                                                (* non-ASCII *)
-      "\x24\x26\x2B\x2C\x2F\x3A\x3B\x3D\x3F\x40" ^                  (* Reserved *)
-      "\x20\x22\x3C\x3E\x23\x25\x7B\x7D\x7C\x5C\x5E\x7E\x5B\x5D\x60]" (* Unsafe *)
+    "\x80-\xFF" ^                                                (* non-ASCII *)
+    "\x24\x26\x2B\x2C\x2F\x3A\x3B\x3D\x3F\x40" ^                  (* Reserved *)
+    "\x20\x22\x3C\x3E\x23\x25\x7B\x7D\x7C\x5C\x5E\x7E\x5B\x5D\x60]" (* Unsafe *)
   )
 
 let encoding str =

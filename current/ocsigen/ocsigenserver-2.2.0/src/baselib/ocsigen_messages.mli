@@ -47,10 +47,10 @@ val console : (unit -> string) -> unit
 val console2 : string -> unit
 
 (** Use that function for all impossible cases in exception handlers
-   ([try ... with ... | e -> unexpected_exception ...] or [Lwt.catch ...]).
-   A message will be written in [warnings.log].
-   Put something in the string to help locating the problem (usually the name
-   of the function where is has been called).
+    ([try ... with ... | e -> unexpected_exception ...] or [Lwt.catch ...]).
+    A message will be written in [warnings.log].
+    Put something in the string to help locating the problem (usually the name
+    of the function where is has been called).
 *)
 val unexpected_exception : exn -> string -> unit
 

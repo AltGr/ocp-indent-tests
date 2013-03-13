@@ -116,10 +116,10 @@ let fdpair_test ~n fdpair sender receiver bs =
   try
     let (read,write) = fdpair () in
     let sth = Thread.create
-        (fun () ->
-          try sender bs write
-          with e -> eprintf "ERROR: %s" (Exn.to_string e))
-        ()
+                (fun () ->
+                  try sender bs write
+                  with e -> eprintf "ERROR: %s" (Exn.to_string e))
+                ()
     in
     receiver ~n bs read;
     Thread.join sth;

@@ -46,7 +46,7 @@ let vm_compute_required_memory vm_record guest_memory_kib =
   (normal_bytes, shadow_bytes)
 
 (** Different users will wish to use a different VM accounting policy, depending
-   on how conservative or liberal they are. *)
+    on how conservative or liberal they are. *)
 type accounting_policy =
   | Static_max
   (** use static_max: conservative: useful for HA. *)
@@ -65,12 +65,12 @@ let choose_memory_required ~policy ~ballooning_enabled ~memory_dynamic_min ~memo
   | (_, Static_max) -> memory_static_max
 
 (** Calculates the amount of memory required in both 'normal' and 'shadow'
-   memory, to start a VM. If the given VM is a PV guest and if memory ballooning
-   is enabled, this function returns values derived from the VM's dynamic memory
-   target (since PV guests are able to start in a pre-ballooned state). If memory
-   ballooning is not enabled or if the VM is an HVM guest, this function returns
-   values derived from the VM's static memory maximum (since currently HVM guests
-   are not able to start in a pre-ballooned state). *)
+    memory, to start a VM. If the given VM is a PV guest and if memory ballooning
+    is enabled, this function returns values derived from the VM's dynamic memory
+    target (since PV guests are able to start in a pre-ballooned state). If memory
+    ballooning is not enabled or if the VM is an HVM guest, this function returns
+    values derived from the VM's static memory maximum (since currently HVM guests
+    are not able to start in a pre-ballooned state). *)
 let vm_compute_start_memory ~__context ?(policy=Dynamic_min) vm_record =
   if Xapi_fist.disable_memory_checks ()
   then (0L, 0L)
@@ -85,9 +85,9 @@ let vm_compute_start_memory ~__context ?(policy=Dynamic_min) vm_record =
       (Memory.kib_of_bytes_used memory_required)
 
 (** Calculates the amount of memory required in both 'normal' and 'shadow'
-   memory, for a running VM. If the VM is currently subject to a memory balloon
-   operation, this function returns the maximum amount of memory that the VM will
-   need between now, and the point in future time when the operation completes. *)
+    memory, for a running VM. If the VM is currently subject to a memory balloon
+    operation, this function returns the maximum amount of memory that the VM will
+    need between now, and the point in future time when the operation completes. *)
 let vm_compute_used_memory ~__context policy vm_ref =
   if Xapi_fist.disable_memory_checks () then 0L else
     let vm_main_record = Db.VM.get_record ~__context ~self:vm_ref in
@@ -123,17 +123,17 @@ let vm_compute_migrate_memory ~__context vm_ref =
     Int64.add current_memory_usage_bytes shadow_bytes
 
 (**
-   The Pool master's view of the total memory and memory consumers on a host.
-   This doesn't take into account dynamic changes i.e. those caused by
-   ballooning. Therefore if we ask a question like, 'is there <x> amount of
-   memory free to boot VM <y>' we will get one of 3 different answers:
-   1. yes:
+  The Pool master's view of the total memory and memory consumers on a host.
+  This doesn't take into account dynamic changes i.e. those caused by
+  ballooning. Therefore if we ask a question like, 'is there <x> amount of
+  memory free to boot VM <y>' we will get one of 3 different answers:
+  1. yes:
     the sum of the static_max's of all VMs with domains + the request
     is less than the total free.
-   2. maybe:
+  2. maybe:
     depending on the behaviour of the balloon drivers in the guest we
     may be able to free the memory.
-   3. no:
+  3. no:
     the sum of the dynamic_min's of all the VMs with domains + the
     request is more than the total free.
 *)
@@ -169,9 +169,9 @@ let get_host_memory_summary ~__context ~host =
   }
 
 (**
-   Given a host's memory summary and a policy flag (i.e. whether to only
-   consider static_max or to consider dynamic balloon data) it returns the
-   amount of free memory on the host.
+  Given a host's memory summary and a policy flag (i.e. whether to only
+  consider static_max or to consider dynamic balloon data) it returns the
+  amount of free memory on the host.
 *)
 let host_compute_free_memory_with_policy ~__context summary policy =
   let all_vms = summary.resident @ summary.scheduled in
@@ -183,18 +183,18 @@ let host_compute_free_memory_with_policy ~__context summary policy =
   max 0L host_mem_available
 
 (**
-   Compute, from our managed data, how much memory is available on a host; this
-   takes into account both VMs that are resident_on the host and also VMs that
-   are scheduled_to_be_resident_on the host.
+  Compute, from our managed data, how much memory is available on a host; this
+  takes into account both VMs that are resident_on the host and also VMs that
+  are scheduled_to_be_resident_on the host.
 
-   If ignore_scheduled_vm is set then we do not consider this VM as having any
-   resources allocated via the scheduled_to_be_resident_on mechanism. This is
-   used to ensure that, when we're executing this function with a view to
-   starting a VM, v, and further that v is scheduled_to_be_resident on the
-   specified host, that we do not count the resources required for v twice.
+  If ignore_scheduled_vm is set then we do not consider this VM as having any
+  resources allocated via the scheduled_to_be_resident_on mechanism. This is
+  used to ensure that, when we're executing this function with a view to
+  starting a VM, v, and further that v is scheduled_to_be_resident on the
+  specified host, that we do not count the resources required for v twice.
 
-   If 'dump_stats=true' then we write to the debug log where we think the
-   memory is being used.
+  If 'dump_stats=true' then we write to the debug log where we think the
+  memory is being used.
 *)
 let host_compute_free_memory_with_maximum_compression
     ?(dump_stats=false) ~__context ~host

@@ -83,7 +83,7 @@ let concat_map t ~f = concat (to_list (map ~f t))
 
 (** [normalize array index] returns a new index into the array such that if index is less
     than zero, the returned index will "wrap around" -- i.e. array.(normalize array (-1))
-   returns the last element of the array. *)
+    returns the last element of the array. *)
 let normalize t i =
   Ordered_collection_common.normalize ~length_fun:length t i
 
@@ -126,8 +126,8 @@ let of_list_rev l =
 
 (* Cannot use List.length here because the List module depends on Array. *)
 let rec list_length accu = function
-  | [] -> accu
-  | _h::t -> list_length (succ accu) t
+| [] -> accu
+| _h::t -> list_length (succ accu) t
 
 let of_list_map xs ~f =
   match xs with
@@ -135,8 +135,8 @@ let of_list_map xs ~f =
   | hd::tl ->
     let a = create ~len:(list_length 1 tl) (f hd) in
     let rec fill i = function
-      | [] -> a
-      | hd::tl -> unsafe_set a i (f hd); fill (i+1) tl in
+    | [] -> a
+    | hd::tl -> unsafe_set a i (f hd); fill (i+1) tl in
     fill 1 tl
 
 let of_list_rev_map xs ~f =
@@ -153,10 +153,10 @@ let filter_opt t =
   let first_some = ref None in
   for i = 0 to n - 1 do
     begin match t.(i) with
-      | None -> ()
-      | Some _ as s ->
-        if !res_size = 0 then first_some := s;
-        incr res_size;
+    | None -> ()
+    | Some _ as s ->
+      if !res_size = 0 then first_some := s;
+      incr res_size;
     end;
   done;
   match !first_some with
@@ -166,10 +166,10 @@ let filter_opt t =
     let pos = ref 0 in
     for i = 0 to n - 1 do
       begin match t.(i) with
-        | None -> ()
-        | Some x ->
-          result.(!pos) <- x;
-          incr pos;
+      | None -> ()
+      | Some x ->
+        result.(!pos) <- x;
+        incr pos;
       end;
     done;
     result

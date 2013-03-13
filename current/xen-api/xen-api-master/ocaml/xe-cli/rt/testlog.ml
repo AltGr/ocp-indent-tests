@@ -143,9 +143,9 @@ let testpicurl test vm = (testxapiloganchor test vm)^".jpg"
 let output_html version fname =
   let oc = open_out fname in
   Printf.fprintf oc "%s" ("<html><head><title>Test Results</title>"^
-      "<link rel=\"stylesheet\" type=\"text/css\" href=\"test.css\"/>"^
-      "<script type=\"text/javascript\" src=\"test_log.js\"></script></head><body>"^
-      "<div id=\"header\"><h1>Test Results</h1></div>\n");
+                          "<link rel=\"stylesheet\" type=\"text/css\" href=\"test.css\"/>"^
+                          "<script type=\"text/javascript\" src=\"test_log.js\"></script></head><body>"^
+                          "<div id=\"header\"><h1>Test Results</h1></div>\n");
 
   Printf.fprintf oc "<h3>Xapi version: %s</h3>" version;
 

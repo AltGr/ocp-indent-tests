@@ -384,9 +384,9 @@ let update_management_flags ~__context ~host =
       | [] -> []
       | net :: _ ->
         Db.PIF.get_refs_where ~__context ~expr:(And (
-              Eq (Field "host", Literal (Ref.string_of host)),
-              Eq (Field "network", Literal (Ref.string_of net))
-            ))
+            Eq (Field "host", Literal (Ref.string_of host)),
+            Eq (Field "network", Literal (Ref.string_of net))
+          ))
     in
     let management_pifs_in_db = Db.PIF.get_refs_where ~__context ~expr:(And (
           Eq (Field "host", Literal (Ref.string_of host)),

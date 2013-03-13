@@ -130,7 +130,7 @@ TEST_MODULE = struct
   TEST = length t' = 0
   TEST = is_empty t'
 
-    (* test that t was not modified by pops applied to copies *)
+  (* test that t was not modified by pops applied to copies *)
   TEST = length t = 3
   TEST = top_exn t = 2
 

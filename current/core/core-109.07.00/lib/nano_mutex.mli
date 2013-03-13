@@ -35,9 +35,9 @@
    ==============
    For any mutex, there are design choices as to how to behave in certain situations:
 
-   * recursive locking (when a thread locks a mutex it already has)
-   * unlocking an unlocked mutex
-   * unlocking a mutex held by another thread
+ * recursive locking (when a thread locks a mutex it already has)
+ * unlocking an unlocked mutex
+ * unlocking a mutex held by another thread
 
    Here is a table comparing how the various mutexes behave:
 

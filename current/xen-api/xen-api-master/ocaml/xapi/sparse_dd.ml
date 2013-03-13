@@ -376,8 +376,8 @@ module Nbd_copy = DD(File_reader)(Nbd_writer)
 
 (** [file_dd ?progress_cb ?size ?bat prezeroed src dst]
     If [size] is not given, will assume a plain file and will use st_size from Unix.stat
-   If [erase]: will erase other parts of the disk
-   If [write_zeroes]: will not scan for and skip zeroes
+    If [erase]: will erase other parts of the disk
+    If [write_zeroes]: will not scan for and skip zeroes
     If [dst] has the format:
        fd:X
     then data is written directly to file descriptor X in a chunked encoding. Otherwise

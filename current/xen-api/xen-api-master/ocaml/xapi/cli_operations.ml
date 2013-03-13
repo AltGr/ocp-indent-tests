@@ -138,10 +138,10 @@ let diagnostic_timing_stats printer rpc session_id params =
   let table_of_host host =
     [ "host-uuid", Client.Host.get_uuid rpc session_id host;
       "host-name-label", Client.Host.get_name_label rpc session_id host ] @
-      (try
-        Client.Host.get_diagnostic_timing_stats rpc session_id host
-      with e ->
-        [ "Error", Api_errors.to_string e ]) in
+    (try
+      Client.Host.get_diagnostic_timing_stats rpc session_id host
+    with e ->
+      [ "Error", Api_errors.to_string e ]) in
   let all = List.map table_of_host (Client.Host.get_all rpc session_id) in
 
   printer (Cli_printer.PTable all)
@@ -337,31 +337,31 @@ let string_of_task_status task = match task.API.task_status with
     "Cancelled"
 
 (*let task_list printer rpc session_id params =
-   let internal = try (List.assoc "internal" params)="true" with _ -> false in
-   let task_records = get_task_records rpc session_id in
-   let recs =
-   List.map
-   (fun (ref,task) ->
-   let common =
-   ["NAME",task.API.task_name_label;
-   "uuid",task.API.task_uuid;
-   "descr",task.API.task_name_description;
-   "status", (string_of_task_status task);
-   ] in
-   (* If in show-internal mode, list the locks too *)
-   let locks = if internal
-   then List.map (fun lock -> "lock", lock)
-   (Client.Task.get_locks rpc session_id ref)
-   else [] in
-   common @ locks)
-   task_records
-   in
-   printer (Cli_printer.PTable recs)
+  let internal = try (List.assoc "internal" params)="true" with _ -> false in
+  let task_records = get_task_records rpc session_id in
+  let recs =
+  List.map
+  (fun (ref,task) ->
+  let common =
+  ["NAME",task.API.task_name_label;
+  "uuid",task.API.task_uuid;
+  "descr",task.API.task_name_description;
+  "status", (string_of_task_status task);
+  ] in
+  (* If in show-internal mode, list the locks too *)
+  let locks = if internal
+  then List.map (fun lock -> "lock", lock)
+  (Client.Task.get_locks rpc session_id ref)
+  else [] in
+  common @ locks)
+  task_records
+  in
+  printer (Cli_printer.PTable recs)
 *)
 
 let user_password_change _ rpc session_id params =
   let old_pwd = List.assoc_default "old" params ""
-(* "new" must be in params here, since it is a required parameter. *)
+  (* "new" must be in params here, since it is a required parameter. *)
   and new_pwd = List.assoc "new" params in
   Client.Session.change_password rpc session_id old_pwd new_pwd
 
@@ -759,40 +759,40 @@ let make_param_funs getall getallrecs getbyuuid record class_name def_filters de
 
 let gen_cmds rpc session_id =
   (make_param_funs (Client.Pool.get_all) (Client.Pool.get_all_records_where) (Client.Pool.get_by_uuid) (pool_record) "pool" [] ["uuid";"name-label";"name-description";"master";"default-SR"] rpc session_id) @
-    (make_param_funs (Client.PIF.get_all) (Client.PIF.get_all_records_where) (Client.PIF.get_by_uuid) (pif_record) "pif" [] ["uuid";"device";"VLAN";"mac";"network-uuid"; "currently-attached"] rpc session_id) @
-    (make_param_funs (Client.Bond.get_all) (Client.Bond.get_all_records_where) (Client.Bond.get_by_uuid) (bond_record) "bond" [] ["uuid";"master";"slaves"] rpc session_id) @
-    (make_param_funs (Client.VLAN.get_all) (Client.VLAN.get_all_records_where) (Client.VLAN.get_by_uuid) (vlan_record) "vlan" [] ["uuid";"tagged-PIF";"untagged-PIF"; "tag"] rpc session_id) @
-    (make_param_funs (Client.Tunnel.get_all) (Client.Tunnel.get_all_records_where) (Client.Tunnel.get_by_uuid) (tunnel_record) "tunnel" [] ["uuid";"transport-PIF";"access-PIF";"status"] rpc session_id) @
-    (make_param_funs (Client.VIF.get_all) (Client.VIF.get_all_records_where) (Client.VIF.get_by_uuid) (vif_record) "vif" [] ["uuid";"device";"vm-uuid";"network-uuid"] rpc session_id)  @
-    (make_param_funs (Client.Network.get_all) (Client.Network.get_all_records_where) (Client.Network.get_by_uuid) (net_record) "network" [] ["uuid";"name-label";"name-description";"bridge"] rpc session_id) @
-    (make_param_funs (Client.Console.get_all) (Client.Console.get_all_records_where) (Client.Console.get_by_uuid) (console_record) "console" [] ["uuid";"vm-uuid";"vm-name-label";"protocol";"location"] rpc session_id) @
-    (make_param_funs (Client.VM.get_all) (Client.VM.get_all_records_where) (Client.VM.get_by_uuid) (vm_record) "vm" [("is-a-template","false")] ["name-label";"uuid";"power-state"] rpc session_id) @
-    (make_param_funs (Client.VM.get_all) (Client.VM.get_all_records_where) (Client.VM.get_by_uuid) (vm_record) "template" [("is-a-template","true");("is-a-snapshot","false")] ["name-label";"name-description";"uuid"] rpc session_id) @
-    (make_param_funs (Client.VM.get_all) (Client.VM.get_all_records_where) (Client.VM.get_by_uuid) (vm_record) "snapshot" [("is-a-snapshot","true")] ["name-label";"name-description";"uuid";"snapshot_of"; "snapshot_time"; "is-snapshot-from-vmpp"] rpc session_id) @
-    (make_param_funs (Client.Host.get_all) (Client.Host.get_all_records_where) (Client.Host.get_by_uuid) (host_record) "host" [] ["uuid";"name-label";"name-description"] rpc session_id) @
-    (make_param_funs (Client.Host_cpu.get_all) (Client.Host_cpu.get_all_records_where) (Client.Host_cpu.get_by_uuid) (host_cpu_record) "host-cpu" [] ["uuid";"number";"vendor";"speed";"utilisation"] rpc session_id) @
-    (make_param_funs (Client.Host_crashdump.get_all) (Client.Host_crashdump.get_all_records_where) (Client.Host_crashdump.get_by_uuid) (host_crashdump_record) "host-crashdump" [] ["uuid";"host";"timestamp";"size"] rpc session_id) @
-    (make_param_funs (Client.Pool_patch.get_all) (Client.Pool_patch.get_all_records_where) (Client.Pool_patch.get_by_uuid) (pool_patch_record) "patch" [] ["uuid"; "name-label"; "name-description"; "size"; "hosts"; "after-apply-guidance"] rpc session_id) @
-    (make_param_funs (Client.VDI.get_all) (Client.VDI.get_all_records_where) (Client.VDI.get_by_uuid) (vdi_record) "vdi" [] ["uuid";"name-label";"name-description";"virtual-size";"read-only";"sharable";"sr-uuid"] rpc session_id) @
-    (make_param_funs (Client.VBD.get_all) (Client.VBD.get_all_records_where) (Client.VBD.get_by_uuid) (vbd_record) "vbd" [] ["uuid";"vm-uuid";"vm-name-label";"vdi-uuid";"device"; "empty"] rpc session_id) @
-    (make_param_funs (Client.SR.get_all) (Client.SR.get_all_records_where) (Client.SR.get_by_uuid) (sr_record) "sr" [] ["uuid";"name-label";"name-description";"host";"type";"content-type"] rpc session_id) @
-    (make_param_funs (Client.SM.get_all) (Client.SM.get_all_records_where) (Client.SM.get_by_uuid) (sm_record) "sm" [] ["uuid";"type"; "name-label";"name-description";"vendor"; "copyright"; "configuration"] rpc session_id) @
-    (make_param_funs (Client.PBD.get_all) (Client.PBD.get_all_records_where) (Client.PBD.get_by_uuid) (pbd_record) "pbd" [] ["uuid";"host-uuid";"sr-uuid";"device-config";"currently-attached"] rpc session_id) @
-    (make_param_funs (Client.Task.get_all) (Client.Task.get_all_records_where) (Client.Task.get_by_uuid) (task_record) "task" [] ["uuid";"name-label";"name-description";"status";"progress"] rpc session_id) @
-    (make_param_funs (Client.Subject.get_all) (Client.Subject.get_all_records_where) (Client.Subject.get_by_uuid) (subject_record) "subject" [] ["uuid";"subject-identifier";"other-config";"roles"] rpc session_id) @
-    (make_param_funs (Client.Role.get_all) (fun ~rpc ~session_id ~expr -> Client.Role.get_all_records_where ~rpc ~session_id ~expr:Xapi_role.expr_no_permissions)
-       (Client.Role.get_by_uuid) (role_record) "role" [] ["uuid";"name";"description";"subroles"] rpc session_id) @
-    (make_param_funs (Client.VMPP.get_all) (Client.VMPP.get_all_records_where) (Client.VMPP.get_by_uuid) (vmpp_record) "vmpp" [] ["uuid";"name-label";"name-description";"is-policy-enabled";"backup-type";"backup-retention-value";"backup-frequency";"backup-schedule";"is-backup-running";"backup-last-run-time";"archive-target-type";"archive-target-config";"archive-frequency";"archive-schedule";"is-archive-running";"archive-last-run-time";"is-alarm-enabled";"alarm-config";"VMs"] rpc session_id) @
+  (make_param_funs (Client.PIF.get_all) (Client.PIF.get_all_records_where) (Client.PIF.get_by_uuid) (pif_record) "pif" [] ["uuid";"device";"VLAN";"mac";"network-uuid"; "currently-attached"] rpc session_id) @
+  (make_param_funs (Client.Bond.get_all) (Client.Bond.get_all_records_where) (Client.Bond.get_by_uuid) (bond_record) "bond" [] ["uuid";"master";"slaves"] rpc session_id) @
+  (make_param_funs (Client.VLAN.get_all) (Client.VLAN.get_all_records_where) (Client.VLAN.get_by_uuid) (vlan_record) "vlan" [] ["uuid";"tagged-PIF";"untagged-PIF"; "tag"] rpc session_id) @
+  (make_param_funs (Client.Tunnel.get_all) (Client.Tunnel.get_all_records_where) (Client.Tunnel.get_by_uuid) (tunnel_record) "tunnel" [] ["uuid";"transport-PIF";"access-PIF";"status"] rpc session_id) @
+  (make_param_funs (Client.VIF.get_all) (Client.VIF.get_all_records_where) (Client.VIF.get_by_uuid) (vif_record) "vif" [] ["uuid";"device";"vm-uuid";"network-uuid"] rpc session_id)  @
+  (make_param_funs (Client.Network.get_all) (Client.Network.get_all_records_where) (Client.Network.get_by_uuid) (net_record) "network" [] ["uuid";"name-label";"name-description";"bridge"] rpc session_id) @
+  (make_param_funs (Client.Console.get_all) (Client.Console.get_all_records_where) (Client.Console.get_by_uuid) (console_record) "console" [] ["uuid";"vm-uuid";"vm-name-label";"protocol";"location"] rpc session_id) @
+  (make_param_funs (Client.VM.get_all) (Client.VM.get_all_records_where) (Client.VM.get_by_uuid) (vm_record) "vm" [("is-a-template","false")] ["name-label";"uuid";"power-state"] rpc session_id) @
+  (make_param_funs (Client.VM.get_all) (Client.VM.get_all_records_where) (Client.VM.get_by_uuid) (vm_record) "template" [("is-a-template","true");("is-a-snapshot","false")] ["name-label";"name-description";"uuid"] rpc session_id) @
+  (make_param_funs (Client.VM.get_all) (Client.VM.get_all_records_where) (Client.VM.get_by_uuid) (vm_record) "snapshot" [("is-a-snapshot","true")] ["name-label";"name-description";"uuid";"snapshot_of"; "snapshot_time"; "is-snapshot-from-vmpp"] rpc session_id) @
+  (make_param_funs (Client.Host.get_all) (Client.Host.get_all_records_where) (Client.Host.get_by_uuid) (host_record) "host" [] ["uuid";"name-label";"name-description"] rpc session_id) @
+  (make_param_funs (Client.Host_cpu.get_all) (Client.Host_cpu.get_all_records_where) (Client.Host_cpu.get_by_uuid) (host_cpu_record) "host-cpu" [] ["uuid";"number";"vendor";"speed";"utilisation"] rpc session_id) @
+  (make_param_funs (Client.Host_crashdump.get_all) (Client.Host_crashdump.get_all_records_where) (Client.Host_crashdump.get_by_uuid) (host_crashdump_record) "host-crashdump" [] ["uuid";"host";"timestamp";"size"] rpc session_id) @
+  (make_param_funs (Client.Pool_patch.get_all) (Client.Pool_patch.get_all_records_where) (Client.Pool_patch.get_by_uuid) (pool_patch_record) "patch" [] ["uuid"; "name-label"; "name-description"; "size"; "hosts"; "after-apply-guidance"] rpc session_id) @
+  (make_param_funs (Client.VDI.get_all) (Client.VDI.get_all_records_where) (Client.VDI.get_by_uuid) (vdi_record) "vdi" [] ["uuid";"name-label";"name-description";"virtual-size";"read-only";"sharable";"sr-uuid"] rpc session_id) @
+  (make_param_funs (Client.VBD.get_all) (Client.VBD.get_all_records_where) (Client.VBD.get_by_uuid) (vbd_record) "vbd" [] ["uuid";"vm-uuid";"vm-name-label";"vdi-uuid";"device"; "empty"] rpc session_id) @
+  (make_param_funs (Client.SR.get_all) (Client.SR.get_all_records_where) (Client.SR.get_by_uuid) (sr_record) "sr" [] ["uuid";"name-label";"name-description";"host";"type";"content-type"] rpc session_id) @
+  (make_param_funs (Client.SM.get_all) (Client.SM.get_all_records_where) (Client.SM.get_by_uuid) (sm_record) "sm" [] ["uuid";"type"; "name-label";"name-description";"vendor"; "copyright"; "configuration"] rpc session_id) @
+  (make_param_funs (Client.PBD.get_all) (Client.PBD.get_all_records_where) (Client.PBD.get_by_uuid) (pbd_record) "pbd" [] ["uuid";"host-uuid";"sr-uuid";"device-config";"currently-attached"] rpc session_id) @
+  (make_param_funs (Client.Task.get_all) (Client.Task.get_all_records_where) (Client.Task.get_by_uuid) (task_record) "task" [] ["uuid";"name-label";"name-description";"status";"progress"] rpc session_id) @
+  (make_param_funs (Client.Subject.get_all) (Client.Subject.get_all_records_where) (Client.Subject.get_by_uuid) (subject_record) "subject" [] ["uuid";"subject-identifier";"other-config";"roles"] rpc session_id) @
+  (make_param_funs (Client.Role.get_all) (fun ~rpc ~session_id ~expr -> Client.Role.get_all_records_where ~rpc ~session_id ~expr:Xapi_role.expr_no_permissions)
+     (Client.Role.get_by_uuid) (role_record) "role" [] ["uuid";"name";"description";"subroles"] rpc session_id) @
+  (make_param_funs (Client.VMPP.get_all) (Client.VMPP.get_all_records_where) (Client.VMPP.get_by_uuid) (vmpp_record) "vmpp" [] ["uuid";"name-label";"name-description";"is-policy-enabled";"backup-type";"backup-retention-value";"backup-frequency";"backup-schedule";"is-backup-running";"backup-last-run-time";"archive-target-type";"archive-target-config";"archive-frequency";"archive-schedule";"is-archive-running";"archive-last-run-time";"is-alarm-enabled";"alarm-config";"VMs"] rpc session_id) @
     (*
       (make_param_funs (Client.Blob.get_all) (Client.Blob.get_all_records_where) (Client.Blob.get_by_uuid) (blob_record) "blob" [] ["uuid";"mime-type"] rpc session_id) @
      *)
-    (make_param_funs (Client.Message.get_all) (Client.Message.get_all_records_where) (Client.Message.get_by_uuid) (message_record) "message" [] [] rpc session_id) @
-    (make_param_funs (Client.Secret.get_all) (Client.Secret.get_all_records_where) (Client.Secret.get_by_uuid) (secret_record) "secret" [] [] rpc session_id) @
-    (make_param_funs (Client.VM_appliance.get_all) (Client.VM_appliance.get_all_records_where) (Client.VM_appliance.get_by_uuid) (vm_appliance_record) "appliance" [] [] rpc session_id) @
-    (make_param_funs (Client.PGPU.get_all) (Client.PGPU.get_all_records_where) (Client.PGPU.get_by_uuid) (pgpu_record) "pgpu" [] ["uuid";"vendor-name";"device-name";"gpu-group-uuid"] rpc session_id) @
-    (make_param_funs (Client.GPU_group.get_all) (Client.GPU_group.get_all_records_where) (Client.GPU_group.get_by_uuid) (gpu_group_record) "gpu-group" [] ["uuid";"name-label";"name-description"] rpc session_id) @
-    (make_param_funs (Client.VGPU.get_all) (Client.VGPU.get_all_records_where) (Client.VGPU.get_by_uuid) (vgpu_record) "vgpu" [] ["uuid";"vm-uuid";"device";"gpu-group-uuid"] rpc session_id) @
-    (make_param_funs (Client.DR_task.get_all) (Client.DR_task.get_all_records_where) (Client.DR_task.get_by_uuid) (dr_task_record) "drtask" [] [] rpc session_id)
+  (make_param_funs (Client.Message.get_all) (Client.Message.get_all_records_where) (Client.Message.get_by_uuid) (message_record) "message" [] [] rpc session_id) @
+  (make_param_funs (Client.Secret.get_all) (Client.Secret.get_all_records_where) (Client.Secret.get_by_uuid) (secret_record) "secret" [] [] rpc session_id) @
+  (make_param_funs (Client.VM_appliance.get_all) (Client.VM_appliance.get_all_records_where) (Client.VM_appliance.get_by_uuid) (vm_appliance_record) "appliance" [] [] rpc session_id) @
+  (make_param_funs (Client.PGPU.get_all) (Client.PGPU.get_all_records_where) (Client.PGPU.get_by_uuid) (pgpu_record) "pgpu" [] ["uuid";"vendor-name";"device-name";"gpu-group-uuid"] rpc session_id) @
+  (make_param_funs (Client.GPU_group.get_all) (Client.GPU_group.get_all_records_where) (Client.GPU_group.get_by_uuid) (gpu_group_record) "gpu-group" [] ["uuid";"name-label";"name-description"] rpc session_id) @
+  (make_param_funs (Client.VGPU.get_all) (Client.VGPU.get_all_records_where) (Client.VGPU.get_by_uuid) (vgpu_record) "vgpu" [] ["uuid";"vm-uuid";"device";"gpu-group-uuid"] rpc session_id) @
+  (make_param_funs (Client.DR_task.get_all) (Client.DR_task.get_all_records_where) (Client.DR_task.get_by_uuid) (dr_task_record) "drtask" [] [] rpc session_id)
     (*
       @ (make_param_funs (Client.Alert.get_all) (Client.Alert.get_all_records_where) (Client.Alert.get_by_uuid) (alert_record) "alert" [] ["uuid";"message";"level";"timestamp";"system";"task"] rpc session_id)
      *)
@@ -1240,7 +1240,7 @@ let print_assert_exception e =
   | Api_errors.Server_error(code, [key; v] ) when code=Api_errors.invalid_value ->
     Printf.sprintf "Field has invalid value: %s = %s" key v
 
-      (* Used by VM.assert_agile: *)
+  (* Used by VM.assert_agile: *)
   | Api_errors.Server_error(code, [ sr ]) when code=Api_errors.ha_constraint_violation_sr_not_shared ->
     Printf.sprintf "VM requires access to non-shared SR: %s. SR must both be marked as shared and a properly configured PBD must be plugged-in on every host" (Cli_util.ref_convert sr)
   | Api_errors.Server_error(code, [ net]) when code = Api_errors.ha_constraint_violation_network_not_shared ->
@@ -1619,7 +1619,7 @@ let event_wait_gen rpc session_id classname record_matches =
       | "role" -> List.map (fun x -> (role_record rpc session_id x).fields) (Client.Role.get_all rpc session_id)
       | "vmpp" -> List.map (fun x -> (vmpp_record rpc session_id x).fields) (Client.VMPP.get_all rpc session_id)
       | "secret" -> List.map (fun x -> (secret_record rpc session_id x).fields) (Client.Secret.get_all rpc session_id)
-                      (*        | "alert" -> List.map (fun x -> (alert_record rpc session_id x).fields) (Client.Alert.get_all rpc session_id) *)
+      (*        | "alert" -> List.map (fun x -> (alert_record rpc session_id x).fields) (Client.Alert.get_all rpc session_id) *)
       | _ -> failwith ("Cli listening for class '"^classname^"' not currently implemented")
     in
 
@@ -1786,7 +1786,7 @@ let select_vm_geneva rpc session_id params =
     end
   else
     (failwith ("Must select a VM using either vm-name or vm-id: params="
-       ^(String.concat "," (List.map (fun (a,b) -> a^"="^b) params))))
+               ^(String.concat "," (List.map (fun (a,b) -> a^"="^b) params))))
 
 exception Multiple_failure of (string * string) list
 
@@ -3086,7 +3086,7 @@ let vm_import fd printer rpc session_id params =
               let request = Xapi_http.http_request
                   ~cookie:(["session_id", Ref.string_of session_id;
                             "task_id", Ref.string_of importtask] @
-                      (if sr <> Ref.null then [ "sr_id", Ref.string_of sr ] else []))
+                           (if sr <> Ref.null then [ "sr_id", Ref.string_of sr ] else []))
                   Http.Put Constants.import_uri in
               (* Stream the disk data from the client *)
               let writer (response, sock) =

@@ -20,10 +20,10 @@
 *)
 
 (** Helpers and other not better classified functions which should not be
-   exposed in the final API *)
+    exposed in the final API *)
 
 (** @return the current date compliant to RFC 1123, which updates RFC 822
-   zone info are retrieved from UTC *)
+    zone info are retrieved from UTC *)
 val date_822: unit -> string
 
 (** Convert a number of seconds to a date compliant with RFC 822 *)
@@ -39,7 +39,7 @@ val strip_heading_slash: string -> string
 val reason_phrase_of_code: int -> string
 
 (** like List.assoc but return all bindings of a given key instead of the
-   leftmost one only *)
+    leftmost one only *)
 val list_assoc_all: 'a -> ('a * 'b) list -> 'b list
 
 val warn: string -> unit (** print a warning msg to stderr. Adds trailing \n *)

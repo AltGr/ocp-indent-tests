@@ -139,12 +139,12 @@ let rec cmdtable_data : (string*cmd_spec) list =
     };
 
     (*    "host-introduce",
-        {
+          {
           reqd=["name"; "address"; "remote-port"; "remote-username"; "remote-password"]; 
           optn=["description"];
           help="Introduce a remote host";
           implementation=No_fd Cli_operations.host_introduce
-        };*)
+          };*)
 
     "pool-enable-binary-storage",
     {
@@ -878,7 +878,7 @@ let rec cmdtable_data : (string*cmd_spec) list =
       reqd=["target"];
       optn=[];
       help="Set the memory target for a running VM. The given value must be within the "^
-          "range defined by the VM's memory_dynamic_min and memory_dynamic_max values.";
+           "range defined by the VM's memory_dynamic_min and memory_dynamic_max values.";
       implementation=No_fd Cli_operations.vm_memory_target_set;
       flags=[Deprecated ["vm-memory-dynamic-range-set"]; Vm_selectors; Hidden];
     };
@@ -2676,8 +2676,8 @@ let rio_help printer minimal cmd =
       let host_selectors = List.mem Host_selectors cmd_spec.flags in
       let optional =
         cmd_spec.optn @
-          (if vm_selectors then vmselectors else []) @
-          (if host_selectors then hostselectors else [])
+        (if vm_selectors then vmselectors else []) @
+        (if host_selectors then hostselectors else [])
       in
       let desc = match (vm_selectors,host_selectors) with
         | (false,false) -> cmd_spec.help

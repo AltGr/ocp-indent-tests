@@ -22,7 +22,7 @@ module D = Debug.Debugger(struct let name="xapi" end)
 open D
 
 (** Given an operation, [allowed_power_states] returns all the possible power state for
-   wich this operation can be performed. *)
+    wich this operation can be performed. *)
 let allowed_power_states ~__context ~vmr ~(op:API.vm_operations) =
   let all_power_states =
     [`Halted; `Paused; `Suspended; `Running] in
@@ -90,7 +90,7 @@ let is_allowed_sequentially ~__context ~vmr ~power_state ~op =
   List.mem power_state (allowed_power_states ~__context ~vmr ~op)
 
 (**  check if [op] can be done while [current_ops] are already in progress.
-   Remark: we do not test whether the power-state is valid. *)
+     Remark: we do not test whether the power-state is valid. *)
 let is_allowed_concurrently ~(op:API.vm_operations) ~current_ops =
   (* declare below the non-conflicting concurrent sets. *)
   let long_copies = [`clone; `copy; `export ]
@@ -198,14 +198,14 @@ let check_pci ~op ~ref_str =
 let check_appliance ~vmr ~op ~ref_str =
   match op with
   | `make_into_template -> Some (Api_errors.vm_is_part_of_an_appliance,
-                               [ref_str; Ref.string_of vmr.Db_actions.vM_appliance])
+                             [ref_str; Ref.string_of vmr.Db_actions.vM_appliance])
   | _ -> None
 
 (* VM cannot be converted into a template while it is assigned to a protection policy. *)
 let check_protection_policy ~vmr ~op ~ref_str =
   match op with
   | `make_into_template -> Some (Api_errors.vm_assigned_to_protection_policy,
-                               [ref_str; Ref.string_of vmr.Db_actions.vM_protection_policy])
+                             [ref_str; Ref.string_of vmr.Db_actions.vM_protection_policy])
   | _ -> None
 
 (** Take an internal VM record and a proposed operation, return true if the operation

@@ -28,8 +28,8 @@ let ( @-- ) a b = a @ List.map (( ^ ) "    ") b
 (** Generate a block with an indented, space-separated middle. *)
 let block head middle tail =
   (head @-
-     List.flatten (List.between [""] middle)) @
-    tail
+   List.flatten (List.between [""] middle)) @
+  tail
 
 let gen_type ty accu = match ty with
   | String | Int | Float | Bool -> accu
@@ -44,7 +44,7 @@ let ty_to_xmlrpc api ty =
     | Enum(_, cs) ->
       let aux (c, _) = constructor_of c^" -> \""^c^"\"" in
       "    fun v -> To.string(match v with\n  "^indent^
-        String.concat ("\n"^indent^"| ") (List.map aux cs)^")"
+      String.concat ("\n"^indent^"| ") (List.map aux cs)^")"
     | Float -> "To.double"
     | Int -> "fun n -> To.string(Int64.to_string n)"
     | Map(key, value) ->
@@ -69,7 +69,7 @@ let ty_to_xmlrpc api ty =
       let kvs = List.map 
           (fun fld -> 
             alias_of_ty fld.ty ^ " x." ^ 
-              (OU.ocaml_of_record_field (x::fld.full_name)),
+            (OU.ocaml_of_record_field (x::fld.full_name)),
             String.concat "_" fld.full_name) fields in
       let kvs = List.map (fun (record, v) -> "\"" ^ v ^ "\", " ^ record) kvs in
       "fun x -> To.structure [ " ^ (String.concat "; " kvs) ^ " ]"
@@ -96,7 +96,7 @@ let gen_to_xmlrpc api tys = block
       ];
       ["let structure = To.structure"];
       ["let rec unused' = ()"]] @
-       (List.map (ty_to_xmlrpc api) tys))
+     (List.map (ty_to_xmlrpc api) tys))
     ["end"]
 
 (** Generate code to marshal from the given datamodel type to XML-RPC. *)
@@ -110,8 +110,8 @@ let ty_of_xmlrpc api ty =
       let aux (c, _) = "\""^(String.lowercase c)^"\" -> "^constructor_of c in
       wrap "xml"
         ("\n    match String.lowercase (From.string xml) with\n      "^
-           String.concat "\n    | " (List.map aux cs)^
-           "\n    | _ -> log_backtrace(); raise (RunTimeTypeError(\""^name^"\", xml))")
+         String.concat "\n    | " (List.map aux cs)^
+         "\n    | _ -> log_backtrace(); raise (RunTimeTypeError(\""^name^"\", xml))")
     | Float -> wrap "xml" "From.double xml"
     | Int -> wrap "xml" "Int64.of_string(From.string xml)"
     | Map(key, value) ->
@@ -121,8 +121,8 @@ let ty_of_xmlrpc api ty =
           let aux (c, _) = "\""^(String.lowercase c)^"\" -> "^constructor_of c in
           wrap "txt"
             ("\n    match String.lowercase txt with\n      "^
-               String.concat "\n    | " (List.map aux cs)^
-               "\n    | _ -> raise (RunTimeTypeError(\""^name^"\", Xml.parse_string txt))")
+             String.concat "\n    | " (List.map aux cs)^
+             "\n    | _ -> raise (RunTimeTypeError(\""^name^"\", Xml.parse_string txt))")
         | key -> "FromString." ^ (alias_of_ty key)
       end in
       let vf = alias_of_ty_param value in
@@ -139,25 +139,25 @@ let ty_of_xmlrpc api ty =
       let fields = 
         List.map (fun fld ->
           (OU.ocaml_of_record_field (x::fld.full_name)) ^ " = " ^
-            (alias_of_ty_param fld.ty) ^
-            (
-              (* generate code to insert default value if none in xml structure *)
-              let field_name = String.concat "_" fld.full_name in
-              let default_value =
-                match fld.DT.ty with
-                  DT.Set (DT.Ref _) -> Some (DT.VSet [])
-                | _ -> fld.DT.default_value in
-              match default_value with
-                None -> "(my_assoc \"" ^ field_name ^ "\" all)"
-              | Some default ->
-                Printf.sprintf "(if (List.mem_assoc \"%s\" all) then (my_assoc \"%s\" all) else %s)"
-                  field_name field_name
-                  ("Xml.parse_string (\""^(Xml.to_string (Datamodel_values.to_xml default))^"\")")
-            ))
+          (alias_of_ty_param fld.ty) ^
+          (
+            (* generate code to insert default value if none in xml structure *)
+            let field_name = String.concat "_" fld.full_name in
+            let default_value =
+              match fld.DT.ty with
+                DT.Set (DT.Ref _) -> Some (DT.VSet [])
+              | _ -> fld.DT.default_value in
+            match default_value with
+              None -> "(my_assoc \"" ^ field_name ^ "\" all)"
+            | Some default ->
+              Printf.sprintf "(if (List.mem_assoc \"%s\" all) then (my_assoc \"%s\" all) else %s)"
+                field_name field_name
+                ("Xml.parse_string (\""^(Xml.to_string (Datamodel_values.to_xml default))^"\")")
+          ))
           fields in
       let fields = if fields = [] then [ "__unused=()" ] else fields in
       wrap "xml" ("let all = From.structure xml in { " ^
-          (String.concat ";\n " fields) ^ " }") in
+                  (String.concat ";\n " fields) ^ " }") in
   let f = "fun param -> ("^f^")" in
   ["and "^alias_of_ty ty^" : string -> xml -> "^alias_of_ty ty^" =";
    "  "^f]
@@ -182,5 +182,5 @@ let gen_of_xmlrpc api tys = block
       ];
       ["let structure = From.structure"];
       ["let rec unused' = ()"]] @ 
-       (List.map (ty_of_xmlrpc api) tys))
+     (List.map (ty_of_xmlrpc api) tys))
     ["end"]

@@ -192,9 +192,9 @@ module type Creators = sig
      the particular ['comparator] of the creation function.  The comparator can come
      in one of three ways, depending on which set module is used
 
-       [Set.map] -- comparator comes as an argument
-       [Set.Poly.map] -- comparator is polymorphic comparison
-       [Foo.Set.map] -- comparator is [Foo.comparator] *)
+     [Set.map] -- comparator comes as an argument
+     [Set.Poly.map] -- comparator is polymorphic comparison
+     [Foo.Set.map] -- comparator is [Foo.comparator] *)
   val map
     : ('b, 'comparator, ('a, _) set -> f:('a -> 'b elt       ) -> ('b, 'comparator) t
     ) options

@@ -91,14 +91,14 @@ let check_string_args ~loc str ~pos ~len =
     invalid_arg (Printf.sprintf "Unix_ext.%s: length(str) < pos + len" loc)
 
 let get_opt_pos ~loc = function
-  | Some pos ->
-    if pos < 0 then invalid_arg (Printf.sprintf "Unix_ext.%s: pos < 0" loc);
-    pos
-  | None -> 0
+| Some pos ->
+  if pos < 0 then invalid_arg (Printf.sprintf "Unix_ext.%s: pos < 0" loc);
+  pos
+| None -> 0
 
 let get_opt_len str ~pos = function
-  | Some len -> len
-  | None -> String.length str - pos
+| Some len -> len
+| None -> String.length str - pos
 
 let read_assume_fd_is_nonblocking fd ?pos ?len buf =
   let loc = "read_assume_fd_is_nonblocking" in
@@ -127,8 +127,8 @@ external mknod :
   string -> Unix.file_kind -> int -> int -> int -> unit = "unix_mknod_stub"
 
 let mknod
-    ?(file_kind = Unix.S_REG) ?(perm = 0o600) ?(major = 0) ?(minor = 0)
-    pathname =
+      ?(file_kind = Unix.S_REG) ?(perm = 0o600) ?(major = 0) ?(minor = 0)
+      pathname =
   mknod pathname file_kind perm major minor
 
 (* Resource limits *)
@@ -157,7 +157,7 @@ module RLimit = struct
   let virtual_memory       = Virtual_memory
   let nice                 =
 IFDEF RLIMIT_NICE THEN
-  Ok Nice
+        Ok Nice
 ELSE
 unimplemented "RLIMIT_NICE is not supported on this system"
 ENDIF
@@ -340,12 +340,12 @@ module IOVec = struct
 end
 
 let get_iovec_count loc iovecs = function
-  | None -> Array.length iovecs
-  | Some count ->
-    if count < 0 then invalid_arg (loc ^ ": count < 0");
-    let n_iovecs = Array.length iovecs in
-    if count > n_iovecs then invalid_arg (loc ^ ": count > n_iovecs");
-    count
+| None -> Array.length iovecs
+| Some count ->
+  if count < 0 then invalid_arg (loc ^ ": count < 0");
+  let n_iovecs = Array.length iovecs in
+  if count > n_iovecs then invalid_arg (loc ^ ": count > n_iovecs");
+  count
 ;;
 
 external unsafe_writev_assume_fd_is_nonblocking :
@@ -402,12 +402,12 @@ module Fnmatch_flags = struct
   with sexp
 
   let flag_to_internal = function
-    | `No_escape -> 0
-    | `Pathname -> 1
-    | `Period -> 2
-    | `File_name -> 3
-    | `Leading_dir -> 4
-    | `Casefold -> 5
+  | `No_escape -> 0
+  | `Pathname -> 1
+  | `Period -> 2
+  | `File_name -> 3
+  | `Leading_dir -> 4
+  | `Casefold -> 5
   ;;
 
   type t = int32 with sexp
@@ -415,8 +415,8 @@ module Fnmatch_flags = struct
   external internal_make : int array -> t = "unix_fnmatch_make_flags"
 
   let make = function
-    | None | Some [] -> Int32.zero
-    | Some flags -> internal_make (Array.map ~f:flag_to_internal (Array.of_list flags))
+  | None | Some [] -> Int32.zero
+  | Some flags -> internal_make (Array.map ~f:flag_to_internal (Array.of_list flags))
   ;;
 end
 
@@ -430,9 +430,9 @@ module Wordexp_flags = struct
   type _flag = [ `No_cmd | `Show_err | `Undef ] with sexp
 
   let flag_to_internal = function
-    | `No_cmd -> 0
-    | `Show_err -> 1
-    | `Undef -> 2
+  | `No_cmd -> 0
+  | `Show_err -> 1
+  | `Undef -> 2
   ;;
 
   type t = int32 with sexp
@@ -440,8 +440,8 @@ module Wordexp_flags = struct
   external internal_make : int array -> t = "unix_wordexp_make_flags"
 
   let make = function
-    | None | Some [] -> Int32.zero
-    | Some flags -> internal_make (Array.map ~f:flag_to_internal (Array.of_list flags))
+  | None | Some [] -> Int32.zero
+  | Some flags -> internal_make (Array.map ~f:flag_to_internal (Array.of_list flags))
   ;;
 end
 
@@ -485,9 +485,9 @@ module Scheduler = struct
     module Ordered = struct
       type t = Fifo | Round_robin | Other with sexp
       let create = function
-        | `Fifo -> Fifo
-        | `Round_robin -> Round_robin
-        | `Other -> Other
+      | `Fifo -> Fifo
+      | `Round_robin -> Round_robin
+      | `Other -> Other
       ;;
     end
   end
@@ -609,13 +609,13 @@ module Exit = struct
   type t = (unit, error) Result.t with sexp
 
   let to_string_hum = function
-    | Ok () -> "exited normally"
-    | Error (`Exit_non_zero i) -> sprintf "exited with code %d" i
+  | Ok () -> "exited normally"
+  | Error (`Exit_non_zero i) -> sprintf "exited with code %d" i
   ;;
 
   let code = function
-    | Ok () -> 0
-    | Error (`Exit_non_zero i) -> i
+  | Ok () -> 0
+  | Error (`Exit_non_zero i) -> i
   ;;
 
   exception Exit_code_must_be_nonnegative of int with sexp
@@ -636,18 +636,18 @@ module Exit_or_signal = struct
   type t = (unit, error) Result.t with sexp
 
   let to_string_hum = function
-    | Ok () | Error #Exit.error as e -> Exit.to_string_hum e
-    | Error (`Signal s) ->
-      sprintf "died after receiving %s (signal number %d)"
-        (Signal.to_string s) (Signal.to_system_int s)
+  | Ok () | Error #Exit.error as e -> Exit.to_string_hum e
+  | Error (`Signal s) ->
+    sprintf "died after receiving %s (signal number %d)"
+      (Signal.to_string s) (Signal.to_system_int s)
   ;;
 
   exception Of_unix_got_invalid_status of process_status with sexp
 
   let of_unix = function
-    | WEXITED i -> if i = 0 then Ok () else Error (`Exit_non_zero i)
-    | WSIGNALED i -> Error (`Signal (Signal.of_caml_int i))
-    | WSTOPPED _ as status -> raise (Of_unix_got_invalid_status status)
+  | WEXITED i -> if i = 0 then Ok () else Error (`Exit_non_zero i)
+  | WSIGNALED i -> Error (`Signal (Signal.of_caml_int i))
+  | WSTOPPED _ as status -> raise (Of_unix_got_invalid_status status)
   ;;
 end
 
@@ -657,16 +657,16 @@ module Exit_or_signal_or_stop = struct
   type t = (unit, error) Result.t with sexp
 
   let to_string_hum = function
-    | Ok () | Error #Exit_or_signal.error as e -> Exit_or_signal.to_string_hum e
-    | Error (`Stop s) ->
-      sprintf "stopped by %s (signal number %d)"
-        (Signal.to_string s) (Signal.to_system_int s)
+  | Ok () | Error #Exit_or_signal.error as e -> Exit_or_signal.to_string_hum e
+  | Error (`Stop s) ->
+    sprintf "stopped by %s (signal number %d)"
+      (Signal.to_string s) (Signal.to_system_int s)
   ;;
 
   let of_unix = function
-    | WEXITED i -> if i = 0 then Ok () else Error (`Exit_non_zero i)
-    | WSIGNALED i -> Error (`Signal (Signal.of_caml_int i))
-    | WSTOPPED i -> Error (`Stop (Signal.of_caml_int i))
+  | WEXITED i -> if i = 0 then Ok () else Error (`Exit_non_zero i)
+  | WSIGNALED i -> Error (`Signal (Signal.of_caml_int i))
+  | WSTOPPED i -> Error (`Stop (Signal.of_caml_int i))
   ;;
 end
 
@@ -742,10 +742,10 @@ type _t = mode
 type waitpid_result = (Pid.t * Exit_or_signal_or_stop.t) option with sexp_of
 
 let wait_gen
-    ~mode
-    (type a) (f : waitpid_result -> a option)
-    ~restart
-    wait_on : a =
+      ~mode
+      (type a) (f : waitpid_result -> a option)
+      ~restart
+      wait_on : a =
   let pid =
     match wait_on with
     | `Any -> -1
@@ -780,16 +780,16 @@ let wait_gen
 
 let wait ?(restart=true) pid =
   let f = function
-    | Some ((_, (Ok _ | Error #Exit_or_signal.error)) as x) -> Some x
-    | _ -> None
+  | Some ((_, (Ok _ | Error #Exit_or_signal.error)) as x) -> Some x
+  | _ -> None
   in
   wait_gen ~restart ~mode:[] f pid
 ;;
 
 let wait_nohang pid =
   let f = function
-    | None | Some ((_, (Ok _ | Error #Exit_or_signal.error))) as x -> Some x
-    | _ -> None
+  | None | Some ((_, (Ok _ | Error #Exit_or_signal.error))) as x -> Some x
+  | _ -> None
   in
   wait_gen ~mode:[WNOHANG] ~restart:true f pid
 ;;
@@ -1123,10 +1123,10 @@ let access filename perm =
   Result.try_with (fun () ->
     access filename
       ~perm:(List.map perm ~f:(function
-          | `Read -> Unix.R_OK
-          | `Write -> Unix.W_OK
-          | `Exec -> Unix.X_OK
-          | `Exists -> Unix.F_OK)))
+             | `Read -> Unix.R_OK
+             | `Write -> Unix.W_OK
+             | `Exec -> Unix.X_OK
+             | `Exists -> Unix.F_OK)))
 ;;
 
 let access_exn filename perm = Result.ok_exn (access filename perm)
@@ -1546,9 +1546,9 @@ module Protocol_family = struct
   with bin_io, sexp
 
   let of_unix = function
-    | Unix.PF_UNIX -> `Unix
-    | Unix.PF_INET -> `Inet
-    | Unix.PF_INET6 -> `Inet6
+  | Unix.PF_UNIX -> `Unix
+  | Unix.PF_INET -> `Inet
+  | Unix.PF_INET6 -> `Inet6
   ;;
 end
 
@@ -1568,8 +1568,8 @@ module Inet_addr0 = struct
 
     let sexp_of_t t = Sexp.Atom (to_string t)
     let t_of_sexp = function
-      | Sexp.Atom s -> of_string s
-      | Sexp.List _ as sexp -> of_sexp_error "Inet_addr0.t_of_sexp: atom expected" sexp
+    | Sexp.Atom s -> of_string s
+    | Sexp.List _ as sexp -> of_sexp_error "Inet_addr0.t_of_sexp: atom expected" sexp
   end
   include T
   include Comparable.Make(T)
@@ -1633,8 +1633,8 @@ module Inet_addr = struct
   ;;
 
   let t_of_sexp = function
-    | Sexp.Atom name -> of_string_or_getbyname name
-    | Sexp.List _ as sexp -> of_sexp_error "Inet_addr.t_of_sexp: atom expected" sexp
+  | Sexp.Atom name -> of_string_or_getbyname name
+  | Sexp.List _ as sexp -> of_sexp_error "Inet_addr.t_of_sexp: atom expected" sexp
   ;;
 
   let bind_any       = Unix.inet_addr_any

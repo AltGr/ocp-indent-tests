@@ -42,8 +42,8 @@ let expr_list_of_opt_list _loc exprs =
   let rec aux accu = function
     | `Option (eid, pid), x ->
       <:expr< let tl_object_ = $accu$ in match $eid$ with [
-        None -> tl_object_
-        | Some $pid$ -> [ $x$ :: tl_object_ ] ] >>
+             None -> tl_object_
+             | Some $pid$ -> [ $x$ :: tl_object_ ] ] >>
     | `Regular, x -> <:expr< [ $x$ :: $accu$ ] >> in
 
   match List.rev exprs with
@@ -51,8 +51,8 @@ let expr_list_of_opt_list _loc exprs =
   | (`Option (eid, pid), h) ::t ->
     List.fold_left aux
       <:expr< match $eid$ with [
-        None       -> []
-        | Some $pid$ -> $h$ ] >>
+             None       -> []
+             | Some $pid$ -> $h$ ] >>
       t
   | (`Regular, h) ::t -> List.fold_left aux <:expr< [ $h$ ] >> t
 
@@ -189,96 +189,96 @@ module Of_json = struct
 
   let runtime_error _loc name id expected =
     <:match_case< error -> do {
-      Printf.eprintf
-        "Runtime error in '%s_of_json:%s': got '%s' when '%s' was expected\\n"
-        $str:name$ $str_of_id id$
-        (Json.to_string error)
-        $str:expected$;
-      raise (Json.Runtime_error ($str:expected$, error)) }
+                 Printf.eprintf
+                 "Runtime error in '%s_of_json:%s': got '%s' when '%s' was expected\\n"
+                 $str:name$ $str_of_id id$
+                 (Json.to_string error)
+                 $str:expected$;
+                 raise (Json.Runtime_error ($str:expected$, error)) }
     >>
 
   let gen (_loc, n, t_exp) =
     let t = match t_exp with Ext (_,t) | Rec (_,t) -> t | _ -> assert false in
     let rec aux id = function
       | Unit -> <:expr< match $id$ with [
-                  Json.Null -> ()
-                  | $runtime_error _loc n id "Null"$ ] >>
+                       Json.Null -> ()
+                       | $runtime_error _loc n id "Null"$ ] >>
 
       | Int (Some i) when i + 1 = Sys.word_size ->
         <:expr< match $id$ with [
-          Json.Int x    -> Int64.to_int x
-          | Json.String s -> int_of_string s
-          | $runtime_error _loc n id "Int(int)"$ ] >>
+               Json.Int x    -> Int64.to_int x
+               | Json.String s -> int_of_string s
+               | $runtime_error _loc n id "Int(int)"$ ] >>
 
       | Int (Some i) when i <= 32 ->
         <:expr< match $id$ with [
-          Json.Int x    -> Int64.to_int32 x
-          | Json.String s -> Int32.of_string s
-          | $runtime_error _loc n id "Int(int32)"$ ] >>
+               Json.Int x    -> Int64.to_int32 x
+               | Json.String s -> Int32.of_string s
+               | $runtime_error _loc n id "Int(int32)"$ ] >>
 
       | Int (Some i) when i <= 64 ->
         <:expr< match $id$ with [
-          Json.Int x    -> x
-          | Json.String s -> Int64.of_string s
-          | $runtime_error _loc n id "Int(int64)"$ ] >>
+               Json.Int x    -> x
+               | Json.String s -> Int64.of_string s
+               | $runtime_error _loc n id "Int(int64)"$ ] >>
 
       | Int _ ->
         <:expr< match $id$ with [
-          Json.String s -> Bigint.of_string s
-          | $runtime_error _loc n id "Int(int64)"$ ] >>
+               Json.String s -> Bigint.of_string s
+               | $runtime_error _loc n id "Int(int64)"$ ] >>
 
       | Float ->
         <:expr< match $id$ with [
-          Json.Float x  -> x
-          | Json.Int x    -> Int64.to_float x
-          | Json.String s -> float_of_string s
-          | $runtime_error _loc n id "Float"$ ] >>
+               Json.Float x  -> x
+               | Json.Int x    -> Int64.to_float x
+               | Json.String s -> float_of_string s
+               | $runtime_error _loc n id "Float"$ ] >>
 
       | Char ->
         <:expr< match $id$ with [
-          Json.Int x    -> Char.chr (Int64.to_int x)
-          | Json.String s -> Char.chr (int_of_string s)
-          | $runtime_error _loc n id "Int(char)"$ ] >>
+               Json.Int x    -> Char.chr (Int64.to_int x)
+               | Json.String s -> Char.chr (int_of_string s)
+               | $runtime_error _loc n id "Int(char)"$ ] >>
 
       | String -> <:expr< match $id$ with [
-                    Json.String x -> x
-                    | $runtime_error _loc n id "String(string)"$ ] >>
+                         Json.String x -> x
+                         | $runtime_error _loc n id "String(string)"$ ] >>
 
       | Bool   -> <:expr< match $id$ with [
-                    Json.Bool x -> x
-                    | $runtime_error _loc n id "Bool"$ ] >>
+                         Json.Bool x -> x
+                         | $runtime_error _loc n id "Bool"$ ] >>
 
       | Tuple t ->
         let ids = List.map (new_id _loc) t in
         let patts,exprs = List.split ids in
         let exprs = List.map2 aux exprs t in
         <:expr< match $id$ with [
-          Json.Array $patt_list_of_list _loc patts$ -> $expr_tuple_of_list _loc exprs$
-          | $runtime_error _loc n id "Array"$ ] >>
+               Json.Array $patt_list_of_list _loc patts$ -> $expr_tuple_of_list _loc exprs$
+               | $runtime_error _loc n id "Array"$ ] >>
 
       | List (Tuple [String; t]) -> (* XXX: handle the nested string case *)
         let pid, eid = new_id _loc () in
         <:expr< match $id$ with [
-          Json.Object d -> List.map (fun (key, $pid$) -> (key, $aux eid t$)) d
-          | $runtime_error _loc n id "Object"$ ] >>
+               Json.Object d -> List.map (fun (key, $pid$) -> (key, $aux eid t$)) d
+               | $runtime_error _loc n id "Object"$ ] >>
 
       | List t  ->
         let pid, eid = new_id _loc () in
         <:expr< match $id$ with [
-          Json.Array d -> List.map (fun $pid$ -> $aux eid t$) d
-          | $runtime_error _loc n id "Array"$ ] >>
+               Json.Array d -> List.map (fun $pid$ -> $aux eid t$) d
+               | $runtime_error _loc n id "Array"$ ] >>
 
       | Array (Tuple [String; t]) -> (* XXX: handle the nested array case *)
         let pid, eid = new_id _loc () in
         <:expr< match $id$ with [
-          Json.Object d -> Array.of_list (List.map (fun (key, $pid$) -> (key, $aux eid t$)) d)
-          | $runtime_error _loc n id "Object"$ ] >>
+               Json.Object d -> Array.of_list (List.map (fun (key, $pid$) -> (key, $aux eid t$)) d)
+               | $runtime_error _loc n id "Object"$ ] >>
 
       | Array t ->
         let pid, eid = new_id _loc () in
         <:expr< match $id$ with [
-          Json.Array d -> Array.of_list (List.map (fun $pid$ -> $aux eid t$) d)
-          | $runtime_error _loc n id "Array"$ ] >>
+               Json.Array d -> Array.of_list (List.map (fun $pid$ -> $aux eid t$) d)
+               | $runtime_error _loc n id "Array"$ ] >>
 
       | Dict(`R, d) ->
         let pid, eid = new_id _loc () in
@@ -287,20 +287,20 @@ module Of_json = struct
           match t with
           | Option tt ->
             <:rec_binding< $lid:f$ =
-              if List.mem_assoc $`str:f$ $eid$ then
-                let $pid2$ = List.assoc $`str:f$ $eid$ in
-                Some $aux eid2 tt$
-              else
-                None >>
+                          if List.mem_assoc $`str:f$ $eid$ then
+                          let $pid2$ = List.assoc $`str:f$ $eid$ in
+                          Some $aux eid2 tt$
+                          else
+                          None >>
           | _ ->
             <:rec_binding< $lid:f$ = 
-              if List.mem_assoc $`str:f$ $eid$ then
-                let $pid2$ = List.assoc $`str:f$ $eid$ in $aux eid2 t$
-              else
-                $runtime_error_key_not_found _loc f id n$ >> in
+                          if List.mem_assoc $`str:f$ $eid$ then
+                          let $pid2$ = List.assoc $`str:f$ $eid$ in $aux eid2 t$
+                          else
+                          $runtime_error_key_not_found _loc f id n$ >> in
         <:expr< match $id$ with [
-          Json.Object $pid$ -> { $Ast.rbSem_of_list (List.map field d)$ }
-          | $runtime_error _loc n id "Object"$ ] >>
+               Json.Object $pid$ -> { $Ast.rbSem_of_list (List.map field d)$ }
+               | $runtime_error _loc n id "Object"$ ] >>
 
       | Dict(`O, d) ->
         let pid, eid = new_id _loc () in
@@ -309,19 +309,19 @@ module Of_json = struct
           match t with
           | Option tt ->
             <:class_str_item< method $lid:f$ =
-              if List.mem_assoc $`str:f$ $eid$ then
-                let $pid2$ = List.assoc $`str:f$ $eid$ in
-                Some $aux eid2 tt$
-              else
-                None >>
+                             if List.mem_assoc $`str:f$ $eid$ then
+                             let $pid2$ = List.assoc $`str:f$ $eid$ in
+                             Some $aux eid2 tt$
+                             else
+                             None >>
           | _ ->
             <:class_str_item< method $lid:f$ = 
-              match List.mem_assoc $`str:f$ $eid$ with [
-                True -> let $pid2$ = List.assoc $`str:f$ $eid$ in $aux eid2 t$
-              | $runtime_error _loc f id ("Looking for key "^n)$ ] >> in
+                             match List.mem_assoc $`str:f$ $eid$ with [
+                             True -> let $pid2$ = List.assoc $`str:f$ $eid$ in $aux eid2 t$
+                             | $runtime_error _loc f id ("Looking for key "^n)$ ] >> in
         <:expr< match $id$ with [
-          Json.Object $pid$ -> object $Ast.crSem_of_list (List.map field d)$ end
-          | $runtime_error _loc n id "Object"$ ] >>
+               Json.Object $pid$ -> object $Ast.crSem_of_list (List.map field d)$ end
+               | $runtime_error _loc n id "Object"$ ] >>
 
       | Sum (k, s) ->
         let mc (n, args) =
@@ -338,15 +338,15 @@ module Of_json = struct
             | _  -> <:patt< Json.Array [ Json.String $str:n$ :: $patt_list_of_list _loc patts$ ] >> in
           <:match_case< $patt$ -> $exprs$ >> in
         <:expr< match $id$ with [
-          $list:List.map mc s$
-          | $runtime_error _loc n id "Enum[String s;...]"$ ] >>
+               $list:List.map mc s$
+               | $runtime_error _loc n id "Enum[String s;...]"$ ] >>
 
       | Option t ->
         let pid, eid = new_id _loc () in
         <:expr< match $id$ with [
-          Json.Array [] -> None
-          | Json.Array [ $pid$ ] -> Some $aux eid t$
-          | $runtime_error _loc n id "Enum[]/Enum[_]"$ ] >>
+               Json.Array [] -> None
+               | Json.Array [ $pid$ ] -> Some $aux eid t$
+               | $runtime_error _loc n id "Enum[]/Enum[_]"$ ] >>
 
       | Arrow _  -> failwith "arrow type is not yet supported"
 

@@ -470,7 +470,7 @@ val coerce_opt : 'a Opt.t -> ('a -> 'b Opt.t) -> ('a -> 'b) -> 'b
     called.
     Typical usage is the following:
     {[Js.coerce_opt (Dom_html.getElementById id)
-    Dom_html.CoerceTo.div (fun _ -> assert false)]} *)
+        Dom_html.CoerceTo.div (fun _ -> assert false)]} *)
 
 (** {2 Type checking operators.} *)
 

@@ -14,10 +14,10 @@ val reraise : t -> string -> _
 (* Types with [format4] are hard to read, so here's an example.
 
    let foobar str =
-     try
-       ...
-     with exn ->
-       Exn.reraisef exn "Foobar is buggy on: %s" str ()
+   try
+   ...
+   with exn ->
+   Exn.reraisef exn "Foobar is buggy on: %s" str ()
 *)
 val reraisef : t -> ('a, unit, string, unit -> _) format4 -> 'a
 

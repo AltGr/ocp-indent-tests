@@ -46,36 +46,36 @@ module Avltree = struct
 
   let invariant t compare =
     let rec binary_tree = function
-      | Empty | Leaf _ -> ()
-      | Node (left, key, _value, _height, right) ->
-        begin match left with
-          | Empty -> ()
-          | Leaf (left_key, _)
-          | Node (_, left_key, _, _, _) ->
-            assert (compare left_key key < 0)
-        end;
-        begin match right with
-          | Empty -> ()
-          | Leaf (right_key, _)
-          | Node (_, right_key, _, _, _) ->
-            assert (compare right_key key > 0)
-        end;
-        assert (compare key key = 0);
-        binary_tree left;
-        binary_tree right
+    | Empty | Leaf _ -> ()
+    | Node (left, key, _value, _height, right) ->
+      begin match left with
+      | Empty -> ()
+      | Leaf (left_key, _)
+      | Node (_, left_key, _, _, _) ->
+        assert (compare left_key key < 0)
+      end;
+      begin match right with
+      | Empty -> ()
+      | Leaf (right_key, _)
+      | Node (_, right_key, _, _, _) ->
+        assert (compare right_key key > 0)
+      end;
+      assert (compare key key = 0);
+      binary_tree left;
+      binary_tree right
     in
     let rec height = function
-      | Empty -> 0
-      | Leaf _ -> 1
-      | Node (left, _k, _v, _h, right) ->
-        Int.max (height left) (height right) + 1
+    | Empty -> 0
+    | Leaf _ -> 1
+    | Node (left, _k, _v, _h, right) ->
+      Int.max (height left) (height right) + 1
     in
     let rec balanced = function
-      | Empty | Leaf _ -> ()
-      | Node (left, _k, _v, _h, right) ->
-        assert (abs (height left - height right) < 3);
-        balanced left;
-        balanced right
+    | Empty | Leaf _ -> ()
+    | Node (left, _k, _v, _h, right) ->
+      assert (abs (height left - height right) < 3);
+      balanced left;
+      balanced right
     in
     binary_tree t;
     balanced t
@@ -83,9 +83,9 @@ module Avltree = struct
   let empty = Empty
 
   let height = function
-    | Empty -> 0
-    | Leaf _ -> 1
-    | Node (_l, _k, _v, height, _r) -> height
+  | Empty -> 0
+  | Leaf _ -> 1
+  | Node (_l, _k, _v, height, _r) -> height
 
   let update_height n =
     match n with
@@ -182,8 +182,8 @@ module Avltree = struct
   let balance_root tree =
     let tree = balance tree in
     begin match tree with
-      | Empty | Leaf _ -> ()
-      | Node _ as node -> update_height node
+    | Empty | Leaf _ -> ()
+    | Node _ as node -> update_height node
     end;
     tree
 

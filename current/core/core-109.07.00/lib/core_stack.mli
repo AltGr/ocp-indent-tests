@@ -2,10 +2,10 @@
     Core idioms and adds some functions.
 
     Differences from the standard module:
-      [pop] and [top] return an [option] rather than raise [Empty].
-      [iter] takes a labeled argument.
-      [push] takes the stack argument first.
-      [length] is O(1)
+    [pop] and [top] return an [option] rather than raise [Empty].
+    [iter] takes a labeled argument.
+    [push] takes the stack argument first.
+    [length] is O(1)
 *)
 
 exception Empty

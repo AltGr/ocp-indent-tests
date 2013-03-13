@@ -27,41 +27,41 @@ module Spec : sig
   (** composable command-line specifications *)
   type ('main_in, 'main_out) t
   (**
-      Ultimately one forms a base command by combining a spec of type [('main, unit) t]
-      with a main function of type ['main]; see the [basic] function below.  Combinators
-      in this library incrementally build up the type of main according to what
-      command-line parameters it expects, so the resulting type of [main] is something
-      like:
+    Ultimately one forms a base command by combining a spec of type [('main, unit) t]
+    with a main function of type ['main]; see the [basic] function below.  Combinators
+    in this library incrementally build up the type of main according to what
+    command-line parameters it expects, so the resulting type of [main] is something
+    like:
 
-      [arg1 -> ... -> argN -> unit]
+    [arg1 -> ... -> argN -> unit]
 
-      It may help to think of [('a, 'b) t] as a function space ['a -> 'b] embellished with
-      information about:
+    It may help to think of [('a, 'b) t] as a function space ['a -> 'b] embellished with
+    information about:
 
-      {ul {- how to parse command line}
-          {- what the command does and how to call it}
-          {- how to auto-complete a partial command line}}
+    {ul {- how to parse command line}
+    {- what the command does and how to call it}
+    {- how to auto-complete a partial command line}}
 
-      One can view a value of type [('main_in, 'main_out) t] as function that transforms a
-      main function from type ['main_in] to ['main_out], typically by supplying some
-      arguments.  E.g. a value of type [Spec.t] might have type:
+    One can view a value of type [('main_in, 'main_out) t] as function that transforms a
+    main function from type ['main_in] to ['main_out], typically by supplying some
+    arguments.  E.g. a value of type [Spec.t] might have type:
 
-      |  (arg1 -> ... -> argN -> 'r, 'r) Spec.t
+    |  (arg1 -> ... -> argN -> 'r, 'r) Spec.t
 
-      Such a value can transform a main function of type [arg1 -> ... -> argN -> 'r] by
-      supplying it argument values of type [arg1], ..., [argn], leaving a main function
-      whose type is ['r].  In the end, [Command.basic] takes a completed spec where ['r =
-      unit], and hence whose type looks like:
+    Such a value can transform a main function of type [arg1 -> ... -> argN -> 'r] by
+    supplying it argument values of type [arg1], ..., [argn], leaving a main function
+    whose type is ['r].  In the end, [Command.basic] takes a completed spec where ['r =
+    unit], and hence whose type looks like:
 
-      |  (arg1 -> ... -> argN -> unit, unit) Spec.t
+    |  (arg1 -> ... -> argN -> unit, unit) Spec.t
 
-      A value of this type can fully apply a main function of type [arg1 -> ... -> argN
-      -> unit] to all its arguments.
+    A value of this type can fully apply a main function of type [arg1 -> ... -> argN
+    -> unit] to all its arguments.
 
-      The view of [('main_in, main_out) Spec.t] as a function from ['main_in] to
-      ['main_out] is directly reflected by the [step] function, whose type is:
+    The view of [('main_in, main_out) Spec.t] as a function from ['main_in] to
+    ['main_out] is directly reflected by the [step] function, whose type is:
 
-      |  val step : ('m1 -> 'm2) -> ('m1, 'm2) t
+    |  val step : ('m1 -> 'm2) -> ('m1, 'm2) t
   *)
 
   (** [spec1 ++ spec2 ++ ... ++ specN] composes spec1 through specN.
@@ -113,10 +113,10 @@ module Spec : sig
   val step : ('m1 -> 'm2) -> ('m1, 'm2) t
   (** Here are a couple examples of some of its many uses
       {ul
-        {li {i introducing labeled arguments}
+      {li {i introducing labeled arguments}
             {v step (fun m v -> m ~foo:v)
                +> flag "-foo" no_arg : (foo:bool -> 'm, 'm) t v}}
-        {li {i prompting for missing values}
+      {li {i prompting for missing values}
             {v step (fun m user -> match user with
                  | Some user -> m user
                  | None -> print_string "enter username: "; m (read_line ()))
@@ -146,12 +146,12 @@ module Spec : sig
   val wrap : (run:('m1 -> 'r1) -> main:'m2 -> 'r2) -> ('m1, 'r1) t -> ('m2, 'r2) t
   (** Here are two examples of command classes defined using [wrap]
       {ul
-        {li {i print top-level exceptions to stderr}
+      {li {i print top-level exceptions to stderr}
             {v wrap (fun ~run ~main ->
                  Exn.handle_uncaught ~exit:true (fun () -> run main)
                ) : ('m, unit) t -> ('m, unit) t
              v}}
-        {li {i iterate over lines from stdin}
+      {li {i iterate over lines from stdin}
             {v wrap (fun ~run ~main ->
                  In_channel.iter_lines stdin ~f:(fun line -> run (main line))
                ) : ('m, unit) t -> (string -> 'm, unit) t
@@ -205,7 +205,7 @@ module Spec : sig
       describes the meaning of the flag.
 
       NOTE: flag names (including aliases) containing underscores will
-            be rejected.  Use dashes instead.
+      be rejected.  Use dashes instead.
   *)
   val flag : ?aliases:string list -> string -> 'a flag -> doc:string -> 'a param
 
@@ -269,17 +269,17 @@ module Spec : sig
       for optional sequences of anonymous arguments.  Consider a command with
       usage
 
-        main.exe FOO [BAR BAZ]
+      main.exe FOO [BAR BAZ]
 
       where the second and third anonymous arguments must either both
       be there or both not be there.  This can be expressed as
 
-        [t2 ("FOO" %: foo) (maybe (t2 ("BAR" %: bar) ("BAZ" %: baz)))]
+      [t2 ("FOO" %: foo) (maybe (t2 ("BAR" %: bar) ("BAZ" %: baz)))]
 
       Sequences of 5 or more anonymous arguments can be built up using
       nested tuples
 
-        maybe (t3 a b (t3 c d e))
+      maybe (t3 a b (t3 c d e))
   *)
 
   val t2 : 'a anons -> 'b anons -> ('a * 'b) anons

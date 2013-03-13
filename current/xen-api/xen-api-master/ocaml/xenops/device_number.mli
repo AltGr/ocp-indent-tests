@@ -23,7 +23,7 @@ val spec: t -> spec
 
 (** [of_string hvm name] returns the interface which best matches the [name]
     by applying the policy: first check if it is a disk_number, else fall back to
-   a linux_device for backwards compatability *)
+    a linux_device for backwards compatability *)
 val of_string: bool -> string -> t
 
 (** [to_debug_string i] returns a pretty-printed interface *)
@@ -49,7 +49,7 @@ type disk_number = int
 val to_disk_number: t -> disk_number
 
 (** [of_disk_number hvm n] returns the interface corresponding to disk 
-   number [n] which depends on whether the guest is [hvm] or not. *)
+    number [n] which depends on whether the guest is [hvm] or not. *)
 val of_disk_number: bool -> disk_number -> t
 
 

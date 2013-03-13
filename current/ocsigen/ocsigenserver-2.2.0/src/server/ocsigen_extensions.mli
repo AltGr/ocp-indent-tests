@@ -116,7 +116,7 @@ type config_info = {
 and follow_symlink =
     | DoNotFollowSymlinks (** Never follow a symlink *)
     | FollowSymlinksIfOwnerMatch (** Follow a symlink if the symlink and its
-                                    target have the same owner *)
+                                     target have the same owner *)
     | AlwaysFollowSymlinks (** Always follow symlinks *)
 
 
@@ -214,8 +214,8 @@ type request_info =
      ri_connection_closed: unit Lwt.t; (** a thread waking up when the connection is closed *)
     }
 (** If you force [ri_files] or [ri_post_params], the request is fully read,
-   so it is not possible any more to read it from [ri_http_frame]
-   (and vice versa).
+    so it is not possible any more to read it from [ri_http_frame]
+    (and vice versa).
 *)
 and request = {
   request_info: request_info;
@@ -229,19 +229,19 @@ type answer =
     | Ext_do_nothing
     (** I don't want to do anything *)
     | Ext_found of (unit -> Ocsigen_http_frame.result Lwt.t)
-      (** "OK stop! I will take the page.
-          You can start the following request of the same pipelined connection.
-          Here is the function to generate the page".
-          The extension must return Ext_found as soon as possible
-          when it is sure it is safe to start next request.
-          Usually as soon as you know that the result will be Ext_found.
-          But in some case, for example proxies, you don't want the request of
-          one connection to be handled in different order.
-          In that case, wait to be sure that the new request will not
-          overtake this one.
-      *)
+    (** "OK stop! I will take the page.
+        You can start the following request of the same pipelined connection.
+        Here is the function to generate the page".
+        The extension must return Ext_found as soon as possible
+        when it is sure it is safe to start next request.
+        Usually as soon as you know that the result will be Ext_found.
+        But in some case, for example proxies, you don't want the request of
+        one connection to be handled in different order.
+        In that case, wait to be sure that the new request will not
+        overtake this one.
+    *)
     | Ext_found_stop of (unit -> Ocsigen_http_frame.result Lwt.t)
-      (** Found but do not try next extensions *)
+    (** Found but do not try next extensions *)
     | Ext_next of int (** Page not found. Try next extension.
                           The integer is the HTTP error code.
                           It is usally 404, but may be for ex 403 (forbidden)
@@ -250,58 +250,58 @@ type answer =
                           the request.
                       *)
     | Ext_stop_site of (Ocsigen_cookies.cookieset * int)
-      (** Error. Do not try next extension, but
-          try next site.
-          The integer is the HTTP error code, usally 403.
-      *)
+    (** Error. Do not try next extension, but
+        try next site.
+        The integer is the HTTP error code, usally 403.
+    *)
     | Ext_stop_host of (Ocsigen_cookies.cookieset * int)
-      (** Error. Do not try next extension,
-          do not try next site,
-          but try next host.
-          The integer is the HTTP error code, usally 403.
-      *)
+    (** Error. Do not try next extension,
+        do not try next site,
+        but try next host.
+        The integer is the HTTP error code, usally 403.
+    *)
     | Ext_stop_all of (Ocsigen_cookies.cookieset * int)
-      (** Error. Do not try next extension (even filters),
-          do not try next site,
-          do not try next host,
-          do not .
-          The integer is the HTTP error code, usally 403.
-      *)
+    (** Error. Do not try next extension (even filters),
+        do not try next site,
+        do not try next host,
+        do not .
+        The integer is the HTTP error code, usally 403.
+    *)
     | Ext_continue_with of (request * Ocsigen_cookies.cookieset * int)
-      (** Used to modify the request before giving it to next extension.
-          The extension returns the request_info (possibly modified)
-          and a set of cookies if it wants to set or cookies
-          ([!Ocsigen_cookies.Cookies.empty] for no cookies).
-          You must add these cookies yourself in request_info if you
-          want them to be seen by subsequent extensions,
-          for example using {!Ocsigen_http_frame.compute_new_ri_cookies}.
-          The integer is usually equal to the error code received
-          from preceding extension (but you may want to modify it).
-      *)
+    (** Used to modify the request before giving it to next extension.
+        The extension returns the request_info (possibly modified)
+        and a set of cookies if it wants to set or cookies
+        ([!Ocsigen_cookies.Cookies.empty] for no cookies).
+        You must add these cookies yourself in request_info if you
+        want them to be seen by subsequent extensions,
+        for example using {!Ocsigen_http_frame.compute_new_ri_cookies}.
+        The integer is usually equal to the error code received
+        from preceding extension (but you may want to modify it).
+    *)
     | Ext_retry_with of request * Ocsigen_cookies.cookieset
-          (** Used to retry all the extensions with a new request_info.
-              The extension returns the request_info (possibly modified)
-              and a set of cookies if it wants to set or cookies
-              ([!Ocsigen_cookies.Cookies.empty] for no cookies).
-              You must add these cookies yourself in request_info if you
-              want them to be seen by subsequent extensions,
-              for example using {!Ocsigen_http_frame.compute_new_ri_cookies}.
-          *)
+    (** Used to retry all the extensions with a new request_info.
+        The extension returns the request_info (possibly modified)
+        and a set of cookies if it wants to set or cookies
+        ([!Ocsigen_cookies.Cookies.empty] for no cookies).
+        You must add these cookies yourself in request_info if you
+        want them to be seen by subsequent extensions,
+        for example using {!Ocsigen_http_frame.compute_new_ri_cookies}.
+    *)
     | Ext_sub_result of extension2
-      (** Used if your extension want to define option that may contain
-          other options from other extensions.
-          In that case, while parsing the configuration file, call
-          the parsing function (of type [parse_fun]),
-          that will return something of type [extension2].
-      *)
+    (** Used if your extension want to define option that may contain
+        other options from other extensions.
+        In that case, while parsing the configuration file, call
+        the parsing function (of type [parse_fun]),
+        that will return something of type [extension2].
+    *)
     | Ext_found_continue_with of 
         (unit -> (Ocsigen_http_frame.result * request) Lwt.t)
-        (** Same as [Ext_found] but may modify the request. *)
+    (** Same as [Ext_found] but may modify the request. *)
     | Ext_found_continue_with' of (Ocsigen_http_frame.result * request)
-      (** Same as [Ext_found_continue_with] but does not allow to delay
-          the computation of the page. You should probably not use it,
-          but for output filters.
-      *)
+    (** Same as [Ext_found_continue_with] but does not allow to delay
+        the computation of the page. You should probably not use it,
+        but for output filters.
+    *)
 
 and request_state =
     | Req_not_found of (int * request)
@@ -335,10 +335,10 @@ type parse_host
 
 (** Information received by extensions accepting userconf files.
 
-   The parameter [localfiles_root] is an absolute path to the
-   directory that the user is allowed to serve. This is used
-   by staticmod, to disallow the user from allowing access to
-   outside of this directory
+    The parameter [localfiles_root] is an absolute path to the
+    directory that the user is allowed to serve. This is used
+    by staticmod, to disallow the user from allowing access to
+    outside of this directory
 *)
 type userconf_info = {
   localfiles_root : string;
@@ -346,18 +346,18 @@ type userconf_info = {
 
 (** [parse_config] is the type of the functions parsing a <site> tag
     (and returning an extension).  Those are functions taking
-   {ul
+    {ul
      {- the name of the virtual <host>}}
      that will be called for each <host>,
      and that will generate a function taking:
-   {ul
+    {ul
      {- the path attribute of a <site> tag}}
      that will be called for each <site>,
      and that will generate a function taking:
-   {ul
+    {ul
      {- an item of the config file}}
      that will be called on each tag inside <site> and:
-   {ul
+    {ul
      {- raise [Bad_config_tag_for_extension] if it does not recognize that tag}
      {- return something of type [extension] (filter or page generator)}}
 
@@ -376,42 +376,42 @@ and parse_config_aux =
 
 
 (** For each extension generating pages, we register its name and six functions:
-   - a function [fun_site] of type [parse_config]. This function
-   will be responsible for handling the options of the configuration
-   files that are recognized by the extension, and potentially generating
-   a page.
-   - a function [user_fun_site] of type [parse_user_config] which has the
-   same role as [fun_site], but inside userconf files. Specify nothing
-   if your extension is disallowed in userconf files. Otherwise, compared
-   to [fun_site], you can selectively disallow some options,
-   as [user_fun_site] must define only safe options (for example it is not
-   safe to allow such options to load a cmo specified by a user, or to
-   execute a program, as this program will be executed by ocsigen's user).
-   Note that [user_fun_site] will be called for every request, whereas the
-   [fun_site] is called only when starting or reloading the server.
-   - a function [begin_init] that will be called at the beginning
-   of the initialisation phase of each site, and each time the config file is
-   reloaded.
-   - a function [end_init] that will be called at the end of the initialisation
-   phase of each site
-   - a function [init_fun] that will be called just before registering the
-   extension, taking as parameter the configuration options between
-   [<extension>] and [</extension>]. This allows to give configuration options
-   to extensions. If no function is supplied, the extension is supposed to
-   accept no option (and loading will fail if an option is supplied)
-   See <<a_api module="Ocsigen_extensions.Configuration" | val process_elements >> for
-   the easy construction of such a function.
-   - a function [exn_handler] that will create an error message from the
-   exceptions that may be raised during the initialisation phase, and raise again
-   all other exceptions
+    - a function [fun_site] of type [parse_config]. This function
+    will be responsible for handling the options of the configuration
+    files that are recognized by the extension, and potentially generating
+    a page.
+    - a function [user_fun_site] of type [parse_user_config] which has the
+    same role as [fun_site], but inside userconf files. Specify nothing
+    if your extension is disallowed in userconf files. Otherwise, compared
+    to [fun_site], you can selectively disallow some options,
+    as [user_fun_site] must define only safe options (for example it is not
+    safe to allow such options to load a cmo specified by a user, or to
+    execute a program, as this program will be executed by ocsigen's user).
+    Note that [user_fun_site] will be called for every request, whereas the
+    [fun_site] is called only when starting or reloading the server.
+    - a function [begin_init] that will be called at the beginning
+    of the initialisation phase of each site, and each time the config file is
+    reloaded.
+    - a function [end_init] that will be called at the end of the initialisation
+    phase of each site
+    - a function [init_fun] that will be called just before registering the
+    extension, taking as parameter the configuration options between
+    [<extension>] and [</extension>]. This allows to give configuration options
+    to extensions. If no function is supplied, the extension is supposed to
+    accept no option (and loading will fail if an option is supplied)
+    See <<a_api module="Ocsigen_extensions.Configuration" | val process_elements >> for
+    the easy construction of such a function.
+    - a function [exn_handler] that will create an error message from the
+    exceptions that may be raised during the initialisation phase, and raise again
+    all other exceptions
 
-   Moreover, if the optional parameter [?respect_pipeline] is [true],
-   the extension will ask the server to respect the order of the
-   pipeline. That means that it will wait to be sure that the previous
-   request from the same connection has been taken by an extension
-   before giving a request to an extension.  Use this to write proxies
-   extensions, when you want to be able to pipeline the requests you
-   to another server. It is false by default.
+    Moreover, if the optional parameter [?respect_pipeline] is [true],
+    the extension will ask the server to respect the order of the
+    pipeline. That means that it will wait to be sure that the previous
+    request from the same connection has been taken by an extension
+    before giving a request to an extension.  Use this to write proxies
+    extensions, when you want to be able to pipeline the requests you
+    to another server. It is false by default.
 
 *)
 val register_extension :
@@ -510,8 +510,8 @@ val get_hostname : request -> string
 val get_port : request -> int
 
 (** Parsing URLs.
-   This allows to modify the URL in the request_info.
-   (to be used for example with Ext_retry_with or Ext_continue_with)
+    This allows to modify the URL in the request_info.
+    (to be used for example with Ext_retry_with or Ext_continue_with)
 *)
 val ri_of_url : ?full_rewrite:bool -> string -> request_info -> request_info
 

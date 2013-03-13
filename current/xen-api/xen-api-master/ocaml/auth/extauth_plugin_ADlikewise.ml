@@ -384,7 +384,7 @@ struct
          ("subject-sid", get_value "SID" infolist);
          ("subject-is-group", "true");
          (*(* comma-separated list of subjects that are contained in this subject *)
-            ("contains-byname", List.fold_left (fun (n,v) m ->m^","^v) "" (List.filter (fun (n,v)->n="Member") infolist));*)
+           ("contains-byname", List.fold_left (fun (n,v) m ->m^","^v) "" (List.filter (fun (n,v)->n="Member") infolist));*)
       ]
     else (* subject is user *)
       let subject_name = unmap_lw_space_chars (get_value "Name" infolist) in

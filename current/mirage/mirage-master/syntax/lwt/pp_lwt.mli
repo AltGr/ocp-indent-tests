@@ -26,90 +26,90 @@
 
     - anonymous bind:
 
-      {[
-         write stdio "Hello, " >> write stdio "world!"
-      ]}
+    {[
+      write stdio "Hello, " >> write stdio "world!"
+    ]}
 
     - lwt-binding:
 
-      {[
-         lwt ch = get_char stdin in
-         code
-      ]}
+    {[
+      lwt ch = get_char stdin in
+      code
+    ]}
 
       is the same as [bind (get_char stdin) (fun ch -> code)]
 
       Moreover it supports parallel binding:
 
-      {[
-         lwt x = do_something1 ()
-         and y = do_something2 in
-         code
-      ]}
+    {[
+      lwt x = do_something1 ()
+      and y = do_something2 in
+      code
+    ]}
 
       will let [do_something1 ()] and [do_something2 ()] runs then
       bind their result to [x] and [y]. It is the same as:
 
-      {[
-         let t1 = do_something1
-         and t2 = do_something2 in
-         bind t1 (fun x -> bind t2 (fun y -> code))
-      ]}
+    {[
+      let t1 = do_something1
+      and t2 = do_something2 in
+      bind t1 (fun x -> bind t2 (fun y -> code))
+    ]}
 
     - exception catching:
 
-      {[
-         try_lwt
-           <expr>
-      ]},
+    {[
+      try_lwt
+        <expr>
+    ]},
 
-      {[
-         try_lwt
-           <expr>
-         with
-           <branches>
-      ]},
+    {[
+      try_lwt
+        <expr>
+      with
+      <branches>
+    ]},
 
-      {[
-         try_lwt
-           <expr>
-         finally
-           <expr>
-       ]}
+    {[
+      try_lwt
+        <expr>
+          finally
+          <expr>
+    ]}
 
     and:
 
-      {[
-         try_lwt
-           <expr>
-         with
-           <branches>
-         finally
-           <expr>
-      ]}
+    {[
+      try_lwt
+        <expr>
+      with
+      <branches>
+      finally
+        <expr>
+    ]}
 
     For example:
 
-      {[
-         try_lwt
-           f x
-         with
-           | Failure msg ->
-               prerr_endline msg;
-               return ()
-      ]}
+    {[
+      try_lwt
+        f x
+      with
+      | Failure msg ->
+        prerr_endline msg;
+        return ()
+    ]}
 
     is expanded to:
 
-      {[
-         catch (fun _ -> f x)
-           (function
-              | Failure msg ->
-                  prerr_endline msg;
-                  return ()
-              | exn ->
-                  Lwt.fail exn)
-      ]}
+    {[
+      catch (fun _ -> f x)
+        (function
+         | Failure msg ->
+           prerr_endline msg;
+           return ()
+         | exn ->
+           Lwt.fail exn)
+    ]}
 
     Note that the [exn -> Lwt.fail exn] branch is automatically addedd
     when needed.
@@ -119,51 +119,51 @@
 
     - exception raising:
 
-      {[
-        raise_lwt <expr>
-      ]}
+    {[
+      raise_lwt <expr>
+    ]}
 
       This allow exception to be traced when the -lwt-debug switch is passed
       to the syntax extension.
 
     - for loop:
 
-      {[
-        for_lwt i = <expr> to <expr> do
-          <expr>
-        done
-      ]}
+    {[
+      for_lwt i = <expr> to <expr> do
+        <expr>
+      done
+    ]}
 
     and:
 
-      {[
-        for_lwt i = <expr> downto <expr> do
-          <expr>
-        done
-      ]}
+    {[
+      for_lwt i = <expr> downto <expr> do
+        <expr>
+      done
+    ]}
 
     - iteration over streams:
 
-      {[
-        for_lwt <patt> in <expr> do
-          <expr>
-        done
-      ]}
+    {[
+      for_lwt <patt> in <expr> do
+      <expr>
+    done
+    ]}
 
     - while loop:
 
-      {[
-        while_lwt <expr> do
-          <expr>
-        done
-      ]}
+    {[
+      while_lwt <expr> do
+        <expr>
+      done
+    ]}
 
     - pattern mattching:
 
-      {[
-        match_lwt <expr> with
-          | <patt_1> -> <expr_1>
+    {[
+      match_lwt <expr> with
+      | <patt_1> -> <expr_1>
           ...
-          | <patt_n> -> <expr_n>
-      ]}
+      | <patt_n> -> <expr_n>
+    ]}
 *)

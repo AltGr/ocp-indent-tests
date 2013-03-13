@@ -11,7 +11,7 @@ let test byte_order =
       let i' = unpack ~byte_order ~buf ~pos:0 in
       if i' <> i then
         failwith (Printf.sprintf "failed on input %s; returned %s"
-            (to_string i) (to_string i'))
+                    (to_string i) (to_string i'))
     in
     let rec f i inc_by =
       if i < max then begin
@@ -59,7 +59,7 @@ let test byte_order =
           let n' = u ~byte_order ~buf ~pos:0 in
           if n <> n' then
             failwith (sprintf "%s = unpack_%s (pack_%s %s)"
-                (to_string n') name name (to_string n)))
+                        (to_string n') name name (to_string n)))
       in
       test "signed_64" Int64.to_string
         B.pack_signed_64 B.unpack_signed_64

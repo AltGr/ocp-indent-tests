@@ -20,7 +20,7 @@ val load : string -> Images.load_option list -> Images.t;;
 
 val save : string -> Images.save_option list -> Images.t -> unit;;
 (** Save a full-color image in the Encapuslated PS format file.
-   Raises [Invalid_argument] if the image is not a full-color image. *)
+    Raises [Invalid_argument] if the image is not a full-color image. *)
 
 val load_ps : string -> bounding_box -> Images.load_option list -> Images.t;;
 (** Loads a postscript image within a bounding box. *)

@@ -57,8 +57,8 @@ val remove_cookie : Url.path -> string ->
   'a CookiesTable.t Cookies.t
 
 (** [add_cookies newcookies oldcookies] adds the cookies from [newcookies]
-   to [oldcookies]. If cookies are already bound in oldcookies,
-   the previous binding disappear. *)
+    to [oldcookies]. If cookies are already bound in oldcookies,
+    the previous binding disappear. *)
 val add_cookies :
   cookie CookiesTable.t Cookies.t ->
   cookie CookiesTable.t Cookies.t ->

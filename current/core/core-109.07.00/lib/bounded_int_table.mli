@@ -69,9 +69,9 @@ val add_exn : ('a, 'b) t -> key:'a -> data:'b -> unit
 val to_alist : ('key, 'data) t -> ('key * 'data) list
 
 module With_key (Key : sig
-      type t with bin_io, sexp
-      val to_int : t -> int
-    end) : sig
+           type t with bin_io, sexp
+           val to_int : t -> int
+         end) : sig
   (** Serialization of a bounded int table using [bin_io] or [sexp] preserves [num_keys],
       but only takes space proportional to the [length] of the table. *)
   type 'data t = (Key.t, 'data) table with bin_io, sexp

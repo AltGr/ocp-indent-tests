@@ -96,7 +96,7 @@ let answer_query qname qtype trie =
 
     | CNAME l -> 
       List.iter (fun d -> 
-          addrr (`CNAME d.owner.H.node)) l
+        addrr (`CNAME d.owner.H.node)) l
 
     | SOA l -> log_rrset owner `SOA;
       List.iter (fun (prim,admin,serial,refresh,retry,expiration,minttl) ->
@@ -106,54 +106,54 @@ let answer_query qname qtype trie =
 
     | MB l -> 
       List.iter (fun d -> 
-          enqueue_additional d `A;
-          enqueue_additional d `AAAA;
-          addrr (`MB d.owner.H.node)) l
+        enqueue_additional d `A;
+        enqueue_additional d `AAAA;
+        addrr (`MB d.owner.H.node)) l
 
     | MG l -> 
       List.iter (fun d -> 
-          addrr (`MG d.owner.H.node)) l
+        addrr (`MG d.owner.H.node)) l
 
     | MR l -> 
       List.iter (fun d -> 
-          addrr (`MR d.owner.H.node)) l
+        addrr (`MR d.owner.H.node)) l
 
     | WKS l -> 
       List.iter (fun (address, protocol, bitmap) -> 
-          addrr (`WKS (address, DP.byte protocol, bitmap.H.node))) l
+        addrr (`WKS (address, DP.byte protocol, bitmap.H.node))) l
 
     | PTR l -> 
       List.iter (fun d -> 
-          addrr (`PTR d.owner.H.node)) l
+        addrr (`PTR d.owner.H.node)) l
 
     | HINFO l -> 
       List.iter (fun (cpu, os) -> 
-          addrr (`HINFO (cpu.H.node, os.H.node))) l
+        addrr (`HINFO (cpu.H.node, os.H.node))) l
 
     | MINFO l -> 
       List.iter (fun (rm, em) -> 
-          addrr (`MINFO (rm.owner.H.node, em.owner.H.node))) l
+        addrr (`MINFO (rm.owner.H.node, em.owner.H.node))) l
 
     | MX l -> 
       List.iter (fun (preference, d) -> 
-          enqueue_additional d `A;
-          enqueue_additional d `AAAA;
-          addrr (`MX (preference, d.owner.H.node))) l
+        enqueue_additional d `A;
+        enqueue_additional d `AAAA;
+        addrr (`MX (preference, d.owner.H.node))) l
 
     | TXT l ->
       List.iter (fun sl -> (* XXX handle multiple TXT cstrings properly *)
-          let data = List.map (fun x -> x.H.node) sl in 
-          addrr (`TXT data)) l
+        let data = List.map (fun x -> x.H.node) sl in 
+        addrr (`TXT data)) l
 
     | RP l -> 
       List.iter (fun (mbox, txt) -> 
-          addrr (`RP (mbox.owner.H.node, txt.owner.H.node))) l
+        addrr (`RP (mbox.owner.H.node, txt.owner.H.node))) l
 
     | AFSDB l ->
       List.iter (fun (t, d) -> 
-          enqueue_additional d `A;
-          enqueue_additional d `AAAA;
-          addrr (`AFSDB (t, d.owner.H.node))) l
+        enqueue_additional d `A;
+        enqueue_additional d `AAAA;
+        addrr (`AFSDB (t, d.owner.H.node))) l
 
     | X25 l -> log_rrset owner `X25;
       List.iter (fun s -> 
@@ -168,20 +168,20 @@ let answer_query qname qtype trie =
 
     | RT l -> 
       List.iter (fun (preference, d) -> 
-          enqueue_additional d `A;
-          enqueue_additional d `AAAA;
-          enqueue_additional d `X25;
-          enqueue_additional d `ISDN;
-          addrr (`RT (~preference, d.owner.H.node))) l
+        enqueue_additional d `A;
+        enqueue_additional d `AAAA;
+        enqueue_additional d `X25;
+        enqueue_additional d `ISDN;
+        addrr (`RT (~preference, d.owner.H.node))) l
 
     | AAAA l -> log_rrset owner `AAAA;
       List.iter (fun i -> addrr (`AAAA i.H.node)) l 
 
     | SRV l 
       -> List.iter (fun (priority, weight, port, d) -> 
-             enqueue_additional d `A;
-             enqueue_additional d `AAAA;
-             addrr (`SRV (priority, weight, port, d.owner.H.node))) l
+           enqueue_additional d `A;
+           enqueue_additional d `AAAA;
+           addrr (`SRV (priority, weight, port, d.owner.H.node))) l
 
     | UNSPEC l 
       -> List.iter (fun s -> addrr (`UNSPEC s.H.node)) l

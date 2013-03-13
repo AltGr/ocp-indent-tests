@@ -37,5 +37,5 @@ val make_error_opt: t -> API.ref_VM -> API.ref_VM_guest_metrics -> (string * str
     when the PV drivers are not the most recent version. *)
 
 val get_latest_tools_vsn: unit -> unit
-(** [get_latest_tools_vsn ()] sets the global variable Xapi_globs.tools_version with
-    the latest PV tools iso detected in the root filesystem. *)
+  (** [get_latest_tools_vsn ()] sets the global variable Xapi_globs.tools_version with
+      the latest PV tools iso detected in the root filesystem. *)

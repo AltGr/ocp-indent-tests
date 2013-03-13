@@ -55,8 +55,8 @@ val is_empty : t -> bool
     the mutex, and [false] otherwise *)
 
 val with_lock : t -> (unit -> 'a Lwt.t) -> 'a Lwt.t
-(** [with_lock lock f] is used to lock a mutex within a block scope.
-    The function [f ()] is called with the mutex locked, and its
-    result is returned from the call to {with_lock}. If an exception
-    is raised from f, the mutex is also unlocked before the scope of
-    {with_lock} is exited. *)
+    (** [with_lock lock f] is used to lock a mutex within a block scope.
+        The function [f ()] is called with the mutex locked, and its
+        result is returned from the call to {with_lock}. If an exception
+        is raised from f, the mutex is also unlocked before the scope of
+        {with_lock} is exited. *)

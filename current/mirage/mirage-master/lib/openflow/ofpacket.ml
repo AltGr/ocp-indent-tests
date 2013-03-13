@@ -756,7 +756,7 @@ let parse_from_raw_packet in_port bits =
        tp_dst=tp_dst
      }
 
-     (* UDP *)
+(* UDP *)
 | {dmac:48:string; smac:48:string; 0x0800:16; 4:4; ihl:4; tos:8; 
    _:56; 17:8; _:16; 
    nw_src:32; nw_dst:32; _:(ihl-5)*32; tp_src:16; tp_dst:16; 
@@ -768,7 +768,7 @@ let parse_from_raw_packet in_port bits =
      nw_proto=(char_of_int 17); tp_src=tp_src; tp_dst=tp_dst
    }
 
-   (* IP *)
+(* IP *)
 | {dmac:48:string; smac:48:string; 0x0800:16; 4:4; ihl:4; tos:8; 
    _:56; nw_proto:8; _:16; 
    nw_src:32; nw_dst:32; _:(ihl-5)*32:bitstring; _:-1:bitstring } 
@@ -780,7 +780,7 @@ let parse_from_raw_packet in_port bits =
      tp_dst=0 
    }
 
-   (* Ethernet only *)
+(* Ethernet only *)
 | {dmac:48:string; smac:48:string; etype:16; _:-1:bitstring}
 -> { wildcards=Wildcards.l2_match; 
      in_port=in_port;dl_src=smac; dl_dst=dmac; dl_vlan=0xffff;
@@ -1220,7 +1220,7 @@ module Stats = struct
   type stats_type = DESC | FLOW | AGGREGATE | TABLE | PORT | QUEUE | VENDOR
 
   (*  type flow = {
-     (*    length: int; *)
+      (*    length: int; *)
       table_id: uint8;
       of_match: Match.t;
       duration_sec: uint32;
@@ -1352,7 +1352,7 @@ let rec string_of_table_stats_reply tables =
   | h::q -> sp "table_id:%s,name:%s,wildcard:%s,max_entries:%ld,
           active_count:%ld,lookup_count:%Ld,matched_count:%Ld\n%s" 
               (string_of_table_id h.table_id) h.name (Wildcards.string_of_wildcard
-                  h.wildcards) h.max_entries h.active_count h.lookup_count 
+                h.wildcards) h.max_entries h.active_count h.lookup_count 
               h.matched_count (string_of_table_stats_reply q) 
 
 let parse_stats bits =
@@ -1384,7 +1384,7 @@ let rec string_of_flow_stats flows =
   match flows with 
     [] -> ""
   | flow::flow_list -> sp "%s\n%s" (Flow.string_of_flow_stat
-                             flow) (string_of_flow_stats flow_list)
+                           flow) (string_of_flow_stats flow_list)
 
 let string_of_stats stats =
   match stats with
@@ -1589,7 +1589,7 @@ let parse h bits =
     | PACKET_IN -> Packet_in (h, Packet_in.parse_packet_in bits)
     | FLOW_REMOVED -> Flow_removed(h, (Flow_removed.flow_removed_of_bitstring bits))
     | FLOW_MOD -> raise (Unparsed ("GET_CONFIG_RESP", bits))
-                    (* Flow_mod(h, (Flow_mod.flow_mod_of_bitstring h bits)) *)
+    (* Flow_mod(h, (Flow_mod.flow_mod_of_bitstring h bits)) *)
     | STATS_RESP -> Stats_resp (h, (Stats.parse_stats bits))
     | PORT_STATUS -> Port_status(h, (Port.status_of_bitstring bits)) 
     | _ -> raise (Unparsed ("_", bits))

@@ -33,5 +33,5 @@ type tm =
 val time : unit -> float
 
 (** Convert a time in seconds, as returned by {!OS.Clock.time}, into a date and
-   a time. Assumes UTC (Coordinated Universal Time), also known as GMT. *)
+    a time. Assumes UTC (Coordinated Universal Time), also known as GMT. *)
 val gmtime : float -> tm

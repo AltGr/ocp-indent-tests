@@ -332,14 +332,14 @@ let cd_guest_verified (cli : Util.t_cli) vmid =
   let tests = 
     [("cd_test_3________________________",(fun () -> cd_test [cd1]),"cd",
       "Attaching cd to device 3 while VM is stopped, booting, verifying the guest can read it, shutting down "^
-        "and detaching the cd");
+      "and detaching the cd");
      (*     ("cd_test_3_4",(fun () -> cd_test [cd1;cd2]),"cd",
-          "Attaching cds to devices 3 and 4 while VM is stopped, booting, verifying the guest can read it, shutting down "^
+            "Attaching cds to devices 3 and 4 while VM is stopped, booting, verifying the guest can read it, shutting down "^
             "and detaching the cds");
      *)
      ("cd_test_4________________________",(fun () -> cd_test [cd2]),"cd",
       "Attaching cd to device 4 while VM is stopped, booting, verifying the guest can read it, shutting down "^
-        "and detaching the cd")
+      "and detaching the cd")
     ] in
   let hotplug_tests =
     [("cd_hotplug_3_____________________",(fun () -> cd_hotplug [cd1]),"cd",

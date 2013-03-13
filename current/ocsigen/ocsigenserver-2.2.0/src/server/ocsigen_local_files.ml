@@ -187,7 +187,7 @@ let resolve ?no_check_for ~request ~filename () =
                 let index = filename ^ e in
                 Ocsigen_messages.debug
                   (fun () -> "--LocalFiles: Testing \""^index
-                    ^"\" as possible index.");
+                             ^"\" as possible index.");
                 try
                   (index, Unix.LargeFile.stat index)
                 with

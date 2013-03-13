@@ -99,7 +99,7 @@ module Thread_state = struct
       ) snapshot in
     let resources_of_ts ts =
       List.map fst ts.acquired_resources @ 
-        (Opt.default [] (Opt.map (fun (r, _) -> [ r ]) ts.waiting_for)) in
+      (Opt.default [] (Opt.map (fun (r, _) -> [ r ]) ts.waiting_for)) in
     let all_resources = 
       List.setify
         (IntMap.fold (fun _ ts acc -> resources_of_ts ts @ acc ) snapshot [] ) in
@@ -128,16 +128,16 @@ module Thread_state = struct
       "digraph Resources {";
       "node [shape=Mrecord];"
     ] @ (IntMap.fold (fun id sll acc -> Printf.sprintf "t%d [label=\"%s\"];" id (label_of_sll sll) :: acc) threads []) @ [
-        "node [shape=record];"
-      ] @ (List.map (fun (resource, id) -> Printf.sprintf "r%d [style=filled label=\"%s\"];" id (label_of_sll (List.assoc resource resources_to_sll))) resources_to_ids) @
-        (List.map (fun (t, r) -> Printf.sprintf "t%d -> r%d" t r) threads_to_resources) @
-        (List.map (fun (t, r) -> Printf.sprintf "r%d -> t%d" r t) resources_to_threads) @ [
-        "rankdir=LR";
-        "overlap=false";
-        "label=\"Threads and resources\"";
-        "fontsize=12";
-        "}";
-      ] in
+                "node [shape=record];"
+              ] @ (List.map (fun (resource, id) -> Printf.sprintf "r%d [style=filled label=\"%s\"];" id (label_of_sll (List.assoc resource resources_to_sll))) resources_to_ids) @
+              (List.map (fun (t, r) -> Printf.sprintf "t%d -> r%d" t r) threads_to_resources) @
+              (List.map (fun (t, r) -> Printf.sprintf "r%d -> t%d" r t) resources_to_threads) @ [
+                "rankdir=LR";
+                "overlap=false";
+                "label=\"Threads and resources\"";
+                "fontsize=12";
+                "}";
+              ] in
     String.concat "\n" all
 end
 

@@ -69,9 +69,9 @@ module Poly (T : sig type t with sexp end) : S with type t := T.t = struct
 end
 
 module Make_common (T : sig
-      type t with sexp
-      val compare : t -> t -> int
-    end) = struct
+           type t with sexp
+           val compare : t -> t -> int
+         end) = struct
   type t = T.t
   module Replace_polymorphic_compare = struct
     let compare = T.compare
@@ -92,9 +92,9 @@ module Make_common (T : sig
 end
 
 module Make (T : sig
-      type t with sexp
-      val compare : t -> t -> int
-    end) : S with type t := T.t = struct
+           type t with sexp
+           val compare : t -> t -> int
+         end) : S with type t := T.t = struct
   module C = Comparator.Make (T)
   include (C : Comparator.S
     with type t := C.t
@@ -105,9 +105,9 @@ module Make (T : sig
 end
 
 module Make_binable (T : sig
-      type t with bin_io, sexp
-      val compare : t -> t -> int
-    end) : S_binable with type t := T.t = struct
+           type t with bin_io, sexp
+           val compare : t -> t -> int
+         end) : S_binable with type t := T.t = struct
   module C = Comparator.Make_binable (T)
   include (C : Comparator.S_binable
     with type t := C.t
@@ -119,29 +119,29 @@ end
 
 (** Inherit comparability from a component. *)
 module Inherit
-    (C : sig
-       type t
-       val compare : t -> t -> int
-     end)
-    (T : sig
-       type t with sexp
-       val component : t -> C.t
-     end) : S with type t = T.t = struct
+         (C : sig
+            type t
+            val compare : t -> t -> int
+          end)
+         (T : sig
+            type t with sexp
+            val component : t -> C.t
+          end) : S with type t = T.t = struct
 
   type t = T.t
 
   include Make (struct
-      type t = T.t with sexp
-      let compare t t' = C.compare (T.component t) (T.component t')
-    end)
+            type t = T.t with sexp
+            let compare t t' = C.compare (T.component t) (T.component t')
+          end)
 
 end
 
 (* compare [x] and [y] lexicographically using functions in the list [cmps] *)
 let lexicographic cmps x y =
   let rec loop = function
-    | cmp :: cmps -> let res = cmp x y in if res = 0 then loop cmps else res
-    | [] -> 0
+  | cmp :: cmps -> let res = cmp x y in if res = 0 then loop cmps else res
+  | [] -> 0
   in
   loop cmps
 ;;

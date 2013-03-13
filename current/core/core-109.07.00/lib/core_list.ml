@@ -217,8 +217,8 @@ TEST =
   true
 
 let rev = function
-  | [] | [_] as res -> res
-  | x :: y :: rest -> rev_append rest [y; x]
+| [] | [_] as res -> res
+| x :: y :: rest -> rev_append rest [y; x]
 
 let unordered_append l1 l2 =
   match l1, l2 with
@@ -242,7 +242,7 @@ let check_length3 name l1 l2 l3 =
   let n3 = length l3 in
   if n1 <> n2 || n2 <> n3 then
     raise (invalid_argf "length mismatch in %s: %d <> %d || %d <> %d"
-        name n1 n2 n2 n3 ())
+             name n1 n2 n2 n3 ())
 ;;
 
 let iter2_exn l1 l2 ~f =
@@ -278,8 +278,8 @@ let mem ?(equal = (=)) t a = List.exists t ~f:(equal a)
    avoid creating partial closures (showed up for List.filter in profiling). *)
 let rev_filter t ~f =
   let rec find ~f accu = function
-    | [] -> accu
-    | x :: l -> if f x then find ~f (x :: accu) l else find ~f accu l
+  | [] -> accu
+  | x :: l -> if f x then find ~f (x :: accu) l else find ~f accu l
   in
   find ~f [] t
 ;;
@@ -291,19 +291,19 @@ let stable_sort = List.stable_sort
 
 let find_map t ~f =
   let rec loop = function
-    | [] -> None
-    | x :: l ->
-      match f x with
-      | None -> loop l
-      | Some _ as r -> r
+  | [] -> None
+  | x :: l ->
+    match f x with
+    | None -> loop l
+    | Some _ as r -> r
   in
   loop t
 ;;
 
 let find t ~f =
   let rec loop = function
-    | [] -> None
-    | x :: l -> if f x then Some x else loop l
+  | [] -> None
+  | x :: l -> if f x then Some x else loop l
   in
   loop t
 ;;
@@ -488,8 +488,8 @@ TEST = zip [1] [4;5;6]     = None
 
 let rev_mapi l ~f =
   let rec loop i acc = function
-    | [] -> acc
-    | h :: t -> loop (i + 1) (f i h :: acc) t
+  | [] -> acc
+  | h :: t -> loop (i + 1) (f i h :: acc) t
   in
   loop 0 [] l
 
@@ -497,7 +497,7 @@ let mapi l ~f = List.rev (rev_mapi l ~f)
 
 
 TEST = mapi ~f:(fun i x -> (i,x))
-    ["one";"two";"three";"four"] = [0,"one";1,"two";2,"three";3,"four"]
+         ["one";"two";"three";"four"] = [0,"one";1,"two";2,"three";3,"four"]
 TEST = mapi ~f:(fun i x -> (i,x)) [] = []
 
 let iteri l ~f =
@@ -510,13 +510,13 @@ let foldi t ~f ~init =
 
 let filteri l ~f =
   List.rev (foldi l
-      ~f:(fun pos acc x ->
-        if f pos x then x :: acc else acc)
-      ~init:[])
+              ~f:(fun pos acc x ->
+                if f pos x then x :: acc else acc)
+              ~init:[])
 
 let reduce l ~f = match l with
-  | [] -> None
-  | hd :: tl -> Some (fold ~init:hd ~f tl)
+| [] -> None
+| hd :: tl -> Some (fold ~init:hd ~f tl)
 
 let reduce_exn l ~f =
   match reduce l ~f with
@@ -560,15 +560,15 @@ end
 
 let concat_map l ~f =
   let rec aux acc = function
-    | [] -> List.rev acc
-    | hd :: tl -> aux (rev_append (f hd) acc) tl
+  | [] -> List.rev acc
+  | hd :: tl -> aux (rev_append (f hd) acc) tl
   in
   aux [] l
 
 let concat_mapi l ~f =
   let rec aux cont acc = function
-    | [] -> List.rev acc
-    | hd :: tl -> aux (cont + 1) (rev_append (f cont hd) acc) tl
+  | [] -> List.rev acc
+  | hd :: tl -> aux (cont + 1) (rev_append (f cont hd) acc) tl
   in
   aux 0 [] l
 
@@ -591,10 +591,10 @@ include struct
    * we don't accidentally rebind more efficient list-specific functions.
   *)
   module Monad = Monad.Make (struct
-      type 'a t = 'a list
-      let bind x f = concat_map x ~f
-      let return x = [x]
-    end)
+                   type 'a t = 'a list
+                   let bind x f = concat_map x ~f
+                   let return x = [x]
+                 end)
   open Monad
   module Monad_infix = Monad_infix
   let ignore = ignore
@@ -608,9 +608,9 @@ end
 
 (** returns final element of list *)
 let rec last_exn list = match list with
-  | [x] -> x
-  | _ :: tl -> last_exn tl
-  | [] -> raise (Invalid_argument "Core_list.last")
+| [x] -> x
+| _ :: tl -> last_exn tl
+| [] -> raise (Invalid_argument "Core_list.last")
 
 TEST = last_exn [1;2;3] = 3
 TEST = last_exn [1] = 1
@@ -618,19 +618,19 @@ TEST = last_exn (Test_values.long1 ()) = 99_999
 
 (** optionally returns final element of list *)
 let rec last list = match list with
-  | [x] -> Some x
-  | _ :: tl -> last tl
-  | [] -> None
+| [x] -> Some x
+| _ :: tl -> last tl
+| [] -> None
 
 (* returns list without adjacent duplicates *)
 let dedup_without_sorting ?(compare=Pervasives.compare) list =
   let rec loop list accum = match list with
-    | [] -> accum
-    | hd :: [] -> hd :: accum
-    | hd1 :: hd2 :: tl ->
-      if compare hd1 hd2 = 0
-      then loop (hd2 :: tl) accum
-      else loop (hd2 :: tl) (hd1 :: accum)
+  | [] -> accum
+  | hd :: [] -> hd :: accum
+  | hd1 :: hd2 :: tl ->
+    if compare hd1 hd2 = 0
+    then loop (hd2 :: tl) accum
+    else loop (hd2 :: tl) (hd1 :: accum)
   in
   loop list []
 
@@ -644,18 +644,18 @@ TEST = dedup [5;5;5;5;5] = [5]
 TEST = length (dedup [2;1;5;3;4]) = 5
 TEST = length (dedup [2;3;5;3;4]) = 4
 TEST = length (dedup [(0,1);(2,2);(0,2);(4,1)] ~compare:(fun (a,_) (b,_) ->
-      Pervasives.compare a b)) = 3
+                 Pervasives.compare a b)) = 3
 TEST = length (dedup [(0,1);(2,2);(0,2);(4,1)] ~compare:(fun (_,a) (_,b) ->
-      Pervasives.compare a b)) = 2
+                 Pervasives.compare a b)) = 2
 
 let contains_dup ?compare lst = length (dedup ?compare lst) <> length lst
 
 let find_a_dup ?(compare=Pervasives.compare) l =
   let sorted = List.sort ~cmp:compare l in
   let rec loop l = match l with
-      [] | [_] -> None
-    | hd1 :: hd2 :: tl ->
-      if compare hd1 hd2 = 0 then Some (hd1) else loop (hd2 :: tl)
+    [] | [_] -> None
+  | hd1 :: hd2 :: tl ->
+    if compare hd1 hd2 = 0 then Some (hd1) else loop (hd2 :: tl)
   in
   loop sorted
 
@@ -668,9 +668,9 @@ TEST = find_a_dup [3;5;4;5;12] = Some 5
 TEST = find_a_dup [3;5;12;5;12] = Some 5
 TEST = find_a_dup [(0,1);(2,2);(0,2);(4,1)] = None
 TEST = (find_a_dup [(0,1);(2,2);(0,2);(4,1)]
-    ~compare:(fun (_,a) (_,b) -> Pervasives.compare a b)) <> None
+          ~compare:(fun (_,a) (_,b) -> Pervasives.compare a b)) <> None
 TEST = let dup = find_a_dup [(0,1);(2,2);(0,2);(4,1)]
-    ~compare:(fun (a,_) (b,_) -> Pervasives.compare a b)
+                   ~compare:(fun (a,_) (b,_) -> Pervasives.compare a b)
   in
   match dup with
   | Some (0, _) -> true
@@ -717,7 +717,7 @@ TEST = filter_map ~f:(fun x -> Some x) Test_values.l1 = Test_values.l1
 TEST = filter_map ~f:(fun x -> Some x) [] = []
 TEST = filter_map ~f:(fun _x -> None) [1.;2.;3.] = []
 TEST = filter_map
-    ~f:(fun x -> if (x > 0) then Some x else None) [1;-1;3] = [1;3]
+         ~f:(fun x -> if (x > 0) then Some x else None) [1;-1;3] = [1;3]
 
 let rev_filter_mapi l ~f =
   let rec loop i l accum =
@@ -738,7 +738,7 @@ TEST = filter_mapi ~f:(fun _i _x -> None) [1.;2.;3.] = []
 TEST = filter_mapi ~f:(fun _i x -> if (x > 0) then Some x else None) [1;-1;3]
   = [1;3]
 TEST = filter_mapi ~f:(fun i x -> if (i mod 2=0) then Some x else None)
-    [1;-1;3] = [1;3]
+         [1;-1;3] = [1;3]
 
 
 let filter_opt l = filter_map l ~f:(fun x -> x)
@@ -838,8 +838,8 @@ let rec drop_while t ~f =
 
 let take_while t ~f =
   let rec loop acc = function
-    | hd :: tl when f hd -> loop (hd :: acc) tl
-    | _ -> rev acc
+  | hd :: tl when f hd -> loop (hd :: acc) tl
+  | _ -> rev acc
   in
   loop [] t
 ;;
@@ -847,12 +847,12 @@ let take_while t ~f =
 let cartesian_product list1 list2 =
   if list2 = [] then [] else
     let rec loop l1 l2 accum = match l1 with
-      | [] -> accum
-      | (hd :: tl) ->
-        loop tl l2
-          (List.rev_append
-             (map ~f:(fun x -> (hd,x)) l2)
-             accum)
+    | [] -> accum
+    | (hd :: tl) ->
+      loop tl l2
+        (List.rev_append
+           (map ~f:(fun x -> (hd,x)) l2)
+           accum)
     in
     List.rev (loop list1 list2 [])
 
@@ -862,7 +862,7 @@ TEST = concat [[]] = []
 TEST = concat [[3]] = [3]
 TEST = concat [[1;2;3;4]] = [1;2;3;4]
 TEST = concat
-    [[1;2;3;4];[5;6;7];[8;9;10];[];[11;12]]
+         [[1;2;3;4];[5;6;7];[8;9;10];[];[11;12]]
   = [1;2;3;4;5;6;7;8;9;10;11;12]
 
 let concat_no_order l = fold l ~init:[] ~f:(fun acc l -> rev_append l acc)

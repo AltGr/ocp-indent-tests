@@ -48,7 +48,7 @@ val snd3 : (_  * 'a * _ ) -> 'a
 val trd3 : (_  * _  * 'a) -> 'a
 
 (**
-   {6 Option handling}
+  {6 Option handling}
 *)
 val uw : 'a option -> 'a
 
@@ -93,10 +93,10 @@ val sexp_of___ : _ -> Sexp.t
    Here is a typical example:
 
    {[
-   let find l ~f =
-   with_return (fun r ->
-   List.iter l ~f:(fun x -> if f x then r.return (Some x));
-   None)
+     let find l ~f =
+       with_return (fun r ->
+         List.iter l ~f:(fun x -> if f x then r.return (Some x));
+         None)
    ]}
 
    It is only because of a deficiency of ML types that [with_return] doesn't have type:

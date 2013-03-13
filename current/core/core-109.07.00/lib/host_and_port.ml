@@ -33,6 +33,6 @@ include (Hashable.Make_binable (T) : Hashable.S_binable with type t := t)
 include Comparable.Make_binable (T)
 
 let t_of_sexp = function
-  | Sexp.Atom s as sexp ->
-    (try of_string s with Failure err -> of_sexp_error err sexp)
-  | sexp -> t_of_sexp sexp
+| Sexp.Atom s as sexp ->
+  (try of_string s with Failure err -> of_sexp_error err sexp)
+| sexp -> t_of_sexp sexp

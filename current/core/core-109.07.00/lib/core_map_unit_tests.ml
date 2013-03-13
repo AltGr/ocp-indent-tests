@@ -11,38 +11,38 @@ open Std
 open Core_map_intf
 
 module Unit_tests
-    (Key : sig
-       type 'a t with sexp
+         (Key : sig
+            type 'a t with sexp
 
-       val of_int : int -> int t
-       val to_int : int t -> int
-     end)
-    (Map : sig
-       type ('a, 'b, 'c) t_
-       type ('a, 'b, 'c) tree
+            val of_int : int -> int t
+            val to_int : int t -> int
+          end)
+         (Map : sig
+            type ('a, 'b, 'c) t_
+            type ('a, 'b, 'c) tree
 
-       type ('a, 'b, 'c) create_options
+            type ('a, 'b, 'c) create_options
 
-       include Creators
-         with type ('a, 'b, 'c) t    := ('a, 'b, 'c) t_
-         with type ('a, 'b, 'c) tree := ('a, 'b, 'c) tree
-         with type 'a key := 'a Key.t
-         with type ('a, 'b, 'c) options := ('a, 'b, 'c) create_options
+            include Creators
+              with type ('a, 'b, 'c) t    := ('a, 'b, 'c) t_
+              with type ('a, 'b, 'c) tree := ('a, 'b, 'c) tree
+              with type 'a key := 'a Key.t
+              with type ('a, 'b, 'c) options := ('a, 'b, 'c) create_options
 
-       val simplify_creator : (int, Int.comparator, 'c) create_options -> 'c
+            val simplify_creator : (int, Int.comparator, 'c) create_options -> 'c
 
-       type ('a, 'b, 'c) access_options
+            type ('a, 'b, 'c) access_options
 
-       include Accessors
-         with type ('a, 'b, 'c) t    := ('a, 'b, 'c) t_
-         with type ('a, 'b, 'c) tree := ('a, 'b, 'c) tree
-         with type 'a key := 'a Key.t
-         with type ('a, 'b, 'c) options := ('a, 'b, 'c) access_options
+            include Accessors
+              with type ('a, 'b, 'c) t    := ('a, 'b, 'c) t_
+              with type ('a, 'b, 'c) tree := ('a, 'b, 'c) tree
+              with type 'a key := 'a Key.t
+              with type ('a, 'b, 'c) options := ('a, 'b, 'c) access_options
 
-       val simplify_accessor : (int, Int.comparator, 'c) access_options -> 'c
-     end)
-    (* The result signature doesn't actually mean anything -- the values are required so
-       that implementors are reminded to add a unit test for each one. *)
+            val simplify_accessor : (int, Int.comparator, 'c) access_options -> 'c
+          end)
+  (* The result signature doesn't actually mean anything -- the values are required so
+     that implementors are reminded to add a unit test for each one. *)
   : Creators_and_accessors = struct
   module Map = struct
     include Map
@@ -169,15 +169,15 @@ module Unit_tests
           | 1 -> add_or_remove ~prefer:`Remove
           | 2 ->
             begin match caml_choose caml_map with
-              | None ->
-                assert (Map.is_empty core_map);
-                assert (Map.length core_map = 0)
-              | Some (key, data) ->
-                assert (Caml_map.find key caml_map = data);
-                assert (not (Map.is_empty core_map));
-                assert (Map.length core_map = Caml_map.cardinal caml_map);
-                assert (Map.mem core_map key);
-                assert (Map.find core_map key = Some data)
+            | None ->
+              assert (Map.is_empty core_map);
+              assert (Map.length core_map = 0)
+            | Some (key, data) ->
+              assert (Caml_map.find key caml_map = data);
+              assert (not (Map.is_empty core_map));
+              assert (Map.length core_map = Caml_map.cardinal caml_map);
+              assert (Map.mem core_map key);
+              assert (Map.find core_map key = Some data)
             end;
             old_values
           | 3 ->
@@ -394,8 +394,8 @@ module Unit_tests
   TEST =
     let m1 = Map.add (random_map Key.samples) ~key:Key.sample ~data:0 in
     let m2 = Map.change m1 Key.sample (function
-        | Some _ -> None
-        | None -> Some 0)
+             | Some _ -> None
+             | None -> Some 0)
     in
     match Map.find m2 Key.sample with
     | None -> true
@@ -525,10 +525,10 @@ module Unit_tests
     let m1 = random_map Key.samples in
     let m2 =
       Map.change m1 key (function
-        | None -> assert false
-        | Some v ->
-          assert (v <> 2_000);
-          Some 2_000)
+      | None -> assert false
+      | Some v ->
+        assert (v <> 2_000);
+        Some 2_000)
     in
     Map.symmetric_diff m1 m2 ~data_equal:(=) =
       [(key, `Unequal (Map.find_exn m1 key, 2000))]
@@ -539,8 +539,8 @@ module Unit_tests
   TEST =
     let map = random_map Key.samples in
     let added_to_self = Map.merge map map ~f:(fun ~key:_ -> function
-        | `Left _ | `Right _ -> assert false
-        | `Both (x1, x2) -> Some (x1 + x2))
+                        | `Left _ | `Right _ -> assert false
+                        | `Both (x1, x2) -> Some (x1 + x2))
     in
     let doubled = Map.map map ~f:(fun x -> x * 2) in
     Map.equal (=) added_to_self doubled
@@ -653,17 +653,17 @@ module Unit_tests
     assert (Map.prev_key map min_key = None);
     assert (Map.next_key map max_key = None);
     let optional_key_equal key = function
-      | None -> false
-      | Some (key', _) -> Key.equal key key'
+    | None -> false
+    | Some (key', _) -> Key.equal key key'
     in
     assert (optional_key_equal min_key (Map.prev_key map after_min));
     assert (optional_key_equal max_key (Map.next_key map before_max));
     (* range_to_alist *)
     assert (alist_equal (Map.range_to_alist ~min:min_key ~max:max_key map)
-        (Map.to_alist map));
+              (Map.to_alist map));
     assert (alist_equal
-        (Map.range_to_alist ~min:after_min ~max:before_max map)
-        (Map.to_alist (Map.remove (Map.remove map min_key) max_key)));
+              (Map.range_to_alist ~min:after_min ~max:before_max map)
+              (Map.to_alist (Map.remove (Map.remove map min_key) max_key)));
     (* rank *)
     assert (Map.rank map min_key    = Some 0);
     assert (Map.rank map after_min  = Some 1);
@@ -710,42 +710,42 @@ module Access_options_with_comparator = struct
 end
 
 TEST_MODULE "Map" = Unit_tests (Key_poly) (struct
-    include Map
-    include Create_options_with_comparator
-    include Access_options_without_comparator
-  end)
+                      include Map
+                      include Create_options_with_comparator
+                      include Access_options_without_comparator
+                    end)
 
 TEST_MODULE "Map.Poly" = Unit_tests (Key_poly) (struct
-    include Map.Poly
-    include Create_options_without_comparator
-    include Access_options_without_comparator
-  end)
+                           include Map.Poly
+                           include Create_options_without_comparator
+                           include Access_options_without_comparator
+                         end)
 
 TEST_MODULE "Int.Map" = Unit_tests (Key_int) (struct
-    include Int.Map
-    include Create_options_without_comparator
-    include Access_options_without_comparator
-  end)
+                          include Int.Map
+                          include Create_options_without_comparator
+                          include Access_options_without_comparator
+                        end)
 
 TEST_MODULE "Map.Tree" = Unit_tests (Key_poly) (struct
-    include Map.Tree
-    type ('a, 'b, 'c) t_   = ('a, 'b, 'c) t
-    type ('a, 'b, 'c) tree = ('a, 'b, 'c) Map.tree
-    include Create_options_with_comparator
-    include Access_options_with_comparator
-  end)
+                           include Map.Tree
+                           type ('a, 'b, 'c) t_   = ('a, 'b, 'c) t
+                           type ('a, 'b, 'c) tree = ('a, 'b, 'c) Map.tree
+                           include Create_options_with_comparator
+                           include Access_options_with_comparator
+                         end)
 
 TEST_MODULE "Map.Poly.Tree" = Unit_tests (Key_poly) (struct
-    include Map.Poly.Tree
-    type ('a, 'b, 'c) t_   = ('a, 'b, 'c) Map.Poly.tree
-    type ('a, 'b, 'c) tree = ('a, 'b, 'c) Map.Poly.tree
-    include Create_options_without_comparator
-    include Access_options_without_comparator
-  end)
+                                include Map.Poly.Tree
+                                type ('a, 'b, 'c) t_   = ('a, 'b, 'c) Map.Poly.tree
+                                type ('a, 'b, 'c) tree = ('a, 'b, 'c) Map.Poly.tree
+                                include Create_options_without_comparator
+                                include Access_options_without_comparator
+                              end)
 
 TEST_MODULE "Int.Map.Tree" = Unit_tests (Key_int) (struct
-    include Int.Map.Tree
-    type ('a, 'b, 'c) tree = ('a, 'b, 'c) Int.Map.tree
-    include Create_options_without_comparator
-    include Access_options_without_comparator
-  end)
+                               include Int.Map.Tree
+                               type ('a, 'b, 'c) tree = ('a, 'b, 'c) Int.Map.tree
+                               include Create_options_without_comparator
+                               include Access_options_without_comparator
+                             end)

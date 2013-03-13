@@ -67,51 +67,51 @@ end
 let empty = Empty
 
 let height = function
-  | Empty -> 0
-  | Leaf _ -> 1
-  | Node (_l, _k, _v, height, _r) -> height
+| Empty -> 0
+| Leaf _ -> 1
+| Node (_l, _k, _v, height, _r) -> height
 
 let invariant compare =
   let legal_left_key key = function
-    | Empty -> ()
-    | Leaf (left_key, _)
-    | Node (_, left_key, _, _, _) ->
-      assert (compare left_key key < 0)
+  | Empty -> ()
+  | Leaf (left_key, _)
+  | Node (_, left_key, _, _, _) ->
+    assert (compare left_key key < 0)
   in
   let legal_right_key key = function
-    | Empty -> ()
-    | Leaf (right_key, _)
-    | Node (_, right_key, _, _, _) ->
-      assert (compare right_key key > 0)
+  | Empty -> ()
+  | Leaf (right_key, _)
+  | Node (_, right_key, _, _, _) ->
+    assert (compare right_key key > 0)
   in
   let rec inv = function
-    | Empty | Leaf _ -> ()
-    | Node (left, k, _v, h, right) ->
-      let (hl, hr) = (height left, height right) in
-      inv left;
-      inv right;
-      legal_left_key k left;
-      legal_right_key k right;
-      assert (h = Int.max hl hr + 1);
-      assert (abs (hl - hr) <= 2)
+  | Empty | Leaf _ -> ()
+  | Node (left, k, _v, h, right) ->
+    let (hl, hr) = (height left, height right) in
+    inv left;
+    inv right;
+    legal_left_key k left;
+    legal_right_key k right;
+    assert (h = Int.max hl hr + 1);
+    assert (abs (hl - hr) <= 2)
   in inv
 
 let invariant t ~compare = invariant compare t
 
 (* In the following comments,
    't is balanced' means that 'invariant t' does not
-     raise an exception.  This implies of course that each node's height field is
-     correct.
+   raise an exception.  This implies of course that each node's height field is
+   correct.
    't is balanceable' means that height of the left and right subtrees of t
-     differ by at most 3.
+   differ by at most 3.
 *)
 
 (* In the following comments,
    't is balanced' means that 'invariant t' does not
-     raise an exception.  This implies of course that each node's height field is
-     correct.
+   raise an exception.  This implies of course that each node's height field is
+   correct.
    't is balanceable' means that height of the left and right subtrees of t
-     differ by at most 3.
+   differ by at most 3.
 *)
 
 (* @pre: left and right subtrees have correct heights
@@ -124,8 +124,8 @@ let update_height n =
   | _ -> assert false
 
 (*let balanceable = function
-   | Empty | Leaf _ -> true
-   | Node(l, _, _, _, r) -> abs (height l - height r) <= 3*)
+  | Empty | Leaf _ -> true
+  | Node(l, _, _, _, r) -> abs (height l - height r) <= 3*)
 
 (* @pre: left and right subtrees are balanced
    @pre: tree is balanceable

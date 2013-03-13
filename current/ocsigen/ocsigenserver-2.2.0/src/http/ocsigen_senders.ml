@@ -17,7 +17,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 *)
 (** This module provides predefined "senders" for usual types of pages to be
-   sent by the server: xhtml, files, ... *)
+    sent by the server: xhtml, files, ... *)
 
 open Ocsigen_lib
 open Ocsigen_http_frame

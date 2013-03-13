@@ -18,13 +18,13 @@ let server =
       Deferred.create (fun finished ->
         let rec loop () =
           upon (Reader.read_line reader) (function
-            | `Ok query ->
-              message (sprintf "Server got query: %s\n" query);
-              Writer.write writer (sprintf "Response to %s\n" query);
-              loop ()
-            | `Eof ->
-              Ivar.fill finished ();
-              message "Server got EOF\n")
+          | `Ok query ->
+            message (sprintf "Server got query: %s\n" query);
+            Writer.write writer (sprintf "Response to %s\n" query);
+            loop ()
+          | `Eof ->
+            Ivar.fill finished ();
+            message "Server got EOF\n")
         in
         loop ()))
 ;;
@@ -45,11 +45,11 @@ let () =
           Writer.write writer query;
           Writer.write_char writer '\n';
           upon (Reader.read_line reader) (function
-            | `Eof ->
-              message "reader got unexpected Eof"
-            | `Ok response ->
-              message (sprintf "Client got response: %s\n" response);
-              loop queries)
+          | `Eof ->
+            message "reader got unexpected Eof"
+          | `Ok response ->
+            message (sprintf "Client got response: %s\n" response);
+            loop queries)
       in
       loop queries))
 ;;

@@ -43,7 +43,7 @@ let get_host_rrd_handler (req : Http.Request.t) (s : Unix.file_descr) _ =
     ) in
   Http_svr.headers s
     (Http.http_200_ok ~version:"1.0" ~keep_alive:false () @
-       ["Access-Control-Allow-Origin: *"]);
+     ["Access-Control-Allow-Origin: *"]);
   Rrd.to_fd ~json:(List.mem_assoc "json" query) rrd s
 
 (* Get an XML/JSON document (as a string) representing the updates since the
@@ -81,9 +81,9 @@ let get_rrd_updates_handler (req : Http.Request.t) (s : Unix.file_descr) _ =
   let headers =
     if json then headers else headers @ [Http.Hdr.content_type ^ ": text/xml"] in
   let headers = headers @ [
-      "Access-Control-Allow-Origin: *";
-      "Access-Control-Allow-Headers: X-Requested-With";
-    ] in
+                  "Access-Control-Allow-Origin: *";
+                  "Access-Control-Allow-Headers: X-Requested-With";
+                ] in
   Http_svr.headers s headers;
   ignore (Unix.write s reply 0 (String.length reply))
 

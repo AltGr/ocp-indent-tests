@@ -76,19 +76,19 @@ let check_args ~loc ~pos ~len (bstr : t) =
     invalid_arg (sprintf "Bigstring.%s: length(bstr) < pos + len" loc)
 
 let get_opt_len bstr ~pos = function
-  | Some len -> len
-  | None -> length bstr - pos
+| Some len -> len
+| None -> length bstr - pos
 
 let check_min_len ~loc ~len = function
-  | None -> 0
-  | Some min_len ->
-    if min_len > len then (
-      let msg = sprintf "%s: min_len (%d) > len (%d)" loc min_len len in
-      invalid_arg msg);
-    if min_len < 0 then (
-      let msg = sprintf "%s: min_len (%d) < 0" loc min_len in
-      invalid_arg msg);
-    min_len
+| None -> 0
+| Some min_len ->
+  if min_len > len then (
+    let msg = sprintf "%s: min_len (%d) > len (%d)" loc min_len len in
+    invalid_arg msg);
+  if min_len < 0 then (
+    let msg = sprintf "%s: min_len (%d) < 0" loc min_len in
+    invalid_arg msg);
+  min_len
 
 let sub_shared ?(pos = 0) ?len (bstr : t) =
   let len = get_opt_len bstr ~pos len in
@@ -102,7 +102,7 @@ external unsafe_blit :
   = "bigstring_blit_stub"
 
 let blit_common
-    ~loc ~get_src_len ~get_dst_len ~blit ~src ?src_pos ?src_len ~dst ?(dst_pos = 0) () =
+      ~loc ~get_src_len ~get_dst_len ~blit ~src ?src_pos ?src_len ~dst ?(dst_pos = 0) () =
   let (src_pos, len) =
     Ordered_collection_common.get_pos_len_exn ?pos:src_pos ?len:src_len
       ~length:(get_src_len src)
@@ -356,12 +356,12 @@ external unsafe_writev :
   = "bigstring_writev_stub"
 
 let get_iovec_count loc iovecs = function
-  | None -> Array.length iovecs
-  | Some count ->
-    if count < 0 then invalid_arg (loc ^ ": count < 0");
-    let n_iovecs = Array.length iovecs in
-    if count > n_iovecs then invalid_arg (loc ^ ": count > n_iovecs");
-    count
+| None -> Array.length iovecs
+| Some count ->
+  if count < 0 then invalid_arg (loc ^ ": count < 0");
+  let n_iovecs = Array.length iovecs in
+  if count > n_iovecs then invalid_arg (loc ^ ": count > n_iovecs");
+  count
 
 let writev fd ?count iovecs =
   let count = get_iovec_count "writev" iovecs count in
@@ -558,98 +558,98 @@ TEST_MODULE "binary accessors" = struct
   ;;
 
   TEST = test_accessor ~buf
-      ~fget:unsafe_get_int16_le
-      ~fset:unsafe_set_int16_le
-      [-32768; -1; 0; 1; 32767]
+           ~fget:unsafe_get_int16_le
+           ~fset:unsafe_set_int16_le
+           [-32768; -1; 0; 1; 32767]
 
   TEST = test_accessor ~buf
-      ~fget:unsafe_get_uint16_le
-      ~fset:unsafe_set_uint16_le
-      [0; 1; 65535]
+           ~fget:unsafe_get_uint16_le
+           ~fset:unsafe_set_uint16_le
+           [0; 1; 65535]
 
   TEST = test_accessor ~buf
-      ~fget:unsafe_get_int16_be
-      ~fset:unsafe_set_int16_be
-      [-32768; -1; 0; 1; 32767]
+           ~fget:unsafe_get_int16_be
+           ~fset:unsafe_set_int16_be
+           [-32768; -1; 0; 1; 32767]
 
   TEST = test_accessor ~buf
-      ~fget:unsafe_get_uint16_be
-      ~fset:unsafe_set_uint16_be
-      [0; 1; 65535]
+           ~fget:unsafe_get_uint16_be
+           ~fset:unsafe_set_uint16_be
+           [0; 1; 65535]
 
 
 IFDEF ARCH_SIXTYFOUR THEN
 
 TEST = test_accessor ~buf
-    ~fget:unsafe_get_int32_le
-    ~fset:unsafe_set_int32_le
-    [Int64.to_int_exn (-2147483648L); -1; 0; 1; Int64.to_int_exn 2147483647L]
+         ~fget:unsafe_get_int32_le
+         ~fset:unsafe_set_int32_le
+         [Int64.to_int_exn (-2147483648L); -1; 0; 1; Int64.to_int_exn 2147483647L]
 
 TEST = test_accessor ~buf
-    ~fget:unsafe_get_int32_be
-    ~fset:unsafe_set_int32_be
-    [Int64.to_int_exn (-2147483648L); -1; 0; 1; Int64.to_int_exn 2147483647L]
+         ~fget:unsafe_get_int32_be
+         ~fset:unsafe_set_int32_be
+         [Int64.to_int_exn (-2147483648L); -1; 0; 1; Int64.to_int_exn 2147483647L]
 
 TEST = test_accessor ~buf
-    ~fget:unsafe_get_int64_le_exn
-    ~fset:unsafe_set_int64_le
-    [Int64.to_int_exn (-2147483648L); -1; 0; 1; Int64.to_int_exn 2147483647L]
+         ~fget:unsafe_get_int64_le_exn
+         ~fset:unsafe_set_int64_le
+         [Int64.to_int_exn (-2147483648L); -1; 0; 1; Int64.to_int_exn 2147483647L]
 
 TEST = test_accessor ~buf
-    ~fget:unsafe_get_int64_be_exn
-    ~fset:unsafe_set_int64_be
-    [Int64.to_int_exn (-0x4000_0000_0000_0000L);
-     Int64.to_int_exn (-2147483648L); -1; 0; 1; Int64.to_int_exn 2147483647L;
-     Int64.to_int_exn 0x3fff_ffff_ffff_ffffL]
+         ~fget:unsafe_get_int64_be_exn
+         ~fset:unsafe_set_int64_be
+         [Int64.to_int_exn (-0x4000_0000_0000_0000L);
+          Int64.to_int_exn (-2147483648L); -1; 0; 1; Int64.to_int_exn 2147483647L;
+          Int64.to_int_exn 0x3fff_ffff_ffff_ffffL]
 
 ENDIF (* ARCH_SIXTYFOUR *)
 
 TEST = test_accessor ~buf
-    ~fget:unsafe_get_int64_t_le
-    ~fset:unsafe_set_int64_t_le
-    [-0x8000_0000_0000_0000L;
-     -0x789A_BCDE_F012_3456L;
-     -0xFFL;
-     Int64.minus_one;
-     Int64.zero;
-     Int64.one;
-     0x789A_BCDE_F012_3456L;
-     0x7FFF_FFFF_FFFF_FFFFL]
+         ~fget:unsafe_get_int64_t_le
+         ~fset:unsafe_set_int64_t_le
+         [-0x8000_0000_0000_0000L;
+          -0x789A_BCDE_F012_3456L;
+          -0xFFL;
+          Int64.minus_one;
+          Int64.zero;
+          Int64.one;
+          0x789A_BCDE_F012_3456L;
+          0x7FFF_FFFF_FFFF_FFFFL]
 
 TEST = test_accessor ~buf
-    ~fget:unsafe_get_int64_t_be
-    ~fset:unsafe_set_int64_t_be
-    [-0x8000_0000_0000_0000L;
-     -0x789A_BCDE_F012_3456L;
-     -0xFFL;
-     Int64.minus_one;
-     Int64.zero;
-     Int64.one;
-     0x789A_BCDE_F012_3456L;
-     0x7FFF_FFFF_FFFF_FFFFL]
+         ~fget:unsafe_get_int64_t_be
+         ~fset:unsafe_set_int64_t_be
+         [-0x8000_0000_0000_0000L;
+          -0x789A_BCDE_F012_3456L;
+          -0xFFL;
+          Int64.minus_one;
+          Int64.zero;
+          Int64.one;
+          0x789A_BCDE_F012_3456L;
+          0x7FFF_FFFF_FFFF_FFFFL]
 
 TEST = test_accessor ~buf
-    ~fget:unsafe_get_int64_t_be
-    ~fset:unsafe_set_int64_t_be
-    [-0x8000_0000_0000_0000L;
-     -0x789A_BCDE_F012_3456L;
-     -0xFFL;
-     Int64.minus_one;
-     Int64.zero;
-     Int64.one;
-     0x789A_BCDE_F012_3456L;
-     0x7FFF_FFFF_FFFF_FFFFL]
+         ~fget:unsafe_get_int64_t_be
+         ~fset:unsafe_set_int64_t_be
+         [-0x8000_0000_0000_0000L;
+          -0x789A_BCDE_F012_3456L;
+          -0xFFL;
+          Int64.minus_one;
+          Int64.zero;
+          Int64.one;
+          0x789A_BCDE_F012_3456L;
+          0x7FFF_FFFF_FFFF_FFFFL]
 
-    (* Test 63/64-bit precision boundary.
+(* Test 63/64-bit precision boundary.
 
-       Seen on a data stream the constant 0x4000_0000_0000_0000 is supposed to
-       represent a 64-bit positive integer (2^62).
+   Seen on a data stream the constant 0x4000_0000_0000_0000 is supposed to
+   represent a 64-bit positive integer (2^62).
 
-       Whilst this bit pattern does fit inside an OCaml value of type [int] on a
-       64-bit machine, it is the representation of a negative number (the most negative
-       number representable in type [int]), and in particular is not the representation
-       of 2^62.  It is thus suitable for this test.
-    *)
+   Whilst this bit pattern does fit inside an OCaml value of type [int] on a
+   64-bit machine, it is the representation of a negative number (the most negative
+   number representable in type [int]), and in particular is not the representation
+   of 2^62.  It is thus suitable for this test.
+*)
 TEST = let too_big = 0x4000_0000_0000_0000L in
   unsafe_set_int64_t_le buf ~pos:0 too_big;
   try

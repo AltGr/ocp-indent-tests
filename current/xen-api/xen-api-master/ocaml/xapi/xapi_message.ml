@@ -210,7 +210,7 @@ let symlinks _ref gen message basefilename =
     symlinks
 
 (** Check to see if the UUID is valid. This should not use get_by_uuid as
-   this causes spurious exceptions to be logged... *)
+    this causes spurious exceptions to be logged... *)
 let check_uuid ~__context ~cls ~uuid =
   try
     (match cls with
@@ -280,7 +280,7 @@ let cache_remove _ref =
 
 
 (** Write: write message to disk. Returns boolean indicating whether
-   message was written *)
+    message was written *)
 let write ~__context ~_ref ~message =
   (* Check if a message with _ref has already been written *)
   let message_exists () =
@@ -353,7 +353,7 @@ let write ~__context ~_ref ~message =
 
 
 (** create: Create a new message, and write to disk. Returns null ref
-   if write failed, or message ref otherwise. *)
+    if write failed, or message ref otherwise. *)
 let create ~__context ~name ~priority ~cls ~obj_uuid ~body =
   debug "Message.create %s %Ld %s %s" name priority
     (class_to_string cls) obj_uuid;
@@ -529,9 +529,9 @@ let get_since_for_events ~__context since =
         match List.rev !in_memory_cache with
         | (last_in_memory, _, _) :: _ when last_in_memory < since ->
           Some (List.filter_map
-                (fun (gen,_ref,msg) ->
-                  if gen > since then Some (gen, Xapi_event.MCreate (_ref, msg)) else None)
-                !in_memory_cache)
+              (fun (gen,_ref,msg) ->
+                if gen > since then Some (gen, Xapi_event.MCreate (_ref, msg)) else None)
+              !in_memory_cache)
         | (last_in_memory, _, _) :: _ ->
           debug "get_since_for_events: last_in_memory (%Ld) > since (%Ld): Using slow message lookup" last_in_memory since;
           None
@@ -651,7 +651,7 @@ let rss_handler (req: Http.Request.t) (bio: Buf_io.t) _ =
       ignore(Unix.write s body 0 (String.length body)))
 
 (** Handler for PUTing messages to a host.
-   Query params: { cls=<obj class>, uuid=<obj uuid> } *)
+    Query params: { cls=<obj class>, uuid=<obj uuid> } *)
 let handler (req: Http.Request.t) fd _ =
   let query = req.Http.Request.query in
   req.Http.Request.close <- true ;

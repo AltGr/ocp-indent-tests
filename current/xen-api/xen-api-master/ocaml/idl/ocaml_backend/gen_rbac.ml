@@ -38,18 +38,18 @@ let writer_csv static_roles_permissions static_permissions_roles =
      (List.fold_left (fun rr r->rr^r^",") "" Datamodel.roles_all)
   )
   ^List.fold_left
-      (fun acc (permission,roles) ->
-        (Printf.sprintf ",%s," permission)
-        ^(List.fold_left 
-            (fun acc role -> if (List.exists (fun r->r=role) roles) then "X,"^acc else ","^acc) 
-            "" 
-            (List.rev Datamodel.roles_all) (* Xs are ordered by roles in roles_all *)
-        )
-        ^"\n"
-        ^acc
+    (fun acc (permission,roles) ->
+      (Printf.sprintf ",%s," permission)
+      ^(List.fold_left 
+          (fun acc role -> if (List.exists (fun r->r=role) roles) then "X,"^acc else ","^acc) 
+          "" 
+          (List.rev Datamodel.roles_all) (* Xs are ordered by roles in roles_all *)
       )
-      ""
-      static_permissions_roles
+      ^"\n"
+      ^acc
+    )
+    ""
+    static_permissions_roles
 
 let hash2uuid str =
   let h = Digest.string str in
@@ -123,9 +123,9 @@ let writer_role name nroles =
     try List.assoc role_name_label Datamodel.role_description
     with Not_found -> 
       failwith (Printf.sprintf
-            "Check Datamodel.role_description: there's no role description for role %s"
-            role_name_label
-        )
+          "Check Datamodel.role_description: there's no role description for role %s"
+          role_name_label
+      )
   in
   (Printf.sprintf "let %s = \n  { (* %s *)\n" (role_label name) role_number)
   (*^(Printf.sprintf "  role_ref = \"%s\";\n" role_ref)*)
@@ -162,7 +162,7 @@ let writer_stdout static_roles_permissions static_permissions_roles =
         let permissions_label = permissions_label _role in
         (*let subroles_label = subroles_label _role in*)
         acc^
-          (Printf.sprintf "(* %i elements in %s *)\n" (List.length perms) permissions_label)
+        (Printf.sprintf "(* %i elements in %s *)\n" (List.length perms) permissions_label)
         ^(Printf.sprintf "let %s = [" permissions_label)
         ^(List.fold_left
             (fun acc perm -> (Printf.sprintf "%s; " (permission_name perm))^acc)
@@ -170,16 +170,16 @@ let writer_stdout static_roles_permissions static_permissions_roles =
             perms
         )
         ^Printf.sprintf "]\n\n"
-          (*      (* role's list of permission refs *)
+        (*      (* role's list of permission refs *)
                 ^(Printf.sprintf "(* %i elements in %s *)\n" (List.length perms) subroles_label)
                 ^(Printf.sprintf "let %s = [" subroles_label)
                 ^(List.fold_left
-                  (fun acc perm -> (Printf.sprintf "\"%s\"; " (role_ref perm))^acc)
-                  ""
-                  perms
+                (fun acc perm -> (Printf.sprintf "\"%s\"; " (role_ref perm))^acc)
+                ""
+                perms
                 )
                 ^Printf.sprintf "]\n\n"
-          *)
+        *)
       )
       ""
       static_roles_permissions
@@ -245,17 +245,17 @@ let add_permission_to_roles roles_permissions (obj: obj) (x: message) =
 let get_http_permissions_roles =
   List.fold_left
     (fun acc (http_permission,(_,_,_,_,some_roles,sub_actions))-> acc @
-        let roles = Pervasiveext.default [] some_roles in
-        (Datamodel.rbac_http_permission_prefix ^ http_permission, roles)
-        :: 
-          (List.map (* sub_actions for this http_permission *)
-             (fun (sub_action,some_roles)->
-               let roles = Pervasiveext.default [] some_roles in
-               (Datamodel.rbac_http_permission_prefix ^ http_permission
-                ^ "/" ^ sub_action, roles)
-             )
-             sub_actions
-          )
+                                                                  let roles = Pervasiveext.default [] some_roles in
+                                                                  (Datamodel.rbac_http_permission_prefix ^ http_permission, roles)
+                                                                  :: 
+                                                                    (List.map (* sub_actions for this http_permission *)
+                                                                       (fun (sub_action,some_roles)->
+                                                                         let roles = Pervasiveext.default [] some_roles in
+                                                                         (Datamodel.rbac_http_permission_prefix ^ http_permission
+                                                                          ^ "/" ^ sub_action, roles)
+                                                                       )
+                                                                       sub_actions
+                                                                    )
     )
     []
     Datamodel.http_actions

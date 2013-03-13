@@ -2,13 +2,13 @@ open OUnit;;
 open Core.Std
 
 module F
-    (M : sig
-       type t
-       include Comparable.S with type t := t
-       val one : t
-       val two : t
-       val three : t
-     end) : sig
+         (M : sig
+            type t
+            include Comparable.S with type t := t
+            val one : t
+            val two : t
+            val three : t
+          end) : sig
   val test : OUnit.test
 end = struct
   open M
@@ -154,9 +154,9 @@ module Int' =
 module Int'' =
   F (struct
     include Comparable.Inherit (Int) (struct
-        include Int
-        let component x = x
-      end)
+              include Int
+              let component x = x
+            end)
     let one = 1
     let two = 2
     let three = 3
@@ -176,7 +176,7 @@ let lexicographic_test =
     "1 -1" @? (Comparable.lexicographic [compare] 1 2 = -1);
     "1 1" @? (Comparable.lexicographic [compare] 2 1 = 1);
     let cmp = Array.to_list (Array.init 3 ~f:(fun i a b ->
-          compare a.(i) b.(i))) in
+                               compare a.(i) b.(i))) in
     "3 0" @? (Comparable.lexicographic cmp [|1;2;3;4|] [|1;2;3;9|] = 0);
     "3 -1" @? (Comparable.lexicographic cmp [|1;2;3;4|] [|1;2;4;9|] = -1);
     "3 1" @? (Comparable.lexicographic cmp [|1;2;3;4|] [|1;1;4;9|] = 1);

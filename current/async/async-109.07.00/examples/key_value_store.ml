@@ -12,11 +12,11 @@ module Protocol = struct
 
 
     let from_raw msg = match String.split msg ~on:' ' with
-      | ("help" :: _          ) -> Req_help
-      | ("add"  :: k :: v :: _) -> Req_add (k, v)
-      | ("find" :: k :: _     ) -> Req_find k
-      | ("remove" :: k :: _   ) -> Req_remove k
-      | _                       -> Req_invalid
+    | ("help" :: _          ) -> Req_help
+    | ("add"  :: k :: v :: _) -> Req_add (k, v)
+    | ("find" :: k :: _     ) -> Req_find k
+    | ("remove" :: k :: _   ) -> Req_remove k
+    | _                       -> Req_invalid
   end
 
   module Server_message = struct
@@ -27,9 +27,9 @@ module Protocol = struct
 
 
     let to_raw t = match t with
-      | Rep_fail msg -> "[ERROR] " ^ msg
-      | Rep_succ msg -> msg
-      | Rep_help     -> "Valid commands: help, add, find, remove"
+    | Rep_fail msg -> "[ERROR] " ^ msg
+    | Rep_succ msg -> msg
+    | Rep_help     -> "Valid commands: help, add, find, remove"
   end
 
   module Transport = struct
@@ -73,15 +73,15 @@ module Key_value_store = struct
       P.Rep_succ ("New pair stored: "^k^" -> "^v)
     | R.Req_find k     ->
       begin match Hashtbl.find t.store k with
-        | None   -> P.Rep_fail ("No value found for: "^k)
-        | Some v -> P.Rep_succ v
+      | None   -> P.Rep_fail ("No value found for: "^k)
+      | Some v -> P.Rep_succ v
       end
     | R.Req_remove k   ->
       begin match Hashtbl.find t.store k with
-        | None   -> P.Rep_fail ("No value found for: "^k)
-        | Some _ ->
-          Hashtbl.remove t.store k;
-          P.Rep_succ ("Key removed: "^k)
+      | None   -> P.Rep_fail ("No value found for: "^k)
+      | Some _ ->
+        Hashtbl.remove t.store k;
+        P.Rep_succ ("Key removed: "^k)
       end
 end
 
@@ -90,9 +90,9 @@ let main () =
   Server.create ~port:12321 ~auth:(fun _ _ -> return `Allow) ()
   >>> fun svr ->
   let echo (clt, msg) = Server.send_ignore_errors
-      svr
-      clt
-      (Key_value_store.process kvstore msg) in
+                          svr
+                          clt
+                          (Key_value_store.process kvstore msg) in
   don't_wait_for (Pipe.iter_without_pushback ~f:echo (Server.listen_ignore_errors svr))
 
 let () =

@@ -140,8 +140,8 @@ let first_some x y =
 let some_if cond x = if cond then Some x else None
 
 let filter ~f = function
-  | Some v as o when f v -> o
-  | _ -> None
+| Some v as o when f v -> o
+| _ -> None
 
 let compare ~cmp v1 v2 =
   let tag_to_int = function Some _ -> 1 | None -> 0 in
@@ -155,10 +155,10 @@ let try_with f =
   with _ -> None
 
 include (Monad.Make (struct
-    type 'a t = 'a option
-    let return x = Some x
-    let bind o f =
-      match o with
-      | None -> None
-      | Some x -> f x
-  end) : Monad.S with type 'a t := 'a option)
+           type 'a t = 'a option
+           let return x = Some x
+           let bind o f =
+             match o with
+             | None -> None
+             | Some x -> f x
+         end) : Monad.S with type 'a t := 'a option)

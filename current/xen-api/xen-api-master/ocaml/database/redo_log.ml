@@ -120,9 +120,9 @@ let can_connect_fn log =
 type t =
   (* (tblname, newobjref, (k,v) list) *)
   | CreateRow of string * string * (string*string) list
-        (* (tblname, objref) *)
+  (* (tblname, objref) *)
   | DeleteRow of string * string
-      (* (tblname, objref, fldname, newval) *)
+  (* (tblname, objref, fldname, newval) *)
   | WriteField of string * string * string * string
 
 (* First 9 bytes of encoding of entries is an ASCII string indicating the kind of record, from {"CreateRow", "DeleteRow", "WriteFiel"} *)

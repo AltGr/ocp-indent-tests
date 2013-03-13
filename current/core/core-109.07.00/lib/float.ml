@@ -82,10 +82,10 @@ let iround_exn ?(dir=`Nearest) t =
   else if t <= float_round_lb || t >= float_round_ub
   then invalid_argf "Float.iround_exn: argument out of bounds (%f)" t ()
   else match dir with
-    | `Zero    -> truncate t
-    | `Nearest -> to_int (floor (t +. 0.5))
-    | `Up      -> to_int (ceil  t)
-    | `Down    -> to_int (floor t)
+  | `Zero    -> truncate t
+  | `Nearest -> to_int (floor (t +. 0.5))
+  | `Up      -> to_int (ceil  t)
+  | `Down    -> to_int (floor t)
 
 let iround ?(dir=`Nearest) t =
   try Some (iround_exn ~dir t)

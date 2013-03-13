@@ -56,6 +56,6 @@ val register_basic_authentication_method :
 
 val get_basic_authentication_method :
   Simplexmlparser.xml -> string -> string -> bool Lwt.t
-(** This function combines all the parsers registered with
-    [register_basic_authentication_method]. It might be useful for
-    other extensions. Not for the casual user. *)
+    (** This function combines all the parsers registered with
+        [register_basic_authentication_method]. It might be useful for
+        other extensions. Not for the casual user. *)

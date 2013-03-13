@@ -56,10 +56,10 @@ val is_locked : string -> bool
     There are a few caveats compared to local file locks:
 
     - These calls require the locker to have write access to the directory containing the
-      file being locked.
+    file being locked.
 
     - Unlike a normal flock call the lock may not be removed when the calling program
-      exits (in particular if it is killed with SIGKILL).
+    exits (in particular if it is killed with SIGKILL).
 *)
 module Nfs : sig
   (** [lock ?message path] tries to create and lock the file at [path] by creating a hard

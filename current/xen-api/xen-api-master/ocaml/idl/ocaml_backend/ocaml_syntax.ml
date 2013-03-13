@@ -65,7 +65,7 @@ module Let = struct
       | Named (name, ty) -> "~" ^ name in
     [ Line ("(** " ^ x.doc ^ " *)");
       Line (prefix ^ " " ^ x.name ^ " " ^ 
-          (String.concat " " (List.map param x.params)) ^ " =");
+            (String.concat " " (List.map param x.params)) ^ " =");
       Indent (List.map (fun x -> Line x) x.body) ]
 end
 
@@ -93,15 +93,15 @@ module Module = struct
       | Module x -> items_of x
       | Type x -> [ Type.item_of x ] in
     let opening = "module " ^ x.name ^ " = " ^ 
-        (if x.args = [] 
-         then ""
-         else String.concat " " (List.map (fun x -> "functor(" ^ x ^ ") ->") x.args)) ^
-        "struct" in
+                  (if x.args = [] 
+                   then ""
+                   else String.concat " " (List.map (fun x -> "functor(" ^ x ^ ") ->") x.args)) ^
+                  "struct" in
     [ Line opening;
       Indent  (
         List.map (fun x -> Line x) x.preamble @
-          ( if x.letrec then [ Line "let rec __unused () = ()" ] else [] ) @
-          (List.concat (List.map e x.elements))
+        ( if x.letrec then [ Line "let rec __unused () = ()" ] else [] ) @
+        (List.concat (List.map e x.elements))
       );
       Line "end" ]
 

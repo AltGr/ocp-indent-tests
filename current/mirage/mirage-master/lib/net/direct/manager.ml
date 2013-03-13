@@ -169,7 +169,7 @@ let i_of_ip t addr =
   match addr with
   |None ->
     Hashtbl.fold (fun _ (i,_) a ->
-        i :: a) t.listeners []
+      i :: a) t.listeners []
   |Some addr -> begin
       Hashtbl.fold (fun _ (i,_) a ->
         if Ipv4.get_ip i.ipv4 = addr then i :: a else a

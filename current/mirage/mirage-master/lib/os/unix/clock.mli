@@ -34,4 +34,4 @@ external time : unit -> float = "unix_gettimeofday"
 
 external gmtime : float -> tm = "unix_gmtime"
 (** Convert a time in seconds, as returned by {!OS.Clock.time}, into a date and
-   a time. Assumes UTC (Coordinated Universal Time), also known as GMT. *)
+    a time. Assumes UTC (Coordinated Universal Time), also known as GMT. *)

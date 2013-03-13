@@ -26,9 +26,9 @@ exception Finalized
 type 'a stream
 
 (** A stream may be composed by several substreams.
-   Thus a stream is either something that contains the current buffer and
-   a function to retrieve the following data,
-   or a finished stream with possibly another stream following.
+    Thus a stream is either something that contains the current buffer and
+    a function to retrieve the following data,
+    or a finished stream with possibly another stream following.
 *)
 type 'a step = private
     | Finished of 'a stream option
@@ -109,7 +109,7 @@ val substream : string -> string step -> string step Lwt.t
 (*VVV à revoir : *)
 
 (** returns a stream reading from a file.
-   Do not forget to finalize the stream to close the file.
+    Do not forget to finalize the stream to close the file.
 *)
 val of_file : string -> string t
 

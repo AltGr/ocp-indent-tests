@@ -8,8 +8,8 @@ module Stable = struct
       let stripped = String.strip s in
       if not (String.(=) stripped s) then
         Some (sprintf ("'%s' is not a valid identifier " ^^
-              "because it has whitespace on the edge")
-            s)
+                       "because it has whitespace on the edge")
+                s)
       else if String.(=) s "" then
         Some "Attempt to use empty identifier"
       else if String.contains s '|' then

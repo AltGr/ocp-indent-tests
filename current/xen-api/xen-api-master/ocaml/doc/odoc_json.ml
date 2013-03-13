@@ -213,14 +213,14 @@ let rec print_one_t = function
   | Node ("", _, _) -> ""
   | Node (tag, atts, subs) ->
     "<" ^ tag ^
-      (match atts with
-       | [] -> ""
-       | _ -> " " ^
-           String.concat " " (List.map
-               (fun (a,v) -> (Printf.sprintf "%s=\"%s\" " a (escape_entities (escape_quotes v)))) atts)
-      ) ^ ">" ^
-      (print_t_list subs) ^
-      (Printf.sprintf "</%s>" tag)
+    (match atts with
+     | [] -> ""
+     | _ -> " " ^
+            String.concat " " (List.map
+                (fun (a,v) -> (Printf.sprintf "%s=\"%s\" " a (escape_entities (escape_quotes v)))) atts)
+    ) ^ ">" ^
+    (print_t_list subs) ^
+    (Printf.sprintf "</%s>" tag)
 
 and print_t_list l =
   String.concat "" (List.map print_one_t l)
@@ -341,10 +341,10 @@ class gen () =
       | Parameter.Simple_name sn ->
         Object (["name", String sn.Parameter.sn_name;
                  "type", self#json_of_type_expr sn.Parameter.sn_type] @
-              (match sn.Parameter.sn_text with
-               | None -> []
-               | Some t -> ["comment", self#json_of_comment t])
-          )
+                (match sn.Parameter.sn_text with
+                 | None -> []
+                 | Some t -> ["comment", self#json_of_comment t])
+        )
       | Parameter.Tuple (l,texpr) ->
         Object ["tuple", Object
                   ["type", self#json_of_type_expr texpr; "contents", Array (List.map self#json_of_parameter l)]]
@@ -359,8 +359,8 @@ class gen () =
       let te = "type", self#json_of_type_expr v.Value.val_type in
       let params = "params", Array (List.map self#json_of_parameter v.Value.val_parameters) in
       (*    let code = match v.Value.val_code with
-          None -> [] | Some s -> [node "code" [Leaf s]]
-          in*)
+            None -> [] | Some s -> [node "code" [Leaf s]]
+            in*)
       Object (name :: loc :: info :: te :: params :: []) (* @ code *)
 
     method json_of_exception e =
@@ -376,9 +376,9 @@ class gen () =
         | Some ea -> ["exception_alias", String ea.Exception.ea_name]
       in
       (*    let code = match e.Exception.ex_code with
-          | None -> []
-          | Some s -> [node "code" [Leaf s]]
-          in *)
+            | None -> []
+            | Some s -> [node "code" [Leaf s]]
+            in *)
       Object (name :: loc :: info :: args @ alias) (*  @ code *)
 
     method json_of_included_module im =
@@ -405,8 +405,8 @@ class gen () =
         | Some t -> ["manifest", self#json_of_type_expr t]
       in
       (*    let code = match t.Type.ty_code with
-          | None -> [] | Some s -> [node "code" [Leaf s]]
-          in*)
+            | None -> [] | Some s -> [node "code" [Leaf s]]
+            in*)
       Object (name :: loc :: info :: params :: kind :: manifest @ []) (* @ code *)
 
     method json_of_type_parameter (texp, covar, contravar) =
@@ -447,7 +447,7 @@ class gen () =
       in
       descr_cnt <- descr_cnt + 1;
       Object (["name", String f.Type.rf_name; "mutable", json_of_bool f.Type.rf_mutable] @
-          desc @ ["type", self#json_of_type_expr f.Type.rf_type])
+              desc @ ["type", self#json_of_type_expr f.Type.rf_type])
 
     method json_of_info_opt info =
       descr_cnt <- descr_cnt + 1;
@@ -511,21 +511,21 @@ class gen () =
         "module_alias", String "unavailable" (* self#t_of_module_alias ma *)
       | Module_functor (mparam, mk) ->
         "module_functor", Object (["parameter", self#json_of_module_parameter mparam; self#json_of_module_kind mk])
-        (*      node "module_functor"
-            [ self#t_of_module_parameter mparam ; self#t_of_module_kind mk]*)
+      (*      node "module_functor"
+              [ self#t_of_module_parameter mparam ; self#t_of_module_kind mk]*)
       | Module_apply (mk1, mk2) ->
         "module_apply", String "unavailable"
-        (*      node "module_apply"
-            [ self#t_of_module_kind mk1 ; self#t_of_module_kind mk2]*)
+      (*      node "module_apply"
+              [ self#t_of_module_kind mk1 ; self#t_of_module_kind mk2]*)
       | Module_with (mk, s) ->
         "module_with", String "unavailable"
-        (*      node "module_with"
-            [ self#t_of_module_type_kind mk; node "with" [Leaf s] ]*)
+      (*      node "module_with"
+              [ self#t_of_module_type_kind mk; node "with" [Leaf s] ]*)
       | Module_constraint (mk, mtk) ->
         self#json_of_module_kind mk
-          (*      node "module_constraint"
+      (*      node "module_constraint"
               [ self#t_of_module_kind mk ;
-                self#t_of_module_type_kind mtk ;
+              self#t_of_module_type_kind mtk ;
               ]*)
       | _ ->
         print_endline "Error: Unhandled element (odoc_json)!"; 

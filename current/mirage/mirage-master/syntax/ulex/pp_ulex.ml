@@ -106,7 +106,7 @@ let partition (i,p) =
   let rec gen_tree = function 
     | Lte (i,yes,no) ->
       <:expr< if (c <= $`int:i$) 
-        then $gen_tree yes$ else $gen_tree no$ >>
+             then $gen_tree yes$ else $gen_tree no$ >>
     | Return i ->
       <:expr< $`int:i$ >>
     | Table (offset, t) ->
@@ -169,8 +169,8 @@ let gen_definition _loc l =
   let cases = Array.mapi (fun i (_,e) -> <:match_case< $`int:i$ -> $e$ >>) brs in
   let states = Array.mapi (gen_state auto _loc) auto in
   <:expr< fun lexbuf ->
-    let rec $list:Array.to_list states$ in
-    do { Ulexing.start lexbuf;
+         let rec $list:Array.to_list states$ in
+         do { Ulexing.start lexbuf;
          match __ulex_state_0 lexbuf with
          [ $list:Array.to_list cases$ | _ -> raise Ulexing.Error ] } >>
 

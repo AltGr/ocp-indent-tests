@@ -49,9 +49,9 @@ end
 
 (* These functors allow users to write:
    module Foo = struct
-     include Tuple.Make       (String) (Int)
-     include Tuple.Comparable (String) (Int)
-     include Tuple.Hashable   (String) (Int)
+   include Tuple.Make       (String) (Int)
+   include Tuple.Comparable (String) (Int)
+   include Tuple.Hashable   (String) (Int)
    end
 *)
 
@@ -77,16 +77,16 @@ end
 
     example:
     module Four_ints = Tuple.Hashable_t (Tuple.Hashable_t (Int)(Int))
-                                        (Tuple.Hashable_t (Int)(Int))
+    (Tuple.Hashable_t (Int)(Int))
 
     If instead we used [Hashable] compiler would complain that the input to outer functor
     doesn't have type [t].
 
     On the other hand:
     module Foo = struct
-      type t = String.t * Int.t
-      include Tuple.Comparable (String.t) (Int)
-      include Tuple.Hashable (String.t) (Int)
+    type t = String.t * Int.t
+    include Tuple.Comparable (String.t) (Int)
+    include Tuple.Hashable (String.t) (Int)
     end
 
     If we used [Hashable_t] above, compiler would compile that we have two types [t]

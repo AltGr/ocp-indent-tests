@@ -34,8 +34,8 @@ let hashtbl_of_domaininfo (x : Xenctrl.Domain_info.t) : (string, string) Hashtbl
   Hashtbl.add table "id" (int x.domid);
   let state = let bool ch = function true -> ch | _ -> " " in
     (bool "D" x.dying) ^ (bool "S" x.shutdown) ^
-      (bool "P" x.paused) ^ (bool "B" x.blocked) ^
-      (bool "R" x.running) ^ (bool "H" x.hvm_guest) in
+    (bool "P" x.paused) ^ (bool "B" x.blocked) ^
+    (bool "R" x.running) ^ (bool "H" x.hvm_guest) in
   Hashtbl.add table "state" state;
   Hashtbl.add table "shutdown code" (int x.shutdown_code);
   Hashtbl.add table "tot bytes" (pages_to_string_bytes    x.total_memory_pages);

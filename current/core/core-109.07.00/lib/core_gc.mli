@@ -19,18 +19,18 @@ module Stat : sig
   type t = {
     minor_words : float;
     (** Number of words allocated in the minor heap since
-       the program was started.  This number is accurate in
-       byte-code programs, but only an approximation in programs
-       compiled to native code. *)
+        the program was started.  This number is accurate in
+        byte-code programs, but only an approximation in programs
+        compiled to native code. *)
 
     promoted_words : float;
     (** Number of words allocated in the minor heap that
-       survived a minor collection and were moved to the major heap
-       since the program was started. *)
+        survived a minor collection and were moved to the major heap
+        since the program was started. *)
 
     major_words : float;
     (** Number of words allocated in the major heap, including
-       the promoted words, since the program was started. *)
+        the promoted words, since the program was started. *)
 
     minor_collections : int;
     (** Number of minor collections since the program was started. *)
@@ -47,7 +47,7 @@ module Stat : sig
 
     live_words : int;
     (** Number of words of live data in the major heap, including the header
-       words. *)
+        words. *)
 
     live_blocks : int;
     (** Number of live blocks in the major heap. *)
@@ -63,8 +63,8 @@ module Stat : sig
 
     fragments : int;
     (** Number of wasted words due to fragmentation.  These are
-       1-words free blocks placed between two live blocks.  They
-       are not available for allocation. *)
+        1-words free blocks placed between two live blocks.  They
+        are not available for allocation. *)
 
     compactions : int;
     (** Number of heap compactions since the program was started. *)
@@ -82,60 +82,60 @@ type stat = Stat.t
 
 (** The memory management counters are returned in a [stat] record.
 
-   The total amount of memory allocated by the program since it was started
-   is (in words) [minor_words + major_words - promoted_words].  Multiply by
-   the word size (4 on a 32-bit machine, 8 on a 64-bit machine) to get
-   the number of bytes.
+    The total amount of memory allocated by the program since it was started
+    is (in words) [minor_words + major_words - promoted_words].  Multiply by
+    the word size (4 on a 32-bit machine, 8 on a 64-bit machine) to get
+    the number of bytes.
 *)
 
 module Control : sig
   type t = {
     mutable minor_heap_size : int;
     (** The size (in words) of the minor heap.  Changing
-       this parameter will trigger a minor collection.  Default: 32k. *)
+        this parameter will trigger a minor collection.  Default: 32k. *)
 
     mutable major_heap_increment : int;
     (** The minimum number of words to add to the
-       major heap when increasing it.  Default: 62k. *)
+        major heap when increasing it.  Default: 62k. *)
 
     mutable space_overhead : int;
     (** The major GC speed is computed from this parameter.
         This is the memory that will be "wasted" because the GC does not
-       immediatly collect unreachable blocks.  It is expressed as a
-       percentage of the memory used for live data.
-       The GC will work more (use more CPU time and collect
-       blocks more eagerly) if [space_overhead] is smaller.
-       Default: 80. *)
+        immediatly collect unreachable blocks.  It is expressed as a
+        percentage of the memory used for live data.
+        The GC will work more (use more CPU time and collect
+        blocks more eagerly) if [space_overhead] is smaller.
+        Default: 80. *)
 
     mutable verbose : int;
     (** This value controls the GC messages on standard error output.
-       It is a sum of some of the following flags, to print messages
-       on the corresponding events:
-       - [0x001] Start of major GC cycle.
-       - [0x002] Minor collection and major GC slice.
-       - [0x004] Growing and shrinking of the heap.
-       - [0x008] Resizing of stacks and memory manager tables.
-       - [0x010] Heap compaction.
-       - [0x020] Change of GC parameters.
-       - [0x040] Computation of major GC slice size.
-       - [0x080] Calling of finalisation functions.
-       - [0x100] Bytecode executable search at start-up.
-       - [0x200] Computation of compaction triggering condition.
-       Default: 0. *)
+        It is a sum of some of the following flags, to print messages
+        on the corresponding events:
+        - [0x001] Start of major GC cycle.
+        - [0x002] Minor collection and major GC slice.
+        - [0x004] Growing and shrinking of the heap.
+        - [0x008] Resizing of stacks and memory manager tables.
+        - [0x010] Heap compaction.
+        - [0x020] Change of GC parameters.
+        - [0x040] Computation of major GC slice size.
+        - [0x080] Calling of finalisation functions.
+        - [0x100] Bytecode executable search at start-up.
+        - [0x200] Computation of compaction triggering condition.
+        Default: 0. *)
 
     mutable max_overhead : int;
     (** Heap compaction is triggered when the estimated amount
-       of "wasted" memory is more than [max_overhead] percent of the
-       amount of live data.  If [max_overhead] is set to 0, heap
-       compaction is triggered at the end of each major GC cycle
-       (this setting is intended for testing purposes only).
-       If [max_overhead >= 1000000], compaction is never triggered.
-       Default: 500. *)
+        of "wasted" memory is more than [max_overhead] percent of the
+        amount of live data.  If [max_overhead] is set to 0, heap
+        compaction is triggered at the end of each major GC cycle
+        (this setting is intended for testing purposes only).
+        If [max_overhead >= 1000000], compaction is never triggered.
+        Default: 500. *)
 
     mutable stack_limit : int;
     (** The maximum size of the stack (in words).  This is only
-       relevant to the byte-code runtime, as the native code runtime
-       uses the operating system's stack.  Default: 256k. *)
+        relevant to the byte-code runtime, as the native code runtime
+        uses the operating system's stack.  Default: 256k. *)
     mutable allocation_policy : int;
     (** The policy used for allocating in the heap.  Possible
         values are 0 and 1.  0 is the next-fit policy, which is
@@ -156,8 +156,8 @@ type control = Control.t
 
 external stat : unit -> stat = "caml_gc_stat"
 (** Return the current values of the memory management counters in a
-   [stat] record.  This function examines every heap block to get the
-   statistics. *)
+    [stat] record.  This function examines every heap block to get the
+    statistics. *)
 
 external quick_stat : unit -> stat = "caml_gc_quick_stat"
 (** Same as [stat] except that [live_words], [live_blocks], [free_words],
@@ -175,7 +175,7 @@ external get : unit -> control = "caml_gc_get"
 external set : control -> unit = "caml_gc_set"
 (** [set r] changes the GC parameters according to the [control] record [r].
     The normal usage is:
-      [Gc.set { (Gc.get()) with Gc.Control.verbose = 0x00d }] *)
+    [Gc.set { (Gc.get()) with Gc.Control.verbose = 0x00d }] *)
 
 external minor : unit -> unit = "caml_gc_minor"
 (** Trigger a minor collection. *)
@@ -190,27 +190,27 @@ external major : unit -> unit = "caml_gc_major"
 
 external full_major : unit -> unit = "caml_gc_full_major"
 (** Do a minor collection, finish the current major collection cycle,
-   and perform a complete new cycle.  This will collect all currently
-   unreachable blocks. *)
+    and perform a complete new cycle.  This will collect all currently
+    unreachable blocks. *)
 
 external compact : unit -> unit = "caml_gc_compaction"
 (** Perform a full major collection and compact the heap.  Note that heap
-   compaction is a lengthy operation. *)
+    compaction is a lengthy operation. *)
 
 val print_stat : out_channel -> unit
 (** Print the current values of the memory management counters (in
-   human-readable form) into the channel argument. *)
+    human-readable form) into the channel argument. *)
 
 val allocated_bytes : unit -> float
 (** Return the total number of bytes allocated since the program was
-   started.  It is returned as a [float] to avoid overflow problems
-   with [int] on 32-bit machines. *)
+    started.  It is returned as a [float] to avoid overflow problems
+    with [int] on 32-bit machines. *)
 
 (** [add_finalizer b f] ensures that [f] runs after [b] becomes unreachable.  The
     OCaml runtime only supports finalizers on heap blocks, hence [add_finalizer] requires
     [b : _ Heap_block.t].  The runtime essentially maintains a set of finalizer pairs:
 
-      'a Heap_block.t * ('a Heap_block.t -> unit)
+    'a Heap_block.t * ('a Heap_block.t -> unit)
 
     Each call to [add_finalizer] adds a new pair to the set.  It is allowed for many
     pairs to have the same heap block, the same function, or both.  Each pair is a
@@ -254,18 +254,18 @@ val finalise_release : unit -> unit;;
 
 type alarm
 (** An alarm is a piece of data that calls a user function at the end of
-   each major GC cycle.  The following functions are provided to create
-   and delete alarms. *)
+    each major GC cycle.  The following functions are provided to create
+    and delete alarms. *)
 
 val create_alarm : (unit -> unit) -> alarm
 (** [create_alarm f] will arrange for [f] to be called at the end of each
-   major GC cycle, starting with the current cycle or the next one.
-   A value of type [alarm] is returned that you can
-   use to call [delete_alarm]. *)
+    major GC cycle, starting with the current cycle or the next one.
+    A value of type [alarm] is returned that you can
+    use to call [delete_alarm]. *)
 
 val delete_alarm : alarm -> unit
 (** [delete_alarm a] will stop the calls to the function associated
-   to [a].  Calling [delete_alarm a] again has no effect. *)
+    to [a].  Calling [delete_alarm a] again has no effect. *)
 
 (** Adjust the specified GC parameters. *)
 val tune :

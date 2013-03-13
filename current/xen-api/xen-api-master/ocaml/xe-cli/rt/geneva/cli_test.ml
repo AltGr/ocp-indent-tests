@@ -114,7 +114,7 @@ let run_vm_test_cycle is_hvm cli vms disks nics =
                        ("auto_poweron","false");
                        ("auto_poweron","true");
                        (*           ("force_hvm","false");
-                                  ("force_hvm","true");*)
+                                    ("force_hvm","true");*)
                        ("boot_params","boottest");
                        ("on_crash","destroy");
                        ("on_crash","restart")] in

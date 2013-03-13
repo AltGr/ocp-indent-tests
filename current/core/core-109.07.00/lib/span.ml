@@ -173,14 +173,14 @@ module Stable = struct
     ;;
 
     let create
-        ?(sign=Float.Sign.Pos)
-        ?(day = 0)
-        ?(hr = 0)
-        ?(min = 0)
-        ?(sec = 0)
-        ?(ms = 0)
-        ?(us = 0)
-        () =
+          ?(sign=Float.Sign.Pos)
+          ?(day = 0)
+          ?(hr = 0)
+          ?(min = 0)
+          ?(sec = 0)
+          ?(ms = 0)
+          ?(us = 0)
+          () =
       let (+) = T.(+) in
       let t =
         of_day    (Float.of_int day)
@@ -202,22 +202,22 @@ module Stable = struct
     let of_string (s:string) =
       try
         begin match s with
-          | "" -> failwith "empty string"
-          | _  ->
-            let float n =
-              match (String.drop_suffix s n) with
-              | "" -> failwith "no number given"
-              | s  -> Float.of_string s
-            in
-            let len = String.length s in
-            match s.[Int.(-) len 1] with
-            | 's' ->
-              if Int.(>=) len 2 && Char.(=) s.[Int.(-) len 2] 'm' then of_ms (float 2)
-              else T.of_float (float 1)
-            | 'm' -> of_min (float 1)
-            | 'h' -> of_hr (float 1)
-            | 'd' -> of_day (float 1)
-            | _ -> failwith "Time spans must end in ms, s, m, h, or d."
+        | "" -> failwith "empty string"
+        | _  ->
+          let float n =
+            match (String.drop_suffix s n) with
+            | "" -> failwith "no number given"
+            | s  -> Float.of_string s
+          in
+          let len = String.length s in
+          match s.[Int.(-) len 1] with
+          | 's' ->
+            if Int.(>=) len 2 && Char.(=) s.[Int.(-) len 2] 'm' then of_ms (float 2)
+            else T.of_float (float 1)
+          | 'm' -> of_min (float 1)
+          | 'h' -> of_hr (float 1)
+          | 'd' -> of_day (float 1)
+          | _ -> failwith "Time spans must end in ms, s, m, h, or d."
         end
       with exn ->
         invalid_argf "Span.of_string could not parse '%s': %s" s (Exn.to_string exn) ()
@@ -264,17 +264,17 @@ module Stable = struct
   end
 
   TEST_MODULE "Span.V1" = Stable_unit_test.Make (struct
-      include V1
+                            include V1
 
-      let equal t1 t2 = Int.(=) 0 (compare t1 t2)
+                            let equal t1 t2 = Int.(=) 0 (compare t1 t2)
 
-      let tests =
-        let span = of_sec in
-        [ span 1234.56,    "20.576m",  "\010\215\163\112\061\074\147\064";
-          span 0.000001,   "0.001ms",  "\141\237\181\160\247\198\176\062";
-          span 80000006.4, "925.926d", "\154\153\153\025\208\018\147\065";
-        ]
-    end)
+                            let tests =
+                              let span = of_sec in
+                              [ span 1234.56,    "20.576m",  "\010\215\163\112\061\074\147\064";
+                                span 0.000001,   "0.001ms",  "\141\237\181\160\247\198\176\062";
+                                span 80000006.4, "925.926d", "\154\153\153\025\208\018\147\065";
+                              ]
+                          end)
 end
 include Stable.V1
 

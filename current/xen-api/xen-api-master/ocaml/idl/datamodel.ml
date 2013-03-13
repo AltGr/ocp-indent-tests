@@ -1905,7 +1905,7 @@ let vm_suspend = call
     ~name:"suspend"
     ~doc:"Suspend the specified VM to disk.  This can only be called when the specified VM is in the Running state."
     ~params:[Ref _vm, "vm", "The VM to suspend"]
-            (*      Bool, "live", "If set to true, perform a live hibernate; otherwise suspend the VM before commencing hibernate" *)
+    (*      Bool, "live", "If set to true, perform a live hibernate; otherwise suspend the VM before commencing hibernate" *)
     ~errs:[Api_errors.vm_bad_power_state; Api_errors.other_operation_in_progress; Api_errors.operation_not_allowed;
            Api_errors.vm_is_template]
     ~allowed_roles:_R_VM_OP
@@ -3385,24 +3385,24 @@ let task =
       uid _task;
       namespace ~name:"name" ~contents:(names oss_since_303 DynamicRO) ();
     ] @ (allowed_and_current_operations task_allowed_operations) @ [
-        field ~qualifier:DynamicRO ~ty:DateTime "created" "Time task was created";
-        field ~qualifier:DynamicRO ~ty:DateTime "finished" "Time task finished (i.e. succeeded or failed). If task-status is pending, then the value of this field has no meaning";
-        field ~qualifier:DynamicRO ~ty:status_type "status" "current status of the task";
-        field ~in_oss_since:None ~internal_only:true ~qualifier:DynamicRO ~ty:(Ref _session) "session" "the session that created the task";
-        field ~qualifier:DynamicRO ~ty:(Ref _host) "resident_on" "the host on which the task is running";
-        field ~qualifier:DynamicRO ~ty:Float "progress" "This field contains the estimated fraction of the task which is complete. This field should not be used to determine whether the task is complete - for this the status field of the task should be used.";
-        field ~in_oss_since:None ~internal_only:true ~qualifier:DynamicRO ~ty:Int "externalpid" "If the task has spawned a program, the field record the PID of the process that the task is waiting on. (-1 if no waiting completion of an external program )";
-        field ~in_oss_since:None ~internal_deprecated_since:rel_boston ~internal_only:true ~qualifier:DynamicRO ~ty:Int "stunnelpid" "If the task has been forwarded, this field records the pid of the stunnel process spawned to manage the forwarding connection";
-        field ~in_oss_since:None ~internal_only:true ~qualifier:DynamicRO ~ty:Bool "forwarded" "True if this task has been forwarded to a slave";
-        field ~in_oss_since:None ~internal_only:true ~qualifier:DynamicRO ~ty:(Ref _host) "forwarded_to" "The host to which the task has been forwarded";
-        field ~qualifier:DynamicRO ~ty:String "type" "if the task has completed successfully, this field contains the type of the encoded result (i.e. name of the class whose reference is in the result field). Undefined otherwise.";
-        field ~qualifier:DynamicRO ~ty:String "result" "if the task has completed successfully, this field contains the result value (either Void or an object reference). Undefined otherwise.";
-        field ~qualifier:DynamicRO ~ty:(Set String) "error_info" "if the task has failed, this field contains the set of associated error strings. Undefined otherwise.";
-        field ~in_product_since:rel_miami ~default_value:(Some (VMap [])) ~ty:(Map(String, String)) "other_config" "additional configuration" ~map_keys_roles:[("applies_to",(_R_VM_OP));("XenCenterUUID",(_R_VM_OP));("XenCenterMeddlingActionTitle",(_R_VM_OP))];
-        (* field ~ty:(Set(Ref _alert)) ~in_product_since:rel_miami ~qualifier:DynamicRO "alerts" "all alerts related to this task"; *)
-        field ~qualifier:DynamicRO ~in_product_since:rel_orlando ~default_value:(Some (VRef "")) ~ty:(Ref _task) "subtask_of" "Ref pointing to the task this is a substask of.";
-        field ~qualifier:DynamicRO ~in_product_since:rel_orlando ~ty:(Set (Ref _task)) "subtasks"   "List pointing to all the substasks."; 
-      ]) 
+                  field ~qualifier:DynamicRO ~ty:DateTime "created" "Time task was created";
+                  field ~qualifier:DynamicRO ~ty:DateTime "finished" "Time task finished (i.e. succeeded or failed). If task-status is pending, then the value of this field has no meaning";
+                  field ~qualifier:DynamicRO ~ty:status_type "status" "current status of the task";
+                  field ~in_oss_since:None ~internal_only:true ~qualifier:DynamicRO ~ty:(Ref _session) "session" "the session that created the task";
+                  field ~qualifier:DynamicRO ~ty:(Ref _host) "resident_on" "the host on which the task is running";
+                  field ~qualifier:DynamicRO ~ty:Float "progress" "This field contains the estimated fraction of the task which is complete. This field should not be used to determine whether the task is complete - for this the status field of the task should be used.";
+                  field ~in_oss_since:None ~internal_only:true ~qualifier:DynamicRO ~ty:Int "externalpid" "If the task has spawned a program, the field record the PID of the process that the task is waiting on. (-1 if no waiting completion of an external program )";
+                  field ~in_oss_since:None ~internal_deprecated_since:rel_boston ~internal_only:true ~qualifier:DynamicRO ~ty:Int "stunnelpid" "If the task has been forwarded, this field records the pid of the stunnel process spawned to manage the forwarding connection";
+                  field ~in_oss_since:None ~internal_only:true ~qualifier:DynamicRO ~ty:Bool "forwarded" "True if this task has been forwarded to a slave";
+                  field ~in_oss_since:None ~internal_only:true ~qualifier:DynamicRO ~ty:(Ref _host) "forwarded_to" "The host to which the task has been forwarded";
+                  field ~qualifier:DynamicRO ~ty:String "type" "if the task has completed successfully, this field contains the type of the encoded result (i.e. name of the class whose reference is in the result field). Undefined otherwise.";
+                  field ~qualifier:DynamicRO ~ty:String "result" "if the task has completed successfully, this field contains the result value (either Void or an object reference). Undefined otherwise.";
+                  field ~qualifier:DynamicRO ~ty:(Set String) "error_info" "if the task has failed, this field contains the set of associated error strings. Undefined otherwise.";
+                  field ~in_product_since:rel_miami ~default_value:(Some (VMap [])) ~ty:(Map(String, String)) "other_config" "additional configuration" ~map_keys_roles:[("applies_to",(_R_VM_OP));("XenCenterUUID",(_R_VM_OP));("XenCenterMeddlingActionTitle",(_R_VM_OP))];
+                  (* field ~ty:(Set(Ref _alert)) ~in_product_since:rel_miami ~qualifier:DynamicRO "alerts" "all alerts related to this task"; *)
+                  field ~qualifier:DynamicRO ~in_product_since:rel_orlando ~default_value:(Some (VRef "")) ~ty:(Ref _task) "subtask_of" "Ref pointing to the task this is a substask of.";
+                  field ~qualifier:DynamicRO ~in_product_since:rel_orlando ~ty:(Set (Ref _task)) "subtasks"   "List pointing to all the substasks."; 
+                ]) 
     ()
 
 (** Many of the objects need to record IO bandwidth *)
@@ -4957,13 +4957,13 @@ let vif =
        field ~in_oss_since:None ~internal_only:true ~qualifier:DynamicRO ~ty:Bool "reserved" "true if the VIF is reserved pending a reboot/migrate";
        field ~ty:(Map(String, String)) "other_config" "additional configuration";
      ] @ device_status_fields @
-       [ namespace ~name:"qos" ~contents:(qos "VIF") (); ] @
-       [ field ~qualifier:DynamicRO ~ty:(Ref _vif_metrics) "metrics" "metrics associated with this VIF";
-         field ~qualifier:DynamicRO ~in_product_since:rel_george ~default_value:(Some (VBool false)) ~ty:Bool "MAC_autogenerated" "true if the MAC was autogenerated; false indicates it was set manually";
-         field ~qualifier:StaticRO ~in_product_since:rel_tampa ~default_value:(Some (VEnum "network_default")) ~ty:vif_locking_mode "locking_mode" "current locking mode of the VIF";
-         field ~qualifier:StaticRO ~in_product_since:rel_tampa ~default_value:(Some (VSet [])) ~ty:(Set (String)) "ipv4_allowed" "A list of IPv4 addresses which can be used to filter traffic passing through this VIF";
-         field ~qualifier:StaticRO ~in_product_since:rel_tampa ~default_value:(Some (VSet [])) ~ty:(Set (String)) "ipv6_allowed" "A list of IPv6 addresses which can be used to filter traffic passing through this VIF";
-       ])
+     [ namespace ~name:"qos" ~contents:(qos "VIF") (); ] @
+     [ field ~qualifier:DynamicRO ~ty:(Ref _vif_metrics) "metrics" "metrics associated with this VIF";
+       field ~qualifier:DynamicRO ~in_product_since:rel_george ~default_value:(Some (VBool false)) ~ty:Bool "MAC_autogenerated" "true if the MAC was autogenerated; false indicates it was set manually";
+       field ~qualifier:StaticRO ~in_product_since:rel_tampa ~default_value:(Some (VEnum "network_default")) ~ty:vif_locking_mode "locking_mode" "current locking mode of the VIF";
+       field ~qualifier:StaticRO ~in_product_since:rel_tampa ~default_value:(Some (VSet [])) ~ty:(Set (String)) "ipv4_allowed" "A list of IPv4 addresses which can be used to filter traffic passing through this VIF";
+       field ~qualifier:StaticRO ~in_product_since:rel_tampa ~default_value:(Some (VSet [])) ~ty:(Set (String)) "ipv6_allowed" "A list of IPv6 addresses which can be used to filter traffic passing through this VIF";
+     ])
     ()
 
 let vif_metrics = 
@@ -5608,8 +5608,8 @@ let vbd =
        field ~ty:(Map(String, String)) "other_config" "additional configuration";
      ]
      @ device_status_fields @
-       [ namespace ~name:"qos" ~contents:(qos "VBD") (); ] @
-       [ field ~qualifier:DynamicRO ~ty:(Ref _vbd_metrics) "metrics" "metrics associated with this VBD"; ])
+     [ namespace ~name:"qos" ~contents:(qos "VBD") (); ] @
+     [ field ~qualifier:DynamicRO ~ty:(Ref _vbd_metrics) "metrics" "metrics associated with this VBD"; ])
     ()
 
 let vbd_metrics = 
@@ -7193,8 +7193,8 @@ let vm_appliance =
       uid _vm_appliance;
       namespace ~name:"name" ~contents:(names None RW) ();
     ] @ (allowed_and_current_operations vm_appliance_operations) @ [
-        field ~qualifier:DynamicRO ~ty:(Set (Ref _vm)) "VMs" "all VMs in this appliance";
-      ])
+                 field ~qualifier:DynamicRO ~ty:(Set (Ref _vm)) "VMs" "all VMs in this appliance";
+               ])
     ()
 
 (* DR_task *)

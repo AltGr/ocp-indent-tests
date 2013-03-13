@@ -38,8 +38,8 @@ let tcp_serve_test () =
   Tcp.Server.create Tcp.on_port_chosen_by_os
     ~buffer_age_limit:(`At_most (sec 1.))
     ~on_handler_error:(`Call (fun _a e ->
-        failwithf "Tcp.Server.create: handler error: %s" (Exn.to_string e) ()
-      ))
+                         failwithf "Tcp.Server.create: handler error: %s" (Exn.to_string e) ()
+                       ))
     (fun inet reader writer ->
       Writer.close_finished writer >>> (fun () -> Ivar.fill server_close_test ());
 

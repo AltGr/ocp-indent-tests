@@ -127,7 +127,7 @@ let read_multipart_body decode_part boundary s =
       (function
         | Not_found ->
             fail (Multipart_error
-                  "read_multipart_body: MIME boundary without line end")
+                "read_multipart_body: MIME boundary without line end")
         | e -> fail e)
   in
 

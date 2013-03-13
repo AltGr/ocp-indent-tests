@@ -61,8 +61,8 @@ let round = Float.round
 include Interfaces
 module Sexp = Core_sexp
 include (Sexplib.Conv : module type of Sexplib.Conv
-  (* hide the special sexp type constructors so we can define them below
-     with bin_io and friends. *)
+(* hide the special sexp type constructors so we can define them below
+   with bin_io and friends. *)
   with type 'a sexp_option := 'a option
   with type 'a sexp_list   := 'a list
   with type 'a sexp_array  := 'a array

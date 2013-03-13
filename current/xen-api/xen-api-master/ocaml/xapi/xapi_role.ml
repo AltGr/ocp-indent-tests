@@ -54,7 +54,7 @@ let find_role_by_name_label name_label = Hashtbl.find static_role_by_name_label_
 let get_all ~__context = 
   List.map (fun r -> ref_of_role r) get_all_static_roles
 (*@ (* concatenate with Db table *)
-   Db.Role.get_all ~__context*)
+  Db.Role.get_all ~__context*)
 
 let is_valid_role ~__context ~role =
   Hashtbl.mem static_role_by_ref_tbl role
@@ -99,8 +99,8 @@ let get_all_records_where ~__context ~expr =
       (fun r -> ((ref_of_role r),(get_api_record ~static_record:r)))
       get_all_static_roles
 (*@ (* concatenate with Db table *)
-   (* TODO: this line is crashing for some unknown reason, but not needed in RBAC 1 *)
-   Db.Role.get_all_records_where ~__context ~expr*)
+  (* TODO: this line is crashing for some unknown reason, but not needed in RBAC 1 *)
+  Db.Role.get_all_records_where ~__context ~expr*)
 
 (*    val get_all_records : __context:Context.t -> ref_role_to_role_t_map*)
 let get_all_records ~__context =
@@ -149,13 +149,13 @@ let get_subroles ~__context ~self =
 
 (*    val get_is_basic : __context:Context.t -> self:ref_role -> bool*)
 (*let get_is_basic ~__context ~self =
-   get_common ~__context ~self
+  get_common ~__context ~self
     ~static_fn:(fun static_record -> static_record.role_is_basic)
     ~db_fn:(fun ~__context ~self -> Db.Role.get_is_basic ~__context ~self)
 *)
 (*    val get_is_complete : __context:Context.t -> self:ref_role -> bool*)
 (*let get_is_complete ~__context ~self =
-   get_common ~__context ~self
+  get_common ~__context ~self
     ~static_fn:(fun static_record -> static_record.role_is_complete)
     ~db_fn:(fun ~__context ~self -> Db.Role.get_is_complete ~__context ~self)
 *)
