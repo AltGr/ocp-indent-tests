@@ -31,19 +31,19 @@
    There is a support for compilers or interpreters directives,
    this is about any separated line beginning with a sharp,
    as in
-  {[
-    v = 5
-    ;;
-    #typer off;;
-    etc...
-  ]}
+   {[
+     v = 5
+     ;;
+     #typer off;;
+     etc...
+   ]}
 
    Comment:
 
    + any thing in the same line than the semicolon separator is removed
-  {[
-    g = "toto" ;; this is a comment removed by the console parser
-  ]}
+   {[
+     g = "toto" ;; this is a comment removed by the console parser
+   ]}
 *)
 
 (** {6 Known bug} *)
@@ -89,14 +89,14 @@ val reset : t -> unit
    <!> The new line char should not be given to the string.
 
    Typically, the correct use is :
-  {[
-    while true do
-      match ConsoleParser.accumulate (input_line stdin) with
-      | Some (ConsoleParser.Directive s) ->
-      | Some (ConsoleParser.Code s) ->
-      | None ->
-    done
-  ]}
+   {[
+     while true do
+       match ConsoleParser.accumulate (input_line stdin) with
+       | Some (ConsoleParser.Directive s) ->
+       | Some (ConsoleParser.Code s) ->
+       | None ->
+     done
+   ]}
 *)
 val accumulate : t -> string -> input option
 
@@ -115,9 +115,9 @@ sig
      The syntax for directives is defined by the [ConsoleParser], which is used
      in the interpreter for parsing the input.
 
-    {[
-      #directives [arguments] ;;
-    ]}
+     {[
+       #directives [arguments] ;;
+     ]}
 
      A directive can for example just modify the state of the interpreter, by modifying
      some option related to its behavior (like [#typer on/off]) or enrich the environment

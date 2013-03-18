@@ -36,38 +36,38 @@
 
 
    Before the pass, after [FunActionEnvSerialize], the code is :
-  {[
-    f(arg1,arg2,...)=e
-    < onclick=\{EXPR = \@funaction(
-                  arg1_ = FunActionServer_serialize_argument(arg1)
-                      arg2_ = FunActionServer_serialize_argument(arg2)
-                    ...
-                        (\@funaction[client_id](f))(
-                      \@funaction[Deserialize](arg1_),
-                      \@funaction[Deserialize](arg2_),
-                      ...
-                    )
-                )
-                \} >
-  ]}
+   {[
+     f(arg1,arg2,...)=e
+     < onclick=\{EXPR = \@funaction(
+                   arg1_ = FunActionServer_serialize_argument(arg1)
+                       arg2_ = FunActionServer_serialize_argument(arg2)
+                     ...
+                         (\@funaction[client_id](f))(
+                       \@funaction[Deserialize](arg1_),
+                       \@funaction[Deserialize](arg2_),
+                       ...
+                     )
+                 )
+                 \} >
+   ]}
 
    After this pass :
-  {[
-    f(arg1,arg2,...)=e
-    < onclick=\{STRING =
-                  arg1_ = FunActionServer_serialize_argument(arg1)
-                    arg2_ = FunActionServer_serialize_argument(arg2)
-                  ...
-                      FunActionServer_serialize_call(
-                    \@jsident(f),
-                    [ arg_1_,
-                      arg_2_,
-                      ...
-                    ]
-                  )
-                  \}
-    >
-  ]}
+   {[
+     f(arg1,arg2,...)=e
+     < onclick=\{STRING =
+                   arg1_ = FunActionServer_serialize_argument(arg1)
+                     arg2_ = FunActionServer_serialize_argument(arg2)
+                   ...
+                       FunActionServer_serialize_call(
+                     \@jsident(f),
+                     [ arg_1_,
+                       arg_2_,
+                       ...
+                     ]
+                   )
+                   \}
+     >
+   ]}
 
    The pass is after typing, and should preserve types.
 *)

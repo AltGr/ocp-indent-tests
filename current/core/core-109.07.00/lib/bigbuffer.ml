@@ -11,9 +11,9 @@ type t =
   }
 
 (*
-let invariant t =
-  assert (t.len == Bigstring.length t.bstr);
-;;
+   let invariant t =
+   assert (t.len == Bigstring.length t.bstr);
+   ;;
 *)
 
 let create n =
@@ -114,9 +114,9 @@ let add_channel buf ic len =
 let output_buffer oc buf = Bigstring.really_output oc buf.bstr ~len:buf.pos
 
 let closing = function
-| '(' -> ')'
-| '{' -> '}'
-| _ -> assert false
+  | '(' -> ')'
+  | '{' -> '}'
+  | _ -> assert false
 
 (* opening and closing: open and close characters, typically ( and )
    k: balance of opening and closing chars

@@ -36,26 +36,26 @@
    and we use opacapi in the compiler.
 
    STDLIB:
-  {[
-    @opacapi myfunction()=....
-  ]}
+   {[
+     @opacapi myfunction()=....
+   ]}
 
    OPABSL:
-  {[
-    ##register [opacapi] mybypass : ...
-  ]}
+   {[
+     ##register [opacapi] mybypass : ...
+   ]}
 
    OPACAPI:
-  {[
-    mybypass = "mybypass"
-        myfunction = "myfunction"
-  ]}
+   {[
+     mybypass = "mybypass"
+         myfunction = "myfunction"
+   ]}
 
    COMPILER:
-  {[
-    let myfunction = Opacapi.myfunction in
-    ...
-  ]}
+   {[
+     let myfunction = Opacapi.myfunction in
+     ...
+   ]}
 
    This check will ensure that :
    -the set of all identifier defined in opacapi is strictly equal to the set of identifiers

@@ -35,9 +35,9 @@ let def_label = label
 (*
   If we need to have unicity of annotation,
   we must replace rlabel by :
-  {[
-    let rlabel = Annot.refresh
-  ]}
+   {[
+     let rlabel = Annot.refresh
+   ]}
 *)
 external rlabel : Annot.label -> Annot.label = "%identity"
 

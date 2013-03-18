@@ -80,9 +80,9 @@ end = struct
 
     TEST = word_wrap long_text 39 =
       (*
-        .........1.........2.........3.........4
-        1234567890123456789012345678901234567890
-      *)
+           .........1.........2.........3.........4
+           1234567890123456789012345678901234567890
+        *)
         ["Lorem ipsum dolor sit amet, consectetur";
          "adipiscing elit. Vivamus fermentum";
          "condimentum eros, sit amet pulvinar dui";
@@ -392,8 +392,8 @@ end = struct
   let commands t = List.rev t
   let to_string t = unwords (commands t)
   let pop_help = function
-  | "help" :: t -> t
-  | _ -> assert false
+    | "help" :: t -> t
+    | _ -> assert false
   let to_string_dots t =
     let t =
       match t with
@@ -424,32 +424,32 @@ module Anon = struct
     type t = s option
 
     let usage = function
-    | None -> ""
-    | Some s -> s.usage
+      | None -> ""
+      | Some s -> s.usage
 
     let zero = None
 
     let one name = Some { usage = name; number = `One }
 
     let many = function
-    | None -> None (* strange, but not non-sense *)
-    | Some s ->
-      match s.number with
-      | `Variable ->
-        failwithf "iteration of variable-length grammars such as %s is disallowed"
-          s.usage ()
-      | (`One | `Fixed) as g ->
-        let s_usage =
-          match g with
-          | `One -> s.usage
-          | `Fixed -> sprintf "(%s)" s.usage
-        in
-        Some { usage = sprintf "[%s ...]" s_usage; number = `Variable }
+      | None -> None (* strange, but not non-sense *)
+      | Some s ->
+        match s.number with
+        | `Variable ->
+          failwithf "iteration of variable-length grammars such as %s is disallowed"
+            s.usage ()
+        | (`One | `Fixed) as g ->
+          let s_usage =
+            match g with
+            | `One -> s.usage
+            | `Fixed -> sprintf "(%s)" s.usage
+          in
+          Some { usage = sprintf "[%s ...]" s_usage; number = `Variable }
 
     let maybe = function
-    | None -> None (* strange, but not non-sense *)
-    | Some s ->
-      Some { usage = sprintf "[%s]" s.usage; number = `Variable }
+      | None -> None (* strange, but not non-sense *)
+      | Some s ->
+        Some { usage = sprintf "[%s]" s.usage; number = `Variable }
 
     let concat2 t1 t2 =
       match (t1, t2) with
@@ -473,8 +473,8 @@ module Anon = struct
           }
 
     let rec concat = function
-    | [] -> zero
-    | t :: ts -> concat2 t (concat ts)
+      | [] -> zero
+      | t :: ts -> concat2 t (concat ts)
 
     let ad_hoc ~usage = Some { usage ; number = `Variable }
   end
@@ -548,9 +548,9 @@ module Anon = struct
       loop []
 
     let rec final_value = function
-    | Done a -> a
-    | Test f -> final_value (f ~more:false)
-    | More (name, _, _) -> die "missing anonymous argument: %s" name ()
+      | Done a -> a
+      | Test f -> final_value (f ~more:false)
+      | More (name, _, _) -> die "missing anonymous argument: %s" name ()
 
     let rec consume t arg =
       match t with
@@ -642,20 +642,20 @@ end
 type args = Nil | Cons of string * args | Complete of string
 
 let rec list_of_args = function
-| Nil -> []
-| Cons (x, xs) -> x :: list_of_args xs
-| Complete x -> [x]
+  | Nil -> []
+  | Cons (x, xs) -> x :: list_of_args xs
+  | Complete x -> [x]
 
 let rec args_ends_in_complete = function
-| Complete _ -> true
-| Nil -> false
-| Cons (_, args) -> args_ends_in_complete args
+  | Complete _ -> true
+  | Nil -> false
+  | Cons (_, args) -> args_ends_in_complete args
 
 module Key_type = struct
   type t = Subcommand | Flag
   let to_string = function
-  | Subcommand -> "subcommand"
-  | Flag       -> "flag"
+    | Subcommand -> "subcommand"
+    | Flag       -> "flag"
 end
 
 let assert_no_underscores key_type flag_or_subcommand =
@@ -743,49 +743,49 @@ module Base = struct
     let env = Env.set env args_key (list_of_args args) in
     let env = Env.set env help_key help_text in
     let rec loop env anons = function
-    | Nil ->
-      List.iter (String.Map.data t.flags) ~f:(fun flag ->
-        match flag.Flag.check_available with
-        | `Optional -> ()
-        | `Required check -> check ());
-      Anon.Parser.final_value anons
-    | Cons (arg, args) ->
-      if String.is_prefix arg ~prefix:"-" then begin
-        let flag = arg in
-        let (flag, { Flag.action; name=_; aliases=_; doc=_; check_available=_ }) =
-          match lookup_expand_with_aliases t.flags flag Key_type.Flag with
-          | Error msg -> die "%s" msg ()
-          | Ok x -> x
-        in
-        match action with
-        | Flag.No_arg f ->
-          let env = f env in
+      | Nil ->
+        List.iter (String.Map.data t.flags) ~f:(fun flag ->
+          match flag.Flag.check_available with
+          | `Optional -> ()
+          | `Required check -> check ());
+        Anon.Parser.final_value anons
+      | Cons (arg, args) ->
+        if String.is_prefix arg ~prefix:"-" then begin
+          let flag = arg in
+          let (flag, { Flag.action; name=_; aliases=_; doc=_; check_available=_ }) =
+            match lookup_expand_with_aliases t.flags flag Key_type.Flag with
+            | Error msg -> die "%s" msg ()
+            | Ok x -> x
+          in
+          match action with
+          | Flag.No_arg f ->
+            let env = f env in
+            loop env anons args
+          | Flag.Arg (f, comp) ->
+            begin match args with
+            | Nil -> die "missing argument for flag %s" flag ()
+            | Cons (arg, rest) ->
+              let env = f arg env in
+              loop env anons rest
+            | Complete part ->
+              never_returns (Completer.run_and_exit comp env ~part)
+            end
+          | Flag.Rest f ->
+            if args_ends_in_complete args then exit 0;
+            f (list_of_args args);
+            loop env anons Nil
+        end else begin
+          let (env_upd, anons) = Anon.Parser.consume anons arg in
+          let env = env_upd env in
           loop env anons args
-        | Flag.Arg (f, comp) ->
-          begin match args with
-          | Nil -> die "missing argument for flag %s" flag ()
-          | Cons (arg, rest) ->
-            let env = f arg env in
-            loop env anons rest
-          | Complete part ->
-            never_returns (Completer.run_and_exit comp env ~part)
-          end
-        | Flag.Rest f ->
-          if args_ends_in_complete args then exit 0;
-          f (list_of_args args);
-          loop env anons Nil
-      end else begin
-        let (env_upd, anons) = Anon.Parser.consume anons arg in
-        let env = env_upd env in
-        loop env anons args
-      end
-    | Complete part ->
-      if String.is_prefix part ~prefix:"-" then begin
-        List.iter (String.Map.keys t.flags) ~f:(fun name ->
-          if String.is_prefix name ~prefix:part then print_endline name);
-        exit 0
-      end else
-        never_returns (Anon.Parser.complete anons env ~part);
+        end
+      | Complete part ->
+        if String.is_prefix part ~prefix:"-" then begin
+          List.iter (String.Map.keys t.flags) ~f:(fun name ->
+            if String.is_prefix name ~prefix:part then print_endline name);
+          exit 0
+        end else
+          never_returns (Anon.Parser.complete anons env ~part);
     in
     match Result.try_with (fun () -> loop env (t.anons env) args `Parse_args) with
     | Ok thunk -> thunk `Run_main
@@ -953,8 +953,8 @@ and group = {
 }
 
 let get_summary = function
-| Base base -> Base.summary base
-| Group { summary; readme=_; subcommands=_ } -> summary
+  | Base base -> Base.summary base
+  | Group { summary; readme=_; subcommands=_ } -> summary
 
 let group_help ~path ~summary ~readme subs =
   unparagraphs (List.filter_opt [
@@ -1081,17 +1081,17 @@ let help_subcommand ~summary ~readme =
           else acc)
       and
         gather rpath acc = function
-      | Group { subcommands; summary=_; readme=_ } -> gather_group rpath acc subcommands
-      | Base base ->
-        if show_flags then begin
-          Base.formatted_flags base
-          |! List.filter ~f:(fun fmt -> fmt.Format.name <> "[-help]")
-          |! List.fold ~init:acc ~f:(fun acc fmt ->
-               let rpath = Path.add rpath ~subcommand:fmt.Format.name in
-               let fmt = { fmt with Format.name = string_of_path rpath } in
-               Fqueue.enqueue acc fmt)
-        end else
-          acc
+        | Group { subcommands; summary=_; readme=_ } -> gather_group rpath acc subcommands
+        | Base base ->
+          if show_flags then begin
+            Base.formatted_flags base
+            |! List.filter ~f:(fun fmt -> fmt.Format.name <> "[-help]")
+            |! List.fold ~init:acc ~f:(fun acc fmt ->
+                 let rpath = Path.add rpath ~subcommand:fmt.Format.name in
+                 let fmt = { fmt with Format.name = string_of_path rpath } in
+                 Fqueue.enqueue acc fmt)
+          end else
+            acc
       in
       let group_help_text { readme; summary; subcommands } =
         let menu = Fqueue.to_list (gather_group Path.empty Fqueue.empty subcommands) in
@@ -1207,38 +1207,38 @@ complete -F %s %s
 %!" fname Sys.argv.(0) fname Sys.argv.(0)
 
 let args_of_list = function
-| [] -> failwith "missing executable name"
-| _cmd :: args ->
-  match getenv_and_clear "COMMAND_OUTPUT_INSTALLATION_BASH" with
-  | Some _ ->
-    dump_autocomplete_function ();
-    exit 0
-  | None ->
-    match
-      Option.bind (getenv_and_clear "COMP_CWORD") (fun i ->
-        Option.try_with (fun () -> Int.of_string i))
-    with
+  | [] -> failwith "missing executable name"
+  | _cmd :: args ->
+    match getenv_and_clear "COMMAND_OUTPUT_INSTALLATION_BASH" with
+    | Some _ ->
+      dump_autocomplete_function ();
+      exit 0
     | None ->
-      List.fold_right args ~init:Nil
-        ~f:(fun arg args -> Cons (arg, args))
-    | Some i ->
-      let args = List.take (args @ [""]) i in
-      List.fold_right args ~init:Nil ~f:(fun arg args ->
-        match args with
-        | Nil -> Complete arg
-        | _ -> Cons (arg, args))
+      match
+        Option.bind (getenv_and_clear "COMP_CWORD") (fun i ->
+          Option.try_with (fun () -> Int.of_string i))
+      with
+      | None ->
+        List.fold_right args ~init:Nil
+          ~f:(fun arg args -> Cons (arg, args))
+      | Some i ->
+        let args = List.take (args @ [""]) i in
+        List.fold_right args ~init:Nil ~f:(fun arg args ->
+          match args with
+          | Nil -> Complete arg
+          | _ -> Cons (arg, args))
 
 let get_args () = Array.to_list Sys.argv |! args_of_list
 
 let rec add_help_subcommands = function
-| Base _ as t -> t
-| Group { summary; readme; subcommands } ->
-  let subcommands = String.Map.map subcommands ~f:add_help_subcommands in
-  let subcommands =
-    extend_map_exn subcommands Key_type.Subcommand ~key:"help"
-      (help_subcommand ~summary ~readme)
-  in
-  Group { summary; readme; subcommands }
+  | Base _ as t -> t
+  | Group { summary; readme; subcommands } ->
+    let subcommands = String.Map.map subcommands ~f:add_help_subcommands in
+    let subcommands =
+      extend_map_exn subcommands Key_type.Subcommand ~key:"help"
+        (help_subcommand ~summary ~readme)
+    in
+    Group { summary; readme; subcommands }
 
 let rec dispatch t env ~path ~args =
   match t with
@@ -1299,14 +1299,14 @@ module Deprecated = struct
   module Spec = Spec.Deprecated
 
   let rec args_of_list = function
-  | [] -> Nil
-  | f :: r -> Cons (f, args_of_list r)
+    | [] -> Nil
+    | f :: r -> Cons (f, args_of_list r)
 
   let summary = get_summary
 
   let get_flag_names = function
-  | Base base -> base.Base.flags |! String.Map.keys
-  | Group _ -> assert false
+    | Base base -> base.Base.flags |! String.Map.keys
+    | Group _ -> assert false
 
   let help_recursive ~cmd ~with_flags ~expand_dots t s =
     let rec help_recursive_rec ~cmd t s =

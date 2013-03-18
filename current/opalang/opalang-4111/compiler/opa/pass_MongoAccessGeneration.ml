@@ -18,9 +18,9 @@
 
 
 (**
-  Pass for MongoDB backend
+   Pass for MongoDB backend
 
-  @author Quentin Bourgerie
+   @author Quentin Bourgerie
 *)
 
 (* shorthands *)

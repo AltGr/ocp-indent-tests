@@ -54,9 +54,9 @@ sig
 
   (**
      Used for declarating a new external type
-    {[
-      type toto('a, 'b) = external
-    ]}
+     {[
+       type toto('a, 'b) = external
+     ]}
      Assert: This function is called with an [External] type, with [TypeVar] for all parameters
      @error if [t] is not a candidate for definition (outside of this case)
   *)
@@ -82,22 +82,22 @@ sig
 
   (**
      For External types, the implementation is hidden, it is a ocaml row code.
-    {[
-      ##extern-type ('a, 'b) toto = Ka of 'a | Kb of 'b
-    ]}
+     {[
+       ##extern-type ('a, 'b) toto = Ka of 'a | Kb of 'b
+     ]}
      will produce
      + in the ml:
-    {[
-      type ('a, 'b) toto = Ka of 'a | Kb of 'b
-    ]}
+     {[
+       type ('a, 'b) toto = Ka of 'a | Kb of 'b
+     ]}
      + in the mli:
-    {[
-      type ('a, 'b) toto
-    ]}
+     {[
+       type ('a, 'b) toto
+     ]}
      + in opa:
-    {[
-      type toto('a, 'b) = external
-    ]}
+     {[
+       type toto('a, 'b) = external
+     ]}
 
      Assert: This function is called with an exteranl types, with only [TypeVars] for parameters
 

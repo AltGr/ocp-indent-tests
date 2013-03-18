@@ -135,9 +135,9 @@ val environment : unit -> string array
 val putenv : key : string -> data : string -> unit
 
 (**
-  [unsetenv name] deletes the variable [name] from the environment.
+   [unsetenv name] deletes the variable [name] from the environment.
 
-  EINVAL [name] contained an ’=’ or an '\000' character.
+   EINVAL [name] contained an ’=’ or an '\000' character.
 *)
 val unsetenv : string -> unit
 

@@ -48,7 +48,7 @@ val snd3 : (_  * 'a * _ ) -> 'a
 val trd3 : (_  * _  * 'a) -> 'a
 
 (**
-  {6 Option handling}
+   {6 Option handling}
 *)
 val uw : 'a option -> 'a
 

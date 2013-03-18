@@ -17,13 +17,13 @@
 *)
 (**
 
-  For inserted values, we can use a extra directive, with a key in the stdlib.
-  instead of inserting a identifier.
+   For inserted values, we can use a extra directive, with a key in the stdlib.
+   instead of inserting a identifier.
 
-  myvariable = @compiletime("git-version")
+   myvariable = @compiletime("git-version")
 
-  And we can document somewhere all available keys, so that the user may
-  decide or not to introduce them in its code, and making less hacky the procedure.
+   And we can document somewhere all available keys, so that the user may
+   decide or not to introduce them in its code, and making less hacky the procedure.
 *)
 
 val infos_ident_names : string list

@@ -40,15 +40,15 @@ let start_reader fd =
     if n = 0 then
       (* Make sure we now get an EOF *)
       upon (Reader.read_bin_prot reader bin_reader_test) (function
-      | `Eof ->
-        print_endline "Reader success";
-        shutdown 0
-      | _ -> assert false)
+        | `Eof ->
+          print_endline "Reader success";
+          shutdown 0
+        | _ -> assert false)
     else begin
       (* Read another binary protocol message *)
       upon (Reader.read_bin_prot reader bin_reader_test) (function
-      | `Ok v when v = test -> loop (n - 1)
-      | _ -> assert false)
+        | `Ok v when v = test -> loop (n - 1)
+        | _ -> assert false)
     end
   in
   loop n_msgs;

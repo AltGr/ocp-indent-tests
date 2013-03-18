@@ -73,7 +73,7 @@ type 'env tracker = iter_tracker -> 'env -> unit
    The standard example:
 
    In the ast, you'll find a directive
-  {[Directive ( `tracker of PassTracker.t , [ expr ] , None )]}
+   {[Directive ( `tracker of PassTracker.t , [ expr ] , None )]}
 
    Every pass should traverse this directive, considering it as a decoration only.
    The directive should not be removed, and the rewriting pass should rewrite the
@@ -82,16 +82,16 @@ type 'env tracker = iter_tracker -> 'env -> unit
    The [PassHandler] module will ask for a [iter_tracker] function, which
    should be something like :
 
-  {[
-    (* The standard printer of your tracked expressions *)
-    val fmt : 'expr PassHandler.printer
-          ...
-          let iter iter env =
-            LangWalk.Code.iter
-              (function
-               | Directive (`tracker t, [e], _) -> iter.track (PassTracker.filename t) fmt e
-               | _ -> () ) (extract_code env)
-  ]}
+   {[
+     (* The standard printer of your tracked expressions *)
+     val fmt : 'expr PassHandler.printer
+           ...
+           let iter iter env =
+             LangWalk.Code.iter
+               (function
+                | Directive (`tracker t, [e], _) -> iter.track (PassTracker.filename t) fmt e
+                | _ -> () ) (extract_code env)
+   ]}
 
    It will update the track system file, and update the system file system tree.
 
@@ -101,12 +101,12 @@ type 'env tracker = iter_tracker -> 'env -> unit
    Other example:
 
    You can track all toplevel value of a code
-  {[
-    let iter iter env =
-      List.iter (function
-        | NewVal b | NewVal b -> List.iter (fun (s, e) -> iter.track (ExprIdent.stident s) fmt e) b
-        | _ -> () ) (extract_code env)
-  ]}
+   {[
+     let iter iter env =
+       List.iter (function
+         | NewVal b | NewVal b -> List.iter (fun (s, e) -> iter.track (ExprIdent.stident s) fmt e) b
+         | _ -> () ) (extract_code env)
+   ]}
 
    Tracked values are then regrouped in a sub-folder of the [track] directory.
 *)
@@ -211,52 +211,52 @@ val register_global_ref : _ ref -> unit
    meld-like applications. [opatrack] is a bash script with several modes dedicated
    to this file system.
 
-  {[
-    passes.list
-      printers.list
-      trackers.list
+   {[
+     passes.list
+       printers.list
+       trackers.list
 
-      trackers/
-      tracker.list
-        other.list
+       trackers/
+       tracker.list
+         other.list
 
-        time/
-      pass_Name.time
-        pass_OtherPass.time
+         time/
+       pass_Name.time
+         pass_OtherPass.time
 
-        pass_Name/
-      printers/
-      some_file
-        an_other_file
-        trackers/
-      tracker/
-      index.1
-        index.2
-        etc...
-          other/
-      something
-        whatever
-        internal/
-      some_internal_log
-        some_other
-        check/
-      cond.cat.this.%d
-        files/
-      some_more_file
+         pass_Name/
+       printers/
+       some_file
+         an_other_file
+         trackers/
+       tracker/
+       index.1
+         index.2
+         etc...
+           other/
+       something
+         whatever
+         internal/
+       some_internal_log
+         some_other
+         check/
+       cond.cat.this.%d
+         files/
+       some_more_file
 
-        pass_OtherPass/
-      printers/
-      some_file
-        an_other_file
-        an_extra_file
-        trackers/
-      tracker/
-      index.1
-        index.2
-        etc...
-          etc..
-        etc...
-  ]}
+         pass_OtherPass/
+       printers/
+       some_file
+         an_other_file
+         an_extra_file
+         trackers/
+       tracker/
+       index.1
+         index.2
+         etc...
+           etc..
+         etc...
+   ]}
 
    Files *.list are always generated, even if they are empty.
 
@@ -282,10 +282,10 @@ val register_global_ref : _ ref -> unit
 
    It is yet not frozen about what we will attach to tracker. Currently this
    is a string. This string may be available directly in the file index.list,
-  {[
-    cut -d' '      # will give you the index
-        cut -d' ' -f2- # will give you the info
-  ]}
+   {[
+     cut -d' '      # will give you the index
+         cut -d' ' -f2- # will give you the info
+   ]}
    or maybe later, we could produce directly [index.%d.info] files, with
    larger attached infos (e.g. one field per line)
 *)

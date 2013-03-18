@@ -111,29 +111,29 @@ type t =
    + [bslty] is the variable name for a value of type [t]
    + [B] is the letter for short access (local allias)
 
-  Verbose:
-  {[
-    | Const (pos, const)
-    | TypeVar (pos, typevar)
-    | Void pos
-    | Bool pos
-    | Option (pos, t)
-    | OpaValue (pos, t)
-    | Fun (pos, args, ret)
-    | External (pos, name, params)
-  ]}
+   Verbose:
+   {[
+     | Const (pos, const)
+     | TypeVar (pos, typevar)
+     | Void pos
+     | Bool pos
+     | Option (pos, t)
+     | OpaValue (pos, t)
+     | Fun (pos, args, ret)
+     | External (pos, name, params)
+   ]}
 
-  Shorter:
-  {[
-    | Const (p, c)
-    | TypeVar (p, v)
-    | Void p
-    | Bool p
-    | Option (p, t)
-    | OpaValue (p, t)
-    | Fun (p, u, v)
-    | External (p, n, vs)
-  ]}
+   Shorter:
+   {[
+     | Const (p, c)
+     | TypeVar (p, v)
+     | Void p
+     | Bool p
+     | Option (p, t)
+     | OpaValue (p, t)
+     | Fun (p, u, v)
+     | External (p, n, vs)
+   ]}
 *)
 
 (** {6 Positions} *)
@@ -292,9 +292,9 @@ val has_fun : t -> bool
 
    + compile time :
    Example, a primitive defined as:
-  {[##register cmp : 'a, 'a -> int]}
+   {[##register cmp : 'a, 'a -> int]}
    and then declared in opa as:
-  {[val cmp_int = %%cmp%% : int, int -> int]}
+   {[val cmp_int = %%cmp%% : int, int -> int]}
    This is allowed, because [int -> int -> int] is included in ['a -> 'a -> int].
    The [expected] type should be the type of the definition,
    and the [found] type the type of the coercion.
@@ -317,9 +317,9 @@ val has_fun : t -> bool
 
    The {b static_strict_check:true} option is used for failing in case of magic
    parameters. Exemple :
-  {[
-    expected:[int->int] found:['a->'a]
-  ]}
+   {[
+     expected:[int->int] found:['a->'a]
+   ]}
    will fail in case of [static_strict_check:true].
    By default, the behavior is strict. The not strict option is used by opatop.
 
@@ -381,9 +381,9 @@ val to_ty : ?typeident:(?check:bool -> string -> QmlAst.TypeIdent.t) -> t -> Qml
    Test about specialization of parameters of parametric extern types.
 
    Exemple:
-  {[
-    ##register foo : external[foo(void)] -> void
-  ]}
+   {[
+     ##register foo : external[foo(void)] -> void
+   ]}
 
    This is not allowed because there is no way to project an extern type without an explicit
    function provided with the implementation by the user.
@@ -429,10 +429,10 @@ val check_runtime_restriction :
 
    To avoid conflict and too long strings, we generate [B.] as prefix of every
    constructor. Bslregister should insert :
-  {[
-    module B = BslTypes
-    module Q = QmlAst
-  ]}
+   {[
+     module B = BslTypes
+     module Q = QmlAst
+   ]}
    in the beginning of the generated files.
    In will also help the refactoring.
 

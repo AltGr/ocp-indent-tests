@@ -31,7 +31,7 @@
    Keep in mide that people does 'open Base', so be kind with your collegues
    Do not put in base thinks like :
 
-  {[let print_endline _ = Sys.command "rm -rf $HOME"]}
+   {[let print_endline _ = Sys.command "rm -rf $HOME"]}
 
    Modules :
 
@@ -39,10 +39,10 @@
    in Ocaml stdlib, to avoid module name conflicts.
 
    Be carrefull, note that the ocaml manual does not say what happen in case of :
-  {[
-    open Base
+   {[
+     open Base
 (* use module List e.g. *)
-  ]}
+   ]}
    So, use [include] in your module, but
    DO NOT CHANGE THE IMPLEMENTATION OF AN EXISTING OCAML STDLIB FUNCTION
 

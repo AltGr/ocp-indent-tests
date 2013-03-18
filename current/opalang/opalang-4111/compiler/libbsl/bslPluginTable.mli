@@ -39,21 +39,21 @@ val get : string option -> BslPluginInterface.plugin option
    The finalization will check if the dependancies of plugins are satisfied.
    Example scenario : You have built a plugin [libB] using an other plugin [libA],
    with a command like :
-  {[
-    $ bslregister -o libB myfile.ml myfile2.ml libA.opp
-  ]}
+   {[
+     $ bslregister -o libB myfile.ml myfile2.ml libA.opp
+   ]}
    And then, you try to compile an opa file which uses some primitives from libB :
-  {[
-    $ opa.exe libB.opp myfile.opa
-  ]}
+   {[
+     $ opa.exe libB.opp myfile.opa
+   ]}
    Then, you'll get an error when you finalize the plugin table, because the plugin
    [libB] was built with a dependencie to the [libA], and you try to use
    the [libB] without loading the [libA].
 
    Add:
-  {[
-    $ opa.exe libB.opp libA.opp myfile.opa
-  ]}
+   {[
+     $ opa.exe libB.opp libA.opp myfile.opa
+   ]}
 
    Order of storing does not make any importance, the plugin are topologically sorted during the finalization,
    and then returned in a topologic order in the returned list.

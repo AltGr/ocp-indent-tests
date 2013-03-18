@@ -25,17 +25,17 @@
 (**
    This module defines the type of the preprocess directives you can find in
    the different files given to {b bslregister}, for example :
-  {[
-    ##register myfun : int, string -> string
-  ]}
+   {[
+     ##register myfun : int, string -> string
+   ]}
 
    As a complement, see also the module [BslTags.t] which manage only the optionnal
    parameters for directives :
-  {[
-    ##register [tag:attribute] ....
-      like in :
-    ##register [noprojection] ....
-  ]}
+   {[
+     ##register [tag:attribute] ....
+       like in :
+     ##register [noprojection] ....
+   ]}
 
    For extanding tags, it is really easy, you just have to modify 1 file : BslTags.
 
@@ -64,9 +64,9 @@ type skey             = string
 
    Tags are some extra options you can give to the directive,
    as in
-  {[
-    ##mydirective [mytag1, mytag:with_1_argument] directive_contents....
-  ]}
+   {[
+     ##mydirective [mytag1, mytag:with_1_argument] directive_contents....
+   ]}
 *)
 
 type ('tags, 'directive) decorated_source_elt =
@@ -96,16 +96,16 @@ let merge_pos = LangAst.merge_pos
 (**
 
    Verbose:
-  {[
-    | Directive (pos, tags, directive)
-    | Source (pos, source)
-  ]}
+   {[
+     | Directive (pos, tags, directive)
+     | Source (pos, source)
+   ]}
 
    Shorter:
-  {[
-    | Directive (p, t, d)
-    | Source (p, s)
-  ]}
+   {[
+     | Directive (p, t, d)
+     | Source (p, s)
+   ]}
 *)
 
 
@@ -134,13 +134,13 @@ type opalang_decorated_file =
    A directive for producing all types definitions matching a regexp.
    A typical example, is to include all type from a given path
 
-  {[
-    ##extern-type mymodule.*
-  ]}
+   {[
+     ##extern-type mymodule.*
+   ]}
    is represented as :
-  {[
-    IncludeType "mymodule.*"
-  ]}
+   {[
+     IncludeType "mymodule.*"
+   ]}
 
    {9 Include}
 
@@ -148,9 +148,9 @@ type opalang_decorated_file =
    bypass definitions, without rewritting the code with the type manually.
 
    TODO: document format, cf BslIncludeFormat.
-  {[
-    ##include <format> path
-  ]}
+   {[
+     ##include <format> path
+   ]}
 
    {9 FormatDefinition}
    TODO: documentation
@@ -160,18 +160,18 @@ type opalang_decorated_file =
 (**
 
    Verbose:
-  {[
-    | IncludeType regexp
-    | Include (iformat, path)
-    | FormatDefinition name
-  ]}
+   {[
+     | IncludeType regexp
+     | Include (iformat, path)
+     | FormatDefinition name
+   ]}
 
    Shorter:
-  {[
-    | IncludeType rgx
-    | Include (ifmt, p)
-    | FormatDefinition n
-  ]}
+   {[
+     | IncludeType rgx
+     | Include (ifmt, p)
+     | FormatDefinition n
+   ]}
 *)
 
 
@@ -261,35 +261,35 @@ end
    This makes actually sense only in Ocaml files.
    It introduces a new ocaml type.
 
-  {[
-    ##extern-type ('a, 'b, 'c) toto = Ka of 'a | Kb of 'b | Kc of 'c
-  ]}
+   {[
+     ##extern-type ('a, 'b, 'c) toto = Ka of 'a | Kb of 'b | Kc of 'c
+   ]}
    is represented as :
-  {[
-    ExternTypeDef ("toto", ['a ; 'b ; 'c], "Ka of 'a | Kb of 'b | Kc of 'c")
-  ]}
+   {[
+     ExternTypeDef ("toto", ['a ; 'b ; 'c], "Ka of 'a | Kb of 'b | Kc of 'c")
+   ]}
 
    @see "BslTypesGeneration.Ocaml" to see how this type is defined in opa, and how it is printed
    in the [ml] and [mli] of the generated [MLRuntime]
 
    {9 Module}
 
-  {[
-    ##module skey \ impl_name
-  ]}
+   {[
+     ##module skey \ impl_name
+   ]}
    is represented as :
-  {[
-    Module ("skey", "impl_name")
-  ]}
+   {[
+     Module ("skey", "impl_name")
+   ]}
 
    {9 EndModule}
 
    For closing a module previously open.
 
    Syntax:
-  {[
-    ##endmodule
-  ]}
+   {[
+     ##endmodule
+   ]}
 
    {9 Register}
 
@@ -300,31 +300,31 @@ end
    the implementation will be directly injected in the generated code. (cf Syntax 3)
 
    Syntax 1:
-  {[
-    ##register skey : int, int -> int
-  ]}
+   {[
+     ##register skey : int, int -> int
+   ]}
    is represented as :
-  {[
-    Register ("skey", "skey", false, BslTypes.(int, int -> int))
-  ]}
+   {[
+     Register ("skey", "skey", false, BslTypes.(int, int -> int))
+   ]}
 
    Syntax 2:
-  {[
-    ##register skey \ different_name : int, int -> int
-  ]}
+   {[
+     ##register skey \ different_name : int, int -> int
+   ]}
    is represented as :
-  {[
-    Register ("skey", "different_name", false, BslTypes.(int, int -> int))
-  ]}
+   {[
+     Register ("skey", "different_name", false, BslTypes.(int, int -> int))
+   ]}
 
    Syntax 3:
-  {[
-    ##register skey \ `Pervasives.(+)` : int, int -> int
-  ]}
+   {[
+     ##register skey \ `Pervasives.(+)` : int, int -> int
+   ]}
    is represented as :
-  {[
-    Register ("skey", "Pervasives.(+)", true, BslTypes.(int, int -> int))
-  ]}
+   {[
+     Register ("skey", "Pervasives.(+)", true, BslTypes.(int, int -> int))
+   ]}
 
    This is the only case where the injected bool is set to [true]
 
@@ -343,22 +343,22 @@ end
 (**
 
    Verbose:
-  {[
-    | ExternalTypeDef (skey, params, implementation)
-    | Module (skey, implementation)
-    | EndModule
-    | Register (skey, implementation, injected, bslty)
-    | Args (name, args, bslty)
-    | Property (props)
-  ]}
+   {[
+     | ExternalTypeDef (skey, params, implementation)
+     | Module (skey, implementation)
+     | EndModule
+     | Register (skey, implementation, injected, bslty)
+     | Args (name, args, bslty)
+     | Property (props)
+   ]}
 
    Shorter:
-  {[
-    | ExternalTypeDef (n, p, imp)
-    | Module (n, imp)
-    | EndModule
-    | Register (n, imp, inj, ty)
-    | Args (n, xs, ty)
-    | Property p
-  ]}
+   {[
+     | ExternalTypeDef (n, p, imp)
+     | Module (n, imp)
+     | EndModule
+     | Register (n, imp, inj, ty)
+     | Args (n, xs, ty)
+     | Property p
+   ]}
 *)

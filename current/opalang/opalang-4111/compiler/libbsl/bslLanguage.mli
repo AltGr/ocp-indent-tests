@@ -70,12 +70,12 @@ val mli : t (** Traditional ocaml code, to be used in an interpreter (opatop) *)
 (** {6 Code generation} *)
 (**
    In the generated plugins and loaders, there are reference to languages.
-  {[
-    L.ml, L.mli, L.js, etc...
-  ]}
+   {[
+     L.ml, L.mli, L.js, etc...
+   ]}
    The generated code should contains
-  {[
-    module L = BslLanguag
-  ]}
+   {[
+     module L = BslLanguag
+   ]}
 *)
 val pp_meta : t LangPrint.pprinter

@@ -127,16 +127,16 @@ module Decimal = struct
 
   let sexp_of_t t = Sexp.Atom (Core_printf.sprintf "%.12G" t)
   let t_of_sexp = function
-  | Sexp.Atom s ->
-    let t = Float.of_string s in
-    begin
-      try
-        verify t
-      with e -> Conv.of_sexp_error (Exn.to_string e) (Sexp.Atom s)
-    end;
-    t
-  | s ->
-    Conv.of_sexp_error "decimal_of_sexp: Expected Atom, found List" s
+    | Sexp.Atom s ->
+      let t = Float.of_string s in
+      begin
+        try
+          verify t
+        with e -> Conv.of_sexp_error (Exn.to_string e) (Sexp.Atom s)
+      end;
+      t
+    | s ->
+      Conv.of_sexp_error "decimal_of_sexp: Expected Atom, found List" s
 end
 
 let stage = Staged.stage

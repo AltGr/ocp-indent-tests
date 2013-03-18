@@ -76,19 +76,19 @@ let check_args ~loc ~pos ~len (bstr : t) =
     invalid_arg (sprintf "Bigstring.%s: length(bstr) < pos + len" loc)
 
 let get_opt_len bstr ~pos = function
-| Some len -> len
-| None -> length bstr - pos
+  | Some len -> len
+  | None -> length bstr - pos
 
 let check_min_len ~loc ~len = function
-| None -> 0
-| Some min_len ->
-  if min_len > len then (
-    let msg = sprintf "%s: min_len (%d) > len (%d)" loc min_len len in
-    invalid_arg msg);
-  if min_len < 0 then (
-    let msg = sprintf "%s: min_len (%d) < 0" loc min_len in
-    invalid_arg msg);
-  min_len
+  | None -> 0
+  | Some min_len ->
+    if min_len > len then (
+      let msg = sprintf "%s: min_len (%d) > len (%d)" loc min_len len in
+      invalid_arg msg);
+    if min_len < 0 then (
+      let msg = sprintf "%s: min_len (%d) < 0" loc min_len in
+      invalid_arg msg);
+    min_len
 
 let sub_shared ?(pos = 0) ?len (bstr : t) =
   let len = get_opt_len bstr ~pos len in
@@ -356,12 +356,12 @@ external unsafe_writev :
   = "bigstring_writev_stub"
 
 let get_iovec_count loc iovecs = function
-| None -> Array.length iovecs
-| Some count ->
-  if count < 0 then invalid_arg (loc ^ ": count < 0");
-  let n_iovecs = Array.length iovecs in
-  if count > n_iovecs then invalid_arg (loc ^ ": count > n_iovecs");
-  count
+  | None -> Array.length iovecs
+  | Some count ->
+    if count < 0 then invalid_arg (loc ^ ": count < 0");
+    let n_iovecs = Array.length iovecs in
+    if count > n_iovecs then invalid_arg (loc ^ ": count > n_iovecs");
+    count
 
 let writev fd ?count iovecs =
   let count = get_iovec_count "writev" iovecs count in

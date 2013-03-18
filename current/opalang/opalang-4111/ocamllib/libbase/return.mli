@@ -21,11 +21,11 @@
    The main reason for using this is when you want to traverse
    a data structure and stop at some point with a value.
    You can use it to defined a find function from an iter function for instance:
-  {[ let find predicate =
-    set_checkpoint (fun label ->
-      iter (fun elt -> if predicate elt then return label (Some elt));
-      None
-    ) ]}
+   {[ let find predicate =
+     set_checkpoint (fun label ->
+       iter (fun elt -> if predicate elt then return label (Some elt));
+       None
+     ) ]}
 *)
 type 'a label
 val set_checkpoint : ('a label -> 'a) -> 'a

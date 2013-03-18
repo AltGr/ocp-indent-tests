@@ -30,23 +30,23 @@ let printable_sexp () =
     >>= fun local_socket ->
     add_fd (Socket.fd local_socket);
     let rec loop = function
-    | 0 -> return ()
-    | remaining ->
-      don't_wait_for (
-        Socket.accept local_socket
-        >>| function
-        | `Socket_closed -> assert false
-        | `Ok (socket, address) ->
-          add_fd (Socket.fd socket);
-          let sexp = (<:sexp_of< Socket.Address.t>> (address :> Socket.Address.t)) in
-          let address_string = Sexp.to_string sexp in
-          if String.exists address_string ~f:(fun c ->
-               not (Char.is_print c)) then
-            Error.raise (Error.create "Sexp contains unprintable characters" sexp Fn.id));
-      Tcp.connect_sock (Tcp.to_file file)
-      >>= fun client ->
-      add_fd (Socket.fd client);
-      loop (remaining - 1)
+      | 0 -> return ()
+      | remaining ->
+        don't_wait_for (
+          Socket.accept local_socket
+          >>| function
+          | `Socket_closed -> assert false
+          | `Ok (socket, address) ->
+            add_fd (Socket.fd socket);
+            let sexp = (<:sexp_of< Socket.Address.t>> (address :> Socket.Address.t)) in
+            let address_string = Sexp.to_string sexp in
+            if String.exists address_string ~f:(fun c ->
+                 not (Char.is_print c)) then
+              Error.raise (Error.create "Sexp contains unprintable characters" sexp Fn.id));
+        Tcp.connect_sock (Tcp.to_file file)
+        >>= fun client ->
+        add_fd (Socket.fd client);
+        loop (remaining - 1)
     in
     loop 2)
     ~finally:(fun () ->

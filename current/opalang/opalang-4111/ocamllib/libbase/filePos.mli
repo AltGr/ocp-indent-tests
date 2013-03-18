@@ -224,18 +224,18 @@ val to_old_pos :  (unit -> string * int * int) -> pos ->  string *int * int
    This is used for printing citation of the source code from a position.
    It is possible to parametrize the citation with some parameters.
 
-  {[
-    Citation:
+   {[
+     Citation:
 
-      x =
-        y = 5 + "toto"
-            ^^^^^^
-            z = y * 5
-            z + y
+       x =
+         y = 5 + "toto"
+             ^^^^^^
+             z = y * 5
+             z + y
 
-            This expression has type string
-      but the context expected an expression of type int
-  ]}
+             This expression has type string
+       but the context expected an expression of type int
+   ]}
 
 *)
 

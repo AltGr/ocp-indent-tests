@@ -577,16 +577,16 @@ val make_typed_cons :
    you create contains and updates the annotmap itself
 
    If you want to build the term [error("blabla")], you would do:
-  {[[let cons, get_state = TypedExpr.make_cons gamma annotmap in
-     let e = cons#apply (cons#ident ident <<string -> 'a>>) (cons#string "blabla") in
-     get_state (), e ]}
+   {[[let cons, get_state = TypedExpr.make_cons gamma annotmap in
+      let e = cons#apply (cons#ident ident <<string -> 'a>>) (cons#string "blabla") in
+      get_state (), e ]}
 
    Instead of
-  {[ let annotmap, ident = TypedExpr.ident annotmap ident <<string -> 'a>> in
-    let annotmap, string_expr = TypedExpr.string annotmap "blabla" in
-    let annotmap, app = TypedExpr.apply gamma annotmap ident string_expr in
-    (gamma, annotmap), app
-  ]}
+   {[ let annotmap, ident = TypedExpr.ident annotmap ident <<string -> 'a>> in
+     let annotmap, string_expr = TypedExpr.string annotmap "blabla" in
+     let annotmap, app = TypedExpr.apply gamma annotmap ident string_expr in
+     (gamma, annotmap), app
+   ]}
    @return the constructor object and a function that gives you the new state
 *)
 

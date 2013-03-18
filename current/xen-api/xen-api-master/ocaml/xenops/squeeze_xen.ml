@@ -12,7 +12,7 @@
  * GNU Lesser General Public License for more details.
  *)
 (**
-  Interface between the abstract domain memory balancing code and Xen.
+   Interface between the abstract domain memory balancing code and Xen.
 *)
 (*
   Aims are:

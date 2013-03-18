@@ -16,7 +16,7 @@
     along with Opa. If not, see <http://www.gnu.org/licenses/>.
 *)
 (**
-  This module offers utility functions to have run-time dispatch or conditional execution over platform specific implementation.
+   This module offers utility functions to have run-time dispatch or conditional execution over platform specific implementation.
 *)
 
 (** The platform type, essentially the same as the ocaml platform type *)

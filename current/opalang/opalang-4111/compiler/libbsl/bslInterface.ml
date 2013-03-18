@@ -144,9 +144,9 @@ sig
      uncps.
 
      This code is inserted there :
-    {[
-      let bslp36 x0 x1 x2 <THERE> =
-    ]}
+     {[
+       let bslp36 x0 x1 x2 <THERE> =
+     ]}
      which is the place for adding a 'k' argument.
   *)
   val more_args : BslKey.t -> BslTags.t -> env -> string option
@@ -158,16 +158,16 @@ sig
      to be passed to the projection functions uncps.
 
      This code is inserted there :
-    {[
-      let bslp36 x0 x1 x2 =
-        <THERE>
-          ...
-    ]}
+     {[
+       let bslp36 x0 x1 x2 =
+         <THERE>
+           ...
+     ]}
      which is the place for adding :
-    {[
-      "let bslkey = \"mybslkey\" in"
+     {[
+       "let bslkey = \"mybslkey\" in"
 
-    ]}
+     ]}
   *)
 
   val more_code : BslKey.t -> BslTags.t -> env -> string option
@@ -177,15 +177,15 @@ sig
      the result of bypass. Typically, this is a [Continuation.return]
 
      This code is inserted there :
-    {[
-      let bslp36 x0 x1 x2 =
-        let r = ... in
-        <THERE>(r)
-    ]}
+     {[
+       let bslp36 x0 x1 x2 =
+         let r = ... in
+         <THERE>(r)
+     ]}
      which is the place for adding :
-    {[
-      "QmlCpsServerLib.return k r"
-    ]}
+     {[
+       "QmlCpsServerLib.return k r"
+     ]}
   *)
   val return : BslKey.t -> BslTags.t -> env -> meta_ident -> string option
 end
@@ -203,9 +203,9 @@ sig
      Additional arguments to add on projection.
 
      This code is inserted there :
-    {[
-      function bsl_proj(x0, x1, x2, <THERE>)
-    ]}
+     {[
+       function bsl_proj(x0, x1, x2, <THERE>)
+     ]}
   *)
   val more_args : BslKey.t -> BslTags.t -> env -> string list option
 
@@ -213,9 +213,9 @@ sig
      Additional arguments to add on projection.
 
      This code is inserted there :
-    {[
-      function bsl_proj(x0, x1, x2, <THERE>)
-    ]}
+     {[
+       function bsl_proj(x0, x1, x2, <THERE>)
+     ]}
   *)
   val map_result : BslKey.t -> BslTags.t -> env -> JsAst.expr -> JsAst.expr
 end
@@ -252,12 +252,12 @@ sig
     (**
        Implementation expressed as concrete syntax.
        e.g.:
-      {[
-        "my_bsl_function"
-      ]}
-      {[
-        "Pervasives.(+)"
-      ]}
+       {[
+         "my_bsl_function"
+       ]}
+       {[
+         "Pervasives.(+)"
+       ]}
     *)
     type function_name = string
 
@@ -307,9 +307,9 @@ sig
          This can be either :
          + the name of the implementation, as it was defined in the bsl
          + a row string, if the bypass was defined with the injected syntax, like in
-        {[
-          ##register add_int \ `Pervasives.(+)` : int, int -> int
-        ]}
+         {[
+           ##register add_int \ `Pervasives.(+)` : int, int -> int
+         ]}
          + the name of a fresh function which has been regenerated because of
          bsl-projection system (CTrans).
          In this case, the code of the function can be found in the

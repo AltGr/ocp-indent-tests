@@ -141,9 +141,9 @@ let t_of_sexp s =
 type pid_spec = [ `Pid of Pid.t | `My_group | `Group of Pid.t ] ;;
 
 let pid_spec_to_int = function
-| `Pid pid -> Pid.to_int pid
-| `My_group -> 0
-| `Group pid -> ~- (Pid.to_int pid)
+  | `Pid pid -> Pid.to_int pid
+  | `My_group -> 0
+  | `Group pid -> ~- (Pid.to_int pid)
 ;;
 
 let pid_spec_to_string p = Int.to_string (pid_spec_to_int p)
@@ -171,14 +171,14 @@ type behavior = [ `Default | `Ignore | `Handle of t -> unit ]
 module Behavior = struct
 
   let of_caml = function
-  | Sys.Signal_default -> `Default
-  | Sys.Signal_ignore -> `Ignore
-  | Sys.Signal_handle f -> `Handle f
+    | Sys.Signal_default -> `Default
+    | Sys.Signal_ignore -> `Ignore
+    | Sys.Signal_handle f -> `Handle f
 
   let to_caml = function
-  | `Default -> Sys.Signal_default
-  | `Ignore -> Sys.Signal_ignore
-  | `Handle f -> Sys.Signal_handle f
+    | `Default -> Sys.Signal_default
+    | `Ignore -> Sys.Signal_ignore
+    | `Handle f -> Sys.Signal_handle f
 end
 
 let signal t behavior =

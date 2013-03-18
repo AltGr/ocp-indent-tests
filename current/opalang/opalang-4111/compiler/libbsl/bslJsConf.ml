@@ -80,9 +80,9 @@ sig
   (**
      The type parsed for an analysis, corresponding to a property with an argument
      Example:
-    {[
-      cleanup: false
-    ]}
+     {[
+       cleanup: false
+     ]}
      will be parsed as: ["cleanup", "false"]
   *)
   type entry = string * string

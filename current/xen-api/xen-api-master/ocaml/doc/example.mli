@@ -31,22 +31,22 @@ type q =
 (** {2 Another heading} *)
 
 (** 
-  Additional comments, not associated to any element can be inserted anywhere.
-  This gives me the oppotunity to introduce some fancy formatting options, such as
-  - a bulleted list
-  - of items
+   Additional comments, not associated to any element can be inserted anywhere.
+   This gives me the oppotunity to introduce some fancy formatting options, such as
+   - a bulleted list
+   - of items
 
-  Or a numbered list:
-  + like
-  + this
+   Or a numbered list:
+   + like
+   + this
 
-  Text can be formatted as [source code], {i in italics}, {b in bold face}, and
-  links to a function such as {!Module.function} can be used.
+   Text can be formatted as [source code], {i in italics}, {b in bold face}, and
+   links to a function such as {!Module.function} can be used.
 
-  {3 Lower-level heading}
+   {3 Lower-level heading}
 
-  Additional formatting options are listed in the OCamlDoc manual:
-  http://caml.inria.fr/pub/docs/manual-ocaml/manual029.html.
+   Additional formatting options are listed in the OCamlDoc manual:
+   http://caml.inria.fr/pub/docs/manual-ocaml/manual029.html.
 *)
 
 (** The order of all functions, comments, etc. in an mli file is maintained in

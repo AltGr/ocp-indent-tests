@@ -58,12 +58,12 @@ module Make (Key : Key) = struct
     if Float.is_nan x
     then invalid_arg "Piecewise_linear.get on nan";
     let rec loop = function
-    | left :: ((right :: _) as rest) ->
-      if x <= fst left then snd left
-      else if x <= fst right then linear x left right
-      else loop rest
-    | last :: [] -> snd last
-    | [] -> failwith "Bug in Piecewise_linear.get"
+      | left :: ((right :: _) as rest) ->
+        if x <= fst left then snd left
+        else if x <= fst right then linear x left right
+        else loop rest
+      | last :: [] -> snd last
+      | [] -> failwith "Bug in Piecewise_linear.get"
     in
     loop t
 

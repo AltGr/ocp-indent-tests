@@ -11,8 +11,8 @@ let test =
     [ "merge1" >::
         (fun () ->
           let f ~key:_ = function
-          | `Left _ | `Right _ -> None
-          | `Both (x, y) -> Some (x+y)
+            | `Left _ | `Right _ -> None
+            | `Both (x, y) -> Some (x+y)
           in
           "eq1" @? Map.equal (=) (Map.merge ~f m1 m2)
                      (Map.of_alist_exn ["a",2;"c",0;"d",8;]);
@@ -22,9 +22,9 @@ let test =
       "merge2" >::
         (fun () ->
           let f ~key:_ = function
-          | `Left x -> Some x
-          | `Right _ -> None
-          | `Both (x, y) -> Some (x+y)
+            | `Left x -> Some x
+            | `Right _ -> None
+            | `Both (x, y) -> Some (x+y)
           in
           "eq" @? Map.equal (=) (Map.merge ~f m1 m2)
                     (Map.of_alist_exn ["a",2;"b",2;"c",0;"d",8;])
@@ -32,8 +32,8 @@ let test =
       "merge3" >::
         (fun () ->
           let f ~key:_ = function
-          | `Left x | `Right x -> Some x
-          | `Both (x, y) -> Some (x+y)
+            | `Left x | `Right x -> Some x
+            | `Both (x, y) -> Some (x+y)
           in
           "eq1" @? Map.equal (=) (Map.merge ~f m1 m2)
                      (Map.of_alist_exn ["a",2;"b",2;"c",0;"d",8;"e",5]);
@@ -43,8 +43,8 @@ let test =
       "merge3" >::
         (fun () ->
           let f ~key:_ = function
-          | `Left x | `Right x -> Some x
-          | `Both (x, y) -> Some (x+y)
+            | `Left x | `Right x -> Some x
+            | `Both (x, y) -> Some (x+y)
           in
           "eq1" @? Map.equal (=) (Map.merge ~f m1 Map.empty) m1;
           "eq2" @? Map.equal (=) (Map.merge ~f Map.empty m1) m1;

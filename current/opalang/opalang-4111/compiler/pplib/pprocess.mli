@@ -19,26 +19,26 @@
 
 (**
    File syntax (quick summary):
-  #<Debug> / #<Else> / #<End>
+   #<Debug> / #<Else> / #<End>
    Filter according to PPDEBUG mode (-d switch)
-  #<If:VAR TEST> / #<Else> / #<End>
-  Do a run-time check on environment variable VAR (applying function
-  TEST on its value if TEST is present). Disabled in release mode (-r
-  switch). If #<Else> is absent, unit is assumed.
-  If TEST is used, the character \$ can be used as the ppdebug module
-  prefix ($\{debugmodule\}.).
-  #<Ifstatic:VAR REGEXP> / #<Else> / #<End>
+   #<If:VAR TEST> / #<Else> / #<End>
+   Do a run-time check on environment variable VAR (applying function
+   TEST on its value if TEST is present). Disabled in release mode (-r
+   switch). If #<Else> is absent, unit is assumed.
+   If TEST is used, the character \$ can be used as the ppdebug module
+   prefix ($\{debugmodule\}.).
+   #<Ifstatic:VAR REGEXP> / #<Else> / #<End>
    Do a static check at compile-time on the value of environment
    variable VAR.
-  #<Debugvar:VAR>
-  Define VAR as the default to test in following #<If>/#<Ifstatic> tests.
+   #<Debugvar:VAR>
+   Define VAR as the default to test in following #<If>/#<Ifstatic> tests.
 
-  Invocation: $0 [-d] [-r] [file]
-  -d  enable debug sections
-  -r  release mode: comment out dynamic environment checks
-  file  file to parse, by default stdin
+   Invocation: $0 [-d] [-r] [file]
+   -d  enable debug sections
+   -r  release mode: comment out dynamic environment checks
+   file  file to parse, by default stdin
 
-  The output is put to stdout
+   The output is put to stdout
 *)
 
 (** {6 Environment} *)

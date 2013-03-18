@@ -81,72 +81,72 @@ type special_bool_hack = [
    and pattern-binding.
 
    Example, for matching a list, we will generate from:
-  {[
-    match e with
-    | [ hd = v0 | tl = v1 ]
-    | []
-  ]}
+   {[
+     match e with
+     | [ hd = v0 | tl = v1 ]
+     | []
+   ]}
    a code like:
-  {[
-    if ( v1 = e.tl, v1 != undefined ) {
-        v0 = e.hd ;
-        <right-side>;
-      } else {
-    <right-side> ;
-  }
-  ]}
+   {[
+     if ( v1 = e.tl, v1 != undefined ) {
+         v0 = e.hd ;
+         <right-side>;
+       } else {
+     <right-side> ;
+   }
+   ]}
 
    On the other hand, some js value can never be evaluated to false.
    We take also benefits of this for having shorter guards.
    Example, for list matching, we know that a list is an js object,
    and a js object is equivalent to [true] in a conditional,
    so, we will finally replace the guard
-  {[
-    if ( v1 = e.tl, v1 != undefined )
-  ]}
+   {[
+     if ( v1 = e.tl, v1 != undefined )
+   ]}
    by
-  {[
-    if ( v1 = e.tl )
-  ]}
+   {[
+     if ( v1 = e.tl )
+   ]}
 
    Details about params [assign] and [ident]
    If the ident is Some, it should necessary be the ident of the assignment.
-  {[
-    assign: v0 = a.x
-          ident: Some v0
-  ]}
+   {[
+     assign: v0 = a.x
+           ident: Some v0
+   ]}
    will build one of the following forms:
-  {[
-    (v0 = a.x, v0 != undefined)
-  ]}
-  {[
-    (v0 = a.x, v0 == undefined)
-  ]}
-  {[
-    v0 = a.x
-  ]}
-  {[
-    !(v0 = a.x)
-  ]}
+   {[
+     (v0 = a.x, v0 != undefined)
+   ]}
+   {[
+     (v0 = a.x, v0 == undefined)
+   ]}
+   {[
+     v0 = a.x
+   ]}
+   {[
+     !(v0 = a.x)
+   ]}
    If the expr should not be kept in a comma, we use the assign as the ident.
    In this case, use [None] for the ident:
-  {[
-    assign: v0
-        ident: None
-  ]}
+   {[
+     assign: v0
+         ident: None
+   ]}
    will build one of the following forms:
-  {[
-    v0 != undefined
-  ]}
-  {[
-    v0 == undefined
-  ]}
-  {[
-    v0
-  ]}
-  {[
-    !v0
-  ]}
+   {[
+     v0 != undefined
+   ]}
+   {[
+     v0 == undefined
+   ]}
+   {[
+     v0
+   ]}
+   {[
+     !v0
+   ]}
 *)
 val aux_build_guard :
   env:env ->
@@ -165,24 +165,24 @@ val aux_build_guard :
    the matched expression verify the nested guard.
    Examples.
    From:
-  {[
-    present(m.a.b.c.d)
-  ]}
+   {[
+     present(m.a.b.c.d)
+   ]}
    To:
-  {[
-    v0 = m.a &&
-    v1 = v0.b &&
-    v2 = v1.c &&
-    v3 = v2.d
-  ]}
+   {[
+     v0 = m.a &&
+     v1 = v0.b &&
+     v2 = v1.c &&
+     v3 = v2.d
+   ]}
    We use the optimization about maybe_js_false if possible, but in cases where it is not,
    it will generated something like;
-  {[
-    v0 = m.a && v0 != undefined &&
-    v1 = v0.b && v1 != undefined &&
-    v2 = v1.c && v2 != undefined &&
-    v3 = v2.d && v3 != undefined.
-  ]}
+   {[
+     v0 = m.a && v0 != undefined &&
+     v1 = v0.b && v1 != undefined &&
+     v2 = v1.c && v2 != undefined &&
+     v3 = v2.d && v3 != undefined.
+   ]}
    We give the path concerned by the guard, and the kind of check we are talking about:
    -present
    -absent
@@ -262,13 +262,13 @@ val build_decision :
    Some example:
    -if the rev_path is empty, this return directly the matched expression
    -if there is not any previous shared dot, it returns an nested dot:
-  {[
-    build_dot ~rev_path:["c"; "b"; "a"] ~matched:x
-  ]}
+   {[
+     build_dot ~rev_path:["c"; "b"; "a"] ~matched:x
+   ]}
    returns
-  {[
-    x.a.b.c
-  ]}
+   {[
+     x.a.b.c
+   ]}
 *)
 val build_dot :
   menv:menv ->
@@ -281,18 +281,18 @@ val build_dot :
    Return elements of javascript for compiling an analysed pattern.
 
    The returned [cond] and [bindings] should be used in this way
-  {[
-    if ( cond ) {
-        bindings;
-        <right-side>
-      } else
-  if ( cond ) {
-      bindings;
-      <rigth-side>
-    } else {
-    match_failure()
-  }
-  ]}
+   {[
+     if ( cond ) {
+         bindings;
+         <right-side>
+       } else
+   if ( cond ) {
+       bindings;
+       <rigth-side>
+     } else {
+     match_failure()
+   }
+   ]}
 
    Note about minimal_condition:
    The minimal condition restart for each new pattern, but the maximal condition

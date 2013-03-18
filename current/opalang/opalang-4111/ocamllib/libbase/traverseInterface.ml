@@ -244,9 +244,9 @@ end
    It is almost the same interface than S2. If [container = t], you'll get S2.
    It is needed, since a functor in [Traverse] takes as argument a module of sig S2,
    and it is not possible to write something like :
-  {[
-    MakeLift ( LIFT2 with 'p t = 'p container )
-  ]}
+   {[
+     MakeLift ( LIFT2 with 'p t = 'p container )
+   ]}
 
 *)
 module type LIFT2 =
@@ -269,10 +269,10 @@ end
 
 (**
    Traverse AB is a support for an ast defined with 2 mutual recursive types
-  {[
-    type 'a tA = phi('a tA, 'a tB)
-    and 'b tB = xhi('a tA, 'a tB)
-  ]}
+   {[
+     type 'a tA = phi('a tA, 'a tB)
+     and 'b tB = xhi('a tA, 'a tB)
+   ]}
    The rest is less documented, since it is more or less like the previous TRAVERSE,
    and mostly because it is used only by maniac geeks.
 *)

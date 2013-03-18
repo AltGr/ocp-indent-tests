@@ -16,9 +16,9 @@
     along with Opa. If not, see <http://www.gnu.org/licenses/>.
 *)
 (**
-  This module contains the compilation passes that are executed
-  in SurfaceAst (the very front end of the compiler)
-  except the parsing pass (that is available in OpaParser)
+   This module contains the compilation passes that are executed
+   in SurfaceAst (the very front end of the compiler)
+   except the parsing pass (that is available in OpaParser)
 *)
 
 open SurfaceAstPassesTypes

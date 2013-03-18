@@ -35,33 +35,33 @@
    already applied.
 
    Initial expressions
-  {[
-    < onclick=\{EXPR = \@funaction(e)\}>
-  ]}
+   {[
+     < onclick=\{EXPR = \@funaction(e)\}>
+   ]}
 
    After [FunActionLifting]
-  {[
-    f(arg1,arg2,...)=e
-    < onclick=\{EXPR = \@funaction( f(arg1,arg2,...) ) \}>
-  ]}
+   {[
+     f(arg1,arg2,...)=e
+     < onclick=\{EXPR = \@funaction( f(arg1,arg2,...) ) \}>
+   ]}
 
    Then, [typing, slicing].
 
    After [FunActionEnvSerialize]
-  {[
-    f(arg1,arg2,...)=e
-    < onclick=\{EXPR = \@funaction(
-                  arg1_ = FunActionServer_serialize_argument(arg1)
-                      arg2_ = FunActionServer_serialize_argument(arg2)
-                    ...
-                        (\@funaction[client_id](f))(
-                      \@funaction[Deserialize](arg1_),
-                      \@funaction[Deserialize](arg2_),
-                      ...
-                    )
-                )
-                \} >
-  ]}
+   {[
+     f(arg1,arg2,...)=e
+     < onclick=\{EXPR = \@funaction(
+                   arg1_ = FunActionServer_serialize_argument(arg1)
+                       arg2_ = FunActionServer_serialize_argument(arg2)
+                     ...
+                         (\@funaction[client_id](f))(
+                       \@funaction[Deserialize](arg1_),
+                       \@funaction[Deserialize](arg2_),
+                       ...
+                     )
+                 )
+                 \} >
+   ]}
 
    The pass is after typing, and should preserve types.
 
@@ -74,23 +74,23 @@
    on the server side code :
 
    From all directives :
-  {[
-    \@funaction( f(arg1,arg2,...) )
-  ]}
+   {[
+     \@funaction( f(arg1,arg2,...) )
+   ]}
 
    To
-  {[
-    \@funaction(
-    arg1_ = FunActionServer_serialize_argument(arg1)
-        arg2_ = FunActionServer_serialize_argument(arg2)
-      ...
-          (\@funaction[client_id](f))(
-        \@funaction[Deserialize](arg1_),
-        \@funaction[Deserialize](arg2_),
-        ...
-      )
-  )
-  ]}
+   {[
+     \@funaction(
+     arg1_ = FunActionServer_serialize_argument(arg1)
+         arg2_ = FunActionServer_serialize_argument(arg2)
+       ...
+           (\@funaction[client_id](f))(
+         \@funaction[Deserialize](arg1_),
+         \@funaction[Deserialize](arg2_),
+         ...
+       )
+   )
+   ]}
 
 *)
 

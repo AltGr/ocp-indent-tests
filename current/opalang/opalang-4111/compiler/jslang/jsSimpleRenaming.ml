@@ -32,9 +32,9 @@ type jsp = JsAst.code -> JsAst.code
 (*
   If we need to have unicity of annotation,
   we must replace rlabel by :
-  {[
-    let rlabel = Annot.refresh
-  ]}
+   {[
+     let rlabel = Annot.refresh
+   ]}
 *)
 external rlabel : Annot.label -> Annot.label = "%identity"
 
@@ -107,11 +107,11 @@ let stmt_collect_locals acc s =
 (*
   Cf the notice for the 3 following recursive functions.
 
-  {[
-    let rec rename_expr
-    and rename_function
-    and rename_statement
-  ]}
+   {[
+     let rec rename_expr
+     and rename_function
+     and rename_statement
+   ]}
 *)
 
 let rec rename_expr (acc : Rename.env) e =

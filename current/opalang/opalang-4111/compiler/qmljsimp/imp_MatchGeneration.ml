@@ -83,13 +83,13 @@ type analysed_bool_pattern = [
         assume that every matched value will be a bool at runtime, e.g open colvar.
         In this case, we cannot compile the test as a javascript native test, because
         every not null object will pass a native test:
-    {[
-      if (e) {
-          // pass if e is a javascript object, even if (e !== [true])
-        }
-    ]}
-    We compile the guard as a strict equality with the boolean [true].
-    In case of an introduction, we always bind [js_void].
+     {[
+       if (e) {
+           // pass if e is a javascript object, even if (e !== [true])
+         }
+     ]}
+     We compile the guard as a strict equality with the boolean [true].
+     In case of an introduction, we always bind [js_void].
   *)
 
   | `maybebool of bool
@@ -98,11 +98,11 @@ type analysed_bool_pattern = [
         If we end-up in this case, that means that either a pass as lost some type annotation,
         or the user has redefined some exotic types dealing with fields ["true"] or ["false"],
         like:
-      {[
-        type optionbool('a) = { false } / { true : 'a}
-      ]}
-      In this case, we will use special introspection accessors ClientLib.[dot_$bool].
-      In case of an introduction, we bind the value returned by the introspection accessor.
+       {[
+         type optionbool('a) = { false } / { true : 'a}
+       ]}
+       In this case, we will use special introspection accessors ClientLib.[dot_$bool].
+       In case of an introduction, we bind the value returned by the introspection accessor.
     *)
 ]
 

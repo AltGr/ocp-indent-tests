@@ -28,20 +28,20 @@
 
 (**
    Template for a module name [MyId]
-  {[
-    #<Debugvar:MY_VAR>
-        let debug fmt =
-          OManager.printf ("@{<cyan>[MyId]@}@ @[<2>"^^fmt^^"@]@.")
+   {[
+     #<Debugvar:MY_VAR>
+         let debug fmt =
+           OManager.printf ("@{<cyan>[MyId]@}@ @[<2>"^^fmt^^"@]@.")
 
-          (* utilisation *)
-          ...
-              let _ =
-                #<If:MY_VAR $minlevel 4>
-                    debug "do some %s of level %d@\n" "debug" 4
-                      #<End>
-              in
-              ...
-  ]}
+           (* utilisation *)
+           ...
+               let _ =
+                 #<If:MY_VAR $minlevel 4>
+                     debug "do some %s of level %d@\n" "debug" 4
+                       #<End>
+               in
+               ...
+   ]}
 *)
 
 (** {6 Static Debug Preprocessor -- Syntax Documentation} *)
@@ -50,43 +50,43 @@
    The preprocessor {b ppdebug} is used whenever you want to add logs or computation
    in your application (assert, etc...), but you do not want the code to be embedded in release mode.
 
-  {[
-    let g =
-      #<Debug>
-        print_endline "this is a log" ;
-      #<End>
-        5
-  ]}
+   {[
+     let g =
+       #<Debug>
+         print_endline "this is a log" ;
+       #<End>
+         5
+   ]}
 
    will be either
-  {[
-    let g =
-      (*        #<Debug> *)
-      print_endline "this is a log" ;
-      (*        #<End> *)
-      5
-  ]}
+   {[
+     let g =
+       (*        #<Debug> *)
+       print_endline "this is a log" ;
+       (*        #<End> *)
+       5
+   ]}
    or
-  {[
-    let g =
-      (*        #<Debug> *)(*
+   {[
+     let g =
+       (*        #<Debug> *)(*
          print_endline "this is a log" ;
 *)(*        #<End> *)
-      5
-  ]}
+       5
+   ]}
    depending of the env var {b MLSTATE_PPDEBUG}, or on the tag used with ocamlbuild.
 
    Note that you can also have a different code instead of nothing, using [#else]
-  {[
-    let g =
-      #<Debug>
-        print_endline "this is BIG BIG LOG" ;
-      print_endline "with so many details that I'd like to keep it only in debug mode" ;
-      #<Else>
-        print_endline "short log" ;
-      #<End>
-        5
-  ]}
+   {[
+     let g =
+       #<Debug>
+         print_endline "this is BIG BIG LOG" ;
+       print_endline "with so many details that I'd like to keep it only in debug mode" ;
+       #<Else>
+         print_endline "short log" ;
+       #<End>
+         5
+   ]}
 
    <!> The code should be totally recompiled with/without option PPDEBUG to make changes be taken in consideration.
    For dynamic toggle behavior, cf the next part.
@@ -95,10 +95,10 @@
    A check will be done by the preprocessor on environment variable [VAR] with the regexp [REGEXP], and comment
    the unappropriate code:
 
-  {[
-    let build_arch =
-      #<Ifstatic:ARCH Win.*> "Windows" #<Else> "Other" #<End>
-  ]}
+   {[
+     let build_arch =
+       #<Ifstatic:ARCH Win.*> "Windows" #<Else> "Other" #<End>
+   ]}
 
    will define [build_arch] to be ["Windows"] whenever a variable [ARCH] is defined with a value beginning with
    ["Win"]
@@ -111,30 +111,30 @@
    everything with a different preprocess configuration, but assures you that your code will
    not be embeded in release mode.
 
-  {[
-    let g =
-      #<If:MY_SPLENDID_VARIABLE>
-          print_endline "this is a log"
-            #<End> ;
-        5
-  ]}
+   {[
+     let g =
+       #<If:MY_SPLENDID_VARIABLE>
+           print_endline "this is a log"
+             #<End> ;
+         5
+   ]}
 
    will be transformed in :
-  {[
-    let g =
-      (*       #<If> *) if (DebugVariables.default) DebugVariables.my_splendid_variable then begin
-        print_endline "this is a log"
-        (*       #<End> *) end else begin () end ;
-      5
-  ]}
+   {[
+     let g =
+       (*       #<If> *) if (DebugVariables.default) DebugVariables.my_splendid_variable then begin
+         print_endline "this is a log"
+         (*       #<End> *) end else begin () end ;
+       5
+   ]}
    or if release-mode is activated :
-  {[
-    let g =
-      (*       #<If> *)(* if (DebugVariables.default) DebugVariables.my_splendid_variable then begin
-                          print_endline "this is a log"
-                          (*       #<End> *) end else *) begin () end ;
-      5
-  ]}
+   {[
+     let g =
+       (*       #<If> *)(* if (DebugVariables.default) DebugVariables.my_splendid_variable then begin
+                           print_endline "this is a log"
+                           (*       #<End> *) end else *) begin () end ;
+       5
+   ]}
 
    Note that the [;] at the end is kept: the ppdebug-[#<If>] should be an ocaml expression.
 
@@ -146,37 +146,37 @@
    By default, we check that the env var is defined and doesn't have value ["0"] (test is [DebugVariables.default]).
    You can use a different test using the following syntax :
 
-  {[
-    let g =
-      #<If:MY_SPLENDID_VARIABLE $equals "MY_SPLENDID_VALUE">
-          print_endline "this is a log"
-            #<End> ;
-        5
-  ]}
+   {[
+     let g =
+       #<If:MY_SPLENDID_VARIABLE $equals "MY_SPLENDID_VALUE">
+           print_endline "this is a log"
+             #<End> ;
+         5
+   ]}
 
    processed as :
 
-  {[
-    let  =
-      (*       #<If> *) if (DebugVariables.equals "MY_SPLENDID_VALUE") DebugVariables.my_splendid_variable then begin
-        print_endline "this is a log"
-        (*       #<End> *) end else begin () end ;
-      5
-  ]}
+   {[
+     let  =
+       (*       #<If> *) if (DebugVariables.equals "MY_SPLENDID_VALUE") DebugVariables.my_splendid_variable then begin
+         print_endline "this is a log"
+         (*       #<End> *) end else begin () end ;
+       5
+   ]}
 
    Matching on debug variables :
 
    If you have a multi-state debug variable, you can add a runtime-match as long as it's enclosed
    in a [#<If$defined>] :
 
-  {[
-    let verb x =
-      #<If:MY_VERBOSE$defined> match DebugVariables.my_verbose with
-          | Some "quite verbose" -> print_debug x
-          | Some "very verbose" -> print_debug_very_verbose x
-          | _ -> failwith "Bad value for debug variable MY_VERBOSE"
-                   #<End>
-  ]}
+   {[
+     let verb x =
+       #<If:MY_VERBOSE$defined> match DebugVariables.my_verbose with
+           | Some "quite verbose" -> print_debug x
+           | Some "very verbose" -> print_debug_very_verbose x
+           | _ -> failwith "Bad value for debug variable MY_VERBOSE"
+                    #<End>
+   ]}
 
    Warnings :
    + <!> This preprocessor should not be used for top-level definitions.
@@ -193,9 +193,9 @@
 (**
    When you do lots of tests on the same debug-variable, you can use the shortcut:
 
-  {[
-    #<Debugvar:VAR>
-  ]}
+   {[
+     #<Debugvar:VAR>
+   ]}
 
    The [:VAR] in subsequent uses of [#<If>] can be omitted.
 
@@ -351,17 +351,17 @@ val const_sharing_server_string : debug_var
 
    <!> At compile time, the level is not read, everything is generated.
 
-  {[
-    export MLSTATE_CPS_DEBUG=1
-      // compile
-      // run
-          unset  MLSTATE_CPS_DEBUG
-      // run without debug logs
-      // compile
-      // run without debug logs
-          export MLSTATE_CPS_DEBUG=1
-      // run without debug logs (need a recompilation)
-  ]}
+   {[
+     export MLSTATE_CPS_DEBUG=1
+       // compile
+       // run
+           unset  MLSTATE_CPS_DEBUG
+       // run without debug logs
+       // compile
+       // run without debug logs
+           export MLSTATE_CPS_DEBUG=1
+       // run without debug logs (need a recompilation)
+   ]}
 
    This var is used with increasing levels from 1 to 100 :
    + 1  : print a few things
@@ -494,8 +494,8 @@ val debug_paxos_sched : debug_var
 
 
 (**
-  {b MLSTATE_DEBUG_XML}
-  Enables debug messages for Xml module (libbase)
+   {b MLSTATE_DEBUG_XML}
+   Enables debug messages for Xml module (libbase)
 *)
 val debug_xml: debug_var
 
@@ -516,7 +516,7 @@ val diffing : debug_var
 val effects_show : debug_var
 
 (**
-  {b Explicit Instantiation debug}
+   {b Explicit Instantiation debug}
 *)
 val expl_inst_opt_debug : debug_var
 (** print debug info when inserting ExplInst directives *)
@@ -760,7 +760,7 @@ val ping_debug : debug_var
 val buf_debug : debug_var
 
 (**
-  The env var {b MLSTATE_PPDEBUG}
+   The env var {b MLSTATE_PPDEBUG}
 *)
 val ppdebug : debug_var
 
@@ -855,7 +855,7 @@ val simplifymagic_disable : debug_var (** don't specialize any identifier *)
 val simplifymagic_failures : debug_var (** show specializable identifiers that weren't specialized *)
 
 (**
-  {b Slicer debug}
+   {b Slicer debug}
 *)
 val slicer_cond : debug_var (** checks slicer precondition and postcondition *)
 val slicer_debug : debug_var (** ?? *)

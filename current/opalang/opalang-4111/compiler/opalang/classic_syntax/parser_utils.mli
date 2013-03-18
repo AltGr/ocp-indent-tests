@@ -319,10 +319,10 @@ val merge_type_def_visibility:
    which is global to all type defs, in case of a type ... and
    construction.
    The local is the options just given to 1 type defs.
-  {[
-    @global type toto = ...
-  and @local tata = ...
-  ]}
+   {[
+     @global type toto = ...
+   and @local tata = ...
+   ]}
    This function merge the options, or raise an error in case
    of incompatible options.
 *)

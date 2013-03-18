@@ -39,17 +39,17 @@ module Q = QmlAst
   traversing alias, and shared some more pattern of code without being lost because of alias.
 
   example which explain the motivation of the structure :
-  {[
-    d0 = { a = 4.65 ; b = "titi" }
-        e0 = { a = d0 ; g = { g } }
+   {[
+     d0 = { a = 4.65 ; b = "titi" }
+         e0 = { a = d0 ; g = { g } }
 
-        d1 = { a = 4.65 ; b = "titi" }
-        e1 = { a = d1 ; g = { g } }
+         d1 = { a = 4.65 ; b = "titi" }
+         e1 = { a = d1 ; g = { g } }
 
-      * constant-sharing *
+       * constant-sharing *
 
-          ?? e0 == e1 ??
-  ]}
+           ?? e0 == e1 ??
+   ]}
 *)
 type traversing_alias = (Ident.t, unit) UnionFind.t IdentMap.t
 

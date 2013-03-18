@@ -26,10 +26,10 @@ val save : string -> Images.save_option list -> Images.t -> unit;;
 (** The type of bmp images. *)
 
 (**
-  The Caml representation of a bmp bit map image.
-  Fields are Caml values, the decoded versions of raw data in the file.
+   The Caml representation of a bmp bit map image.
+   Fields are Caml values, the decoded versions of raw data in the file.
 
-  Structure of bitmaps files on disk :
+   Structure of bitmaps files on disk :
    - BITMAPFILEHEADER    : bytes 0 to 14 excluded
    - BITMAPINFOHEADER    : bytes 14 to 54 excluded
    - RGBQUAD []          : color map

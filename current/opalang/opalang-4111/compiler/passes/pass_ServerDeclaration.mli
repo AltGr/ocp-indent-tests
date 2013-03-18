@@ -36,12 +36,12 @@ val pass_check_server_entry_point :
   (OpaEnv.opa_options * (string, 'a) SurfaceAstPassesTypes.env_both_lcodes)
 
 (**
-  This pass replaces \@server_entry_point with call to a Bsl function which will
-  store [service] produced by server maker.
+   This pass replaces \@server_entry_point with call to a Bsl function which will
+   store [service] produced by server maker.
 
-  Directives removed : [\[ `server_entry_point \]]
+   Directives removed : [\[ `server_entry_point \]]
 
-  Directives added : [\[\]]
+   Directives added : [\[\]]
 *)
 val pass_resolve_server_entry_point :
   options:OpaEnv.opa_options ->
@@ -50,14 +50,14 @@ val pass_resolve_server_entry_point :
 
 
 (**
-  This pass add a toplevel declaration, which will launch the retrieve all
-  services stored, combine them and launch the server.
-  If retrieved services haven't same options (port, encryption, see [Server]), a
-  runtime error will be produced.
+   This pass add a toplevel declaration, which will launch the retrieve all
+   services stored, combine them and launch the server.
+   If retrieved services haven't same options (port, encryption, see [Server]), a
+   runtime error will be produced.
 
-  Directives removed : [\[ `server_entry_point \]]
+   Directives removed : [\[ `server_entry_point \]]
 
-  Directives added : [\[\]]
+   Directives added : [\[\]]
 *)
 val pass_adding_server :
   options:OpaEnv.opa_options ->

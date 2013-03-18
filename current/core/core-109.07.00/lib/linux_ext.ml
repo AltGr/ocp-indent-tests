@@ -128,8 +128,8 @@ module Epoll_flags(Flag_values : sig
         <:sexp_of< string list * [ `unrecognized_bits of string ] >>
           (flag_names,
            `unrecognized_bits (match to_int leftover with
-           | None -> to_string leftover
-           | Some i -> sprintf "0x%x" i))
+             | None -> to_string leftover
+             | Some i -> sprintf "0x%x" i))
   ;;
 
 end
@@ -326,10 +326,10 @@ let cores =
       |! List.fold_left ~init:0 ~f:(fun count line ->
            count +
              (match Core_string.lsplit2 ~on:':' line with
-             | None -> 0
-             | Some (label, _) ->
-               if Core_string.(=) (Core_string.rstrip label) "processor" then 1
-               else 0))
+              | None -> 0
+              | Some (label, _) ->
+                if Core_string.(=) (Core_string.rstrip label) "processor" then 1
+                else 0))
     in
     if num_cores > 0 then num_cores
     else failwith "Linux_ext.cores: failed to parse /proc/cpuinfo")

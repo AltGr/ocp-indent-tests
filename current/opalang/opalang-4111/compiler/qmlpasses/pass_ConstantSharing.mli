@@ -33,23 +33,23 @@
 
    Example :
 
-  {[
-    _ = %%bslpervasives.print_endline%% "hello"
-          _ = %%bslpervasives.print_endline%% (%%bslpervasives.string_of_float%% 2.)
-          c = 2.
-        _ = %%bslpervasives.print_endline%% "hello"
+   {[
+     _ = %%bslpervasives.print_endline%% "hello"
+           _ = %%bslpervasives.print_endline%% (%%bslpervasives.string_of_float%% 2.)
+           c = 2.
+         _ = %%bslpervasives.print_endline%% "hello"
 
-          is rewritten in
+           is rewritten in
 
-  {[
-    v0_const = "hello"
-        v1_const = 2.
+   {[
+     v0_const = "hello"
+         v1_const = 2.
 
-        _ = %%bslpervasives.print_endline%% v0_const
-          _ = %%bslpervasives.print_endline%% (string_of_int v1_const)
-          c = v1_const
-        _ = %%bslpervasives.print_endline%% v0_const
-  ]}
+         _ = %%bslpervasives.print_endline%% v0_const
+           _ = %%bslpervasives.print_endline%% (string_of_int v1_const)
+           c = v1_const
+         _ = %%bslpervasives.print_endline%% v0_const
+   ]}
    The constants ["hello"] and [2.] are now shared thanks to the
    declaration of two variables at the beginnning of the code.
 

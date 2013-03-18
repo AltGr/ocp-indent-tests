@@ -23,34 +23,34 @@ module Avltree = struct
 
   let invariant t compare =
     let rec binary_tree = function
-    | Empty | Leaf _ -> ()
-    | Node {left = left; right = right; key = key} ->
-      begin match left with
-      | Empty -> ()
-      | Leaf (left_key, _)
-      | Node {key = left_key} -> assert (compare left_key key < 0)
-      end;
-      begin match right with
-      | Empty -> ()
-      | Leaf (right_key, _)
-      | Node {key = right_key} -> assert (compare right_key key > 0)
-      end;
-      assert (compare key key = 0);
-      binary_tree left;
-      binary_tree right
+      | Empty | Leaf _ -> ()
+      | Node {left = left; right = right; key = key} ->
+        begin match left with
+        | Empty -> ()
+        | Leaf (left_key, _)
+        | Node {key = left_key} -> assert (compare left_key key < 0)
+        end;
+        begin match right with
+        | Empty -> ()
+        | Leaf (right_key, _)
+        | Node {key = right_key} -> assert (compare right_key key > 0)
+        end;
+        assert (compare key key = 0);
+        binary_tree left;
+        binary_tree right
     in
     let rec height = function
-    | Empty -> 0
-    | Leaf _ -> 1
-    | Node {left = left; right = right} ->
-      Int.max (height left) (height right) + 1
+      | Empty -> 0
+      | Leaf _ -> 1
+      | Node {left = left; right = right} ->
+        Int.max (height left) (height right) + 1
     in
     let rec balanced = function
-    | Empty | Leaf _ -> ()
-    | Node {left = left; right = right} ->
-      assert (abs (height left - height right) < 3);
-      balanced left;
-      balanced right
+      | Empty | Leaf _ -> ()
+      | Node {left = left; right = right} ->
+        assert (abs (height left - height right) < 3);
+        balanced left;
+        balanced right
     in
     binary_tree t;
     balanced t
@@ -58,9 +58,9 @@ module Avltree = struct
   let empty = Empty
 
   let height = function
-  | Empty -> 0
-  | Leaf _ -> 1
-  | Node n -> n.height
+    | Empty -> 0
+    | Leaf _ -> 1
+    | Node n -> n.height
 
   let update_height n =
     let new_height = (Int.max (height n.left) (height n.right)) + 1 in

@@ -71,14 +71,14 @@ sig
 
   (**
      Outputs only the toplevel values without the bodies, like :
-    {[
-      type toto
-          dbval ...
-            a
-          b
-          c
-          etc...
-    ]}
+     {[
+       type toto
+           dbval ...
+             a
+           b
+           c
+           etc...
+     ]}
      Usefull to have a global overview of the code, and tracking
      inserted/removed toplevel values by a pass.
   *)

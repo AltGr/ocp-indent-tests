@@ -30,12 +30,12 @@ module Hashtbl = struct
                                     some of those implementation details change, even though the serialization would
                                     still be recognized. *)
                                  [ (match hash_version () with
-                                 | `Old_hash ->
-                                   triple_table, "((3 baz) (2 bar) (1 foo))",
-                                   "\003\001\003foo\002\003bar\003\003baz"
-                                 | `New_hash ->
-                                   triple_table, "((3 baz) (1 foo) (2 bar))",
-                                   "\003\002\003bar\001\003foo\003\003baz");
+                                   | `Old_hash ->
+                                     triple_table, "((3 baz) (2 bar) (1 foo))",
+                                     "\003\001\003foo\002\003bar\003\003baz"
+                                   | `New_hash ->
+                                     triple_table, "((3 baz) (1 foo) (2 bar))",
+                                     "\003\002\003bar\001\003foo\003\003baz");
                                    Int.Table.create (), "()", "\000";
                                    single_table, "((0 foo))", "\001\000\003foo";
                                  ]
@@ -62,14 +62,14 @@ module Hash_set = struct
                                 let tests =
                                   (* See comment in Hashtbl.V1's test module. *)
                                   [ (match hash_version () with
-                                  | `Old_hash ->
-                                    ten_set, "(9 8 7 6 5 4 3 2 1 0)",
-                                    String.of_char_list ('\010' :: char_list)
-                                  | `New_hash ->
-                                    ten_set, "(9 4 1 0 8 3 7 6 5 2)",
-                                    String.of_char_list
-                                      (List.map ~f:Char.of_int_exn
-                                         [10;  2;5;6;7;3;8;0;1;4;9]));
+                                    | `Old_hash ->
+                                      ten_set, "(9 8 7 6 5 4 3 2 1 0)",
+                                      String.of_char_list ('\010' :: char_list)
+                                    | `New_hash ->
+                                      ten_set, "(9 4 1 0 8 3 7 6 5 2)",
+                                      String.of_char_list
+                                        (List.map ~f:Char.of_int_exn
+                                           [10;  2;5;6;7;3;8;0;1;4;9]));
                                     Int.Hash_set.create (), "()", "\000";
                                     single_set, "(0)", "\001\000";
                                   ]

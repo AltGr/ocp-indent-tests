@@ -237,45 +237,45 @@ type dynloader = multi_loading_safe_get_dynloader_interface -> unit
 (**
    Showing what is actually going on in the plugin ["examplePlugin.ml"] generated e.g. with {[bslregister -o example]}
 
-  {[
-    module Self : BslPluginInterface.PLUGIN =
-    struct
-      (* This is an example of minimal plugin *)
-      let self_module_name = "ExamplePlugin"
-      let uniq_id = "ExamplePlugin_17431-2010-08-08-(368c3b4-75fe11b-21cbb74)"
-      let ml_runtime_module_name = "ExampleMLRuntime"
-      let depends = [ "opabsl" ]
-      let opa_code = [...]
-      let js_pack = [...]
-      let dynloader ( get_register : BslPluginInterface.multi_loading_safe_get_dynloader_interface) : unit =
-        match get_register ~uniq_id ~plugin_name:basename with
-        | None ->
-            (* I should have been already loaded *)
-            ()
-        | Some { register = register ; register_type = register_type } ->
-            begin
-              ... (* a lot of code to use register and register_type for registering primitives *)
-            end
+   {[
+     module Self : BslPluginInterface.PLUGIN =
+     struct
+       (* This is an example of minimal plugin *)
+       let self_module_name = "ExamplePlugin"
+       let uniq_id = "ExamplePlugin_17431-2010-08-08-(368c3b4-75fe11b-21cbb74)"
+       let ml_runtime_module_name = "ExampleMLRuntime"
+       let depends = [ "opabsl" ]
+       let opa_code = [...]
+       let js_pack = [...]
+       let dynloader ( get_register : BslPluginInterface.multi_loading_safe_get_dynloader_interface) : unit =
+         match get_register ~uniq_id ~plugin_name:basename with
+         | None ->
+             (* I should have been already loaded *)
+             ()
+         | Some { register = register ; register_type = register_type } ->
+             begin
+               ... (* a lot of code to use register and register_type for registering primitives *)
+             end
 
-      let self =  {
-        self_module_name ;
-        uniq_id ;
-        ml_runtime_module_name ;
-        depends ;
-        opa_code ;
-        js_pack ;
-        dynloader ;
-        ocaml_env ;
-        javascript_env ;
-      }
+       let self =  {
+         self_module_name ;
+         uniq_id ;
+         ml_runtime_module_name ;
+         depends ;
+         opa_code ;
+         js_pack ;
+         dynloader ;
+         ocaml_env ;
+         javascript_env ;
+       }
 
-      let self_store () = BslPluginTable.store self
+       let self_store () = BslPluginTable.store self
 
-    end
+     end
 
-    let _ = Self.self_store ()
+     let _ = Self.self_store ()
 
-  ]}
+   ]}
 
 *)
 (** *)

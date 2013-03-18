@@ -76,14 +76,14 @@ sig
      it is better to prefix the field by their global
      module path.
 
-    {[
-      module_path ~full:["A" ; "B" ; "C"] ~pwd:["A"]
-    ]}
+     {[
+       module_path ~full:["A" ; "B" ; "C"] ~pwd:["A"]
+     ]}
 
      returns
-    {[
-      ["B" ; "C"]
-    ]}
+     {[
+       ["B" ; "C"]
+     ]}
 
   *)
   val module_path : full:path -> pwd:path -> path

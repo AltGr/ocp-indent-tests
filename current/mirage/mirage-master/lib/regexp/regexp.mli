@@ -61,7 +61,7 @@ module Re : sig
   (** [from_string_raw s] parses the string [s] and returns the associated regexp.
 
       The following constructions can be used in the given string:
-{v
+      {v
  ________________________________________________________________
  |                                                              |
  | The following constructions can be used in the string [s]:   |

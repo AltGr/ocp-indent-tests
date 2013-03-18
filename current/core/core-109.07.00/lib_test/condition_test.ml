@@ -1,9 +1,9 @@
 (* Test Condition.timedwait *)
 
 (*
-  This only tests the pthread_cond_timedwait wrapper and not the underlying
-  unix function. Both branches (timeout, success) are tested; all the possible
-  race conditions are assumed to be handled properly by pthread and not tested.
+   This only tests the pthread_cond_timedwait wrapper and not the underlying
+   unix function. Both branches (timeout, success) are tested; all the possible
+   race conditions are assumed to be handled properly by pthread and not tested.
 *)
 open Core.Std
 open OUnit

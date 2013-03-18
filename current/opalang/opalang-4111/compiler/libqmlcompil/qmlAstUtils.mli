@@ -35,13 +35,13 @@
    directives for common utils. By default, an util must traverse all
    these directives.
 
-  {[
-    type structural_ignored_directives = [ `tracker | `coerce, etc..]
-    let util ... =
-      let rec aux ... = function
-        | Directive (#structural_ignored_directive, e, ...) -> aux e
-        | ...
-  ]}
+   {[
+     type structural_ignored_directives = [ `tracker | `coerce, etc..]
+     let util ... =
+       let rec aux ... = function
+         | Directive (#structural_ignored_directive, e, ...) -> aux e
+         | ...
+   ]}
 
    TODO:refactor with Lang design.
    Currently a lot of utils are considering some assemptions about the
@@ -53,36 +53,36 @@
    TODO:the utils should define a type 'a utils working an arguments of the
    constructor.
 
-  {[
-    (* in Lang.Ast *)
-    type expr =
-      | A of int
-      | B of expr * expr
-      | Directive of (variant, ....)
+   {[
+     (* in Lang.Ast *)
+     type expr =
+       | A of int
+       | B of expr * expr
+       | Directive of (variant, ....)
 
-    module QmlUtils =
-    struct
-      module B =
-      struct
-        let utils_1 e e' = <impl>
-            instead of
-            let old_utils_1 e =
-              match e with
-              | B (e, e') -> <impl>
-              | _ -> assert false
-      end
-    end
-  ]}
+     module QmlUtils =
+     struct
+       module B =
+       struct
+         let utils_1 e e' = <impl>
+             instead of
+             let old_utils_1 e =
+               match e with
+               | B (e, e') -> <impl>
+               | _ -> assert false
+       end
+     end
+   ]}
    Typically, user of utils are doing things like :
-  {[
-    match e with
-    | ....
-      | B (a, b) ->
-        (* oups, I need an utils on B *)
-        B.utils a b
-          (* instead of *)
-          B.old_utils e
-  ]}
+   {[
+     match e with
+     | ....
+       | B (a, b) ->
+         (* oups, I need an utils on B *)
+         B.utils a b
+           (* instead of *)
+           B.old_utils e
+   ]}
 *)
 
 val map_exprident : QmlAst.code -> ( Ident.t -> Ident.t ) ->  QmlAst.code
@@ -125,22 +125,22 @@ module App : sig
   (**
      Gives the number of arguments with which an expression is applied
      Example:
-    {[
-      (((f x) y) z)
-    ]}
+     {[
+       (((f x) y) z)
+     ]}
      The [nary_args_number] is [1].
 
-    {[
-      ((f x) y z)
-    ]}
+     {[
+       ((f x) y z)
+     ]}
      The [nary_args_number] is [2].
 
      Not Implemented because QmlAst is not ready yet for nary applications.
      Currently the implementation is [assert false]
 
-    {[
-      | Apply (f, args) -> nary_args_number f args
-    ]}
+     {[
+       | Apply (f, args) -> nary_args_number f args
+     ]}
      The argument [f] is not used, but we follow the interface of App.
   *)
   val nary_args_number : int util
@@ -148,9 +148,9 @@ module App : sig
   (**
      Gives the number of arguments with which an expression is applied
      Example:
-    {[
-      (((f x) y) z t)
-    ]}
+     {[
+       (((f x) y) z t)
+     ]}
      The [curryfied_args_number] is [4].
      @see "nary_args_number" for nary support
   *)
@@ -204,9 +204,9 @@ sig
         the ident and the expression
 
      Example :
-    {[val toto e = match e with
-        | Lambda (params, expr) -> QmlAstUtils.curryfied_arity params expr
-        | _ -> 0]}
+     {[val toto e = match e with
+         | Lambda (params, expr) -> QmlAstUtils.curryfied_arity params expr
+         | _ -> 0]}
 
      gives the curryfied_arity of the expression [e], assuming that it is a lambda
      or 0 instead.
@@ -216,9 +216,9 @@ sig
   (**
      Returns the number of arguments of [lambda] taking in consideration the nary informations.
      Examples :
-    {[
-      fun x -> fun y, z -> x + y
-    ]}
+     {[
+       fun x -> fun y, z -> x + y
+     ]}
      The [nary_arity] is [1], where the [curryfied_arity] is [3]
   *)
   val nary_arity : int util
@@ -227,9 +227,9 @@ sig
      Returns the number of arguments of a lambda without distinction between a function
      which returns a function and its curryfied version.
 
-    {[
-      fun x -> fun y, z -> x + y
-    ]}
+     {[
+       fun x -> fun y, z -> x + y
+     ]}
      The [curryfied_arity] is [3], where the [nary_arity] is [1]
   *)
   val curryfied_arity : int util
@@ -240,8 +240,8 @@ sig
      The function that count successive lambda node, traversing coercion node only
      Examples :
      count {[
-      fun x -> fun y, z -> x + y
-    ]}
+       fun x -> fun y, z -> x + y
+     ]}
 
      return 3
 
@@ -458,16 +458,16 @@ sig
      Insertion of a portion of code with dependencies.
      The code is inserted just after the first dependencies starting from the end of the code.
      Example:
-    {[
-      insert (["a"; "b"; "c"], "val h = a+b+c", ...)
+     {[
+       insert (["a"; "b"; "c"], "val h = a+b+c", ...)
 
-        g = 7
-          a = 6
-          b = 7
-          c = 7
-          h = a+b+c
-          ...
-    ]}
+         g = 7
+           a = 6
+           b = 7
+           c = 7
+           h = a+b+c
+           ...
+     ]}
   *)
   val insert :
     deps:IdentSet.t ->

@@ -27,12 +27,12 @@ sig
      [range a b acc fct]
      Bounds:
      start bound is included, end bound is Excluded.
-    {[
-      For.range 0 10 acc (
-        fun i acc ->
-          (* do something with i and acc, return an acc *)
-      )
-    ]}
+     {[
+       For.range 0 10 acc (
+         fun i acc ->
+           (* do something with i and acc, return an acc *)
+       )
+     ]}
 
      The accumulator is returned without changes if a >= b
   *)

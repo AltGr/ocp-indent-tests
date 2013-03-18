@@ -14,16 +14,16 @@ include struct
 end
 
 (*
-  [rank] is an upper bound on the depth of any node in the up-tree.
+   [rank] is an upper bound on the depth of any node in the up-tree.
 
-  Imagine an unlucky sequence of operations in which you create N
-  individual [t]-values and then union them together in such a way
-  that you always pick the root of each tree to union together, so that
-  no path compression takes place.  If you don't take care to somehow
-  balance the resulting up-tree, it is possible that you end up with one
-  big long chain of N links, and then calling [representative] on the
-  deepest node takes Theta(N) time.  With the balancing scheme of never
-  increasing the rank of a node unnecessarily, it would take O(log N).
+   Imagine an unlucky sequence of operations in which you create N
+   individual [t]-values and then union them together in such a way
+   that you always pick the root of each tree to union together, so that
+   no path compression takes place.  If you don't take care to somehow
+   balance the resulting up-tree, it is possible that you end up with one
+   big long chain of N links, and then calling [representative] on the
+   deepest node takes Theta(N) time.  With the balancing scheme of never
+   increasing the rank of a node unnecessarily, it would take O(log N).
 *)
 type 'a root = {
   mutable value: 'a;

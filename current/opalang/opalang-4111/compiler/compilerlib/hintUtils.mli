@@ -49,9 +49,9 @@ val get_closest_names_2 :
    [pp_suggestion all fmt typo]
    Print a suggestion with clothest results.
    Will print:
-  {[
-    Hint:
-      Perhaps you meant ... or ... ?
-  ]}
+   {[
+     Hint:
+       Perhaps you meant ... or ... ?
+   ]}
 *)
 val pp_suggestion : string list -> Format.formatter -> string -> unit

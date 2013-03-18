@@ -16,9 +16,9 @@ end
 include T
 
 let of_string = function
-| "true" -> true
-| "false" -> false
-| s -> invalid_argf "Bool.of_string: expected true or false but got %s" s ()
+  | "true" -> true
+  | "false" -> false
+  | s -> invalid_argf "Bool.of_string: expected true or false but got %s" s ()
 ;;
 
 let to_string = string_of_bool

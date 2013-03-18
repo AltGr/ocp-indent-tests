@@ -108,16 +108,16 @@ let confimport : (package_name, package) ListHashtbl.t = ListHashtbl.create 10
 
 (*
   In a conf file, a line can be a package definition :
-  {[
-    mypackage:
-  ]}
-  or a infos
-  {[
-    import package
-      toto/titi.opa
-    /tmp/myfile.opa
-    $ENVAR/myfile.opa
-  ]}
+   {[
+     mypackage:
+   ]}
+   or a infos
+   {[
+     import package
+       toto/titi.opa
+     /tmp/myfile.opa
+     $ENVAR/myfile.opa
+   ]}
 *)
 type conf_line =
   | Package of package_name

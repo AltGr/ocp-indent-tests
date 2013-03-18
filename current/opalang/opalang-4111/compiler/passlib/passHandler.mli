@@ -46,43 +46,43 @@
 
     Use the pass handlers functions (See Section {!passHandlers})
     Thereafter a typical example :
-  {[
-    let _ = Arg.parse (PassHandler.Arg.options @ ... ) ...
+   {[
+     let _ = Arg.parse (PassHandler.Arg.options @ ... ) ...
 
-          (* An if function *)
-          let if_toto ~options e = options.toto
+           (* An if function *)
+           let if_toto ~options e = options.toto
 
-    (* The main handling *)
-    let e = PassHandler.init
-    let e = PassHandler.handler "MyFirstPass" pass_First
-    let e = PassHandler.if_handler ~if_:if_toto "MyTotoPass" pass_Toto
-        ...
-          let r = PassHandler.return e
-  ]}
+     (* The main handling *)
+     let e = PassHandler.init
+     let e = PassHandler.handler "MyFirstPass" pass_First
+     let e = PassHandler.if_handler ~if_:if_toto "MyTotoPass" pass_Toto
+         ...
+           let r = PassHandler.return e
+   ]}
 
     {9 Binary operators programming style}
 
     For handle your passes you can use also the binary operators (See
     {!binop}), it's a most pretty programming style. You can see that
     on this example :
-  {[
-    (* Parsing command line *)
-    let _ = Arg.parse (PassHandler.Arg.options @ ... ) ...
+   {[
+     (* Parsing command line *)
+     let _ = Arg.parse (PassHandler.Arg.options @ ... ) ...
 
-          (* An if function *)
-          let if_toto ~options e = options.toto
+           (* An if function *)
+           let if_toto ~options e = options.toto
 
-    (* The main handling *)
-    open PassHandler
+     (* The main handling *)
+     open PassHandler
 
-    let r =
-      init
-      |+> ("MyFirstPass", pass_First)
-      |?> (if_toto,
-        "MyTotoPass",  pass_Toto)
-      ...
-          |> return
-  ]}
+     let r =
+       init
+       |+> ("MyFirstPass", pass_First)
+       |?> (if_toto,
+         "MyTotoPass",  pass_Toto)
+       ...
+           |> return
+   ]}
 
 *)
 
@@ -241,7 +241,7 @@ val make_condition : cond_id -> ('env -> unit) -> 'env cond
 val compose_condition : 'env cond list -> 'env cond
 
 (**
-  Apply a function before the condition evaluation
+   Apply a function before the condition evaluation
 *)
 val compose_fun_condition : ('env_a -> 'env_b) -> 'env_b cond -> 'env_a cond
 
@@ -257,7 +257,7 @@ type ('env, 'env2) invariant
 val make_invariant : 'env cond -> 'env2 cond -> ('env, 'env2) invariant
 
 (**
-  Make a new invariant with another environement : we apply a function before the invariant checking
+   Make a new invariant with another environement : we apply a function before the invariant checking
 *)
 val compose_fun_invariant : ('env_1b -> 'env_1a) -> ('env_2b -> 'env_2a) -> ('env_1a, 'env_2a) invariant -> ('env_1b, 'env_2b) invariant
 
@@ -463,33 +463,33 @@ val i_serror : 'context printer -> cond_id option -> 'context -> ('c, unit) OMan
    because it defines the type context :
 
    In langError.ml :
-  {[
-    type context = ...
-      let context_printer = ....
-        let check_fail c = PassHandler.check_fail context_printer c
-  ]}
+   {[
+     type context = ...
+       let context_printer = ....
+         let check_fail c = PassHandler.check_fail context_printer c
+   ]}
 
    In a checker, we will use :
-  {[
-    let rewrite ... =
-      let context = ... in
-      Lang.Error.check_fail context Lang.Check.Cond.check "%s is broken" "this invariant"
-  ]}
+   {[
+     let rewrite ... =
+       let context = ... in
+       Lang.Error.check_fail context Lang.Check.Cond.check "%s is broken" "this invariant"
+   ]}
 
    Finally for readability of the code, you can define as soon as you have the context in your scope
    an alias for [Lang.Error.check_fail] with e.g. ['!!'] which looks like a danger sign.
 
-  {[
-    let my_check code =
-      let rec aux expr =
-        ....
-        (* from there you can build your context, and then : *)
-        let (!!) = Lang.error.check_fail mycond_id context in
-        ...
-          match ... with
-          | ... -> !! "this is an %s" "error"
-          | e -> !! "an other one related to %s" (... e)
-  ]}
+   {[
+     let my_check code =
+       let rec aux expr =
+         ....
+         (* from there you can build your context, and then : *)
+         let (!!) = Lang.error.check_fail mycond_id context in
+         ...
+           match ... with
+           | ... -> !! "this is an %s" "error"
+           | e -> !! "an other one related to %s" (... e)
+   ]}
 
 *)
 

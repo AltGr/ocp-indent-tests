@@ -103,21 +103,21 @@ end = struct
   let value t = t.value
 
   (*
-    [split_or_splice] is sufficient as the lone primitive for
-    accomplishing all pointer updates on cyclic loops of list nodes.
-    It takes two "gaps" between adjacent linked list nodes.  If the gaps
-    point into the same list, the result is that it will be split into
-    two lists afterwards.  If the gaps point into different lists, the
-    result is that they will be spliced together into one list afterwards.
+     [split_or_splice] is sufficient as the lone primitive for
+     accomplishing all pointer updates on cyclic loops of list nodes.
+     It takes two "gaps" between adjacent linked list nodes.  If the gaps
+     point into the same list, the result is that it will be split into
+     two lists afterwards.  If the gaps point into different lists, the
+     result is that they will be spliced together into one list afterwards.
 
-      Before                      After
-          -----+        +-----         -----+               +-----
-             A |  <-->  | B               A |  <---   --->  | B
-          -----+        +-----         -----+      \ /      +-----
-                                                    X
-          -----+        +-----         -----+      / \      +-----
-             C |  <-->  | D               C |  <---   --->  | D
-          -----+        +-----         -----+               +-----
+     Before                      After
+     -----+        +-----         -----+               +-----
+     A |  <-->  | B               A |  <---   --->  | B
+     -----+        +-----         -----+      \ /      +-----
+     X
+     -----+        +-----         -----+      / \      +-----
+     C |  <-->  | D               C |  <---   --->  | D
+     -----+        +-----         -----+               +-----
   *)
 
   let split_or_splice ~prev1:a ~next1:b ~prev2:c ~next2:d =
@@ -179,11 +179,11 @@ let create (type a) () : a t = ref None
 let equal (t : _ t) t' = phys_equal t t'
 
 let of_list = function
-| [] -> create ()
-| x :: xs ->
-  let first = Elt.create x in
-  let _last = List.fold xs ~init:first ~f:Elt.insert_after in
-  ref (Some first)
+  | [] -> create ()
+  | x :: xs ->
+    let first = Elt.create x in
+    let _last = List.fold xs ~init:first ~f:Elt.insert_after in
+    ref (Some first)
 
 let fold_elt t ~init ~f =
   match !t with

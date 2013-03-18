@@ -21,8 +21,8 @@
 
 (**
 
-  This module is about file system path transfomation between windows space and unix space.
-  It should not depend on anything else then Str or other standard Ocaml library NOT INCLUDING THE UNIX MODULE
+   This module is about file system path transfomation between windows space and unix space.
+   It should not depend on anything else then Str or other standard Ocaml library NOT INCLUDING THE UNIX MODULE
 
 *)
 
@@ -73,8 +73,8 @@ let where_is_cygwin_path = ["cygwin"] (* not truly generic, limited to length on
 let where_is_cygwin =  Windows (where_is_cygwin_disk,where_is_cygwin_path)  (* Remark ~ Unix ["/"] *)  
 
 (**
-  where is windows in unix ? 
-  it is the mount point of your windows partition in the linux tree
+   where is windows in unix ? 
+   it is the mount point of your windows partition in the linux tree
 *)
 let where_is_windows_path = [ "cygdrive" ]
 

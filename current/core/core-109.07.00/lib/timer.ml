@@ -123,16 +123,16 @@ let check_span loc span =
     invalid_arg (sprintf "Timer.%s: span < 0" loc)
 
 let get_interval_param loc randomize = function
-| None -> INone
-| Some span ->
-  check_span loc span;
-  match randomize with
-  | None -> INormal span
-  | Some max_ratio ->
-    if max_ratio < 0. || 1. < max_ratio then
-      invalid_arg (
-        sprintf "Timer.%s: max_ratio not in range [0.0, 1.0]" loc);
-    IRandom (span, max_ratio)
+  | None -> INone
+  | Some span ->
+    check_span loc span;
+    match randomize with
+    | None -> INormal span
+    | Some max_ratio ->
+      if max_ratio < 0. || 1. < max_ratio then
+        invalid_arg (
+          sprintf "Timer.%s: max_ratio not in range [0.0, 1.0]" loc);
+      IRandom (span, max_ratio)
 
 (* Makes sure that the timer thread gets signaled only if the element
    at the top of the heap requires earlier wakeups *)

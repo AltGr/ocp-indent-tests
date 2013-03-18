@@ -25,36 +25,36 @@
 
    Example :
 
-  {[
-    toplevel_empty = []
-        toplevel_add (x, y, m) = (x,y)::m
-          toplevel_find (x, m) = List.assoc (x, m)
-      rec toplevel_remove ((x,y),m) =
-      match m with
-        [] -> []
-      | hd::tl when hd <> (x,y) -> hd::(toplevel_remove ((x,y), tl))
-      | hd::tl -> toplevel_remove ((x,y) tl)
+   {[
+     toplevel_empty = []
+         toplevel_add (x, y, m) = (x,y)::m
+           toplevel_find (x, m) = List.assoc (x, m)
+       rec toplevel_remove ((x,y),m) =
+       match m with
+         [] -> []
+       | hd::tl when hd <> (x,y) -> hd::(toplevel_remove ((x,y), tl))
+       | hd::tl -> toplevel_remove ((x,y) tl)
 
-                    (* The module *)
-                    map = \{\{
-                             empty = toplevel_empty;
-                             add = toplevel_add;
-                             find = toplevel_find;
-                             remove = toplevel_remove;
-                             \}\}
+                     (* The module *)
+                     map = \{\{
+                              empty = toplevel_empty;
+                              add = toplevel_add;
+                              find = toplevel_find;
+                              remove = toplevel_remove;
+                              \}\}
 
-              my_map = map.empty
-              my_map = map.add (0, 'a', my_map)
-              my_map = map.remove ((0,'a'), my_map)
-  ]}
+               my_map = map.empty
+               my_map = map.add (0, 'a', my_map)
+               my_map = map.remove ((0,'a'), my_map)
+   ]}
 
    The last part of the code is rewritten in
 
-  {[
-    my_map = toplevel_empty
-        my_map = toplevel_add (0, 'a', my_map)
-        my_map = toplevel_remove ((0,'a'), my_map)
-  ]}
+   {[
+     my_map = toplevel_empty
+         my_map = toplevel_add (0, 'a', my_map)
+         my_map = toplevel_remove ((0,'a'), my_map)
+   ]}
 
    @author Esther Baruk
 *)

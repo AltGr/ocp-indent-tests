@@ -76,7 +76,7 @@ let plugin_main_file plugin =
 (**
    PASSES :
    -------
-  // Command line passes
+   // Command line passes
    returns a : env_bsl, env_blender
 
    val js_generation : argv_options -> env_js_input -> env_js_output

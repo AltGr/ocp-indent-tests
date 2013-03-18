@@ -33,17 +33,17 @@ let sigmask cmd sigs =
 
 let num_threads () =
   let rec find_thread_count = function
-  | [] -> None
-  | line :: xs ->
-    if String.is_prefix line ~prefix:"Threads:" then
-      begin
-        try
-          Some (int_of_string
-                  (String.strip (snd (String.lsplit2_exn line ~on:':'))))
-        with
-        | _ -> None
-      end
-    else find_thread_count xs
+    | [] -> None
+    | line :: xs ->
+      if String.is_prefix line ~prefix:"Threads:" then
+        begin
+          try
+            Some (int_of_string
+                    (String.strip (snd (String.lsplit2_exn line ~on:':'))))
+          with
+          | _ -> None
+        end
+      else find_thread_count xs
   in
   try
     find_thread_count

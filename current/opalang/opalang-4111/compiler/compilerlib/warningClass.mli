@@ -209,10 +209,10 @@ val bsl_unknown_bypass : wclass
    Example :
    [cond_annot_unicity], [cond_bypass_expanded]
    represents the wclass used in :
-  {[
-    OpaCheck.Annot.unicity
-      QmlCheck.Bypass.expanded
-  ]}
+   {[
+     OpaCheck.Annot.unicity
+       QmlCheck.Bypass.expanded
+   ]}
 *)
 
 (** Used for pre/post condition on passes. *)

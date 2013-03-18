@@ -76,8 +76,8 @@ module Inverses' (X : Int_intf.S) (Y : Int_intf.S)
   let xs = let module E = Examples (X) in E.examples
   let ys = let module E = Examples (Y) in E.examples
   let get = function
-  | Some z -> z
-  | None -> failwith "Out_of_range"
+    | Some z -> z
+    | None -> failwith "Out_of_range"
   let y_to_x_exn y = get (y_to_x y)
   let x_to_y_exn x = get (x_to_y x)
   let x_out_of_range x =

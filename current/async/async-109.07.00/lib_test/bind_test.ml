@@ -137,27 +137,27 @@ let nop () = ()
 
 (*
 
-1 is anything (in this case, Empty_many_handlers
-with a removable callback and a normal callback)
-and 2 is empty (the result of a bind with nothing
-attached to it).
+   1 is anything (in this case, Empty_many_handlers
+   with a removable callback and a normal callback)
+   and 2 is empty (the result of a bind with nothing
+   attached to it).
 
-       1     2
- (C)--[ ]   [ ]
- ( )--/
+   1     2
+   (C)--[ ]   [ ]
+   ( )--/
 
-Callback for bind fires:
+   Callback for bind fires:
 
-      [I]-->[ ]--(C)
-             \---( )
+   [I]-->[ ]--(C)
+   \---( )
 
-Removable callback is removed:
+   Removable callback is removed:
 
-      [I]-->[ ]--( )
+   [I]-->[ ]--( )
 
-1 is filled in, normal callback fires:
+   1 is filled in, normal callback fires:
 
-      [I]-->[X]***X
+   [I]-->[X]***X
 
 *)
 let t_choice_star_empty () =
@@ -175,17 +175,17 @@ let t_choice_star_empty () =
 ;;
 
 (*
-1 has one handler (the removable callback), 2 has one
-inline handler (a normal callback). (Note that 1 cannot be an inline
-handler, due to implementation reasons.)
+   1 has one handler (the removable callback), 2 has one
+   inline handler (a normal callback). (Note that 1 cannot be an inline
+   handler, due to implementation reasons.)
 
-       1     2
- (C)--[ ]   [ ]--{ }
+   1     2
+   (C)--[ ]   [ ]--{ }
 
-Callback for bind fires:
+   Callback for bind fires:
 
-      [I]-->[ ]--( )
-              \--(C)
+   [I]-->[ ]--( )
+   \--(C)
 *)
 
 let t_choice_one_inline () =
@@ -201,15 +201,15 @@ let t_choice_one_inline () =
   Ivar.read ret
 
 (*
-1 has one inline handler (normal) and 2 has one handler (removable).
+   1 has one inline handler (normal) and 2 has one handler (removable).
 
-       1     2
- { }--[ ]   [ ]--(C)
+   1     2
+   { }--[ ]   [ ]--(C)
 
-Callback for bind fires:
+   Callback for bind fires:
 
-      [I]-->[ ]--(C)
-              \--( )
+   [I]-->[ ]--(C)
+   \--( )
 *)
 let t_choice_inline_one () =
   let ret = Ivar.create () in

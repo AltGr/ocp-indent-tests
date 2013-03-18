@@ -13,8 +13,8 @@
 (* $Id: ftlow.mli,v 1.1 2007/01/18 10:29:57 rousse Exp $ *)
 
 (**
-  Almost all of the functions are just interpretation of functions of
-  the freetype library. See the documents of the freetype library.
+   Almost all of the functions are just interpretation of functions of
+   the freetype library. See the documents of the freetype library.
 *)
 
 type library;;

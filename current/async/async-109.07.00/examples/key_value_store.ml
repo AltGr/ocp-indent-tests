@@ -12,11 +12,11 @@ module Protocol = struct
 
 
     let from_raw msg = match String.split msg ~on:' ' with
-    | ("help" :: _          ) -> Req_help
-    | ("add"  :: k :: v :: _) -> Req_add (k, v)
-    | ("find" :: k :: _     ) -> Req_find k
-    | ("remove" :: k :: _   ) -> Req_remove k
-    | _                       -> Req_invalid
+      | ("help" :: _          ) -> Req_help
+      | ("add"  :: k :: v :: _) -> Req_add (k, v)
+      | ("find" :: k :: _     ) -> Req_find k
+      | ("remove" :: k :: _   ) -> Req_remove k
+      | _                       -> Req_invalid
   end
 
   module Server_message = struct
@@ -27,9 +27,9 @@ module Protocol = struct
 
 
     let to_raw t = match t with
-    | Rep_fail msg -> "[ERROR] " ^ msg
-    | Rep_succ msg -> msg
-    | Rep_help     -> "Valid commands: help, add, find, remove"
+      | Rep_fail msg -> "[ERROR] " ^ msg
+      | Rep_succ msg -> msg
+      | Rep_help     -> "Valid commands: help, add, find, remove"
   end
 
   module Transport = struct

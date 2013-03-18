@@ -44,27 +44,27 @@ module Tree0 = struct
   (* Sets are represented by balanced binary trees (the heights of the children differ by
      at most 2. *)
   let height = function
-  | Empty -> 0
-  | Leaf _ -> 1
-  | Node(_, _, _, h, _) -> h
+    | Empty -> 0
+    | Leaf _ -> 1
+    | Node(_, _, _, h, _) -> h
   ;;
 
   let length = function
-  | Empty -> 0
-  | Leaf _ -> 1
-  | Node(_, _, _, _, s) -> s
+    | Empty -> 0
+    | Leaf _ -> 1
+    | Node(_, _, _, _, s) -> s
   ;;
 
   let invariants t ~compare_elt =
     let rec loop lower upper t =
       let in_range v =
         (match lower with
-        | None -> true
-        | Some lower -> compare_elt lower v < 0
+         | None -> true
+         | Some lower -> compare_elt lower v < 0
         )
         && (match upper with
-        | None -> true
-        | Some upper -> compare_elt v upper < 0
+          | None -> true
+          | Some upper -> compare_elt v upper < 0
         )
       in
       match t with
@@ -203,23 +203,23 @@ module Tree0 = struct
 
   let add t x ~compare_elt =
     let rec aux = function
-    | Empty -> Leaf x
-    | Leaf v ->
-      let c = compare_elt x v in
-      if c = 0 then
-        raise Same
-      else if c < 0 then
-        bal (Leaf x) v Empty
-      else
-        bal Empty v (Leaf x)
-    | Node(l, v, r, _, _) ->
-      let c = compare_elt x v in
-      if c = 0 then
-        raise Same
-      else if c < 0 then
-        bal (aux l) v r
-      else
-        bal l v (aux r)
+      | Empty -> Leaf x
+      | Leaf v ->
+        let c = compare_elt x v in
+        if c = 0 then
+          raise Same
+        else if c < 0 then
+          bal (Leaf x) v Empty
+        else
+          bal Empty v (Leaf x)
+      | Node(l, v, r, _, _) ->
+        let c = compare_elt x v in
+        if c = 0 then
+          raise Same
+        else if c < 0 then
+          bal (aux l) v r
+        else
+          bal l v (aux r)
     in
     try aux t with Same -> t
   ;;
@@ -240,10 +240,10 @@ module Tree0 = struct
 
   (* Smallest and greatest element of a set *)
   let rec min_elt = function
-  | Empty -> None
-  | Leaf v
-  | Node(Empty, v, _, _, _) -> Some v
-  | Node(l, _, _, _, _) -> min_elt l
+    | Empty -> None
+    | Leaf v
+    | Node(Empty, v, _, _, _) -> Some v
+    | Node(l, _, _, _, _) -> min_elt l
   ;;
 
   exception Set_min_elt_exn_of_empty_set with sexp
@@ -276,10 +276,10 @@ module Tree0 = struct
   ;;
 
   let rec max_elt = function
-  | Empty -> None
-  | Leaf v
-  | Node(_, v, Empty, _, _) -> Some v
-  | Node(_, _, r, _, _) -> max_elt r
+    | Empty -> None
+    | Leaf v
+    | Node(_, v, Empty, _, _) -> Some v
+    | Node(_, _, r, _, _) -> max_elt r
   ;;
 
   let max_elt_exn t =
@@ -291,10 +291,10 @@ module Tree0 = struct
   (* Remove the smallest element of the given set *)
 
   let rec remove_min_elt = function
-  | Empty -> invalid_arg "Set.remove_min_elt"
-  | Leaf _ -> Empty
-  | Node(Empty, _, r, _, _) -> r
-  | Node(l, v, r, _, _) -> bal (remove_min_elt l) v r
+    | Empty -> invalid_arg "Set.remove_min_elt"
+    | Leaf _ -> Empty
+    | Node(Empty, _, r, _, _) -> r
+    | Node(l, v, r, _, _) -> bal (remove_min_elt l) v r
   ;;
 
   (* Merge two trees l and r into one.  All elements of l must precede the elements of r.
@@ -484,10 +484,10 @@ module Tree0 = struct
     let of_set s = cons s End
 
     let rec iter ~f = function
-    | End -> ()
-    | More (a, tree, enum) ->
-      f a;
-      iter (cons tree enum) ~f
+      | End -> ()
+      | More (a, tree, enum) ->
+        f a;
+        iter (cons tree enum) ~f
     ;;
 
     let iter2 compare_elt t1 t2 ~f =
@@ -550,9 +550,9 @@ module Tree0 = struct
 
   let iter t ~f =
     let rec iter = function
-    | Empty -> ()
-    | Leaf v -> f v
-    | Node(l, v, r, _, _) -> iter l; f v; iter r
+      | Empty -> ()
+      | Leaf v -> f v
+      | Node(l, v, r, _, _) -> iter l; f v; iter r
     in
     iter t
   ;;
@@ -574,59 +574,59 @@ module Tree0 = struct
   ;;
 
   let rec for_all t ~f:p = match t with
-  | Empty -> true
-  | Leaf v -> p v
-  | Node(l, v, r, _, _) -> p v && for_all ~f:p l && for_all ~f:p r
+    | Empty -> true
+    | Leaf v -> p v
+    | Node(l, v, r, _, _) -> p v && for_all ~f:p l && for_all ~f:p r
   ;;
 
   let rec exists t ~f:p = match t with
-  | Empty -> false
-  | Leaf v -> p v
-  | Node(l, v, r, _, _) -> p v || exists ~f:p l || exists ~f:p r
+    | Empty -> false
+    | Leaf v -> p v
+    | Node(l, v, r, _, _) -> p v || exists ~f:p l || exists ~f:p r
   ;;
 
   let filter s ~f:p ~compare_elt =
     let rec filt accu = function
-    | Empty -> accu
-    | Leaf v -> if p v then add accu v ~compare_elt else accu
-    | Node(l, v, r, _, _) ->
-      filt (filt (if p v then add accu v ~compare_elt else accu) l) r
+      | Empty -> accu
+      | Leaf v -> if p v then add accu v ~compare_elt else accu
+      | Node(l, v, r, _, _) ->
+        filt (filt (if p v then add accu v ~compare_elt else accu) l) r
     in
     filt Empty s
   ;;
 
   let filter_map s ~f:p ~compare_elt =
     let rec filt accu = function
-    | Empty -> accu
-    | Leaf v ->
-      (match p v with
-      | None -> accu
-      | Some v -> add accu v ~compare_elt)
-    | Node(l, v, r, _, _) ->
-      filt (filt (match p v with
-            | None -> accu
-            | Some v -> add accu v ~compare_elt) l) r
+      | Empty -> accu
+      | Leaf v ->
+        (match p v with
+         | None -> accu
+         | Some v -> add accu v ~compare_elt)
+      | Node(l, v, r, _, _) ->
+        filt (filt (match p v with
+                | None -> accu
+                | Some v -> add accu v ~compare_elt) l) r
     in
     filt Empty s
   ;;
 
   let partition_tf s ~f:p ~compare_elt =
     let rec part ((t, f) as accu) = function
-    | Empty -> accu
-    | Leaf v -> if p v then (add t v ~compare_elt, f) else (t, add f v ~compare_elt)
-    | Node(l, v, r, _, _) ->
-      part (part (
-              if p v
-              then (add t v ~compare_elt, f)
-              else (t, add f v ~compare_elt)) l) r
+      | Empty -> accu
+      | Leaf v -> if p v then (add t v ~compare_elt, f) else (t, add f v ~compare_elt)
+      | Node(l, v, r, _, _) ->
+        part (part (
+                if p v
+                then (add t v ~compare_elt, f)
+                else (t, add f v ~compare_elt)) l) r
     in
     part (Empty, Empty) s
   ;;
 
   let rec elements_aux accu = function
-  | Empty -> accu
-  | Leaf v -> v :: accu
-  | Node(l, v, r, _, _) -> elements_aux (v :: elements_aux accu r) l
+    | Empty -> accu
+    | Leaf v -> v :: accu
+    | Node(l, v, r, _, _) -> elements_aux (v :: elements_aux accu r) l
   ;;
 
   let elements s = elements_aux [] s
@@ -657,29 +657,29 @@ module Tree0 = struct
 
   (* faster but equivalent to [Array.of_list (to_list t)] *)
   let to_array = function
-  | Empty -> [||]
-  | Leaf v -> [| v |]
-  | Node (l, v, r, _, s) ->
-    let res = Array.create ~len:s v in
-    let pos_ref = ref 0 in
-    let rec loop = function
-    (* Invariant: on entry and on exit to [loop], !pos_ref is the next
-       available cell in the array. *)
-    | Empty -> ()
-    | Leaf v ->
-      res.(!pos_ref) <- v;
-      incr pos_ref
-    | Node (l, v, r, _, _) ->
+    | Empty -> [||]
+    | Leaf v -> [| v |]
+    | Node (l, v, r, _, s) ->
+      let res = Array.create ~len:s v in
+      let pos_ref = ref 0 in
+      let rec loop = function
+        (* Invariant: on entry and on exit to [loop], !pos_ref is the next
+           available cell in the array. *)
+        | Empty -> ()
+        | Leaf v ->
+          res.(!pos_ref) <- v;
+          incr pos_ref
+        | Node (l, v, r, _, _) ->
+          loop l;
+          res.(!pos_ref) <- v;
+          incr pos_ref;
+          loop r
+      in
       loop l;
-      res.(!pos_ref) <- v;
+      (* res.(!pos_ref) is already initialized (by Array.create ~len:above). *)
       incr pos_ref;
-      loop r
-    in
-    loop l;
-    (* res.(!pos_ref) is already initialized (by Array.create ~len:above). *)
-    incr pos_ref;
-    loop r;
-    res
+      loop r;
+      res
   ;;
 
   let map t ~f ~compare_elt = fold t ~init:empty ~f:(fun t x -> add t (f x) ~compare_elt)

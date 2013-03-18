@@ -399,17 +399,17 @@ module MyOCamlbuildBase = struct
       (* Declare OCaml libraries *)
       List.iter 
         (function
-        | nm, [] ->
-          ocaml_lib nm
-        | nm, dir :: tl ->
-          ocaml_lib ~dir:dir (dir^"/"^nm);
-          List.iter 
-            (fun dir -> 
-              List.iter
-                (fun str ->
-                  flag ["ocaml"; "use_"^nm; str] (S[A"-I"; P dir]))
-                ["compile"; "infer_interface"; "doc"])
-            tl)
+         | nm, [] ->
+           ocaml_lib nm
+         | nm, dir :: tl ->
+           ocaml_lib ~dir:dir (dir^"/"^nm);
+           List.iter 
+             (fun dir -> 
+               List.iter
+                 (fun str ->
+                   flag ["ocaml"; "use_"^nm; str] (S[A"-I"; P dir]))
+                 ["compile"; "infer_interface"; "doc"])
+             tl)
         t.lib_ocaml;
 
       (* Declare directories dependencies, replace "include" in _tags. *)
@@ -578,9 +578,9 @@ let setup_standard_build_flags () =
 ;;
 
 let dispatch = function
-| After_rules as e ->
-  setup_standard_build_flags ();
-  dispatch_default e
-| e -> dispatch_default e
+  | After_rules as e ->
+    setup_standard_build_flags ();
+    dispatch_default e
+  | e -> dispatch_default e
 
 let () = Ocamlbuild_plugin.dispatch dispatch

@@ -88,9 +88,9 @@ val sub : t -> int -> int -> string
    you can use function [iter_sub] and [fold_sub] applied to
    a function [f] of your choice, which is stricly equivalent
    to
-  {[iter (fun s start len -> f (String.sub s start len))]}
+   {[iter (fun s start len -> f (String.sub s start len))]}
    and respectively
-  {[fold (fun acc s start len -> f acc (String.sub s start len))]}
+   {[fold (fun acc s start len -> f acc (String.sub s start len))]}
    (one more string allocation with [String.sub])
 
    [iter], [fold], [rev_iter], [rev_fold] are equivalent in term of performance,

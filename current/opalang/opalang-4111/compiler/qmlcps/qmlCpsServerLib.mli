@@ -337,12 +337,12 @@ val steal: unit -> task option
 
    To adapt [async_read_contents], we may just define [read_contents] as
 
-    {[
-      let read_contents file =
-        let (cb, future) = callback_of_fun (fun x -> x) in
-        callback_of_fun file cb;
-        future
-    ]}
+     {[
+       let read_contents file =
+         let (cb, future) = callback_of_fun (fun x -> x) in
+         callback_of_fun file cb;
+         future
+     ]}
   *)
 
 (*

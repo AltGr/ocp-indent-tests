@@ -40,15 +40,15 @@
    not true in this case.
 
    Example:
-  {[
-    if ( c1 ) {
-        a = m.toto
-      }
-        if ( c1 && c2 ) {
-            b = a.tutu // there we can use a, because c1 && c2 => c1
-          }
-            c = m.toto.tata
-  ]}
+   {[
+     if ( c1 ) {
+         a = m.toto
+       }
+         if ( c1 && c2 ) {
+             b = a.tutu // there we can use a, because c1 && c2 => c1
+           }
+             c = m.toto.tata
+   ]}
 
    The general problem is complex, but there, we need just a very small subset
    of utilisation, in which the structure of conditions are simple :
@@ -183,11 +183,11 @@ sig
   (**
      Regroup and flaten conjonctives decisions.
      In particular, proceed to simplifications such as :
-    {[
-      flattern And nodes
-        [] => True
-          And [] => True
-    ]}
+     {[
+       flattern And nodes
+         [] => True
+           And [] => True
+     ]}
   *)
   val conjonction : decision list -> decision
 
@@ -272,13 +272,13 @@ sig
      under a certain condition.
      Example:
      An assign has been generated, under the condition [Ci]
-    {[
-      v0 = x.a.b.c
-    ]}
+     {[
+       v0 = x.a.b.c
+     ]}
      So, we will call
-    {[
-      SumEnv.add ~rev_path:["c";"b";"a"] Ci v0 sum_env
-    ]}
+     {[
+       SumEnv.add ~rev_path:["c";"b";"a"] Ci v0 sum_env
+     ]}
   *)
   val add_dot : rev_path:rev_path -> SumCondition.t -> 'ident -> 'ident t -> 'ident t
 
@@ -302,17 +302,17 @@ end
    possible minimal (suffisant) tests for deciding the case of the sum.
 
    Some examples:
-  {[
-    D(hd,tl|nil)[hd,tl] = present(hd) / present(tl) / absent(nil)
-          D(hd,tl|nil)[nil] = present(nil) / absent(hd) / absent(tl)
+   {[
+     D(hd,tl|nil)[hd,tl] = present(hd) / present(tl) / absent(nil)
+           D(hd,tl|nil)[nil] = present(nil) / absent(hd) / absent(tl)
 
-          D(a|a,b)[a] = absent(b)
-        D(a|a,b)[a,b] = present(b)
+           D(a|a,b)[a] = absent(b)
+         D(a|a,b)[a,b] = present(b)
 
-        D(a|b|a,b)[a] = absent(b)
-        D(a|b|a,b)[b] = absent(a)
-        D(a|b|a,b)[a,b] = present(a) AND present(b)
-  ]}
+         D(a|b|a,b)[a] = absent(b)
+         D(a|b|a,b)[b] = absent(a)
+         D(a|b|a,b)[a,b] = present(a) AND present(b)
+   ]}
 
    It is used for deciding with a number minimal of test in which
    case of a sum type we are.
@@ -331,17 +331,17 @@ end
    condition corresponding to the sum case.
 
    Some examples:
-  {[
-    C(hd,tl|nil)[hd,tl] = present(hd) AND present(tl) AND absent(nil)
-        C(hd,tl|nil)[nil] = present(nil) AND absent(hd) AND absent(tl)
+   {[
+     C(hd,tl|nil)[hd,tl] = present(hd) AND present(tl) AND absent(nil)
+         C(hd,tl|nil)[nil] = present(nil) AND absent(hd) AND absent(tl)
 
-        C(a|a,b)[a] = present(a) AND absent(b)
-        C(a|a,b)[a,b] = present(a) AND present(b)
+         C(a|a,b)[a] = present(a) AND absent(b)
+         C(a|a,b)[a,b] = present(a) AND present(b)
 
-        C(a|b|a,b)[a] = present(a)
-        C(a|b|a,b)[b] = present(b)
-        C(a|b|a,b)[a,b] = present(a) AND present(b)
-  ]}
+         C(a|b|a,b)[a] = present(a)
+         C(a|b|a,b)[b] = present(b)
+         C(a|b|a,b)[a,b] = present(a) AND present(b)
+   ]}
 
    It is used for building condition when we add definition of dots
    in the compilation of closed pattern matching.
@@ -417,9 +417,9 @@ sig
      inside a sum type should necessary be on the same type.
      The path is for nested fields.
      Example, if {[ty = list(int)]}, then
-    {[
-      SumAnalysis.ty sum ["hd" ; "tl"; "tl" ; "tl"]
-    ]}
+     {[
+       SumAnalysis.ty sum ["hd" ; "tl"; "tl" ; "tl"]
+     ]}
      will return {[int]},
      because the type of {[a.tl.tl.tl.hd]} is {[int]}
 

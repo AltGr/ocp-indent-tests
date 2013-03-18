@@ -57,9 +57,9 @@ val opa_version_name : string
 
    Generated from the following command line in each repository :
 
-  {[
-    git log --pretty=oneline | wc -l
-  ]}
+   {[
+     git log --pretty=oneline | wc -l
+   ]}
 *)
 (** *)
 
@@ -70,9 +70,9 @@ val opa_git_version : int
 
    Generated from the following command line in each repository :
 
-  {[
-    git log -n1 --pretty=format:%h
-  ]}
+   {[
+     git log -n1 --pretty=format:%h
+   ]}
 *)
 (** *)
 val opa_git_sha : string
@@ -84,9 +84,9 @@ val opa_git_sha : string
 
    Generated from the following command, in the main repository opageneral :
 
-  {[
-    git log -n1 --pretty=format:%ad --date=short
-  ]}
+   {[
+     git log -n1 --pretty=format:%ad --date=short
+   ]}
 *)
 val date : string
 

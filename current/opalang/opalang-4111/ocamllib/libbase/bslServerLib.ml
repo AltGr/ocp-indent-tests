@@ -64,9 +64,9 @@ module type S = sig
        in case of equality of vtables,
        lexicographic on attached values.
      e.g.
-    {[
-      { z = "yop" ; x = 0 } > { x = 42 ; y }
-    ]}
+     {[
+       { z = "yop" ; x = 0 } > { x = 42 ; y }
+     ]}
 
      Simple record are handled correctly, as they were not optimized.
   *)
@@ -241,20 +241,20 @@ module type S = sig
 
      This is about the constructor opa[] of register directives.
 
-    {[
-      ##opa-type toto('a, 'b)
-        ##register foo : opa[float], opa[toto('a, 'b)], opa['a] -> opa[unit]
-    ]}
+     {[
+       ##opa-type toto('a, 'b)
+         ##register foo : opa[float], opa[toto('a, 'b)], opa['a] -> opa[unit]
+     ]}
      will produce the following interface
-    {[
-      type ('a, 'b) opa_toto
-      external wrap_opa_toto : ServerLib.ty_record -> ('a, 'b) opa_toto
-      external unwrap_opa_toto : ('a, 'b) opa_toto -> ServerLib.ty_record
+     {[
+       type ('a, 'b) opa_toto
+       external wrap_opa_toto : ServerLib.ty_record -> ('a, 'b) opa_toto
+       external unwrap_opa_toto : ('a, 'b) opa_toto -> ServerLib.ty_record
 
-      val foo :
-        ServerLib.ty_float ->
-        ('a, 'b) opa_toto -> 'a -> ServerLib.ty_void
-    ]}
+       val foo :
+         ServerLib.ty_float ->
+         ('a, 'b) opa_toto -> 'a -> ServerLib.ty_void
+     ]}
 
      Alternative approach :
 
@@ -289,11 +289,11 @@ module type S = sig
 
   (**
      In the implementation in any module implementing this interface:
-    {[
-      type ty_void = ty_record
-      type ty_bool
-      type ty_option
-    ]}
+     {[
+       type ty_void = ty_record
+       type ty_bool
+       type ty_option
+     ]}
   *)
 
   type ty_void = ty_record

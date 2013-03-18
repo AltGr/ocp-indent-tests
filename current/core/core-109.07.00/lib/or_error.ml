@@ -16,15 +16,15 @@ let try_with ?(backtrace = false) f =
 let try_with_join ?backtrace f = join (try_with ?backtrace f)
 
 let ok_exn = function
-| Ok x -> x
-| Error err -> Error.raise err
+  | Ok x -> x
+  | Error err -> Error.raise err
 ;;
 
 let of_exn ?backtrace exn = Error (Error.of_exn ?backtrace exn)
 
 let of_exn_result = function
-| Ok _ as z -> z
-| Error exn -> of_exn exn
+  | Ok _ as z -> z
+  | Error exn -> of_exn exn
 ;;
 
 let error message a sexp_of_a = Error (Error.create message a sexp_of_a)

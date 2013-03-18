@@ -399,17 +399,17 @@ module MyOCamlbuildBase = struct
       (* Declare OCaml libraries *)
       List.iter 
         (function
-        | nm, [] ->
-          ocaml_lib nm
-        | nm, dir :: tl ->
-          ocaml_lib ~dir:dir (dir^"/"^nm);
-          List.iter 
-            (fun dir -> 
-              List.iter
-                (fun str ->
-                  flag ["ocaml"; "use_"^nm; str] (S[A"-I"; P dir]))
-                ["compile"; "infer_interface"; "doc"])
-            tl)
+         | nm, [] ->
+           ocaml_lib nm
+         | nm, dir :: tl ->
+           ocaml_lib ~dir:dir (dir^"/"^nm);
+           List.iter 
+             (fun dir -> 
+               List.iter
+                 (fun str ->
+                   flag ["ocaml"; "use_"^nm; str] (S[A"-I"; P dir]))
+                 ["compile"; "infer_interface"; "doc"])
+             tl)
         t.lib_ocaml;
 
       (* Declare directories dependencies, replace "include" in _tags. *)
@@ -591,23 +591,23 @@ let setup_standard_build_flags () =
 ;;
 
 let dispatch = function
-| After_rules as e ->
-  setup_standard_build_flags ();
+  | After_rules as e ->
+    setup_standard_build_flags ();
 
-  pflag ["compile"; "ocaml"] "I" (fun x -> S [A "-I"; A x]);
+    pflag ["compile"; "ocaml"] "I" (fun x -> S [A "-I"; A x]);
 
-  dep  ["ocaml"; "ocamldep"; "mlh"] (select_files "lib/" ".mlh");
+    dep  ["ocaml"; "ocamldep"; "mlh"] (select_files "lib/" ".mlh");
 
-  flag ["mlh"; "ocaml"; "ocamldep"] (S[A"-ppopt"; A"-Ilib/"]);
-  flag ["mlh"; "ocaml"; "compile"]  (S[A"-ppopt"; A"-Ilib/"]);
-  flag ["mlh"; "ocaml"; "doc"]      (S[A"-ppopt"; A"-Ilib/"]);
+    flag ["mlh"; "ocaml"; "ocamldep"] (S[A"-ppopt"; A"-Ilib/"]);
+    flag ["mlh"; "ocaml"; "compile"]  (S[A"-ppopt"; A"-Ilib/"]);
+    flag ["mlh"; "ocaml"; "doc"]      (S[A"-ppopt"; A"-Ilib/"]);
 
-  dispatch_default e;
+    dispatch_default e;
 
-  if test "ld -lrt -shared -o /dev/null 2>/dev/null" then begin
-    flag ["ocamlmklib"; "c"]                      (S[A"-lrt"]);
-    flag ["use_libcore_stubs"; "link"] (S[A"-cclib"; A"-lrt"]);
-  end
-| e -> dispatch_default e
+    if test "ld -lrt -shared -o /dev/null 2>/dev/null" then begin
+      flag ["ocamlmklib"; "c"]                      (S[A"-lrt"]);
+      flag ["use_libcore_stubs"; "link"] (S[A"-cclib"; A"-lrt"]);
+    end
+  | e -> dispatch_default e
 
 let () = Ocamlbuild_plugin.dispatch dispatch

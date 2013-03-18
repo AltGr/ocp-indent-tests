@@ -126,8 +126,8 @@ let of_list_rev l =
 
 (* Cannot use List.length here because the List module depends on Array. *)
 let rec list_length accu = function
-| [] -> accu
-| _h::t -> list_length (succ accu) t
+  | [] -> accu
+  | _h::t -> list_length (succ accu) t
 
 let of_list_map xs ~f =
   match xs with
@@ -135,8 +135,8 @@ let of_list_map xs ~f =
   | hd::tl ->
     let a = create ~len:(list_length 1 tl) (f hd) in
     let rec fill i = function
-    | [] -> a
-    | hd::tl -> unsafe_set a i (f hd); fill (i+1) tl in
+      | [] -> a
+      | hd::tl -> unsafe_set a i (f hd); fill (i+1) tl in
     fill 1 tl
 
 let of_list_rev_map xs ~f =

@@ -261,30 +261,30 @@ val fold_right_map :
   ('a -> 'b -> 'c * 'b) -> 'a list -> 'b -> 'c list * 'b
 
 (**
-  {[foldl f [ 1, 2 , 3 ] acc =       acc |> f 1 |> f 2 |> f 3]}
+   {[foldl f [ 1, 2 , 3 ] acc =       acc |> f 1 |> f 2 |> f 3]}
    same as foldl except that the argument are in a different order
 *)
 val foldl  : ('a -> 'acc -> 'acc) -> 'a list -> 'acc -> 'acc
 
 (**
-  {[foldr f [ 1, 2 , 3 ] acc =       acc |> f 3 |> f 2 |> f 1]}
+   {[foldr f [ 1, 2 , 3 ] acc =       acc |> f 3 |> f 2 |> f 1]}
 *)
 val foldr  : ('a -> 'acc -> 'acc) -> 'a list -> 'acc -> 'acc
 
 (**
-  {[foldl1 f [ 1, 2 , 3 ] = 1 |> f 2 |> f 3]}
+   {[foldl1 f [ 1, 2 , 3 ] = 1 |> f 2 |> f 3]}
    @raise Invalid_argument if the list is empty
 *)
 val foldl1 : ('a -> 'a -> 'a) -> 'a list -> 'a
 
 (**
-  {[foldr1 f [ 1, 2 , 3 ] = 3 |> f 2 |> f 1]}
+   {[foldr1 f [ 1, 2 , 3 ] = 3 |> f 2 |> f 1]}
    @raise Invalid_argument is the list is empty
 *)
 val foldr1 : ('a -> 'a -> 'a) -> 'a list -> 'a
 
 (**
-  {[fold_left1 f [ 1, 2 , 3 ] = (f(f 1 2) 3)]}
+   {[fold_left1 f [ 1, 2 , 3 ] = (f(f 1 2) 3)]}
    @raise Invalid_argument if the list is empty
 *)
 val fold_left1 :  ('a -> 'a -> 'a) -> 'a list -> 'a

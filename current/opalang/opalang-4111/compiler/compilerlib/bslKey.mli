@@ -36,12 +36,12 @@
    When you are manipulating a key after a [to_string] manipulation,
    you should use [skey] as variable identifier.
 
-  {[
-    match expr with
-    | Bypass key ->
-        let skey = BslKey.to_string key in
-        .....
-  ]}
+   {[
+     match expr with
+     | Bypass key ->
+         let skey = BslKey.to_string key in
+         .....
+   ]}
 
 *)
 

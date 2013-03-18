@@ -30,11 +30,11 @@
    - underline: to underline the output
    - dim, bright, normal: to set the brightness of the foreground
 
-  All these tags can be nested arbitrarily (though nesting cross or underline tags is useless).
+   All these tags can be nested arbitrarily (though nesting cross or underline tags is useless).
 
-  You can set severals tags in one go by separating them with commas:
-  [OManager.printf "\@{<blue,Red, bright}stuff\@}"] will set the foreground color
-  to bright blue, and the background color to red.
+   You can set severals tags in one go by separating them with commas:
+   [OManager.printf "\@{<blue,Red, bright}stuff\@}"] will set the foreground color
+   to bright blue, and the background color to red.
 *)
 
 (** {6 Options} *)
@@ -185,9 +185,9 @@ end
 (**
    Given a tool name (e.g bslregister, qmlflat, etc...)
    this will produce on the oformatter :
-  {[
-    This is $tool version ... (c) MLstate 2010
-  ]}
+   {[
+     This is $tool version ... (c) MLstate 2010
+   ]}
 
    [force] means if you want to print it, even if
    verbose is not set to [true].

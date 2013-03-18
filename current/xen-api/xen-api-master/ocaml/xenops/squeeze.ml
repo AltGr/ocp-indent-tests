@@ -12,11 +12,11 @@
  * GNU Lesser General Public License for more details.
  *)
 (**
-  Implement a simple 'proportional memory' policy where VMs are squeezed
-  equally to free memory. There is no direct attempt to respond to distress or
-  memory pressure information from within the guest. Guests which are stuck
-  (e.g. broken balloon driver or who cannot free any more memory) are observed
-  and worked around.
+   Implement a simple 'proportional memory' policy where VMs are squeezed
+   equally to free memory. There is no direct attempt to respond to distress or
+   memory pressure information from within the guest. Guests which are stuck
+   (e.g. broken balloon driver or who cannot free any more memory) are observed
+   and worked around.
 *)
 (*
   Remember:
@@ -269,8 +269,8 @@ module type POLICY = sig
 end
 
 (**
-  Represents an algorithm which attempts to (i) free memory; and (ii) balance
-  memory between VMs on a host by setting balloon targets.
+   Represents an algorithm which attempts to (i) free memory; and (ii) balance
+   memory between VMs on a host by setting balloon targets.
 *)
 module Proportional = struct
 
@@ -283,10 +283,10 @@ module Proportional = struct
       value
 
   (**
-    Given an amount of theoretically surplus memory (= host free memory +
-    that which would be freed by ballooning down to dynamic_min) produce a
-    set of balloon-target-set actions to divide it up amongst the given VMs
-    so that (target - min) / (max - min) is the same for all VMs.
+     Given an amount of theoretically surplus memory (= host free memory +
+     that which would be freed by ballooning down to dynamic_min) produce a
+     set of balloon-target-set actions to divide it up amongst the given VMs
+     so that (target - min) / (max - min) is the same for all VMs.
   *)
   let allocate_memory_in_proportion verbose surplus_memory_kib domains =
     (* We allocate surplus memory in proportion to each domain's dynamic_range: *)
@@ -323,8 +323,8 @@ module Squeezer = struct
   let make () = { stuckness = Stuckness_monitor.make (); non_active_domids = [] }
 
   (**
-    Takes a view of the host state and amount of free memory desired and
-    returns a list of ballooning actions which may help achieve the goal.
+     Takes a view of the host state and amount of free memory desired and
+     returns a list of ballooning actions which may help achieve the goal.
   *)
   let one_iteration ?(fistpoints=[]) verbose success_condition (x: t) (host: host) host_target_kib (now: float) =
     (* 1. Compute which domains are still considered active *)

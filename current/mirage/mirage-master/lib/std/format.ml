@@ -19,7 +19,7 @@ open Pervasives
 
 (**************************************************************
 
-  Data structures definitions.
+   Data structures definitions.
 
  **************************************************************)
 
@@ -170,7 +170,7 @@ type formatter = {
 
 (**************************************************************
 
-  Auxilliaries and basic functions.
+   Auxilliaries and basic functions.
 
  **************************************************************)
 
@@ -288,7 +288,7 @@ let pp_skip_token state =
 
 (**************************************************************
 
-  The main pretty printing functions.
+   The main pretty printing functions.
 
  **************************************************************)
 
@@ -623,7 +623,7 @@ let pp_flush_queue state b =
 
 (**************************************************************
 
-  Procedures to format objects, and use boxes
+   Procedures to format objects, and use boxes
 
  **************************************************************)
 
@@ -744,7 +744,7 @@ let pp_set_tab state () =
 
 (**************************************************************
 
-  Procedures to control the pretty-printers
+   Procedures to control the pretty-printers
 
  **************************************************************)
 
@@ -841,7 +841,7 @@ let pp_set_formatter_out_channel state os =
 
 (**************************************************************
 
-  Creation of specific formatters
+   Creation of specific formatters
 
  **************************************************************)
 
@@ -923,7 +923,7 @@ let flush_str_formatter () =
 
 (**************************************************************
 
-  Basic functions on the standard formatter
+   Basic functions on the standard formatter
 
  **************************************************************)
 
@@ -1001,7 +1001,7 @@ and set_tags =
 
 (**************************************************************
 
-  Printf implementation.
+   Printf implementation.
 
  **************************************************************)
 
@@ -1300,7 +1300,7 @@ let mkprintf to_s get_out =
 
 (**************************************************************
 
-  Defining [fprintf] and various flavors of [fprintf].
+   Defining [fprintf] and various flavors of [fprintf].
 
  **************************************************************)
 
@@ -1322,7 +1322,7 @@ let sprintf fmt = ksprintf (fun s -> s) fmt;;
 
 (**************************************************************
 
-  Deprecated stuff.
+   Deprecated stuff.
 
  **************************************************************)
 

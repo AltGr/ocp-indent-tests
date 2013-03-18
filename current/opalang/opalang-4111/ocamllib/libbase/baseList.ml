@@ -510,7 +510,7 @@ let filter_stable filter list =
   if !equal then list else List.rev acc
 
 (**
-  {[('acc -> 'input -> ('acc * 'output))  ->  'acc  ->  'output list  ->  'input list  -> ('acc *  'output list)]}
+   {[('acc -> 'input -> ('acc * 'output))  ->  'acc  ->  'output list  ->  'input list  -> ('acc *  'output list)]}
    @param f takes the accumulator and the head of the list to give back the new element
    of the output list and the new accumulator
    @param end_ is the end of the output list
@@ -527,7 +527,7 @@ let fold_left_rev_map_end f acc end_ list =
 let fold_left_rev_map f acc list = fold_left_rev_map_end f acc [] list
 
 (**
-  {[('acc -> 'input -> ('acc * 'output))  ->  'acc  ->  'output list  ->  'input list  -> ('acc *  'output list)]}
+   {[('acc -> 'input -> ('acc * 'output))  ->  'acc  ->  'output list  ->  'input list  -> ('acc *  'output list)]}
    @param f takes the accumulator and the head of the list to give back the new element
    of the output list and the new accumulator
    @param rev_beginning is the beginning of the output list in the reverse order

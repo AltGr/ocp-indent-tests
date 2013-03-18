@@ -124,68 +124,68 @@ module Raw_make (T : Bound) = struct
     let empty = Empty
 
     let is_malformed = function
-    | Empty -> false
-    | Interval (x,y) -> T.(>) x y
+      | Empty -> false
+      | Interval (x,y) -> T.(>) x y
 
     let empty_cvt = function
-    | Empty -> Empty
-    | Interval (x,y) as i -> if T.(>) x y then Empty else i
+      | Empty -> Empty
+      | Interval (x,y) as i -> if T.(>) x y then Empty else i
 
     let create x y =
       (* if x > y, then this is just the Empty interval. *)
       empty_cvt (Interval (x,y))
 
     let intersect i1 i2 = match i1,i2 with
-    | Empty,_ | _,Empty -> Empty
-    | Interval (l1,u1), Interval (l2,u2) -> empty_cvt (Interval (T.max l1 l2, T.min u1 u2))
+      | Empty,_ | _,Empty -> Empty
+      | Interval (l1,u1), Interval (l2,u2) -> empty_cvt (Interval (T.max l1 l2, T.min u1 u2))
 
     let is_empty = function Empty -> true | _ -> false
 
     let is_empty_or_singleton = function
-    | Empty -> true
-    | Interval (x,y) -> T.(=) x y
+      | Empty -> true
+      | Interval (x,y) -> T.(=) x y
 
     let bounds = function Empty -> None | Interval (l, u) -> Some (l,u)
     let lbound = function Empty -> None | Interval (l, _) -> Some l
     let ubound = function Empty -> None | Interval (_, u) -> Some u
 
     let bounds_exn = function
-    | Empty -> invalid_arg "Interval.bounds_exn: empty interval"
-    | Interval (l,u) -> (l,u)
+      | Empty -> invalid_arg "Interval.bounds_exn: empty interval"
+      | Interval (l,u) -> (l,u)
 
     let lbound_exn = function
-    | Empty -> invalid_arg "Interval.lbound_exn: empty interval"
-    | Interval (l,_) -> l
+      | Empty -> invalid_arg "Interval.lbound_exn: empty interval"
+      | Interval (l,_) -> l
 
     let ubound_exn = function
-    | Empty -> invalid_arg "Interval.ubound_exn: empty interval"
-    | Interval (_,u) -> u
+      | Empty -> invalid_arg "Interval.ubound_exn: empty interval"
+      | Interval (_,u) -> u
 
     let compare_value i x = match i with
-    | Empty -> `Interval_is_empty
-    | Interval (l,u) ->
-      if T.(<) x l
-      then `Below
-      else if T.(>) x u
-      then `Above
-      else `Within
+      | Empty -> `Interval_is_empty
+      | Interval (l,u) ->
+        if T.(<) x l
+        then `Below
+        else if T.(>) x u
+        then `Above
+        else `Within
 
     let contains i x = Pervasives.(=) (compare_value i x) `Within
 
     let bound i x = match i with
-    | Empty -> None
-    | Interval (l,u) ->
-      let bounded_value =
-        if T.(<) x l then l
-        else if T.(<) u x then u
-        else x in
-      Some bounded_value
+      | Empty -> None
+      | Interval (l,u) ->
+        let bounded_value =
+          if T.(<) x l then l
+          else if T.(<) u x then u
+          else x in
+        Some bounded_value
 
     let is_superset i1 ~of_:i2 = match i1,i2 with
-    | Interval (l1,u1), Interval (l2,u2) ->
-      T.(<=) l1 l2 && T.(>=) u1 u2
-    | _, Empty -> true
-    | Empty, Interval (_, _) -> false
+      | Interval (l1,u1), Interval (l2,u2) ->
+        T.(<=) l1 l2 && T.(>=) u1 u2
+      | _, Empty -> true
+      | Empty, Interval (_, _) -> false
 
     let is_subset i1 ~of_:i2 =
       is_superset i2 ~of_:i1
@@ -239,8 +239,8 @@ module Raw_make (T : Bound) = struct
       let intervals = List.sort ~cmp:interval_compare intervals in
       (* requires sorted list of intervals *)
       let rec is_partition a = function
-      | [] -> true
-      | b :: tl -> T.(=) (ubound_exn a) (lbound_exn b) && is_partition b tl
+        | [] -> true
+        | b :: tl -> T.(=) (ubound_exn a) (lbound_exn b) && is_partition b tl
       in
       match intervals with
       | [] -> true

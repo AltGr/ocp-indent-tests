@@ -31,15 +31,15 @@
    from definitions registred in bypass files.
 
    Example:
-  {[
-    ##include opa-function bslpervasives
-  ]}
+   {[
+     ##include opa-function bslpervasives
+   ]}
    Is expanded as :
-  {[
-    `+` = %%bslpervasives.add_int%% : int, int -> int
-      `-` = %%bslpervasives.sub_int%% : int, int -> int
-      etc...
-  ]}
+   {[
+     `+` = %%bslpervasives.add_int%% : int, int -> int
+       `-` = %%bslpervasives.sub_int%% : int, int -> int
+       etc...
+   ]}
 *)
 
 (** {6 Types of format} *)

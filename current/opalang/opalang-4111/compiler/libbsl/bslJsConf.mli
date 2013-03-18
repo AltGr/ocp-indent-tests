@@ -33,21 +33,21 @@
    specific workarounds for bypassing browser bugs.
    A scary example is the following code, taken from jquery-1.4.4.:
 
-  {[
-    // Safari mis-reports the default selected property of an option
-      // Accessing the parent's selectedIndex property fixes it
-          if ( name === "selected" && !jQuery.support.optSelected ) {
-              var parent = elem.parentNode;
-              if ( parent ) {
-                  parent.selectedIndex;
+   {[
+     // Safari mis-reports the default selected property of an option
+       // Accessing the parent's selectedIndex property fixes it
+           if ( name === "selected" && !jQuery.support.optSelected ) {
+               var parent = elem.parentNode;
+               if ( parent ) {
+                   parent.selectedIndex;
 
-                  // Make sure that it also works with optgroups, see #5701
+                   // Make sure that it also works with optgroups, see #5701
        if ( parent.parentNode ) {
-                                                           parent.parentNode.selectedIndex;
-                                                         }
-                }
-            }
-  ]}
+                                                            parent.parentNode.selectedIndex;
+                                                          }
+                 }
+             }
+   ]}
 
    The cleanup pass would simply remove the expressions [parent.selectedIndex] and [parent.parentNode.selectedIndex]
    because they don't have side effects, although the hack tells the contrary.
@@ -60,27 +60,27 @@
 
    Syntax:
 
-  {[
-    [myfile.js]
-      cleanup: true
-        localrenaming: false
+   {[
+     [myfile.js]
+       cleanup: true
+         localrenaming: false
 
-        [myfile2.js, myfile3.js]
-        cleanup: false
-        localrenaming: true
-  ]}
+         [myfile2.js, myfile3.js]
+         cleanup: false
+         localrenaming: true
+   ]}
 
    It is possible to use the syntax [*] for representing all the js files,
    and to give inconsistent informations about property, in this case, the
    last given property.
 
-  {[
-    [*]
-      verbatim:false
+   {[
+     [*]
+       verbatim:false
 
-        [exception.js]
-    verbatim:true
-  ]}
+         [exception.js]
+     verbatim:true
+   ]}
 *)
 
 (**

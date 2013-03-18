@@ -41,11 +41,11 @@ type directive = QmlAst.qml_directive
    Currently, it is not possible in the syntax to write types arguments for a directives,
    but it is a TODO.
    See some examples :
-  {[
-    \@take_expr_and_ty("titi", "toto" ; float, (int -> int), (int, char -> bool))
-  \@take_just_ty(; char)
-     \@take_just_expr("titi")
-  ]}
+   {[
+     \@take_expr_and_ty("titi", "toto" ; float, (int -> int), (int, char -> bool))
+   \@take_just_ty(; char)
+      \@take_just_expr("titi")
+   ]}
 
    The type of directive is known statically, and defined in this module.
    The typer, as well as [QmlAstCons.TypedExpr] use this module to type directive.
@@ -57,10 +57,10 @@ val ty : directive -> QmlAst.expr list -> QmlAst.ty list -> QmlAst.ty
 (**
    Get the arguments of the directive `create_lazy_record directives.
    The info is optional, the arguments are on the form :
-  {[
-    | [expr]
-    | [expr ; info]
-  ]}
+   {[
+     | [expr]
+     | [expr ; info]
+   ]}
    The returned tuple is the expr, and the optional info
 *)
 val create_lazy_record_arguments :

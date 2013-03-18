@@ -103,7 +103,7 @@ let tune__field logger ?(fmt = ("%d" : (_, _, _) format)) name arg current =
 ;;
 
 (*
-  *\(.*\) -> \1 = f "\1" \1 c.\1;
+ *\(.*\) -> \1 = f "\1" \1 c.\1;
 *)
 let tune ?logger ?minor_heap_size ?major_heap_increment ?space_overhead
       ?verbose ?max_overhead ?stack_limit ?allocation_policy () =

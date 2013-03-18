@@ -121,20 +121,20 @@ type 'right_hand t =
    correspond to the inferred type of the pattern, because of e.g. coercion added
    in the code.
    e.g.:
-  {[
-    f(e) =
-      match e with
-      | { foo } ->
-      | _ ->
-  ]}
+   {[
+     f(e) =
+       match e with
+       | { foo } ->
+       | _ ->
+   ]}
    and
-  {[
-    type foo = { foo } / { bar }
-          f(e : foo) =
-      match e with
-      | { foo } ->
-      | _ ->
-  ]}
+   {[
+     type foo = { foo } / { bar }
+           f(e : foo) =
+       match e with
+       | { foo } ->
+       | _ ->
+   ]}
    In the first case the pattern is open, because the function is polymorphic in column.
    In the second case, the pattern is strict.
    If you look just at the structure of patterns, you cannot differenciate the 2 forms.

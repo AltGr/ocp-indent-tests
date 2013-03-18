@@ -164,8 +164,8 @@ module Stable = struct
       end
 
       let t_of_sexp = function
-      | Sexp.Atom s -> of_string s
-      | Sexp.List _ as sexp -> Old_date.to_date (Old_date.t_of_sexp sexp)
+        | Sexp.Atom s -> of_string s
+        | Sexp.List _ as sexp -> Old_date.to_date (Old_date.t_of_sexp sexp)
       ;;
 
       let t_of_sexp s =

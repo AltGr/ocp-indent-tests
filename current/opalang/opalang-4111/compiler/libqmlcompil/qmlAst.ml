@@ -834,17 +834,17 @@ type pat_rowvar = [
   | `closed
   (**
      represent the absence of dots in the pattern, as in:
-    {[
-      | { foo = bar }
-    ]}
+     {[
+       | { foo = bar }
+     ]}
   *)
 
   | `open_
   (**
      represent the dots in the pattern, as in:
-    {[
-      | { foo = bar ; ... }
-    ]}
+     {[
+       | { foo = bar ; ... }
+     ]}
   *)
 (*
   | `autocomplete
@@ -1110,7 +1110,7 @@ type doctype_info = [
 ]
 
 (**
-  add information around an apply or a lifted lambda
+   add information around an apply or a lifted lambda
 *)
 type lambda_lifting_directive = [
   | `partial_apply of int option * bool (* original arity of the function, guaranteed to be filled by lambda lifting, None means 'undisclosed information' :)

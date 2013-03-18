@@ -40,24 +40,24 @@
    By default, at end of the file, there is some alias for hiding the object
    implementation for user who does not need to use several printers.
 
-  {[
-    class default =
-      object(self)
+   {[
+     class default =
+       object(self)
 
-        method pat ... : Format.formatter -> QmlAst.pat -> unit
-        method expr ...: Format.formatter -> QmlAst.expr -> unit
-          ....
-        method code....: Format.formatter -> QmlAst.code -> unit
-      end
+         method pat ... : Format.formatter -> QmlAst.pat -> unit
+         method expr ...: Format.formatter -> QmlAst.expr -> unit
+           ....
+         method code....: Format.formatter -> QmlAst.code -> unit
+       end
 
-    (* exporting default printer to the top level *)
-    let pat = default#pat
-    let expr = default#expr
-        ....
+     (* exporting default printer to the top level *)
+     let pat = default#pat
+     let expr = default#expr
+         ....
 
-        (* custom printer *)
-        inherit, and overwrite any method.
-  ]}
+         (* custom printer *)
+         inherit, and overwrite any method.
+   ]}
 
    The old printer is deprecated and will be removed (but this means changes in a lot of modules).
 *)

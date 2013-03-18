@@ -28,13 +28,13 @@
 
 (**
    A type for indicating if a pattern is complete or not.
-  {[
-    | { a ; b }
-  ]}
+   {[
+     | { a ; b }
+   ]}
    would be flaged [`closed]
-  {[
-    | { a ; b ; ... }
-  ]}
+   {[
+     | { a ; b ; ... }
+   ]}
    would be flaged [`open_]
 *)
 type row_flag = [ `open_ | `closed ]
@@ -85,52 +85,52 @@ sig
 
      Example 1)
      in this context:
-    {[
-      type toto = { a ; b ; c } / { d }
-            f =
-        | { a ; b ; ... } : toto ->
-          | _ ->
-    ]}
+     {[
+       type toto = { a ; b ; c } / { d }
+             f =
+         | { a ; b ; ... } : toto ->
+           | _ ->
+     ]}
      a call to:
-    {[
-      strictify_record_ty toto [ "a" ; "b" ]
-    ]}
+     {[
+       strictify_record_ty toto [ "a" ; "b" ]
+     ]}
      should return:
-    {[
-      [ [ "a" ; "b" ; "c" ], `closed ]
-    ]}
+     {[
+       [ [ "a" ; "b" ; "c" ], `closed ]
+     ]}
 
      Example 2)
      in this context:
-    {[
-      type toto = { a ; b ; c } / { a ; b ; d }
-            f =
-        | { a ; b ; ... } : toto ->
-          | _ ->
-    ]}
+     {[
+       type toto = { a ; b ; c } / { a ; b ; d }
+             f =
+         | { a ; b ; ... } : toto ->
+           | _ ->
+     ]}
      a call to:
-    {[
-      strictify_record_ty toto [ "a" ; "b" ]
-    ]}
+     {[
+       strictify_record_ty toto [ "a" ; "b" ]
+     ]}
      should return:
-    {[
-      [ [ "a" ; "b" ; "c" ], `closed ;  [ "a" ; "b" ; "d" ], `closed ]
-    ]}
+     {[
+       [ [ "a" ; "b" ; "c" ], `closed ;  [ "a" ; "b" ; "d" ], `closed ]
+     ]}
 
      Example 3)
      in this context:
-    {[
-      f =
-        | { a ; b ; ... } ->
-    ]}
+     {[
+       f =
+         | { a ; b ; ... } ->
+     ]}
      a call to:
-    {[
-      strictify_record_ty { a ; b ; ... } [ "a" ; "b" ]
-    ]}
+     {[
+       strictify_record_ty { a ; b ; ... } [ "a" ; "b" ]
+     ]}
      should return:
-    {[
-      [ [ "a" ; "b" ], `open_ ]
-    ]}
+     {[
+       [ [ "a" ; "b" ], `open_ ]
+     ]}
 
      If all flags in the returned list are strict, this will helps pattern to be free
      of unstrict sub-patterns.

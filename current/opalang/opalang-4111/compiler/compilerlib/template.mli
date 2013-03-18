@@ -32,11 +32,11 @@
 (**
    {ul {- If your comment takes several lines you must put a blank line before
      and after it, this way :
-  {[(**
-      My comment
-      on several
-      lines
-    *)]}}
+   {[(**
+        My comment
+        on several
+        lines
+     *)]}}
    {- If you are the author of the module, you must write your name
      in an author tag}
    {- You must export only the functions that need to be.}}
@@ -49,16 +49,16 @@
 (**
    Please follow these guidelines :
 
-  {[(**
-      Module Foo, with a short explanation about Foo
+   {[(**
+        Module Foo, with a short explanation about Foo
 
-      \@author Jane Doe
-    *)]}
+        \@author Jane Doe
+     *)]}
 
-  {[(**
-      Then comes a longer explanation about module Foo.
-      Please take time to provide examples and documentation.
-    *)]}
+   {[(**
+        Then comes a longer explanation about module Foo.
+        Please take time to provide examples and documentation.
+     *)]}
 *)
 
 

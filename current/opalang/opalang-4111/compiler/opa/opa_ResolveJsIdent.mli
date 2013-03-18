@@ -30,15 +30,15 @@
 
    Example:
    Input code
-  {[
-    t(x) = "{@js_ident("toto")}(x, y)"
-  ]}
+   {[
+     t(x) = "{@js_ident("toto")}(x, y)"
+   ]}
 
    Output code
-  {[
-    _v0_toto = %%bslJsIdent_rename%%("toto")
-      ...
-          t(x) = "{_v0_toto}(x, y)"
-  ]}
+   {[
+     _v0_toto = %%bslJsIdent_rename%%("toto")
+       ...
+           t(x) = "{_v0_toto}(x, y)"
+   ]}
 *)
 val perform : QmlAst.annotmap -> QmlAst.code -> QmlRenamingMap.t -> QmlAst.annotmap * QmlAst.code

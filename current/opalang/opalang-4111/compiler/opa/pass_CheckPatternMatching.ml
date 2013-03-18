@@ -87,23 +87,23 @@ let free_gamma_annotmap () =
 (*
   This function tells if a pattern [p] hides a another pattern [p'].
   For example, in :
-  {[
-    match e with
-    | _ -> "toto"
-    | 6 -> "tutu"
-  ]}
-  The pattern [_] hids the pattern [6]
+   {[
+     match e with
+     | _ -> "toto"
+     | 6 -> "tutu"
+   ]}
+   The pattern [_] hids the pattern [6]
 
-  The question answered by this function is :
-  Does p kills (hides) p' ?
+   The question answered by this function is :
+   Does p kills (hides) p' ?
 
-  <!> beware with rowvar,
-  {[
-    | { a }
-    | { a ; ... }
-  ]}
-  The second case in general is not killed by the first case. (depending on the type).
-  The check is syntactic.
+   <!> beware with rowvar,
+   {[
+     | { a }
+     | { a ; ... }
+   ]}
+   The second case in general is not killed by the first case. (depending on the type).
+   The check is syntactic.
 *)
 let rec is_killed_by p p' =
   match p, p' with

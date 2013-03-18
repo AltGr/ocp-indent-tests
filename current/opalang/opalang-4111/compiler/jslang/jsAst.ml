@@ -116,27 +116,27 @@ type binop =
    Expressions
 
    GUIDELINES for matching expressions
-  {[
-    | J.Je_this _ ->
-      | J.Je_ident (_, ident) ->
-      | J.Je_array (_, list) ->
-      | J.Je_comma (_, list, last) ->
-      | J.Je_object (_, fields) ->
-      | J.Je_string (_, string, double_quote) ->
-      | J.Je_num (_, num) ->
-      | J.Je_null _ ->
-      | J.Je_undefined _ ->
-      | J.Je_bool (_, bool) ->
-      | J.Je_regexp (_, body, flags) ->
-      | J.Je_function (_, ident, params, body) ->
-      | J.Je_dot (_, expr, field) ->
-      | J.Je_unop (_, op, expr) ->
-      | J.Je_binop (_, op, expr1, expr2) ->
-      | J.Je_cond (_, cond, then_, else_) ->
-      | J.Je_call (_, fun_, args, _) ->
-      | J.Je_new (_, obj, args) ->
-      | J.Je_hole (_, qml) ->
-  ]}
+   {[
+     | J.Je_this _ ->
+       | J.Je_ident (_, ident) ->
+       | J.Je_array (_, list) ->
+       | J.Je_comma (_, list, last) ->
+       | J.Je_object (_, fields) ->
+       | J.Je_string (_, string, double_quote) ->
+       | J.Je_num (_, num) ->
+       | J.Je_null _ ->
+       | J.Je_undefined _ ->
+       | J.Je_bool (_, bool) ->
+       | J.Je_regexp (_, body, flags) ->
+       | J.Je_function (_, ident, params, body) ->
+       | J.Je_dot (_, expr, field) ->
+       | J.Je_unop (_, op, expr) ->
+       | J.Je_binop (_, op, expr1, expr2) ->
+       | J.Je_cond (_, cond, then_, else_) ->
+       | J.Je_call (_, fun_, args, _) ->
+       | J.Je_new (_, obj, args) ->
+       | J.Je_hole (_, qml) ->
+   ]}
 
 *)
 type expr =
@@ -193,27 +193,27 @@ type expr =
    Statements.
 
    GUIDELINES for matching statements
-  {[
-    | J.Js_var (_, ident, expr) ->
-      | J.Js_function (_, ident, params, body) ->
-      | J.Js_return (_, expr) ->
-      | J.Js_continue (_, label) ->
-      | J.Js_break (_, label) ->
-      | J.Js_switch (_, expr, cases, default) ->
-      | J.Js_if (_, cond, then_, else_) ->
-      | J.Js_throw (_, expr) ->
-      | J.Js_expr (_, expr) ->
-      | J.Js_trycatch (_, body, catches, finally) ->
-      | J.Js_for (_, init, cond, incr, body) ->
-      | J.Js_forin (_, lhs, rhs, body) ->
-      | J.Js_dowhile (_, body, cond) ->
-      | J.Js_while (_, cond, body) ->
-      | J.Js_block (_, body) ->
-      | J.Js_with (_, expr, body) ->
-      | J.Js_label (_, label, stmt) ->
-      | J.Js_empty _ ->
-      | J.Js_comment (_, comment) ->
-  ]}
+   {[
+     | J.Js_var (_, ident, expr) ->
+       | J.Js_function (_, ident, params, body) ->
+       | J.Js_return (_, expr) ->
+       | J.Js_continue (_, label) ->
+       | J.Js_break (_, label) ->
+       | J.Js_switch (_, expr, cases, default) ->
+       | J.Js_if (_, cond, then_, else_) ->
+       | J.Js_throw (_, expr) ->
+       | J.Js_expr (_, expr) ->
+       | J.Js_trycatch (_, body, catches, finally) ->
+       | J.Js_for (_, init, cond, incr, body) ->
+       | J.Js_forin (_, lhs, rhs, body) ->
+       | J.Js_dowhile (_, body, cond) ->
+       | J.Js_while (_, cond, body) ->
+       | J.Js_block (_, body) ->
+       | J.Js_with (_, expr, body) ->
+       | J.Js_label (_, label, stmt) ->
+       | J.Js_empty _ ->
+       | J.Js_comment (_, comment) ->
+   ]}
 
 *)
 and statement =
@@ -225,11 +225,11 @@ and statement =
 
      The printer will regroup successive variable definitions,
      except in the toplevel.
-    {[
-      function foo() {
-          var x = 5, y, z;
-        }
-    ]}
+     {[
+       function foo() {
+           var x = 5, y, z;
+         }
+     ]}
   *)
 
   | Js_function of   loc * ident * ident list * statement list

@@ -22,21 +22,21 @@ module Tree0 = struct
   type ('k, 'v) tree = ('k, 'v) t
 
   let height = function
-  | Empty -> 0
-  | Leaf _ -> 1
-  | Node(_,_,_,_,h) -> h
+    | Empty -> 0
+    | Leaf _ -> 1
+    | Node(_,_,_,_,h) -> h
   ;;
 
   let invariants t ~compare_key =
     let rec loop lower upper t =
       let in_range k =
         (match lower with
-        | None -> true
-        | Some lower -> compare_key lower k < 0
+         | None -> true
+         | Some lower -> compare_key lower k < 0
         )
         && (match upper with
-        | None -> true
-        | Some upper -> compare_key k upper < 0
+          | None -> true
+          | Some upper -> compare_key k upper < 0
         )
       in
       match t with
@@ -202,10 +202,10 @@ module Tree0 = struct
   let mem t x ~compare_key = Option.is_some (find t x ~compare_key)
 
   let rec min_elt = function
-  | Empty -> None
-  | Leaf (k, d) -> Some (k, d)
-  | Node (Empty, k, d, _, _) -> Some (k, d)
-  | Node (l, _, _, _, _) -> min_elt l
+    | Empty -> None
+    | Leaf (k, d) -> Some (k, d)
+    | Node (Empty, k, d, _, _) -> Some (k, d)
+    | Node (l, _, _, _, _) -> min_elt l
   ;;
 
   exception Map_min_elt_exn_of_empty_map with sexp
@@ -218,10 +218,10 @@ module Tree0 = struct
   ;;
 
   let rec max_elt = function
-  | Empty -> None
-  | Leaf (k, d) -> Some (k, d)
-  | Node (_, k, d, Empty, _) -> Some (k, d)
-  | Node (_, _, _, r, _) -> max_elt r
+    | Empty -> None
+    | Leaf (k, d) -> Some (k, d)
+    | Node (_, k, d, Empty, _) -> Some (k, d)
+    | Node (_, _, _, r, _) -> max_elt r
   ;;
   let max_elt_exn t =
     match max_elt t with
@@ -441,10 +441,10 @@ module Tree0 = struct
     ;;
 
     let rec iter ~f = function
-    | End -> ()
-    | More (key, data, tree, enum) ->
-      f ~key ~data;
-      iter (cons tree enum) ~f
+      | End -> ()
+      | More (key, data, tree, enum) ->
+        f ~key ~data;
+        iter (cons tree enum) ~f
     ;;
 
     let iter2 compare_key t1 t2 ~f =
@@ -471,10 +471,10 @@ module Tree0 = struct
 
     let fold tree ~init ~f =
       let rec loop acc = function
-      | End -> acc
-      | More (key, data, tree, enum) ->
-        let acc = f ~key ~data acc in
-        loop acc (cons tree enum)
+        | End -> acc
+        | More (key, data, tree, enum) ->
+          let acc = f ~key ~data acc in
+          loop acc (cons tree enum)
       in
       loop init tree
     ;;
@@ -519,9 +519,9 @@ module Tree0 = struct
   let symmetric_diff = Enum.symmetric_diff
 
   let rec length = function
-  | Empty -> 0
-  | Leaf _ -> 1
-  | Node (l, _, _, r, _) -> length l + length r + 1
+    | Empty -> 0
+    | Leaf _ -> 1
+    | Node (l, _, _, r, _) -> length l + length r + 1
   ;;
 
   let of_alist_fold alist ~init ~f ~compare_key =

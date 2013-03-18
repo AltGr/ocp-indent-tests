@@ -29,13 +29,13 @@ type 'a pprinter = 'a Base.Format.pprinter
 (**
    Used for outputing parametrized types.
    e.g.
-  {[
-    (* if params is a list of opa types : int, string, 'a *)
+   {[
+     (* if params is a list of opa types : int, string, 'a *)
 
-    Format.printf "type %a" (pp_parameters pp_opa "toto") params ;
+     Format.printf "type %a" (pp_parameters pp_opa "toto") params ;
 
-    (* will print : "type toto(int, string, 'a)" *)
-  ]}
+     (* will print : "type toto(int, string, 'a)" *)
+   ]}
 
    For outputting with the ocaml like syntax (prefix), use
    [OcamlPrint.pp_parameters]
@@ -46,9 +46,9 @@ val pp_parameters :
   'a list pprinter
 
 (**
-  {[
-    Format.fprintf fmt "{ %a }" (pp_field_cp " : " pp_value) ("toto", value)
-  ]}
+   {[
+     Format.fprintf fmt "{ %a }" (pp_field_cp " : " pp_value) ("toto", value)
+   ]}
 *)
 val pp_field_cp :
   ('a, Format.formatter, unit) format ->
@@ -56,9 +56,9 @@ val pp_field_cp :
   Format.formatter -> (string * 'b) -> unit
 
 (**
-  {[
-    Format.fprintf fmt "{ %a }" (StringMap.pp " ; " (pp_field " = " pp_value)) fields
-  ]}
+   {[
+     Format.fprintf fmt "{ %a }" (StringMap.pp " ; " (pp_field " = " pp_value)) fields
+   ]}
 *)
 val pp_field :
   ('a, Format.formatter, unit) format ->
@@ -70,25 +70,25 @@ val pp_field :
      TODO: a pretty printer for fields (common to Qml, Opa, Ocaml, BslTypes, QmlTopValue)
 
      For long records :
-    {[
-      type toto('t1, 't2, ...) = {
-        v1 : 't1 ;
-        v2 : 't2 ;
-        ...
-      }
+     {[
+       type toto('t1, 't2, ...) = {
+         v1 : 't1 ;
+         v2 : 't2 ;
+         ...
+       }
 
-      let toto = {
-        v1 = x1 ;
-        v2 = x2 ;
-        ...
-      }
-    ]}
+       let toto = {
+         v1 = x1 ;
+         v2 = x2 ;
+         ...
+       }
+     ]}
 
      For short records
-    {[
-      type toto('t1, 't2) = { v1 : 't1 ; v2 : 't2 }
-      let toto = { v1 = x1 ; v2 = x2 }
-    ]}
+     {[
+       type toto('t1, 't2) = { v1 : 't1 ; v2 : 't2 }
+       let toto = { v1 = x1 ; v2 = x2 }
+     ]}
 
      pp_fields sep etc...
   *)

@@ -140,8 +140,8 @@ let first_some x y =
 let some_if cond x = if cond then Some x else None
 
 let filter ~f = function
-| Some v as o when f v -> o
-| _ -> None
+  | Some v as o when f v -> o
+  | _ -> None
 
 let compare ~cmp v1 v2 =
   let tag_to_int = function Some _ -> 1 | None -> 0 in

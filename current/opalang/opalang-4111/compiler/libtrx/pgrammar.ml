@@ -63,27 +63,27 @@ let add_globals pg cur_mod new_mod =
   ) pg
 
 (**
-  |parse_pre_grammar|
+   |parse_pre_grammar|
 
 
-  The trx module system is the following:
-  1. each file is a module (by default "file.trx" -> "File")
-  2. each file contains rules
-  3. each file opens itself and opened modules
-  4. there is only one module level
-  5. the search order is first itself, then opened modules by order
+   The trx module system is the following:
+   1. each file is a module (by default "file.trx" -> "File")
+   2. each file contains rules
+   3. each file opens itself and opened modules
+   4. there is only one module level
+   5. the search order is first itself, then opened modules by order
 
 
-  Currently,
-  [
-  Identifier <- (
+   Currently,
+   [
+   Identifier <- (
         / Module [.] Name {{ __1 ^ "_" ^ __3 }}
         / Name {{ module_name ^ "_" ^ __1 }}
         ) Spacing {{ __1 }}
-  ]
+   ]
 
-  What to do when a rulename is defined in multiple modules?
-  Highest priority = module itself, then opened modules by order of definition (including recursives open ?)
+   What to do when a rulename is defined in multiple modules?
+   Highest priority = module itself, then opened modules by order of definition (including recursives open ?)
 
 *)
 let parse_pre_grammar ?(name="Main") ?(stoppable=false) ~verbose input =

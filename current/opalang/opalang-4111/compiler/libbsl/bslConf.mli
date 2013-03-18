@@ -40,40 +40,40 @@
    Any file called [*.conf] can be given in the command line of [opa-plugin-builder],
    following this syntax:
 
-  {[
-    # comments are welcome at the begining of lines
-        [myproperty]
-        argument argument argument
-        argument argument
+   {[
+     # comments are welcome at the begining of lines
+         [myproperty]
+         argument argument argument
+         argument argument
 
-        [myproperty:platform]
-        argument argument
-  ]}
+         [myproperty:platform]
+         argument argument
+   ]}
 
    Supported properties are:
-  {[
-    [mlcopt]
-    # extra options to be passed to ocaml compiler
+   {[
+     [mlcopt]
+     # extra options to be passed to ocaml compiler
 
-        [mllopt]
-        # extra options to be passed to ocaml linker
+         [mllopt]
+         # extra options to be passed to ocaml linker
 
-            [mlinclude]
-            # extra path to be passed to ocaml (absolute only)
+             [mlinclude]
+             # extra path to be passed to ocaml (absolute only)
 
-                [cclib]
-                # options to the C linker
+                 [cclib]
+                 # options to the C linker
 
-                  [ccopt]
-                  # options to the C compiler and linker
-  ]}
+                   [ccopt]
+                   # options to the C compiler and linker
+   ]}
 
    Supported platforms are:
-  {[
-    linux
-      windows
-      mac
-  ]}
+   {[
+     linux
+       windows
+       mac
+   ]}
 *)
 
 (**

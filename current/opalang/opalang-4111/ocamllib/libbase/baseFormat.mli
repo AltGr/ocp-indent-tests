@@ -169,9 +169,9 @@ val pp_snd : 'b pprinter -> ('a * 'b) pprinter
 (**
    [pp_list sep pp_a a_list]
    A exemple of use, via Format
-  {[
-    Format.fprintf fmt "[ %a ]" (LangPrint.pp_list ";@ " pp_a) a_list
-  ]}
+   {[
+     Format.fprintf fmt "[ %a ]" (LangPrint.pp_list ";@ " pp_a) a_list
+   ]}
 *)
 val pp_list :
   (unit, formatter, unit) format ->

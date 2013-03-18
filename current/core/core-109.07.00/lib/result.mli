@@ -2,11 +2,11 @@
 
 (** ['a] is a function's expected return type, and ['b] is often an error message string.
     {[let ric_of_ticker = function
-    | "IBM" -> Ok "IBM.N"
-    | "MSFT" -> Ok "MSFT.OQ"
-    | "AA" -> Ok "AA.N"
-    | "CSCO" -> Ok "CSCO.OQ"
-    | _ as ticker -> Error (sprintf "can't find ric of %s" ticker) ]}
+      | "IBM" -> Ok "IBM.N"
+      | "MSFT" -> Ok "MSFT.OQ"
+      | "AA" -> Ok "AA.N"
+      | "CSCO" -> Ok "CSCO.OQ"
+      | _ as ticker -> Error (sprintf "can't find ric of %s" ticker) ]}
     The return type of ric_of_ticker could be [string option], but [(string, string)
     Result.t] gives more control over the error message. *)
 type ('ok, 'err) t =

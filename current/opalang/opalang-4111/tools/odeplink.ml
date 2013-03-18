@@ -22,30 +22,30 @@
    The format is the one seen in practice as the format produced by dot -Tsvg.
    The hypothesis done is that any node is surrounded by a comment, indicating
    the title of the node :
-  {[
-    <!-- qmlslicer -->
-        <g id="node39" class="node"><title>qmlslicer</title>
-      <ellipse style="fill:none;stroke:black;" cx="645" cy="-162" rx="52.8111" ry="18"/>
-        <text text-anchor="middle" x="645" y="-157.9" style="font-family:Times New Roman;font-size:14.00;">qmlslicer</text>
-      </g>
-  ]}
+   {[
+     <!-- qmlslicer -->
+         <g id="node39" class="node"><title>qmlslicer</title>
+       <ellipse style="fill:none;stroke:black;" cx="645" cy="-162" rx="52.8111" ry="18"/>
+         <text text-anchor="middle" x="645" y="-157.9" style="font-family:Times New Roman;font-size:14.00;">qmlslicer</text>
+       </g>
+   ]}
 
 
    The preprocess proposed by this file is meant to add extra href annotation,
    indexed by the name of the node.
 
    So, if in the map you have a binding :
-  {[
-    qmlslicer -> "odep__lib_qmlslicer.svg"
-  ]}
+   {[
+     qmlslicer -> "odep__lib_qmlslicer.svg"
+   ]}
    the preprocess will return :
-  <!-- qmlslicer -->
-  <a xlink:href="odep__lib_qmlslicer.svg">
-  <g id="node39" class="node"><title>qmlslicer</title>
-  <ellipse style="fill:none;stroke:black;" cx="645" cy="-162" rx="52.8111" ry="18"/>
-  <text text-anchor="middle" x="645" y="-157.9" style="font-family:Times New Roman;font-size:14.00;">qmlslicer</text>
-  </g>
-  </a>
+   <!-- qmlslicer -->
+   <a xlink:href="odep__lib_qmlslicer.svg">
+   <g id="node39" class="node"><title>qmlslicer</title>
+   <ellipse style="fill:none;stroke:black;" cx="645" cy="-162" rx="52.8111" ry="18"/>
+   <text text-anchor="middle" x="645" y="-157.9" style="font-family:Times New Roman;font-size:14.00;">qmlslicer</text>
+   </g>
+   </a>
 
 
    For using this application, you should give all the svg you want to process,

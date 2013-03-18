@@ -560,17 +560,17 @@ module Escaping = struct
     in
     let arr = Array.create 256 (-1) in
     let rec loop vals = function
-    | [] -> Ok arr
-    | (c_from, c_to) :: l ->
-      let k, v = match func with
-      | `Escape -> Char.to_int c_from, c_to
-      | `Unescape -> Char.to_int c_to, c_from
-      in
-      if arr.(k) <> -1 || Char.Set.mem vals v then
-        Or_error.error "escapeworthy_map not one-to-one"
-          (c_from, c_to, escapeworthy_map)
-          (<:sexp_of< char * char * (char * char) list >>)
-      else (arr.(k) <- Char.to_int v; loop (Char.Set.add vals v) l)
+      | [] -> Ok arr
+      | (c_from, c_to) :: l ->
+        let k, v = match func with
+          | `Escape -> Char.to_int c_from, c_to
+          | `Unescape -> Char.to_int c_to, c_from
+        in
+        if arr.(k) <> -1 || Char.Set.mem vals v then
+          Or_error.error "escapeworthy_map not one-to-one"
+            (c_from, c_to, escapeworthy_map)
+            (<:sexp_of< char * char * (char * char) list >>)
+        else (arr.(k) <- Char.to_int v; loop (Char.Set.add vals v) l)
     in
     loop Char.Set.empty escapeworthy_map
   ;;
@@ -624,22 +624,22 @@ module Escaping = struct
           let dst_len = src_len + !to_escape_len in
           let dst = String.create dst_len in
           let rec loop last_idx last_dst_pos = function
-          | [] ->
-            (* copy "000" at last *)
-            blit ~src ~src_pos:0 ~dst ~dst_pos:0 ~len:last_idx
-          | (idx, escaped_char) :: to_escape -> (*[idx] = the char to escape*)
-            (* take first iteration for example *)
-            (* calculate length of "333", minus 1 because we don't copy 'c' *)
-            let len = last_idx - idx - 1 in
-            (* set the dst_pos to copy to *)
-            let dst_pos = last_dst_pos - len in
-            (* copy "333", set [src_pos] to [idx + 1] to skip 'c' *)
-            blit ~src ~src_pos:(idx + 1) ~dst ~dst_pos ~len;
-            (* backoff [dst_pos] by 2 to copy '_' and 'C' *)
-            let dst_pos = dst_pos - 2 in
-            dst.[dst_pos] <- escape_char;
-            dst.[dst_pos + 1] <- escaped_char;
-            loop idx dst_pos to_escape
+            | [] ->
+              (* copy "000" at last *)
+              blit ~src ~src_pos:0 ~dst ~dst_pos:0 ~len:last_idx
+            | (idx, escaped_char) :: to_escape -> (*[idx] = the char to escape*)
+              (* take first iteration for example *)
+              (* calculate length of "333", minus 1 because we don't copy 'c' *)
+              let len = last_idx - idx - 1 in
+              (* set the dst_pos to copy to *)
+              let dst_pos = last_dst_pos - len in
+              (* copy "333", set [src_pos] to [idx + 1] to skip 'c' *)
+              blit ~src ~src_pos:(idx + 1) ~dst ~dst_pos ~len;
+              (* backoff [dst_pos] by 2 to copy '_' and 'C' *)
+              let dst_pos = dst_pos - 2 in
+              dst.[dst_pos] <- escape_char;
+              dst.[dst_pos + 1] <- escaped_char;
+              loop idx dst_pos to_escape
           in
           (* set [last_dst_pos] and [last_idx] to length of [dst] and [src] first *)
           loop src_len dst_len to_escape;
@@ -706,9 +706,9 @@ module Escaping = struct
      str.[i] basing on escape status of str.[i - 1]
   *)
   let update_escape_status str ~escape_char i = function
-  | `Escaping -> `Escaped
-  | `Literal
-  | `Escaped -> if str.[i] = escape_char then `Escaping else `Literal
+    | `Escaping -> `Escaped
+    | `Literal
+    | `Escaped -> if str.[i] = escape_char then `Escaping else `Literal
   ;;
 
   let unescape_gen ~escapeworthy_map ~escape_char =
@@ -746,25 +746,25 @@ module Escaping = struct
         | idx::to_unescape' ->
           let dst = create (String.length src - List.length to_unescape) in
           let rec loop last_idx last_dst_pos = function
-          | [] ->
-            (* copy "000" at last *)
-            blit ~src ~src_pos:0 ~dst ~dst_pos:0 ~len:last_idx
-          | idx::to_unescape -> (* [idx] = index of escaping char *)
-            (* take 1st iteration as example, calculate the length of "333", minus 2 to
-               skip '_C' *)
-            let len = last_idx - idx - 2 in
-            (* point [dst_pos] to the position to copy "333" to *)
-            let dst_pos = last_dst_pos - len in
-            (* copy "333" *)
-            blit ~src ~src_pos:(idx + 2) ~dst ~dst_pos ~len;
-            (* backoff [dst_pos] by 1 to copy 'c' *)
-            let dst_pos = dst_pos - 1 in
-            dst.[dst_pos] <-
-              ( match escapeworthy.(Char.to_int src.[idx + 1]) with
-              | -1 -> src.[idx + 1]
-              | n -> Char.unsafe_of_int n);
-            (* update [last_dst_pos] and [last_idx] *)
-            loop idx dst_pos to_unescape
+            | [] ->
+              (* copy "000" at last *)
+              blit ~src ~src_pos:0 ~dst ~dst_pos:0 ~len:last_idx
+            | idx::to_unescape -> (* [idx] = index of escaping char *)
+              (* take 1st iteration as example, calculate the length of "333", minus 2 to
+                 skip '_C' *)
+              let len = last_idx - idx - 2 in
+              (* point [dst_pos] to the position to copy "333" to *)
+              let dst_pos = last_dst_pos - len in
+              (* copy "333" *)
+              blit ~src ~src_pos:(idx + 2) ~dst ~dst_pos ~len;
+              (* backoff [dst_pos] by 1 to copy 'c' *)
+              let dst_pos = dst_pos - 1 in
+              dst.[dst_pos] <-
+                ( match escapeworthy.(Char.to_int src.[idx + 1]) with
+                  | -1 -> src.[idx + 1]
+                  | n -> Char.unsafe_of_int n);
+              (* update [last_dst_pos] and [last_idx] *)
+              loop idx dst_pos to_unescape
           in
           ( if idx < String.length src - 1 then
               (* set [last_dst_pos] and [last_idx] to length of [dst] and [src] *)
@@ -897,9 +897,9 @@ module Escaping = struct
      str.[i] basing on escape status of str.[i - 1]
   *)
   let update_escape_status str ~escape_char i = function
-  | `Escaping -> `Escaped
-  | `Literal
-  | `Escaped -> if str.[i] = escape_char then `Escaping else `Literal
+    | `Escaping -> `Escaped
+    | `Literal
+    | `Escaped -> if str.[i] = escape_char then `Escaping else `Literal
   ;;
 
   let escape_status str ~escape_char pos =
@@ -1043,8 +1043,8 @@ module Escaping = struct
      additional requirement: only split on literal chars, not escaping or escaped *)
   let split_gen str ~escape_char ~on =
     let is_delim = match on with
-    | `char c' -> (fun c -> c = c')
-    | `char_list l -> (fun c -> char_list_mem l c)
+      | `char c' -> (fun c -> c = c')
+      | `char_list l -> (fun c -> char_list_mem l c)
     in
     let len = String.length str in
     let rec loop acc status last_pos pos =

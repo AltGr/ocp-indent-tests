@@ -21,12 +21,12 @@
 
 (**
    Some recent benches have shown that the indirection introduced by having a record
-  {[{ e : expr ; annot : annot }]}
+   {[{ e : expr ; annot : annot }]}
    for manipulating the AST is less efficient that having the annotation as
    field0 of the constructors. (allocation, GC, etc.)
-  {[
-    K of annot * arg1 * arg2 * etc.
-  ]}
+   {[
+     K of annot * arg1 * arg2 * etc.
+   ]}
 
    In an other side, AnnotMaps in libqmlcompil are much too complex, and correspond
    to a louable (but partially deprecated) effort to follow the complexe needs of several
@@ -88,11 +88,11 @@ module AnnotSet : BaseSetSig.S with type elt = t
 (**
    Originally defined in QmlLoc, the type [label] regroups in a record a position, and an annot.
    This type is meant to be used as field0 of Konstructors of AST.
-  {[
-    type ast =
-      | K1 of label * arg1 * arg2 * etc.
-              | K2 of label * args * etc.
-  ]}
+   {[
+     type ast =
+       | K1 of label * arg1 * arg2 * etc.
+               | K2 of label * args * etc.
+   ]}
 
    It will lead to have an underscore in pattern matching, most of the time,
    but it is the price to pay for removing the indirection [.expr, .annot] which is
@@ -100,11 +100,11 @@ module AnnotSet : BaseSetSig.S with type elt = t
 
    Note:
    We could also have had a version :
-  {[
-    type ast =
-      | K1 of pos * annot * arg1 * arg2 * etc.
-              | K2 of pos * annot * args * etc.
-  ]}
+   {[
+     type ast =
+       | K1 of pos * annot * arg1 * arg2 * etc.
+               | K2 of pos * annot * args * etc.
+   ]}
    but the couple (pos * annot) is not often separatly refreshed, so it brings probably nothing
    in term of performances, but make 2 underscore in patterns instead of 1.
 *)

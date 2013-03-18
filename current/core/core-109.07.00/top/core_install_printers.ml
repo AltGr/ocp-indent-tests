@@ -9,10 +9,10 @@ let eval_string
   Toploop.execute_phrase print_outcome err_formatter phrase
 
 let rec install_printers = function
-| [] -> true
-| printer :: printers ->
-  let cmd = Printf.sprintf "#install_printer %s;;" printer in
-  eval_string cmd && install_printers printers
+  | [] -> true
+  | printer :: printers ->
+    let cmd = Printf.sprintf "#install_printer %s;;" printer in
+    eval_string cmd && install_printers printers
 
 let () =
   if not (install_printers printers) then

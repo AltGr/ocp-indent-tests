@@ -71,15 +71,15 @@ val getcwd : unit -> string
 val readdir : string -> string array
 
 (*
-  Call [readdir], and fold over the elements of the array.
-  @raise Sys_error _ if readdir fails.
-  As with [readdir], ["."] and [".."] are not returned
-  raises the same exception than opendir and closedir.
+   Call [readdir], and fold over the elements of the array.
+   @raise Sys_error _ if readdir fails.
+   As with [readdir], ["."] and [".."] are not returned
+   raises the same exception than opendir and closedir.
 *)
 val fold_dir : init:'acc -> f:('acc -> string -> 'acc) -> string -> 'acc
 
 (**
-  Same as readder, but return a list rather than an array.
+   Same as readder, but return a list rather than an array.
 *)
 val ls_dir : string -> string list
 

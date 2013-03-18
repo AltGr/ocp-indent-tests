@@ -395,10 +395,10 @@ struct
               (*
                 This is an internal error, it correspond to a empty rev_path
                 with a presence or const check:
-                {[
-                  Check (present, [ ]), Check (Const "5", [ ])
-                ]}
-                This is not handled by this function, but would be
+                 {[
+                   Check (present, [ ]), Check (Const "5", [ ])
+                 ]}
+                 This is not handled by this function, but would be
               *)
               assert false
         )

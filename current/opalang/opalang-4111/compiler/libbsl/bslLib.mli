@@ -84,9 +84,9 @@ sig
   (**
      Defines some common options.
      + [--show-iformats] for printing the default iformats available in opa.
-    {[
-      ##include <format> path
-    ]}
+     {[
+       ##include <format> path
+     ]}
   *)
   val options : (Base.Arg.key * Base.Arg.spec * Base.Arg.doc) list
 end

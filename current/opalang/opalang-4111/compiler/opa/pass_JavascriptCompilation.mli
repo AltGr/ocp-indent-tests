@@ -48,9 +48,9 @@
 *)
 
 (**
-  {[
-    a = register("key", b)
-  ]}
+   {[
+     a = register("key", b)
+   ]}
    a -> b, "key"
 *)
 

@@ -16,39 +16,39 @@
 *)
 
 (**
-  This module serves the /wlb_report and /wlb_diagnostics HTTP requests.
-  In the former case, we receive some basic parameters (report name, report
-  params) and pass those to the WLB server as a SOAP request.  The latter
-  takes no parameters, but is also a SOAP request.
+   This module serves the /wlb_report and /wlb_diagnostics HTTP requests.
+   In the former case, we receive some basic parameters (report name, report
+   params) and pass those to the WLB server as a SOAP request.  The latter
+   takes no parameters, but is also a SOAP request.
 
-  What comes back is a SOAP response, containing the report data as the
-  result.   The result itself is an XML string, so this ends up as XML
-  escaped inside an envelope of SOAP/XML cruft.
+   What comes back is a SOAP response, containing the report data as the
+   result.   The result itself is an XML string, so this ends up as XML
+   escaped inside an envelope of SOAP/XML cruft.
 
-  The response could potentially be large (megabytes), so we have to stream to
-  avoid OCaml's 16MB string limit.  We can't use Xmlm, even in streaming mode,
-  because it's just one very large node, so we hit the same limit.
+   The response could potentially be large (megabytes), so we have to stream to
+   avoid OCaml's 16MB string limit.  We can't use Xmlm, even in streaming mode,
+   because it's just one very large node, so we hit the same limit.
 
-  What we do instead is have a receive-side state machine, which passes
-  through three states:
+   What we do instead is have a receive-side state machine, which passes
+   through three states:
     +  Looking for the <XmlDataSet> tag, and discarding data.
     +  Looking for the </XmlDataSet> tag, and sending data.
     +  Discarding data until EOF.
 
-  When sending, we have a separate two-state machine for entity decode:
+   When sending, we have a separate two-state machine for entity decode:
     +  Looking for an ampersand, and sending data.
     +  Found an ampersand, so looking for the ending semicolon.
 
-  If the response does not contain an <XmlDataSet> node, then it's most 
-  likely a WLB error response.  We parse these using the normal XML parser, 
-  through the routines in Workload_balancing.  (Error responses are never
-  large.)
+   If the response does not contain an <XmlDataSet> node, then it's most 
+   likely a WLB error response.  We parse these using the normal XML parser, 
+   through the routines in Workload_balancing.  (Error responses are never
+   large.)
 
-  If it parses through neither method, then it's malformed, and we raise an
-  appropriate exception.
+   If it parses through neither method, then it's malformed, and we raise an
+   appropriate exception.
 
-  The GetDiagnostics message is identical, except we look for different
-  start and end tags.
+   The GetDiagnostics message is identical, except we look for different
+   start and end tags.
 *)
 
 (*

@@ -140,8 +140,8 @@ end
 (* compare [x] and [y] lexicographically using functions in the list [cmps] *)
 let lexicographic cmps x y =
   let rec loop = function
-  | cmp :: cmps -> let res = cmp x y in if res = 0 then loop cmps else res
-  | [] -> 0
+    | cmp :: cmps -> let res = cmp x y in if res = 0 then loop cmps else res
+    | [] -> 0
   in
   loop cmps
 ;;

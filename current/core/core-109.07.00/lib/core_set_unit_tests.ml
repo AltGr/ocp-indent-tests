@@ -182,9 +182,9 @@ module Unit_tests
       Set.iter2 (set_of_list l1) (set_of_list l2) ~f:(fun a -> result := a :: !result);
       let result =
         List.rev_map !result ~f:(function
-        | `Left a -> `Left (Elt.to_int a)
-        | `Right a -> `Right (Elt.to_int a)
-        | `Both (a, b) -> `Both (Elt.to_int a, Elt.to_int b)
+          | `Left a -> `Left (Elt.to_int a)
+          | `Right a -> `Right (Elt.to_int a)
+          | `Both (a, b) -> `Both (Elt.to_int a, Elt.to_int b)
         )
       in
       assert (result = expected)

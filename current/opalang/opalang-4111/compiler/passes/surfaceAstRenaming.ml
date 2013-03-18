@@ -961,18 +961,18 @@ let f_flatvars label x y z = f_list_aux (f_flatvar label) x y z
    or [] if we are in a coercion
    When looking for a variable, this field is looked up BEFORE the field all_env.f.ftypevars
 
-  Meaning of empty_type_env:
-  - true: ignore the given type var environment and use the empty env instead
+   Meaning of empty_type_env:
+   - true: ignore the given type var environment and use the empty env instead
     used when opening a new scope for typevars
-  - false: take the given type_env
+   - false: take the given type_env
 
-  Meaning if give_original:
-  - true: ignore the computed type var environment, and give back the one
+   Meaning if give_original:
+   - true: ignore the computed type var environment, and give back the one
           initially given to the function
     used when closing a new scope
     eg: [type t('a) = 'a x : 'a], once the typedef is renamed, you throw the
         type env to take the one you had before
-  - false: give the computed environment
+   - false: give the computed environment
 *)
 let f_ty_make_ext func ~empty_type_env ~give_original all_env hierar v =
   let f = all_env.f in

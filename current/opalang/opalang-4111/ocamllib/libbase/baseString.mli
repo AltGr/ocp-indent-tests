@@ -112,13 +112,13 @@ val replace : string -> string -> string -> string
    If the string is shorter than len, return the string [s], if not, return
    a fresh string beginning and ending like [s] but with in the middle the
    [sep] string.
-  {[
-    String.citation "[...]" 10 "this is a much too long string"
-  ]}
+   {[
+     String.citation "[...]" 10 "this is a much too long string"
+   ]}
    returns something like
-  {[
-    "this [...] string"
-  ]}
+   {[
+     "this [...] string"
+   ]}
 *)
 val citation : string -> int -> string -> string
 

@@ -45,21 +45,21 @@
 
    in WarningClass :
 
-  {[
-    val cond_category_subcategory_name : wclass
-  ]}
+   {[
+     val cond_category_subcategory_name : wclass
+   ]}
 
-  There :
-  {[
-    module Category =
-    struct
-      module Subcategory =
-      struct
-        let name_id = PassHandler.define_cond WarningClass.cond_category_subcategory_name
-        let name = .... PassHandler.make_condition name_id ...
-      end
-    end
-  ]}
+   There :
+   {[
+     module Category =
+     struct
+       module Subcategory =
+       struct
+         let name_id = PassHandler.define_cond WarningClass.cond_category_subcategory_name
+         let name = .... PassHandler.make_condition name_id ...
+       end
+     end
+   ]}
 
    For more informations, you can refer to [passlib/passdesign.ml] which contains a reference
    implementation for this module.
@@ -117,8 +117,8 @@ sig
      Checks that every bypass is totally applied with respect to its
      arity and to the number of arguments which it is applied on.
      Example :
-    {[ let x = %%plus%% 2 3 ]} is ok.
-    {[ let x = %%minus%% 4 6 7 ]} is not ok.
+     {[ let x = %%plus%% 2 3 ]} is ok.
+     {[ let x = %%minus%% 4 6 7 ]} is not ok.
      - Condition name : ["cond.bypass.applied"]
      - Warning class : [cond_bypass_applied]
   *)

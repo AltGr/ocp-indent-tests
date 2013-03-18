@@ -305,17 +305,17 @@ module Stable = struct
       ;;
 
       (*
-        version 2 timezone files have the format:
-        part 1 - exactly the same as v1
-        part 2 - same format as v1, except that 8 bytes are used to store transition times
-        and leap seconds
-        part 3 - a newline-encloded, POSIX-TZ-environment-variable-style string for use in
-        handling instants after the last transition time stored in the file
-        (with nothing between the newlines if there is no POSIX representation for such
-        instants)
+         version 2 timezone files have the format:
+         part 1 - exactly the same as v1
+         part 2 - same format as v1, except that 8 bytes are used to store transition times
+         and leap seconds
+         part 3 - a newline-encloded, POSIX-TZ-environment-variable-style string for use in
+         handling instants after the last transition time stored in the file
+         (with nothing between the newlines if there is no POSIX representation for such
+         instants)
 
-        We handle files in this format by parsing the first part exactly as a v1 timezone
-        file and then continuing to parse with 64bit reading functions in the right places.
+         We handle files in this format by parsing the first part exactly as a v1 timezone
+         file and then continuing to parse with 64bit reading functions in the right places.
       *)
       let input_tz_file_v2 ic =
         let _ = input_tz_file_v1 ic in

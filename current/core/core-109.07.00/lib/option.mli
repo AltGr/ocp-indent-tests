@@ -5,8 +5,8 @@
     {[
       let data = [(2, "two"); (5, "five"); (8, "eight")];;
       let f x = match List.Assoc.find_opt x data with
-      | Some y -> y
-      | None -> "zero" (* where "zero" is some default value *);; ]}
+        | Some y -> y
+        | None -> "zero" (* where "zero" is some default value *);; ]}
     rather than
     {[
       let f x = try List.Assoc.find x data with Not_found -> "zero";; ]}

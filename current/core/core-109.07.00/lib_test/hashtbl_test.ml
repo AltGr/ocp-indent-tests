@@ -149,9 +149,9 @@ let test =
           | [] -> ()
           | l ->
             List.iter l ~f:(function
-            | `Missing k -> Printf.eprintf "missing key:%d\n" k
-            | `Wrong_data (k, d) ->
-              Printf.eprintf "wrong data key:%d data:%d\n" k d);
+              | `Missing k -> Printf.eprintf "missing key:%d\n" k
+              | `Wrong_data (k, d) ->
+                Printf.eprintf "wrong data key:%d data:%d\n" k d);
             Printf.eprintf "missing %d of %d\n" (List.length l)
               (List.length !inserted);
             failwith "some inserts are missing"

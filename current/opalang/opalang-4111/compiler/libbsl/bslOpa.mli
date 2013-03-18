@@ -34,15 +34,15 @@ type contents = string
    Bsl Preprocessing for Opa files.
 
    Essentially, it is about producing generated declaration.
-  {[
-    ##include functions bslpervasives
-  ]}
+   {[
+     ##include functions bslpervasives
+   ]}
    will produce a code like :
-  {[
-    `+` = %%bslpervasives.add_int%% : int, int -> int
-    ...
-      etc...
-  ]}
+   {[
+     `+` = %%bslpervasives.add_int%% : int, int -> int
+     ...
+       etc...
+   ]}
 
    The final bymap should have been built at the end of all registering
    of bypass, or some inclusion may be unsuccessfull.
@@ -63,12 +63,12 @@ type true_means_error = bool
    if some errors was encounted during the checking.
    [true] means errors.
 
-  {[
-    if checking_fail ~final_bymap opa_codes then
-      !! the opa in the bsl is buggy !!
-  else
-    (* everything is ok *)
-  ]}
+   {[
+     if checking_fail ~final_bymap opa_codes then
+       !! the opa in the bsl is buggy !!
+   else
+     (* everything is ok *)
+   ]}
 
    The function returns also the typed opa interfaces,
    produces after typing.

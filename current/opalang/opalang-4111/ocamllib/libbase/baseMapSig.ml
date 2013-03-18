@@ -225,9 +225,9 @@ sig
      Optimized initialization for huge maps, to avoid temporary unused balancing.
      The key array should be sorted in increasing order, using the same order than the set.
      The value array should have the same length than the key array.
-    {[
-      [| key0 ; key1 ; key2 |] [| val0 ; val1 ; val2 |]
-    ]}
+     {[
+       [| key0 ; key1 ; key2 |] [| val0 ; val1 ; val2 |]
+     ]}
 
      <!> Unoptimized on IntMap
   *)

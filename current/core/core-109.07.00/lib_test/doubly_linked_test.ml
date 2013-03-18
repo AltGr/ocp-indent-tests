@@ -149,8 +149,8 @@ module Foil : S = struct
   }
 
   let elts_to_zipper = function
-  | [] -> None
-  | hd :: tl -> Some { before = []; cursor = hd; after = tl }
+    | [] -> None
+    | hd :: tl -> Some { before = []; cursor = hd; after = tl }
 
   let elts_of_zipper z = List.rev_append z.before (z.cursor :: z.after)
 
@@ -259,10 +259,10 @@ module Both : S = struct
     let pair x y = (Ok x, Ok y)
     let pure x = pair x x
     let force = function
-    | (Ok x,    Ok y   ) -> (x, y)
-    | (Error _, Error _) -> raise Both_raised
-    | (Error _, Ok _   ) -> failwith "hero failure =/= foil success"
-    | (Ok _,    Error _) -> failwith "hero success =/= foil failure"
+      | (Ok x,    Ok y   ) -> (x, y)
+      | (Error _, Error _) -> raise Both_raised
+      | (Error _, Ok _   ) -> failwith "hero failure =/= foil success"
+      | (Ok _,    Error _) -> failwith "hero success =/= foil failure"
     let obs t =
       let (x, y) = force t in
       assert (x = y);
@@ -848,12 +848,12 @@ module Bisimulation = struct
     let add_list l = Queue.enqueue trace (`New_list (add env.ls l, l)) in
     let add_elt e = Queue.enqueue trace (`New_elt (add env.es e, e)) in
     let add_elt_opt = function
-    | None -> ()
-    | Some e -> add_elt e
+      | None -> ()
+      | Some e -> add_elt e
     in
     let pred = function
-    | Even -> fun n -> n mod 0 = 0
-    | Odd  -> fun n -> n mod 0 = 1
+      | Even -> fun n -> n mod 0 = 0
+      | Odd  -> fun n -> n mod 0 = 1
     in
     try
       for _i = 1 to nsteps do

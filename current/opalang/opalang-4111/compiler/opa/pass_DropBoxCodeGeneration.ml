@@ -18,10 +18,10 @@
 
 
 (**
-  Pass for Dropbox database backend
+   Pass for Dropbox database backend
 
-  @author Quentin Bourgerie
-  @author Cedric Soulas
+   @author Quentin Bourgerie
+   @author Cedric Soulas
 *)
 
 (* shorthands *)

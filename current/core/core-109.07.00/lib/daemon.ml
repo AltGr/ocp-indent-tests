@@ -45,12 +45,12 @@ let redirect_fd ~skip_regular_files ~mode ~src ~dst =
     let should_skip = skip_regular_files && is_regular () in
     if not should_skip then begin
       let src = match src with
-      | `Dev_null ->
-        Unix.openfile "/dev/null" ~mode:[mode] ~perm:0o777
-      | `File_append file ->
-        Unix.openfile file ~mode:[mode; Unix.O_CREAT; Unix.O_APPEND] ~perm:0o777
-      | `File_truncate file ->
-        Unix.openfile file ~mode:[mode; Unix.O_CREAT; Unix.O_TRUNC] ~perm:0o777
+        | `Dev_null ->
+          Unix.openfile "/dev/null" ~mode:[mode] ~perm:0o777
+        | `File_append file ->
+          Unix.openfile file ~mode:[mode; Unix.O_CREAT; Unix.O_APPEND] ~perm:0o777
+        | `File_truncate file ->
+          Unix.openfile file ~mode:[mode; Unix.O_CREAT; Unix.O_TRUNC] ~perm:0o777
       in
       Unix.dup2 ~src ~dst;
       Unix.close src;

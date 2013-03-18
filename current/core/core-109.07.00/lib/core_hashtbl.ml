@@ -268,14 +268,14 @@ let mapi t ~f =
 
 (* How about this? *)
 (*
-let mapi t ~f =
-  let new_t =
-    create ~growth_allowed:t.growth_allowed
-      ~hashable:t.hashable ~size:t.length ()
-  in
-  let itfun ~key ~data = replace new_t ~key ~data:(f ~key ~data) in
-  iter t ~f:itfun;
-  new_t
+   let mapi t ~f =
+   let new_t =
+   create ~growth_allowed:t.growth_allowed
+   ~hashable:t.hashable ~size:t.length ()
+   in
+   let itfun ~key ~data = replace new_t ~key ~data:(f ~key ~data) in
+   iter t ~f:itfun;
+   new_t
 *)
 
 let map t ~f = mapi t ~f:(fun ~key:_ ~data -> f data)
@@ -295,17 +295,17 @@ let filter_mapi t ~f =
 
 (* How about this? *)
 (*
-let filter_mapi t ~f =
-  let new_t =
-    create ~growth_allowed:t.growth_allowed
-      ~hashable:t.hashable ~size:t.length ()
-  in
-  let itfun ~key ~data = match f ~key ~data with
-    | None -> ()
-    | Some d -> replace new_t ~key ~data:d
-  in
-  iter t ~f:itfun;
-  new_t
+   let filter_mapi t ~f =
+   let new_t =
+   create ~growth_allowed:t.growth_allowed
+   ~hashable:t.hashable ~size:t.length ()
+   in
+   let itfun ~key ~data = match f ~key ~data with
+   | None -> ()
+   | Some d -> replace new_t ~key ~data:d
+   in
+   iter t ~f:itfun;
+   new_t
 *)
 
 let filter_map t ~f = filter_mapi t ~f:(fun ~key:_ ~data -> f data)
@@ -362,8 +362,8 @@ let change t id f =
 let incr ?(by = 1) t key =
   change t key
     (function
-    | None -> Some by
-    | Some i -> Some (i + by))
+     | None -> Some by
+     | Some i -> Some (i + by))
 
 let add_multi t ~key ~data =
   match find t key with

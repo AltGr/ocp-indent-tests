@@ -87,13 +87,13 @@ val does_side_effects : JsAst.expr -> bool
    This is used for optimizing condition mixed with affectation.
    If not any value of the type [ty] could be evaluated to [false],
    we can generate :
-  {[
-    if (x = a.some)
-  ]}
+   {[
+     if (x = a.some)
+   ]}
    instead of
-  {[
-    if (x = a.some && x != undefined)
-  ]}
+   {[
+     if (x = a.some && x != undefined)
+   ]}
 
    We should add a cache in named type in this function for performance.
 *)
