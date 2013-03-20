@@ -50,15 +50,15 @@ let create_member p =
     lwt mem = p.create () in
     return mem
   with exn ->
-    (* create failed, so don't increment count *)
-    p.count <- p.count - 1;
-    raise_lwt exn
+      (* create failed, so don't increment count *)
+      p.count <- p.count - 1;
+      raise_lwt exn
 
 let release p c =
   try
     wakeup_later (Lwt_sequence.take_l p.waiters) c
   with Lwt_sequence.Empty ->
-    Queue.push c p.list
+      Queue.push c p.list
 
 let replace_acquired p =
   ignore_result (
@@ -84,8 +84,8 @@ let acquire p =
       try_lwt
         p.validate c
       with e ->
-        replace_acquired p;
-        raise_lwt e
+          replace_acquired p;
+          raise_lwt e
     in
     if valid then
       return c
@@ -109,5 +109,5 @@ let use p f =
     release p c;
     return r
   with e ->
-    checked_release p c;
-    raise_lwt e
+      checked_release p c;
+      raise_lwt e

@@ -9,9 +9,9 @@ let rec echo_server =
   function
   |0 -> return ()
   |num_lines ->
-    lwt s = read_line () in
-    Console.log s;
-    echo_server (num_lines - 1)
+      lwt s = read_line () in
+      Console.log s;
+      echo_server (num_lines - 1)
 
 let main () =
   Random.self_init ();

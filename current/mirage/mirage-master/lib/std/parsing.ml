@@ -127,26 +127,26 @@ let yyparse tables start lexer lexbuf =
   let rec loop cmd arg =
     match parse_engine tables env cmd arg with
       Read_token ->
-      let t = Obj.repr(lexer lexbuf) in
-      env.symb_start <- lexbuf.lex_start_p;
-      env.symb_end <- lexbuf.lex_curr_p;
-      loop Token_read t
+        let t = Obj.repr(lexer lexbuf) in
+        env.symb_start <- lexbuf.lex_start_p;
+        env.symb_end <- lexbuf.lex_curr_p;
+        loop Token_read t
     | Raise_parse_error ->
-      raise Parse_error
+        raise Parse_error
     | Compute_semantic_action ->
-      let (action, value) =
-        try
-          (Semantic_action_computed, tables.actions.(env.rule_number) env)
-        with Parse_error ->
-          (Error_detected, Obj.repr ()) in
-      loop action value
+        let (action, value) =
+          try
+            (Semantic_action_computed, tables.actions.(env.rule_number) env)
+          with Parse_error ->
+              (Error_detected, Obj.repr ()) in
+        loop action value
     | Grow_stacks_1 ->
-      grow_stacks(); loop Stacks_grown_1 (Obj.repr ())
+        grow_stacks(); loop Stacks_grown_1 (Obj.repr ())
     | Grow_stacks_2 ->
-      grow_stacks(); loop Stacks_grown_2 (Obj.repr ())
+        grow_stacks(); loop Stacks_grown_2 (Obj.repr ())
     | Call_error_function ->
-      tables.error_function "syntax error";
-      loop Error_detected (Obj.repr ()) in
+        tables.error_function "syntax error";
+        loop Error_detected (Obj.repr ()) in
   let init_asp = env.asp
   and init_sp = env.sp
   and init_stackbase = env.stackbase
@@ -159,23 +159,23 @@ let yyparse tables start lexer lexbuf =
   try
     loop Start (Obj.repr ())
   with exn ->
-    let curr_char = env.curr_char in
-    env.asp <- init_asp;
-    env.sp <- init_sp;
-    env.stackbase <- init_stackbase;
-    env.state <- init_state;
-    env.curr_char <- init_curr_char;
-    env.errflag <- init_errflag;
-    match exn with
-      YYexit v ->
-      Obj.magic v
-    | _ ->
-      current_lookahead_fun :=
-        (fun tok ->
-          if Obj.is_block tok
-          then tables.transl_block.(Obj.tag tok) = curr_char
-          else tables.transl_const.(Obj.magic tok) = curr_char);
-      raise exn
+      let curr_char = env.curr_char in
+      env.asp <- init_asp;
+      env.sp <- init_sp;
+      env.stackbase <- init_stackbase;
+      env.state <- init_state;
+      env.curr_char <- init_curr_char;
+      env.errflag <- init_errflag;
+      match exn with
+        YYexit v ->
+          Obj.magic v
+      | _ ->
+          current_lookahead_fun :=
+            (fun tok ->
+              if Obj.is_block tok
+              then tables.transl_block.(Obj.tag tok) = curr_char
+              else tables.transl_const.(Obj.magic tok) = curr_char);
+          raise exn
 
 let peek_val env n =
   Obj.magic env.v_stack.(env.asp - n)

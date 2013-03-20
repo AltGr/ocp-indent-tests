@@ -61,11 +61,11 @@ class virtual icon_creator = object (self)
     begin match icons with
       | [] -> self#deactivate (); sync ()
       | f :: fs ->
-        icons <- fs;
-        f ();
-        self#activate ();
-        sync ();
-        ignore (GMain.Timeout.add ~ms: 1 ~callback: self#make_icon)
+          icons <- fs;
+          f ();
+          self#activate ();
+          sync ();
+          ignore (GMain.Timeout.add ~ms: 1 ~callback: self#make_icon)
     end;
     false
 
@@ -109,11 +109,11 @@ and icon ~dir ~name (req : icon_creator) =
       let typ = Livshtype.guess (Filename.concat dir name) in
       match typ with
       | ContentType x ->
-        begin
-          match Mstring.split_str (fun c -> c = '/') x with
-          | [mj; mn] -> mj, mn
-          | _ -> assert false
-        end
+          begin
+            match Mstring.split_str (fun c -> c = '/') x with
+            | [mj; mn] -> mj, mn
+            | _ -> assert false
+          end
       | ContentEncoding x -> "encoding", x
       | Special m -> "special", m
     with
@@ -155,9 +155,9 @@ and icon ~dir ~name (req : icon_creator) =
         ignore !!vbox; ignore !!button; ignore !!pix; ignore !!label;
         begin match !info_icon with
           | Mylazy.Delayed _ ->
-            req#add (fun () ->
-              if !!button#misc#visible then
-                (try ignore (self#icon) with _ -> ()))
+              req#add (fun () ->
+                if !!button#misc#visible then
+                  (try ignore (self#icon) with _ -> ()))
           | _ -> ()
         end;
         v) in
@@ -342,8 +342,8 @@ class livsh init_dir func =
                         match typ with
                         | "special", "dir"
                         | "special", "lnkdir" ->
-                          self#open_dir file;
-                          self#force_reconfigure ()
+                            self#open_dir file;
+                            self#force_reconfigure ()
                         | t -> func file t
                       end)
                     (fun () -> active := true)));

@@ -49,26 +49,26 @@ let rec get_data count d = match d with
      The count parameter is used for calling `Sgen-functions'.  *)
     Sempty | Scons (_, _) -> d
   | Sapp (d1, d2) ->
-    begin match get_data count d1 with
-        Scons (a, d11) -> Scons (a, Sapp (d11, d2))
-      | Sempty -> get_data count d2
-      | _ -> assert false
-    end
+      begin match get_data count d1 with
+          Scons (a, d11) -> Scons (a, Sapp (d11, d2))
+        | Sempty -> get_data count d2
+        | _ -> assert false
+      end
   | Sgen {curr = Some None; func = _ } -> Sempty
   | Sgen ({curr = Some(Some a); func = f} as g) ->
-    g.curr <- None; Scons(a, d)
+      g.curr <- None; Scons(a, d)
   | Sgen g ->
-    begin match g.func count with
-        None -> g.curr <- Some(None); Sempty
-      | Some a -> Scons(a, d)
-                  (* Warning: anyone using g thinks that an item has been read *)
-    end
+      begin match g.func count with
+          None -> g.curr <- Some(None); Sempty
+        | Some a -> Scons(a, d)
+                    (* Warning: anyone using g thinks that an item has been read *)
+      end
   | Sbuffio b ->
-    if b.ind >= b.len then fill_buff b;
-    if b.len == 0 then Sempty else
-      let r = Obj.magic (String.unsafe_get b.buff b.ind) in
-      (* Warning: anyone using g thinks that an item has been read *)
-      b.ind <- succ b.ind; Scons(r, d)
+      if b.ind >= b.len then fill_buff b;
+      if b.len == 0 then Sempty else
+        let r = Obj.magic (String.unsafe_get b.buff b.ind) in
+        (* Warning: anyone using g thinks that an item has been read *)
+        b.ind <- succ b.ind; Scons(r, d)
   | Slazy f -> get_data count (Lazy.force f)
 ;;
 
@@ -78,18 +78,18 @@ let rec peek s =
     Sempty -> None
   | Scons (a, _) -> Some a
   | Sapp (_, _) ->
-    begin match get_data s.count s.data with
-        Scons(a, _) as d -> set_data s d; Some a
-      | Sempty -> None
-      | _ -> assert false
-    end
+      begin match get_data s.count s.data with
+          Scons(a, _) as d -> set_data s d; Some a
+        | Sempty -> None
+        | _ -> assert false
+      end
   | Slazy f -> set_data s (Lazy.force f); peek s
   | Sgen {curr = Some a} -> a
   | Sgen g -> let x = g.func s.count in g.curr <- Some x; x
   | Sbuffio b ->
-    if b.ind >= b.len then fill_buff b;
-    if b.len == 0 then begin set_data s Sempty; None end
-    else Some (Obj.magic (String.unsafe_get b.buff b.ind))
+      if b.ind >= b.len then fill_buff b;
+      if b.len == 0 then begin set_data s Sempty; None end
+      else Some (Obj.magic (String.unsafe_get b.buff b.ind))
 ;;
 
 let rec junk s =
@@ -98,9 +98,9 @@ let rec junk s =
   | Sgen ({curr = Some _} as g) -> set_count s (succ s.count); g.curr <- None
   | Sbuffio b -> set_count s (succ s.count); b.ind <- succ b.ind
   | _ ->
-    match peek s with
-      None -> ()
-    | Some _ -> junk s
+      match peek s with
+        None -> ()
+      | Some _ -> junk s
 ;;
 
 let rec nget n s =
@@ -108,8 +108,8 @@ let rec nget n s =
   else
     match peek s with
       Some a ->
-      junk s;
-      let (al, d, k) = nget (pred n) s in a :: al, Scons (a, d), succ k
+        junk s;
+        let (al, d, k) = nget (pred n) s in a :: al, Scons (a, d), succ k
     | None -> [], s.data, 0
 ;;
 
@@ -183,17 +183,17 @@ and dump_data f =
   function
     Sempty -> print_string "Sempty"
   | Scons (a, d) ->
-    print_string "Scons (";
-    f a;
-    print_string ", ";
-    dump_data f d;
-    print_string ")"
+      print_string "Scons (";
+      f a;
+      print_string ", ";
+      dump_data f d;
+      print_string ")"
   | Sapp (d1, d2) ->
-    print_string "Sapp (";
-    dump_data f d1;
-    print_string ", ";
-    dump_data f d2;
-    print_string ")"
+      print_string "Sapp (";
+      dump_data f d1;
+      print_string ", ";
+      dump_data f d2;
+      print_string ")"
   | Slazy _ -> print_string "Slazy"
   | Sgen _ -> print_string "Sgen"
   | Sbuffio b -> print_string "Sbuffio"

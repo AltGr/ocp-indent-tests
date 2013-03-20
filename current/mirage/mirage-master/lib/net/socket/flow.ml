@@ -52,8 +52,8 @@ let close_on_exit t fn =
     close t >>
     return x
   with exn -> 
-    close t >>
-    fail exn
+      close t >>
+      fail exn
 
 let id = new_key ()
 let new_id () = Some (Oo.id (object end))
@@ -70,53 +70,53 @@ let listen_tcpv4 addr port fn =
     |R.Retry _ -> assert false in
   match R.tcpv4_listen fd with
   |R.OK () ->
-    let rec loop t =
-      with_value id (new_id ()) (fun () ->
-        (match R.tcpv4_accept fd with
-         |R.OK (afd,caddr_i,cport) ->
-           let caddr = ipv4_addr_of_uint32 caddr_i in
-           let t' = t_of_fd afd in
-           (* Be careful to catch an exception here, as otherwise
-              ignore_result may raise it at some other random point *)
-           Lwt.ignore_result (
-             close_on_exit t' (fun t ->
-               try_lwt
-                 fn (caddr, cport) t
-               with exn ->
-                 return (Printf.printf "EXN: %s\n%!" (Printexc.to_string exn))
-             )
-           );
-           loop t
-         |R.Retry -> Activations.read t.fd >> loop t
-         |R.Err err -> fail (Accept_error err)
-        )
-      ) in
-    let t = t_of_fd fd in
-    let listen_t = close_on_exit t loop in
-    t.abort_t <?> listen_t
+      let rec loop t =
+        with_value id (new_id ()) (fun () ->
+          (match R.tcpv4_accept fd with
+           |R.OK (afd,caddr_i,cport) ->
+               let caddr = ipv4_addr_of_uint32 caddr_i in
+               let t' = t_of_fd afd in
+               (* Be careful to catch an exception here, as otherwise
+                  ignore_result may raise it at some other random point *)
+               Lwt.ignore_result (
+                 close_on_exit t' (fun t ->
+                   try_lwt
+                     fn (caddr, cport) t
+                   with exn ->
+                       return (Printf.printf "EXN: %s\n%!" (Printexc.to_string exn))
+                 )
+               );
+               loop t
+           |R.Retry -> Activations.read t.fd >> loop t
+           |R.Err err -> fail (Accept_error err)
+          )
+        ) in
+      let t = t_of_fd fd in
+      let listen_t = close_on_exit t loop in
+      t.abort_t <?> listen_t
   |R.Err s ->
-    fail (Listen_error s)
+      fail (Listen_error s)
   |R.Retry ->
-    fail (Listen_error "listen retry") (* Listen never blocks *)
+      fail (Listen_error "listen retry") (* Listen never blocks *)
 
 (* Read a buffer off the wire *)
 let rec read_buf t buf off len =
   match R.read t.fd buf off len with
   |R.Retry ->
-    Activations.read t.fd >>
-    read_buf t buf off len
+      Activations.read t.fd >>
+      read_buf t buf off len
   |R.OK r -> return r
   |R.Err e -> fail (Read_error e)
 
 let rec write_buf t buf =
   match R.write t.fd buf 0 (Cstruct.len buf) with
   |R.Retry ->
-    Activations.write t.fd >>
-    write_buf t buf
+      Activations.write t.fd >>
+      write_buf t buf
   |R.OK amt ->
-    let len = Cstruct.len buf in
-    if amt = len then return ()
-    else write_buf t (Cstruct.shift buf amt)
+      let len = Cstruct.len buf in
+      if amt = len then return ()
+      else write_buf t (Cstruct.shift buf amt)
   |R.Err e -> fail (Write_error e)
 
 let read t =
@@ -155,18 +155,18 @@ module TCPv4 = struct
   let connect mgr ?src ((addr,port):ipv4_dst) (fn: t -> 'a Lwt.t) =
     match R.tcpv4_connect (ipv4_addr_to_uint32 addr) port with
     |R.OK fd ->
-      (* Wait for the connect to complete *)
-      let t = t_of_fd fd in
-      let rec loop () =
-        match R.connect_result t.fd with
-        |R.OK _ ->
-          close_on_exit t fn
-        |R.Retry -> 
-          Activations.write t.fd >>
-          loop ()
-        |R.Err s -> fail (Connect_error s) in
-      let cancel_t = t.abort_t >> fail (Connect_error "cancelled") in
-      loop () <?> cancel_t
+        (* Wait for the connect to complete *)
+        let t = t_of_fd fd in
+        let rec loop () =
+          match R.connect_result t.fd with
+          |R.OK _ ->
+              close_on_exit t fn
+          |R.Retry -> 
+              Activations.write t.fd >>
+              loop ()
+          |R.Err s -> fail (Connect_error s) in
+        let cancel_t = t.abort_t >> fail (Connect_error "cancelled") in
+        loop () <?> cancel_t
     |R.Err s -> failwith s
     |R.Retry -> assert false (* initial connect cannot request a retry *)
 end
@@ -187,15 +187,15 @@ module Pipe = struct
     |[] -> return ()
     |[page] -> write t page
     |pages ->
-      let page = Io_page.get () in
-      let off = ref 0 in
-      List.iter (fun p ->
-        let len = Cstruct.len p in
-        Cstruct.blit_buffer p 0 page !off len;
-        off := !off + len;
-      ) pages;
-      let v = Cstruct.sub page 0 !off in
-      write t v
+        let page = Io_page.get () in
+        let off = ref 0 in
+        List.iter (fun p ->
+          let len = Cstruct.len p in
+          Cstruct.blit_buffer p 0 page !off len;
+          off := !off + len;
+        ) pages;
+        let v = Cstruct.sub page 0 !off in
+        write t v
 
   let close (rd,wr) = close rd <&> (close wr)
 
@@ -236,15 +236,15 @@ let close = function
 
 let connect mgr = function
   |`TCPv4 (src, dst, fn) ->
-    TCPv4.connect mgr ?src dst (fun t -> fn (TCPv4 t))
+      TCPv4.connect mgr ?src dst (fun t -> fn (TCPv4 t))
   |`Pipe (src, dst, fn) ->
-    Pipe.connect mgr ?src dst (fun t -> fn (Pipe t))
+      Pipe.connect mgr ?src dst (fun t -> fn (Pipe t))
   |_ -> fail (Failure "unknown protocol")
 
 let listen mgr = function
   |`TCPv4 (src, fn) ->
-    TCPv4.listen mgr src (fun dst t -> fn dst (TCPv4 t))
+      TCPv4.listen mgr src (fun dst t -> fn dst (TCPv4 t))
   |`Pipe (src, fn) ->
-    Pipe.listen mgr src (fun dst t -> fn dst (Pipe t))
+      Pipe.listen mgr src (fun dst t -> fn dst (Pipe t))
   |_ -> fail (Failure "unknown protocol")
 

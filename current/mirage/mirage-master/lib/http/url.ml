@@ -121,44 +121,44 @@ module Of_string = struct
     match fragment str off with
     | None -> none_url
     | Some o ->
-      { none_url with
-        fragment = Some (String.sub str (succ off) (o - (succ off)))
-          (*'succ' gets rid of '#'*)
-      }
+        { none_url with
+          fragment = Some (String.sub str (succ off) (o - (succ off)))
+            (*'succ' gets rid of '#'*)
+        }
 
   let of_string_query str off =
     match query str off with
     | None -> of_string_fragment str off
     | Some o ->
-      {(of_string_fragment str o) with
-       query_string = Some (String.sub str (succ off) (o - (succ off)))
-         (*'succ' gets rid of '?'*)
-      }
+        {(of_string_fragment str o) with
+         query_string = Some (String.sub str (succ off) (o - (succ off)))
+           (*'succ' gets rid of '?'*)
+        }
 
   let of_string_path str off =
     match path str off with
     | None -> of_string_query str off
     | Some o ->
-      {(of_string_query str o)
-       with path_string = Some (String.sub str off (o - off))
-      }
+        {(of_string_query str o)
+         with path_string = Some (String.sub str off (o - off))
+        }
 
   let of_string_host str off =
     match host str off with
     | None -> of_string_path str off
     | Some o ->
-      {(of_string_path str o) with
-       host = Some (String.sub str (off + 2) (o - (off + 2)))
-         (*'+ 2' gets rid of '//'*)
-      }
+        {(of_string_path str o) with
+         host = Some (String.sub str (off + 2) (o - (off + 2)))
+           (*'+ 2' gets rid of '//'*)
+        }
 
   let of_string str =
     match scheme str with
     | None -> of_string_host str 0
     | Some o ->
-      {(of_string_host str o) with
-       scheme = Some (String.sub str 0 (pred o))(*'pred' gets rid of ':'*)
-      }
+        {(of_string_host str o) with
+         scheme = Some (String.sub str 0 (pred o))(*'pred' gets rid of ':'*)
+        }
 
   let path_delim     = Re.from_string "/"
   let query_delim    = Re.from_string "&"
@@ -171,25 +171,25 @@ module Of_string = struct
       match url.host with
       | None -> url
       | Some s -> (*check for userinfo*)
-        match Re.search_forward userinfo_delim s 0 with
-        | None -> url
-        | Some (b,e) ->
-          { url with
-            userinfo = Some (String.sub s 0 (pred b)) ;
-            host     = Some (String.sub s e (String.length s - e)) ;
-          }
+          match Re.search_forward userinfo_delim s 0 with
+          | None -> url
+          | Some (b,e) ->
+              { url with
+                userinfo = Some (String.sub s 0 (pred b)) ;
+                host     = Some (String.sub s e (String.length s - e)) ;
+              }
     in
     let url = (*/!\ does NOT support IPv6 addresses*)
       match url.host with
       | None -> url
       | Some s -> (*check for port*)
-        match Re.search_forward port_delim s 0 with
-        | None -> url
-        | Some (b,e) ->
-          { url with
-            host = Some (String.sub s 0 (pred b)) ;
-            port = Some (int_of_string (String.sub s e (String.length s - e))) ;
-          }
+          match Re.search_forward port_delim s 0 with
+          | None -> url
+          | Some (b,e) ->
+              { url with
+                host = Some (String.sub s 0 (pred b)) ;
+                port = Some (int_of_string (String.sub s e (String.length s - e))) ;
+              }
     in
     { url with
       path = begin
@@ -201,19 +201,19 @@ module Of_string = struct
         match url.query_string with
         | None -> None
         | Some s ->
-          let bits = Re.split_delim query_delim s in
-          let bitbits =
-            List.map
-              (fun s -> match Re.search_forward query_subdelim s 0 with
-                | None -> (s,"")
-                | Some (b,e) ->
-                  (String.sub s 0 (pred b)
-                   ,String.sub s e (String.length s - e)
-                  )
-              )
-              bits
-          in
-          Some bitbits
+            let bits = Re.split_delim query_delim s in
+            let bitbits =
+              List.map
+                (fun s -> match Re.search_forward query_subdelim s 0 with
+                  | None -> (s,"")
+                  | Some (b,e) ->
+                      (String.sub s 0 (pred b)
+                      ,String.sub s e (String.length s - e)
+                      )
+                )
+                bits
+            in
+            Some bitbits
       end
     }
 

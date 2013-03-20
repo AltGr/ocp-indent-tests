@@ -2021,7 +2021,7 @@ struct
       turn_separated_on ();
       ()),
     " Recompile only what is needed, but do not link"
-  ;
+    ;
 
     (* c *)
 
@@ -2032,12 +2032,12 @@ struct
       turn_separated_on ();
       ()),
     " Compile the current package, do not link"
-  ;
+    ;
 
     "--conf",
     Arg.String load_conf,
     " Load a package conf file"
-  ;
+    ;
 
     (* i *)
 
@@ -2047,7 +2047,7 @@ struct
       turn_separated_on ();
       ()),
     " Add packages(s) to import"
-  ;
+    ;
 
     (* l *)
 
@@ -2058,7 +2058,7 @@ struct
       turn_separated_on ();
     ),
     " Compile the remaining files and link them with the loaded packages (enforce separated mode)"
-  ;
+    ;
 
     "--link-package",
     Arg.String (fun p ->
@@ -2067,7 +2067,7 @@ struct
       turn_separated_on ();
       ()),
     " Add package(s) to link with (enforce separated and linking modes)"
-  ;
+    ;
 
     (* o *)
 
@@ -2077,7 +2077,7 @@ struct
       opadep := true ;
     ),
     " Generate the packages dependencies graph and exit"
-  ;
+    ;
 
     "--odep-all",
     Arg.Unit (fun () ->
@@ -2086,12 +2086,12 @@ struct
       opadep_all := true ;
     ),
     " Generate all dependency graphs and continue"
-  ;
+    ;
 
     "--opx-dir",
     Arg.Set_string opxdir,
     " Defines the directory where opx are saved and loaded (default is .)"
-  ;
+    ;
 
     (* p *)
 
@@ -2099,7 +2099,7 @@ struct
     "--rebuild",
     Arg.Set rebuild,
     " Forces the compiler to rebuild all the sources in autobuild mode"
-  ;
+    ;
 
     (* s *)
 
@@ -2122,7 +2122,7 @@ struct
       turn_separated_on ();
       ()),
     " Recompile only what is needed, and link to build the application"
-  ;
+    ;
 
     (* d *)
 
@@ -2131,14 +2131,14 @@ struct
       show_package (package_name,FilePos.nopos "command line");
       exit 0),
     " Dumps the content of an opx to standard output"
-  ;
+    ;
 
     (* s *)
 
     "--separated",
     Arg.spec_of_opt_assoc separated default_separated ["full", `full; "partial", `partial; "off", `no],
     " Separated compilation mode of the compiler (WIP, transitional period only)"
-  ;
+    ;
 
   ]
 

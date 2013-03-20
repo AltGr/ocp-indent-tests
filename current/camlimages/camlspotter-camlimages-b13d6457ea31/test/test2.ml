@@ -63,11 +63,11 @@ let treat_image name0 =
          name (extension format) header.header_width header.header_height);
     match format with
     | Gif ->
-      let sequence = Gif.load name [] in
-      Gif.save ("out-" ^ name0) [] sequence
+        let sequence = Gif.load name [] in
+        Gif.save ("out-" ^ name0) [] sequence
     | _ ->
-      let img = Images.load name [] in
-      Images.save ("out-" ^ name0) (Some format) [] img;
+        let img = Images.load name [] in
+        Images.save ("out-" ^ name0) (Some format) [] img;
   with
   | Wrong_file_type -> prerr_endline "file format detection failed"
   | Failure s -> prerr_endline s;;

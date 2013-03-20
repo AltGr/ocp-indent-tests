@@ -42,8 +42,8 @@ let parse_request_fst_line ic =
     match Re.split_delim pieces_sep request_line with
     | [ meth_raw; uri_raw; http_version_raw ] -> return
                                                    ( method_of_string meth_raw
-                                                     , Url.of_string uri_raw
-                                                     , version_of_string http_version_raw
+                                                   , Url.of_string uri_raw
+                                                   , version_of_string http_version_raw
                                                    )
     | _ -> fail (Malformed_request request_line)
   end with | Malformed_URL url -> fail (Malformed_request_URI url)
@@ -53,13 +53,13 @@ let parse_response_fst_line ic =
   try_lwt
     (match Re.split_delim pieces_sep response_line with
      | version_raw :: code_raw :: _ ->
-       return (version_of_string version_raw,      (* method *)
-         status_of_code (int_of_string code_raw))    (* status *)
+         return (version_of_string version_raw,      (* method *)
+           status_of_code (int_of_string code_raw))    (* status *)
      | _ ->
-       fail (Malformed_response response_line))
+         fail (Malformed_response response_line))
   with 
   | Malformed_URL _ | Invalid_code _ | Failure "int_of_string" ->
-    fail (Malformed_response response_line)
+      fail (Malformed_response response_line)
   | e -> fail e
 
 let parse_headers ic =
@@ -100,16 +100,16 @@ let parse_content_range headers =
       let str = List.assoc "content-length" headers in
       Some (int_of_string str)
     with _ ->
-      None
+        None
   end else if List.mem_assoc "content-range" headers then begin
     let range_s = List.assoc "content-range" headers in
     match parse_content_range range_s with
     |Some (start, fini, total) ->
-      (* some sanity checking before we act on these values *)
-      if fini < total && start <= total && 0 <= start && 0 <= total then (
-        let num_bytes_to_read = fini - start + 1 in
-        Some num_bytes_to_read
-      ) else None
+        (* some sanity checking before we act on these values *)
+        if fini < total && start <= total && 0 <= start && 0 <= total then (
+          let num_bytes_to_read = fini - start + 1 in
+          Some num_bytes_to_read
+        ) else None
     |None -> None
   end else None    
 

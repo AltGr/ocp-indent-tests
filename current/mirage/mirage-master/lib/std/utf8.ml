@@ -12,31 +12,31 @@ let () =
 let next s i =
   match s.[i] with
   | '\000'..'\127' as c ->
-    Char.code c
+      Char.code c
   | '\192'..'\223' as c ->
-    let n1 = Char.code c in
-    let n2 = Char.code s.[i+1] in
-    if (n2 lsr 6 != 0b10) then raise MalFormed;
-    ((n1 land 0x1f) lsl 6) lor (n2 land 0x3f)
+      let n1 = Char.code c in
+      let n2 = Char.code s.[i+1] in
+      if (n2 lsr 6 != 0b10) then raise MalFormed;
+      ((n1 land 0x1f) lsl 6) lor (n2 land 0x3f)
   | '\224'..'\239' as c ->
-    let n1 = Char.code c in
-    let n2 = Char.code s.[i+1] in
-    let n3 = Char.code s.[i+2] in
-    if (n2 lsr 6 != 0b10) || (n3 lsr 6 != 0b10) then raise MalFormed;
-    let p = 
-      ((n1 land 0x0f) lsl 12) lor ((n2 land 0x3f) lsl 6) lor (n3 land 0x3f)
-    in
-    if (p >= 0xd800) && (p <= 0xdf00) then raise MalFormed;
-    p
+      let n1 = Char.code c in
+      let n2 = Char.code s.[i+1] in
+      let n3 = Char.code s.[i+2] in
+      if (n2 lsr 6 != 0b10) || (n3 lsr 6 != 0b10) then raise MalFormed;
+      let p = 
+        ((n1 land 0x0f) lsl 12) lor ((n2 land 0x3f) lsl 6) lor (n3 land 0x3f)
+      in
+      if (p >= 0xd800) && (p <= 0xdf00) then raise MalFormed;
+      p
   | '\240'..'\247' as c ->
-    let n1 = Char.code c in
-    let n2 = Char.code s.[i+1] in
-    let n3 = Char.code s.[i+2] in
-    let n4 = Char.code s.[i+3] in
-    if (n2 lsr 6 != 0b10) || (n3 lsr 6 != 0b10) || (n4 lsr 6 != 0b10)
-    then raise MalFormed;
-    ((n1 land 0x07) lsl 18) lor ((n2 land 0x3f) lsl 12) lor
-      ((n3 land 0x3f) lsl 6) lor (n4 land 0x3f)
+      let n1 = Char.code c in
+      let n2 = Char.code s.[i+1] in
+      let n3 = Char.code s.[i+2] in
+      let n4 = Char.code s.[i+3] in
+      if (n2 lsr 6 != 0b10) || (n3 lsr 6 != 0b10) || (n4 lsr 6 != 0b10)
+      then raise MalFormed;
+      ((n1 land 0x07) lsl 18) lor ((n2 land 0x3f) lsl 12) lor
+        ((n3 land 0x3f) lsl 6) lor (n4 land 0x3f)
   | _ -> raise MalFormed
 
 
@@ -46,27 +46,27 @@ let next s i =
 let from_stream s =
   match Stream.next s with
   | '\000'..'\127' as c ->
-    Char.code c
+      Char.code c
   | '\192'..'\223' as c ->
-    let n1 = Char.code c in
-    let n2 = Char.code (Stream.next s) in
-    if (n2 lsr 6 != 0b10) then raise MalFormed;
-    ((n1 land 0x1f) lsl 6) lor (n2 land 0x3f)
+      let n1 = Char.code c in
+      let n2 = Char.code (Stream.next s) in
+      if (n2 lsr 6 != 0b10) then raise MalFormed;
+      ((n1 land 0x1f) lsl 6) lor (n2 land 0x3f)
   | '\224'..'\239' as c ->
-    let n1 = Char.code c in
-    let n2 = Char.code (Stream.next s) in
-    let n3 = Char.code (Stream.next s) in
-    if (n2 lsr 6 != 0b10) || (n3 lsr 6 != 0b10) then raise MalFormed;
-    ((n1 land 0x0f) lsl 12) lor ((n2 land 0x3f) lsl 6) lor (n3 land 0x3f)
+      let n1 = Char.code c in
+      let n2 = Char.code (Stream.next s) in
+      let n3 = Char.code (Stream.next s) in
+      if (n2 lsr 6 != 0b10) || (n3 lsr 6 != 0b10) then raise MalFormed;
+      ((n1 land 0x0f) lsl 12) lor ((n2 land 0x3f) lsl 6) lor (n3 land 0x3f)
   | '\240'..'\247' as c ->
-    let n1 = Char.code c in
-    let n2 = Char.code (Stream.next s) in
-    let n3 = Char.code (Stream.next s) in
-    let n4 = Char.code (Stream.next s) in
-    if (n2 lsr 6 != 0b10) || (n3 lsr 6 != 0b10) || (n4 lsr 6 != 0b10)
-    then raise MalFormed;
-    ((n1 land 0x07) lsl 18) lor ((n2 land 0x3f) lsl 12) lor
-      ((n3 land 0x3f) lsl 6) lor (n4 land 0x3f)
+      let n1 = Char.code c in
+      let n2 = Char.code (Stream.next s) in
+      let n3 = Char.code (Stream.next s) in
+      let n4 = Char.code (Stream.next s) in
+      if (n2 lsr 6 != 0b10) || (n3 lsr 6 != 0b10) || (n4 lsr 6 != 0b10)
+      then raise MalFormed;
+      ((n1 land 0x07) lsl 18) lor ((n2 land 0x3f) lsl 12) lor
+        ((n3 land 0x3f) lsl 6) lor (n4 land 0x3f)
   | _ -> raise MalFormed
 
 

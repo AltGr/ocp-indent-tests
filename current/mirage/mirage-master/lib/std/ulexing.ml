@@ -69,9 +69,9 @@ let from_var_enc_stream enc s =
     try 
       buf.(pos) <- (match !enc with
         | Ascii ->
-          let c = Char.code (Stream.next s) in
-          if c > 127 then raise (InvalidCodepoint c);
-          c
+            let c = Char.code (Stream.next s) in
+            if c > 127 then raise (InvalidCodepoint c);
+            c
         | Latin1 -> Char.code (Stream.next s)
         | Utf8 -> Utf8.from_stream s);
       1

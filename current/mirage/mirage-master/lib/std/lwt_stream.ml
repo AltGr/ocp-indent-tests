@@ -124,16 +124,16 @@ struct
       match Weak.get weak_box 0 with
       | None -> ()
       | Some box ->
-        match box.state with
-        | No_mail ->
-          let q = Queue.create () in
-          Queue.push v q;
-          box.state <- Full q
-        | Waiting wakener ->
-          box.state <- No_mail;
-          wakeup_later wakener v
-        | Full q ->
-          Queue.push v q
+          match box.state with
+          | No_mail ->
+              let q = Queue.create () in
+              Queue.push v q;
+              box.state <- Full q
+          | Waiting wakener ->
+              box.state <- No_mail;
+              wakeup_later wakener v
+          | Full q ->
+              Queue.push v q
     in
     let box = { state = No_mail } in
     Weak.set weak_box 0 (Some box);
@@ -142,21 +142,21 @@ struct
   let pop b =
     match b.state with
     | No_mail ->
-      let waiter, wakener = task () in
-      b.state <- Waiting wakener;
-      (try_lwt
-        waiter
-      with exn ->
-        b.state <- No_mail;
-        raise_lwt exn)
+        let waiter, wakener = task () in
+        b.state <- Waiting wakener;
+        (try_lwt
+          waiter
+        with exn ->
+            b.state <- No_mail;
+            raise_lwt exn)
     | Waiting _ ->
-      (* Calls to next are serialized, so this case will never
-         happened *)
-      assert false
+        (* Calls to next are serialized, so this case will never
+           happened *)
+        assert false
     | Full q ->
-      let v = Queue.take q in
-      if Queue.is_empty q then b.state <- No_mail;
-      return v
+        let v = Queue.take q in
+        if Queue.is_empty q then b.state <- No_mail;
+        return v
 end
 
 let create () =
@@ -167,9 +167,9 @@ let push_clones wa x =
   for i = 0 to Weak.length wa - 1 do
     match Weak.get wa i with
     | Some q ->
-      Queue.push x q
+        Queue.push x q
     | None ->
-      ()
+        ()
   done
 
 let peek s =
@@ -202,9 +202,9 @@ let rec force n s =
       end
     end >>= function
     | true ->
-      force n s
+        force n s
     | false ->
-      return ()
+        return ()
 
 let npeek n s =
   lwt () = force n s in
@@ -233,9 +233,9 @@ let rec get s =
         for i = 0 to Weak.length wa - 1 do
           match Weak.get wa i with
           | Some q when q != s.queue ->
-            Queue.push x q
+              Queue.push x q
           | _ ->
-            ()
+              ()
         done;
         return x
       end else begin
@@ -257,10 +257,10 @@ let nget n s =
     else
       get s >>= function
       | Some x ->
-        lwt l = loop (n - 1) in
-        return (x :: l)
+          lwt l = loop (n - 1) in
+          return (x :: l)
       | None ->
-        return []
+          return []
   in
   loop n
 
@@ -268,15 +268,15 @@ let get_while f s =
   let rec loop () =
     peek s >>= function
     | Some x ->
-      let test = f x in
-      if test then begin
-        ignore (Queue.take s.queue);
-        lwt l = loop () in
-        return (x :: l)
-      end else
-        return []
+        let test = f x in
+        if test then begin
+          ignore (Queue.take s.queue);
+          lwt l = loop () in
+          return (x :: l)
+        end else
+          return []
     | None ->
-      return []
+        return []
   in
   loop ()
 
@@ -284,15 +284,15 @@ let get_while_s f s =
   let rec loop () =
     peek s >>= function
     | Some x ->
-      lwt test = f x in
-      if test then begin
-        ignore (Queue.take s.queue);
-        lwt l = loop () in
-        return (x :: l)
-      end else
-        return []
+        lwt test = f x in
+        if test then begin
+          ignore (Queue.take s.queue);
+          lwt l = loop () in
+          return (x :: l)
+        end else
+          return []
     | None ->
-      return []
+        return []
   in
   loop ()
 
@@ -303,33 +303,33 @@ let next s = get s >>= function
 let last_new s =
   match Lwt.state (peek s) with
   | Return None ->
-    raise_lwt Empty
+      raise_lwt Empty
   | Sleep ->
-    next s
+      next s
   | Fail exn ->
-    raise_lwt exn
+      raise_lwt exn
   | Return(Some x) ->
-    let _ = Queue.take s.queue in
-    let rec loop last =
-      match Lwt.state (peek s) with
-      | Sleep | Return None ->
-        return last
-      | Return(Some x) ->
-        let _ = Queue.take s.queue in
-        loop x
-      | Fail exn ->
-        raise_lwt exn
-    in
-    loop x
+      let _ = Queue.take s.queue in
+      let rec loop last =
+        match Lwt.state (peek s) with
+        | Sleep | Return None ->
+            return last
+        | Return(Some x) ->
+            let _ = Queue.take s.queue in
+            loop x
+        | Fail exn ->
+            raise_lwt exn
+      in
+      loop x
 
 let to_list s =
   let rec loop () =
     get s >>= function
     | Some x ->
-      lwt l = loop () in
-      return (x :: l)
+        lwt l = loop () in
+        return (x :: l)
     | None ->
-      return []
+        return []
   in
   loop ()
 
@@ -338,10 +338,10 @@ let to_string s =
   let rec loop () =
     get s >>= function
     | Some x ->
-      Buffer.add_char buf x;
-      loop ()
+        Buffer.add_char buf x;
+        loop ()
     | None ->
-      return (Buffer.contents buf)
+        return (Buffer.contents buf)
   in
   loop ()
 
@@ -363,14 +363,14 @@ let junk_while f s =
   let rec loop () =
     peek s >>= function
     | Some x ->
-      let test = f x in
-      if test then begin
-        ignore (Queue.take s.queue);
-        loop ()
-      end else
-        return ()
+        let test = f x in
+        if test then begin
+          ignore (Queue.take s.queue);
+          loop ()
+        end else
+          return ()
     | None ->
-      return ()
+        return ()
   in
   loop ()
 
@@ -378,14 +378,14 @@ let junk_while_s f s =
   let rec loop () =
     peek s >>= function
     | Some x ->
-      lwt test = f x in
-      if test then begin
-        ignore (Queue.take s.queue);
-        loop ()
-      end else
-        return ()
+        lwt test = f x in
+        if test then begin
+          ignore (Queue.take s.queue);
+          loop ()
+        end else
+          return ()
     | None ->
-      return ()
+        return ()
   in
   loop ()
 
@@ -393,10 +393,10 @@ let junk_old s =
   let rec loop () =
     match Lwt.state (peek s) with
     | Sleep ->
-      return ()
+        return ()
     | _ ->
-      ignore (Queue.take s.queue);
-      loop ()
+        ignore (Queue.take s.queue);
+        loop ()
   in
   loop ()
 
@@ -404,28 +404,28 @@ let get_available s =
   let rec loop () =
     match Lwt.state (peek s) with
     | Sleep | Return None ->
-      []
+        []
     | Return(Some x) ->
-      ignore (Queue.take s.queue);
-      x :: loop ()
+        ignore (Queue.take s.queue);
+        x :: loop ()
     | Fail exn ->
-      raise exn
+        raise exn
   in
   loop ()
 
 let get_available_up_to n s =
   let rec loop = function
     | 0 ->
-      []
-    | n ->
-      match Lwt.state (peek s) with
-      | Sleep | Return None ->
         []
-      | Return(Some x) ->
-        ignore (Queue.take s.queue);
-        x :: loop (n - 1)
-      | Fail exn ->
-        raise exn
+    | n ->
+        match Lwt.state (peek s) with
+        | Sleep | Return None ->
+            []
+        | Return(Some x) ->
+            ignore (Queue.take s.queue);
+            x :: loop (n - 1)
+        | Fail exn ->
+            raise exn
   in
   loop n
 
@@ -434,30 +434,30 @@ let is_empty s = peek s >|= fun x -> x = None
 let map f s =
   from (fun () -> get s >>= function
     | Some x ->
-      let x = f x in
-      return (Some x)
+        let x = f x in
+        return (Some x)
     | None ->
-      return None)
+        return None)
 
 let map_s f s =
   from (fun () -> get s >>= function
     | Some x ->
-      lwt x = f x in
-      return (Some x)
+        lwt x = f x in
+        return (Some x)
     | None ->
-      return None)
+        return None)
 
 let filter f s =
   let rec next () =
     get s >>= function
     | Some x as result ->
-      let test = f x in
-      if test then
-        return result
-      else
-        next ()
+        let test = f x in
+        if test then
+          return result
+        else
+          next ()
     | None ->
-      return None
+        return None
   in
   from next
 
@@ -465,13 +465,13 @@ let filter_s f s =
   let rec next () =
     get s >>= function
     | Some x as result ->
-      lwt test = f x in
-      if test then
-        return result
-      else
-        next ()
+        lwt test = f x in
+        if test then
+          return result
+        else
+          next ()
     | None ->
-      return None
+        return None
   in
   from next
 
@@ -479,14 +479,14 @@ let filter_map f s =
   let rec next () =
     get s >>= function
     | Some x ->
-      let x = f x in
-      (match x with
-       | Some _ ->
-         return x
-       | None ->
-         next ())
+        let x = f x in
+        (match x with
+         | Some _ ->
+             return x
+         | None ->
+             next ())
     | None ->
-      return None
+        return None
   in
   from next
 
@@ -494,14 +494,14 @@ let filter_map_s f s =
   let rec next () =
     get s >>= function
     | Some x ->
-      lwt x = f x in
-      (match x with
-       | Some _ ->
-         return x
-       | None ->
-         next ())
+        lwt x = f x in
+        (match x with
+         | Some _ ->
+             return x
+         | None ->
+             next ())
     | None ->
-      return None
+        return None
   in
   from next
 
@@ -510,16 +510,16 @@ let map_list f s =
   let rec next () =
     match !pendings with
     | [] ->
-      get s >>= (function
-        | Some x ->
-          let l = f x in
-          pendings := l;
-          next ()
-        | None ->
-          return None)
+        get s >>= (function
+          | Some x ->
+              let l = f x in
+              pendings := l;
+              next ()
+          | None ->
+              return None)
     | x :: l ->
-      pendings := l;
-      return (Some x)
+        pendings := l;
+        return (Some x)
   in
   from next
 
@@ -528,16 +528,16 @@ let map_list_s f s =
   let rec next () =
     match !pendings with
     | [] ->
-      get s >>= (function
-        | Some x ->
-          lwt l = f x in
-          pendings := l;
-          next ()
-        | None ->
-          return None)
+        get s >>= (function
+          | Some x ->
+              lwt l = f x in
+              pendings := l;
+              next ()
+          | None ->
+              return None)
     | x :: l ->
-      pendings := l;
-      return (Some x)
+        pendings := l;
+        return (Some x)
   in
   from next
 
@@ -548,10 +548,10 @@ let fold f s acc =
   let rec loop acc =
     get s >>= function
     | Some x ->
-      let acc = f x acc in
-      loop acc
+        let acc = f x acc in
+        loop acc
     | None ->
-      return acc
+        return acc
   in
   loop acc
 
@@ -559,10 +559,10 @@ let fold_s f s acc =
   let rec loop acc =
     get s >>= function
     | Some x ->
-      lwt acc = f x acc in
-      loop acc
+        lwt acc = f x acc in
+        loop acc
     | None ->
-      return acc
+        return acc
   in
   loop acc
 
@@ -570,10 +570,10 @@ let iter f s =
   let rec loop () =
     get s >>= function
     | Some x ->
-      let () = f x in
-      loop ()
+        let () = f x in
+        loop ()
     | None ->
-      return ()
+        return ()
   in
   loop ()
 
@@ -581,10 +581,10 @@ let iter_s f s =
   let rec loop () =
     get s >>= function
     | Some x ->
-      lwt () = f x in
-      loop ()
+        lwt () = f x in
+        loop ()
     | None ->
-      return ()
+        return ()
   in
   loop ()
 
@@ -592,9 +592,9 @@ let iter_p f s =
   let rec loop () =
     get s >>= function
     | Some x ->
-      f x <&> loop ()
+        f x <&> loop ()
     | None ->
-      return ()
+        return ()
   in
   loop ()
 
@@ -602,13 +602,13 @@ let find f s =
   let rec loop () =
     get s >>= function
     | Some x as result ->
-      let test = f x in
-      if test then
-        return result
-      else
-        loop ()
+        let test = f x in
+        if test then
+          return result
+        else
+          loop ()
     | None ->
-      return None
+        return None
   in
   loop ()
 
@@ -616,13 +616,13 @@ let find_s f s =
   let rec loop () =
     get s >>= function
     | Some x as result ->
-      lwt test = f x in
-      if test then
-        return result
-      else
-        loop ()
+        lwt test = f x in
+        if test then
+          return result
+        else
+          loop ()
     | None ->
-      return None
+        return None
   in
   loop ()
 
@@ -630,14 +630,14 @@ let rec find_map f s =
   let rec loop () =
     get s >>= function
     | Some x ->
-      let x = f x in
-      (match x with
-       | Some _ ->
-         return x
-       | None ->
-         loop ())
+        let x = f x in
+        (match x with
+         | Some _ ->
+             return x
+         | None ->
+             loop ())
     | None ->
-      return None
+        return None
   in
   loop ()
 
@@ -645,14 +645,14 @@ let rec find_map_s f s =
   let rec loop () =
     get s >>= function
     | Some x ->
-      lwt x = f x in
-      (match x with
-       | Some _ ->
-         return x
-       | None ->
-         loop ())
+        lwt x = f x in
+        (match x with
+         | Some _ ->
+             return x
+         | None ->
+             loop ())
     | None ->
-      return None
+        return None
   in
   loop ()
 
@@ -661,9 +661,9 @@ let rec combine s1 s2 =
     lwt n1 = get s1 and n2 = get s2 in
     match n1, n2 with
     | Some x1, Some x2 ->
-      return (Some(x1, x2))
+        return (Some(x1, x2))
     | _ ->
-      return None
+        return None
   in
   from next
 
@@ -672,15 +672,15 @@ let append s1 s2 =
   let rec next () =
     get !current_s >>= function
     | Some _ as result ->
-      return result
+        return result
     | None ->
-      if !s1_finished then
-        return None
-      else begin
-        s1_finished := true;
-        current_s := s2;
-        next ()
-      end
+        if !s1_finished then
+          return None
+        else begin
+          s1_finished := true;
+          current_s := s2;
+          next ()
+        end
   in
   from next
 
@@ -689,14 +689,14 @@ let concat s_top =
   let rec next () =
     get !current_s >>= function
     | Some _ as result ->
-      return result
+        return result
     | None ->
-      get s_top >>= function
-      | Some s ->
-        current_s := s;
-        next ()
-      | None ->
-        return None
+        get s_top >>= function
+        | Some s ->
+            current_s := s;
+            next ()
+        | None ->
+            return None
   in
   from next
 
@@ -706,17 +706,17 @@ let choose streams =
   let rec next () =
     match !streams with
     | [] ->
-      return None
+        return None
     | l ->
-      lwt s, x = Lwt.choose (List.map snd l) in
-      let l = List.remove_assq s l in
-      match x with
-      | Some _ ->
-        lwt () = junk s in
-        streams := source s :: l;
-        return x
-      | None ->
-        next ()
+        lwt s, x = Lwt.choose (List.map snd l) in
+        let l = List.remove_assq s l in
+        match x with
+        | Some _ ->
+            lwt () = junk s in
+            streams := source s :: l;
+            return x
+        | None ->
+            next ()
   in
   from next
 
@@ -725,39 +725,39 @@ let parse s f =
   try_lwt
     f s
   with exn ->
-    Queue.clear s.queue;
-    Queue.transfer s'.queue s.queue;
-    raise_lwt exn
+      Queue.clear s.queue;
+      Queue.transfer s'.queue s.queue;
+      raise_lwt exn
 
 let hexdump stream =
   let buf = Buffer.create 80 and num = ref 0 in
   from begin fun _ ->
     nget 16 stream >>= function
     | [] ->
-      return None
+        return None
     | l ->
-      Buffer.clear buf;
-      Printf.bprintf buf "%08x|  " !num;
-      num := !num + 16;
-      let rec bytes pos = function
-        | [] ->
-          blanks pos
-        | x :: l ->
-          if pos = 8 then Buffer.add_char buf ' ';
-          Printf.bprintf buf "%02x " (Char.code x);
-          bytes (pos + 1) l
-      and blanks pos =
-        if pos < 16 then begin
-          if pos = 8 then
-            Buffer.add_string buf "    "
-          else
-            Buffer.add_string buf "   ";
-          blanks (pos + 1)
-        end
-      in
-      bytes 0 l;
-      Buffer.add_string buf " |";
-      List.iter (fun ch -> Buffer.add_char buf (if ch >= '\x20' && ch <= '\x7e' then ch else '.')) l;
-      Buffer.add_char buf '|';
-      return (Some(Buffer.contents buf))
+        Buffer.clear buf;
+        Printf.bprintf buf "%08x|  " !num;
+        num := !num + 16;
+        let rec bytes pos = function
+          | [] ->
+              blanks pos
+          | x :: l ->
+              if pos = 8 then Buffer.add_char buf ' ';
+              Printf.bprintf buf "%02x " (Char.code x);
+              bytes (pos + 1) l
+        and blanks pos =
+          if pos < 16 then begin
+            if pos = 8 then
+              Buffer.add_string buf "    "
+            else
+              Buffer.add_string buf "   ";
+            blanks (pos + 1)
+          end
+        in
+        bytes 0 l;
+        Buffer.add_string buf " |";
+        List.iter (fun ch -> Buffer.add_char buf (if ch >= '\x20' && ch <= '\x7e' then ch else '.')) l;
+        Buffer.add_char buf '|';
+        return (Some(Buffer.contents buf))
   end

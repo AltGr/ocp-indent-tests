@@ -89,14 +89,14 @@ class img_button ?label ?frames ?border_width ?width ?height ?packing ?show () =
     match frames with
     | Some [] | None -> None
     | Some frames ->
-      Some (GMisc.pixmap (fst (List.hd frames))
-          ~packing: (vbox#pack ~expand: true ~fill: true) ())
+        Some (GMisc.pixmap (fst (List.hd frames))
+            ~packing: (vbox#pack ~expand: true ~fill: true) ())
   in
   let _ = 
     match label with
     | Some label -> 
-      Some (GMisc.label ~text: label
-          ~packing: (vbox#pack ~expand: false ~fill: true) ())
+        Some (GMisc.label ~text: label
+            ~packing: (vbox#pack ~expand: false ~fill: true) ())
     | None -> None
   in
   object (self)
@@ -108,34 +108,34 @@ class img_button ?label ?frames ?border_width ?width ?height ?packing ?show () =
     method start_rotate =
       match pix, timeout, frames with
       | Some pix, None, Some frames when List.length frames > 1 ->
-        let img, wait =
-          match current_frames with
-          | [img, wait] -> 
-            current_frames <- frames;
-            img, wait
-          | (img, wait)::fs -> 
-            current_frames <- fs;
-            img, wait
-          | _ -> assert false
-        in
-        let wait = if wait <= 0 then 100 else wait in
-        pix#set_pixmap img;
-        timeout <- 
-          Some (Timeout.add ~ms:wait ~callback: (fun () ->
-              timeout <- None;
-              self#start_rotate;
-              false));
-        Gui.sync ()
+          let img, wait =
+            match current_frames with
+            | [img, wait] -> 
+                current_frames <- frames;
+                img, wait
+            | (img, wait)::fs -> 
+                current_frames <- fs;
+                img, wait
+            | _ -> assert false
+          in
+          let wait = if wait <= 0 then 100 else wait in
+          pix#set_pixmap img;
+          timeout <- 
+            Some (Timeout.add ~ms:wait ~callback: (fun () ->
+                timeout <- None;
+                self#start_rotate;
+                false));
+          Gui.sync ()
       | _ -> ()
 
     method stop_rotate =
       match timeout with
       | Some id -> 
-        Timeout.remove id; timeout <- None;
-        begin match pix, frames with
-          | Some pix, Some ((img,_wait)::_) -> pix#set_pixmap img; Gui.sync ()
-          | _ -> ()
-        end
+          Timeout.remove id; timeout <- None;
+          begin match pix, frames with
+            | Some pix, Some ((img,_wait)::_) -> pix#set_pixmap img; Gui.sync ()
+            | _ -> ()
+          end
       | None -> ()
 
   end

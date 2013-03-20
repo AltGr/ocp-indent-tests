@@ -58,8 +58,8 @@ let transition state =
   (* Merge transition with the same target *)
   let rec norm = function
     | (c1,n1)::((c2,n2)::q as l) ->
-      if n1 == n2 then norm ((Cset.union c1 c2,n1)::q)
-      else (c1,n1)::(norm l)
+        if n1 == n2 then norm ((Cset.union c1 c2,n1)::q)
+        else (c1,n1)::(norm l)
     | l -> l in
   let t = List.concat (List.map (fun n -> n.trans) state) in
   let t = norm (List.sort (fun (c1,n1) (c2,n2) -> n1.id - n2.id) t) in
@@ -86,10 +86,10 @@ let transition state =
 let find_alloc tbl counter x =
   try Hashtbl.find tbl x
   with Not_found ->
-    let i = !counter in
-    incr counter;
-    Hashtbl.add tbl x i;
-    i
+      let i = !counter in
+      incr counter;
+      Hashtbl.add tbl x i;
+      i
 
 let part_tbl = Hashtbl.create 31
 let part_id = ref 0
@@ -104,15 +104,15 @@ let compile rs =
   let rec aux state =
     try Hashtbl.find states state
     with Not_found ->
-      let i = !counter in
-      incr counter;
-      Hashtbl.add states state i;
-      let (part,targets) = transition state in
-      let part = get_part part in
-      let targets = Array.map aux targets in
-      let finals = Array.map (fun (_,f) -> List.mem f state) rs in
-      states_def := (i, (part,targets,finals)) :: !states_def;
-      i
+        let i = !counter in
+        incr counter;
+        Hashtbl.add states state i;
+        let (part,targets) = transition state in
+        let part = get_part part in
+        let targets = Array.map aux targets in
+        let finals = Array.map (fun (_,f) -> List.mem f state) rs in
+        states_def := (i, (part,targets,finals)) :: !states_def;
+        i
   in
   let init = ref [] in
   Array.iter (fun (i,_) -> init := add_node !init i) rs;

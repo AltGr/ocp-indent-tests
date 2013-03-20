@@ -36,12 +36,12 @@ module Make (Syntax : Sig.Camlp4Syntax) = struct
   let rec filter stream =
     match stream with parser
         [< '(KEYWORD "#", loc); rest >] ->
-      begin match rest with parser
-          [< '(KEYWORD "#", loc') >] ->
-        [< '(KEYWORD "##", Loc.merge loc loc'); filter rest >]
-                          | [< >] ->
-                            [< '(KEYWORD "#", loc); filter rest >]
-      end
+        begin match rest with parser
+            [< '(KEYWORD "#", loc') >] ->
+            [< '(KEYWORD "##", Loc.merge loc loc'); filter rest >]
+                            | [< >] ->
+                                [< '(KEYWORD "#", loc); filter rest >]
+        end
                     | [< 'other; rest >] -> [< 'other; filter rest >]
 
   let _ =
@@ -77,7 +77,7 @@ module Make (Syntax : Sig.Camlp4Syntax) = struct
       if i = 0 then raise Not_found;
       String.sub lab 0 i
     with Not_found ->
-      lab
+        lab
 
   let fresh_type _loc = <:ctyp< '$random_var ()$ >>
 

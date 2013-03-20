@@ -80,12 +80,12 @@ let rec input t =
   lwt len = Socket.fdbind Activations.read (fun fd -> Socket.read fd page 0 sz) t.dev in
   match len with
   |(-1) -> (* EAGAIN or EWOULDBLOCK *)
-    input t
+      input t
   |0 -> (* EOF *)
-    t.active <- false;
-    input t
+      t.active <- false;
+      input t
   |n ->
-    return page
+      return page
 
 (* Get write buffer for Netif output *)
 let get_writebuf t =
@@ -97,16 +97,16 @@ let get_writebuf t =
 let rec listen t fn =
   match t.active with
   |true ->
-    lwt frame = input t in
-    Lwt.ignore_result (
-      try_lwt 
-        fn frame
-      with exn ->
-        return (printf "EXN: %s bt: %s\n%!" (Printexc.to_string exn) (Printexc.get_backtrace()))
-    );
-    listen t fn
+      lwt frame = input t in
+      Lwt.ignore_result (
+        try_lwt 
+          fn frame
+        with exn ->
+            return (printf "EXN: %s bt: %s\n%!" (Printexc.to_string exn) (Printexc.get_backtrace()))
+      );
+      listen t fn
   |false ->
-    return ()
+      return ()
 
 (* Shutdown a netfront *)
 let destroy nf =
@@ -130,15 +130,15 @@ let writev t pages =
   |[] -> return ()
   |[page] -> write t page
   |pages ->
-    let page = Io_page.get () in
-    let off = ref 0 in
-    List.iter (fun p ->
-      let len = Cstruct.len p in
-      Cstruct.blit_buffer p 0 page !off len;
-      off := !off + len;
-    ) pages;
-    let v = Cstruct.sub page 0 !off in
-    write t v
+      let page = Io_page.get () in
+      let off = ref 0 in
+      List.iter (fun p ->
+        let len = Cstruct.len p in
+        Cstruct.blit_buffer p 0 page !off len;
+        off := !off + len;
+      ) pages;
+      let v = Cstruct.sub page 0 !off in
+      write t v
 
 let ethid t = 
   t.id

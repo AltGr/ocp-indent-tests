@@ -88,14 +88,14 @@ val pass_Print :
         * SurfaceAst.parsing_directive SurfaceAstPassesTypes.parsed_file list
       )
     ) as 'parsed_files
-      ,
-      'parsed_files
+    ,
+    'parsed_files
   ) opa_pass
 
 val pass_DbEngineImportation :
   ((((SurfaceAst.nonuid, SurfaceAst.parsing_directive)
       SurfaceAst.code_elt) ObjectFiles.parsed_code) as 'parsed_code
-     , 'parsed_code)
+                                                     , 'parsed_code)
     opa_pass
 
 val pass_BslLoading :
@@ -103,8 +103,8 @@ val pass_BslLoading :
   (OpaEnv.opa_back_end -> BslLanguage.t) ->
   ((((SurfaceAst.nonuid, SurfaceAst.parsing_directive)
       SurfaceAst.code_elt) ObjectFiles.parsed_code) as 'parsed_code
-     ,
-     'parsed_code * BslLib.env_bsl) opa_pass
+   ,
+   'parsed_code * BslLib.env_bsl) opa_pass
 
 val pass_ConvertStructure :
   (

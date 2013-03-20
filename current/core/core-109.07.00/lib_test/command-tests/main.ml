@@ -53,10 +53,10 @@ let () =
        ("moonshot", leaf);
        ("mixture", leaf);
        ( "adverb"
-         , group ~summary:"this command does more stuff" ~readme [
-             ("nemeses",  leaf_show_internals);
-             ("drolly", leaf);
-             ("opposable", leaf_no_summary);
-           ]);
+       , group ~summary:"this command does more stuff" ~readme [
+           ("nemeses",  leaf_show_internals);
+           ("drolly", leaf);
+           ("opposable", leaf_no_summary);
+         ]);
      ])
 

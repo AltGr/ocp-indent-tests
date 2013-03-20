@@ -64,24 +64,24 @@ let random_string () =
 let random_write i id =
   match cons.(i).con with
   | Some con ->
-    let str = random_string () in
-    cons.(i).messages <- cons.(i).messages + 1;
-    log "[%d|%s] Sending %d bytes: %s" i id (String.length str) str;
-    OS.Websocket.write con str
+      let str = random_string () in
+      cons.(i).messages <- cons.(i).messages + 1;
+      log "[%d|%s] Sending %d bytes: %s" i id (String.length str) str;
+      OS.Websocket.write con str
   | None     ->
-    log "[%d|%s] WebSocket not initialized" i id
+      log "[%d|%s] WebSocket not initialized" i id
 
 let random_read i id =
   match cons.(i).con with
   | Some con ->
-    log "[%i|%s] Reading ..." i id;
-    lwt str = OS.Websocket.read con in
-    cons.(i).messages <- cons.(i).messages - 1;
-    log "[%i|%s] Read %d bytes: %s" i id (String.length str) str;
-    return ()
+      log "[%i|%s] Reading ..." i id;
+      lwt str = OS.Websocket.read con in
+      cons.(i).messages <- cons.(i).messages - 1;
+      log "[%i|%s] Read %d bytes: %s" i id (String.length str) str;
+      return ()
   | None    ->
-    log "[%d|%s] WebSocket not initialized" i id;
-    return ()
+      log "[%d|%s] WebSocket not initialized" i id;
+      return ()
 
 let iter id n =
   for_lwt j = 0 to n do
@@ -100,7 +100,7 @@ let main () =
     join [iter "one" 10] >> (*; iter "two" 15; iter "three" 10; iter "four" 15] >>*)
     return ()
   with OS.Websocket.Not_supported ->
-    return (OS.Console.printf "[ERROR] Websockets are not supported by this browser")
+      return (OS.Console.printf "[ERROR] Websockets are not supported by this browser")
 
 let _ =
   OS.Main.run (main ())

@@ -26,8 +26,8 @@ let filter f source =
   let rec aux () = match_lwt Lwt_stream.get source with
     | None -> push None; return ()
     | Some x -> match_lwt f x with
-      | true -> push (Some x); aux ()
-      | false -> aux ()
+        | true -> push (Some x); aux ()
+        | false -> aux ()
   in
   let _ = aux () in
   s

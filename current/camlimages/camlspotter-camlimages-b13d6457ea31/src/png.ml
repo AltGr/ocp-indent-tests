@@ -49,37 +49,37 @@ let load name _opts =
   | PNG_RGB24 buf -> Rgb24 (Rgb24.create_with_scanlines w h [] buf)
   | PNG_RGBA32 buf -> Rgba32 (Rgba32.create_with_scanlines w h [] buf)
   | PNG_INDEX8 (buf,cmap) ->
-    Index8 (Index8.create_with_scanlines w h [] { max = 255; map = cmap; } (-1) buf)
+      Index8 (Index8.create_with_scanlines w h [] { max = 255; map = cmap; } (-1) buf)
   | PNG_INDEX16 (buf,cmap) ->
-    Index16 (Index16.create_with_scanlines w h [] { max = 65535; map = cmap } (-1) buf)
+      Index16 (Index16.create_with_scanlines w h [] { max = 65535; map = cmap } (-1) buf)
   | PNG_INDEX4 (buf,cmap) ->
-    let buf' = Array.init h (fun _ -> String.create w) in
-    for y = 0 to h - 1 do
-      for x = 0 to w - 1 do
-        buf'.(y).[x] <-
-          char_of_int
-            (let c = int_of_char buf.(y).[x / 2] in
-             if x mod 2 = 0 then c lsr 4 else c mod 16)
-      done
-    done;
-    Index8 (Index8.create_with_scanlines w h [] { max = 16; map = cmap } (-1) buf')
+      let buf' = Array.init h (fun _ -> String.create w) in
+      for y = 0 to h - 1 do
+        for x = 0 to w - 1 do
+          buf'.(y).[x] <-
+            char_of_int
+              (let c = int_of_char buf.(y).[x / 2] in
+               if x mod 2 = 0 then c lsr 4 else c mod 16)
+        done
+      done;
+      Index8 (Index8.create_with_scanlines w h [] { max = 16; map = cmap } (-1) buf')
 ;;
 
 let save name _opts image =
   match image with
   | Rgb24 bmp ->
-    write_rgb name
-      (Rgb24.dump bmp) bmp.Rgb24.width bmp.Rgb24.height false
+      write_rgb name
+        (Rgb24.dump bmp) bmp.Rgb24.width bmp.Rgb24.height false
   | Rgba32 bmp ->
-    write_rgb name
-      (Rgba32.dump bmp) bmp.Rgba32.width bmp.Rgba32.height true
+      write_rgb name
+        (Rgba32.dump bmp) bmp.Rgba32.width bmp.Rgba32.height true
   | Index8 bmp ->
-    write_index name (Index8.dump bmp) bmp.Index8.colormap.map
-      bmp.Index8.width bmp.Index8.height
+      write_index name (Index8.dump bmp) bmp.Index8.colormap.map
+        bmp.Index8.width bmp.Index8.height
   | Index16 bmp ->
-    write_index name (Index16.dump bmp)
-      bmp.Index16.colormap.map
-      bmp.Index16.width bmp.Index16.height
+      write_index name (Index16.dump bmp)
+        bmp.Index16.colormap.map
+        bmp.Index16.width bmp.Index16.height
   | Cmyk32 _ -> failwith "Saving of CMYK not supported yet"
 ;;
 

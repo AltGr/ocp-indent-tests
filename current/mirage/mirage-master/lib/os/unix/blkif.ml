@@ -41,9 +41,9 @@ let read_512 t offset length =
     (fun () ->
       match !finished with
       | false ->
-        finished := true;
-        lwt data = Int64.(read_n t (mul 512L offset) (mul 512L length)) in
-        return (Some data)
+          finished := true;
+          lwt data = Int64.(read_n t (mul 512L offset) (mul 512L length)) in
+          return (Some data)
       | true -> return None
     )
 
@@ -64,15 +64,15 @@ let create ~id ~filename : Devices.blkif Lwt.t =
     try_lwt
       Socket.(iobind file_open_readwrite filename)
     with Socket.Error err -> 
-      printf "Blkif: failed to open VBD %s\n%!" filename;
-      fail (Error err)
+        printf "Blkif: failed to open VBD %s\n%!" filename;
+        fail (Error err)
   in
   lwt size =
     try_lwt
       Socket.(iobind file_size filename)
     with Socket.Error err ->
-      printf "Blkif: failed to determine VBD size %s\n%!" filename;
-      fail (Error err)
+        printf "Blkif: failed to determine VBD size %s\n%!" filename;
+        fail (Error err)
   in
   printf "Unix.Blkif: success\n%!";
   let t = {id; fd} in
@@ -101,7 +101,7 @@ let _ =
         try
           return (List.assoc "filename" cfg)
         with Not_found ->
-          raise_lwt (Failure "UNIX.Blkif: 'filename' configuration key not found")
+            raise_lwt (Failure "UNIX.Blkif: 'filename' configuration key not found")
       in
       lwt blkif = create ~id ~filename in
       let entry = Devices.({
@@ -120,10 +120,10 @@ let _ =
       |"-vbd" -> begin
           match Regexp.Re.(split_delim (from_string ":") env.(i+1)) with
           |[p_id;filename] ->
-            let p_cfg = ["filename",filename] in
-            let p_dep_ids=[] in
-            printf "found vbd %s filename %s\n%!" p_id filename;
-            vbds := ({Devices.p_dep_ids; p_cfg; p_id}) :: !vbds
+              let p_cfg = ["filename",filename] in
+              let p_dep_ids=[] in
+              printf "found vbd %s filename %s\n%!" p_id filename;
+              vbds := ({Devices.p_dep_ids; p_cfg; p_id}) :: !vbds
           |_ -> failwith "Unix.Blkif: bad -vbd flag, must be id:filename"
         end
       |_ -> ()) env;

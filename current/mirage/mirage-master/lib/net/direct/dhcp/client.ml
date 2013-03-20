@@ -60,10 +60,10 @@ type t = {
     uint32_t cookie
   } as big_endian
 
-      cenum mode {
-      BootRequest = 1;
-      BootReply
-    } as uint8_t
+    cenum mode {
+    BootRequest = 1;
+    BootReply
+  } as uint8_t
 
 (* Send a client broadcast packet *)
 let output_broadcast t ~xid ~yiaddr ~siaddr ~options =
@@ -180,16 +180,16 @@ let rec dhcp_thread t =
   (* For now, just send out regular discoveries until we have a lease *)
   match t.state with
   |Disabled |Request_sent _ ->
-    start_discovery t >>
-    OS.Time.sleep 10. >>
-    dhcp_thread t
+      start_discovery t >>
+      OS.Time.sleep 10. >>
+      dhcp_thread t
   |Shutting_down ->
-    printf "DHCP thread: done\n%!";
-    return ()
+      printf "DHCP thread: done\n%!";
+      return ()
   |_ -> 
-    (* TODO: This should be looking at the lease time *)
-    OS.Time.sleep 3600. >>
-    dhcp_thread t
+      (* TODO: This should be looking at the lease time *)
+      OS.Time.sleep 3600. >>
+      dhcp_thread t
 
 (* Create a DHCP thread *)
 let create ip udp =

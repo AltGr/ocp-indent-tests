@@ -581,8 +581,8 @@ let rec __pp_simple_type prio ppf ty =
               let err_ty2 = (context.error_type2).W_Algebra.sty_desc in
               match ( W_SubTerms.locate_subterms err_ty1
                   ty.W_Algebra.sty_desc
-                , W_SubTerms.locate_subterms err_ty2
-                  ty.W_Algebra.sty_desc) with
+                    , W_SubTerms.locate_subterms err_ty2
+                        ty.W_Algebra.sty_desc) with
               | (Some (_, str), None) ->
                   Format.fprintf ppf "function with %s %a"
                     str (__pp_simple_type 1) context.error_type1

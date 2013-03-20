@@ -37,13 +37,13 @@ let rec timerloop t s =
   OS.Time.sleep t.period >>
   match t.expire s with
   | Stoptimer ->
-    t.running <- false;
-    return ()
+      t.running <- false;
+      return ()
   | Continue d ->
-    timerloop t d
+      timerloop t d
   | ContinueSetPeriod (p, d) ->
-    t.period <- p;
-    timerloop t d
+      t.period <- p;
+      timerloop t d
 
 
 let period t = t.period

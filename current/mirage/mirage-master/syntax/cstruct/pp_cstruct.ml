@@ -119,46 +119,46 @@ let output_get _loc s f =
   let num x = <:expr< $int:string_of_int x$ >> in
   match f.ty with
   |Buffer len ->
-    <:str_item<
-      let $lid:op_name "get" s f$ src = Cstruct.sub_buffer src $num f.off$ $num len$ ;;
-      let $lid:op_name "copy" s f$ src = Cstruct.copy_buffer src $num f.off$ $num len$
-    >>
+      <:str_item<
+        let $lid:op_name "get" s f$ src = Cstruct.sub_buffer src $num f.off$ $num len$ ;;
+        let $lid:op_name "copy" s f$ src = Cstruct.copy_buffer src $num f.off$ $num len$
+      >>
   |ty ->
-    <:str_item<
-      let $lid:getter_name s f$ v = 
-      $match f.ty with
-       |UInt8 -> <:expr< Cstruct.get_uint8 v $num f.off$ >>
+      <:str_item<
+        let $lid:getter_name s f$ v = 
+        $match f.ty with
+         |UInt8 -> <:expr< Cstruct.get_uint8 v $num f.off$ >>
   |UInt16 -> <:expr< $m$.get_uint16 v $num f.off$ >>
   |UInt32 -> <:expr< $m$.get_uint32 v $num f.off$ >>
   |UInt64 -> <:expr< $m$.get_uint64 v $num f.off$ >>
   |Buffer len -> assert false
-    $
-      >>
+      $
+        >>
 
-      let output_set _loc s f =
-        let m = mode_mod _loc s.endian in
-        let num x = <:expr< $int:string_of_int x$ >> in 
-        match f.ty with
-        |Buffer len ->
-          <:str_item<
-            let $lid:setter_name s f$ src srcoff dst = Cstruct.set_buffer src srcoff dst $num f.off$ $num len$ ;;
-            let $lid:op_name "blit" s f$ src srcoff dst = Cstruct.blit_buffer src srcoff dst $num f.off$ $num len$
-          >>
-        |ty ->
-          <:str_item<
-            let $lid:setter_name s f$ v x = $match f.ty with
-             |UInt8 -> <:expr< Cstruct.set_uint8 v $num f.off$ x >>
-        |UInt16 -> <:expr< $m$.set_uint16 v $num f.off$ x >>
-        |UInt32 -> <:expr< $m$.set_uint32 v $num f.off$ x >>
-        |UInt64 -> <:expr< $m$.set_uint64 v $num f.off$ x >>
-        |Buffer len -> assert false 
-          $ 
-            >>
-
-            let output_sizeof _loc s =
+        let output_set _loc s f =
+          let m = mode_mod _loc s.endian in
+          let num x = <:expr< $int:string_of_int x$ >> in 
+          match f.ty with
+          |Buffer len ->
               <:str_item<
-                let $lid:"sizeof_"^s.name$ = $int:string_of_int s.len$
+                let $lid:setter_name s f$ src srcoff dst = Cstruct.set_buffer src srcoff dst $num f.off$ $num len$ ;;
+                let $lid:op_name "blit" s f$ src srcoff dst = Cstruct.blit_buffer src srcoff dst $num f.off$ $num len$
               >>
+          |ty ->
+              <:str_item<
+                let $lid:setter_name s f$ v x = $match f.ty with
+                 |UInt8 -> <:expr< Cstruct.set_uint8 v $num f.off$ x >>
+          |UInt16 -> <:expr< $m$.set_uint16 v $num f.off$ x >>
+          |UInt32 -> <:expr< $m$.set_uint32 v $num f.off$ x >>
+          |UInt64 -> <:expr< $m$.set_uint64 v $num f.off$ x >>
+          |Buffer len -> assert false 
+              $ 
+                >>
+
+                let output_sizeof _loc s =
+                  <:str_item<
+                    let $lid:"sizeof_"^s.name$ = $int:string_of_int s.len$
+                  >>
 
 let output_struct _loc s =
   (* Generate functions of the form {get/set}_<struct>_<field> *)
@@ -177,14 +177,14 @@ let output_enum _loc name fields width =
   let intfn,pattfn = match ty_of_string width with 
     |None -> loc_err _loc ("enum: unknown width specifier " ^ width)
     |Some UInt8|Some UInt16 ->
-      (fun i -> <:expr< $int:string_of_int i$ >>),
-      (fun i -> <:patt< $int:string_of_int i$ >>)
+        (fun i -> <:expr< $int:string_of_int i$ >>),
+        (fun i -> <:patt< $int:string_of_int i$ >>)
     |Some UInt32 ->
-      (fun i -> <:expr< $int32:string_of_int i$ >>),
-      (fun i -> <:patt< $int32:string_of_int i$ >>)
+        (fun i -> <:expr< $int32:string_of_int i$ >>),
+        (fun i -> <:patt< $int32:string_of_int i$ >>)
     |Some UInt64 ->
-      (fun i -> <:expr< $int64:string_of_int i$ >>),
-      (fun i -> <:patt< $int64:string_of_int i$ >>)
+        (fun i -> <:expr< $int64:string_of_int i$ >>),
+        (fun i -> <:patt< $int64:string_of_int i$ >>)
     |Some (Buffer _) -> loc_err _loc "enum: array types not allowed"
   in
   let decls = tyOr_of_list (List.map (fun (f,_) ->

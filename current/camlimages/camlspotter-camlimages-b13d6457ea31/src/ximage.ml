@@ -75,59 +75,59 @@ let of_image visual progress img =
   in
   match img with
   | Rgb24 t ->
-    let width = t.Rgb24.width in
-    let height = t.Rgb24.height in
-    let ximg = create ~kind: `FASTEST ~visual ~width ~height in
-    let f_height = float height in
-    for y = 0 to height - 1 do
-      for x = 0 to width - 1 do 
-        put_rgb ximg x y (Rgb24.unsafe_get t x y) done;
-      prog  (float (y + 1) /. f_height)
-    done;
-    ximg
+      let width = t.Rgb24.width in
+      let height = t.Rgb24.height in
+      let ximg = create ~kind: `FASTEST ~visual ~width ~height in
+      let f_height = float height in
+      for y = 0 to height - 1 do
+        for x = 0 to width - 1 do 
+          put_rgb ximg x y (Rgb24.unsafe_get t x y) done;
+        prog  (float (y + 1) /. f_height)
+      done;
+      ximg
 
   | Rgba32 t -> (* ignore alpha *)
-    let width = t.Rgba32.width in
-    let height = t.Rgba32.height in
-    let ximg = create ~kind: `FASTEST ~visual ~width ~height in
-    let f_height = float height in
-    for y = 0 to height - 1 do
-      for x = 0 to width - 1 do
-        put_rgb ximg x y (Rgba32.unsafe_get t x y).color
+      let width = t.Rgba32.width in
+      let height = t.Rgba32.height in
+      let ximg = create ~kind: `FASTEST ~visual ~width ~height in
+      let f_height = float height in
+      for y = 0 to height - 1 do
+        for x = 0 to width - 1 do
+          put_rgb ximg x y (Rgba32.unsafe_get t x y).color
+        done;
+        prog  (float (y + 1) /. f_height)
       done;
-      prog  (float (y + 1) /. f_height)
-    done;
-    ximg
+      ximg
 
   | Index8 t ->
-    let width = t.Index8.width in
-    let height = t.Index8.height in
-    let cmap = t.Index8.colormap.map in
-    let ximg = create ~kind: `FASTEST ~visual ~width ~height in
-    let f_height = float height in
-    let xcmap = Array.map quick_color_create cmap in
-    for y = 0 to height - 1 do
-      for x = 0 to width - 1 do
-        Gdk.Image.put_pixel ximg.data ~x ~y ~pixel:xcmap.(Index8.unsafe_get t x y)
+      let width = t.Index8.width in
+      let height = t.Index8.height in
+      let cmap = t.Index8.colormap.map in
+      let ximg = create ~kind: `FASTEST ~visual ~width ~height in
+      let f_height = float height in
+      let xcmap = Array.map quick_color_create cmap in
+      for y = 0 to height - 1 do
+        for x = 0 to width - 1 do
+          Gdk.Image.put_pixel ximg.data ~x ~y ~pixel:xcmap.(Index8.unsafe_get t x y)
+        done;
+        prog (float (y + 1) /. f_height)
       done;
-      prog (float (y + 1) /. f_height)
-    done;
-    ximg
+      ximg
 
   | Index16 t ->
-    let width = t.Index16.width in
-    let height = t.Index16.height in
-    let cmap =  t.Index16.colormap.map in
-    let ximg = create ~kind: `FASTEST ~visual ~width ~height in
-    let f_height = float height in
-    let xcmap = Array.map quick_color_create cmap in
-    for y = 0 to height - 1 do
-      for x = 0 to width - 1 do
-        Gdk.Image.put_pixel ximg.data ~x ~y ~pixel:xcmap.(Index16.unsafe_get t x y)
+      let width = t.Index16.width in
+      let height = t.Index16.height in
+      let cmap =  t.Index16.colormap.map in
+      let ximg = create ~kind: `FASTEST ~visual ~width ~height in
+      let f_height = float height in
+      let xcmap = Array.map quick_color_create cmap in
+      for y = 0 to height - 1 do
+        for x = 0 to width - 1 do
+          Gdk.Image.put_pixel ximg.data ~x ~y ~pixel:xcmap.(Index16.unsafe_get t x y)
+        done;
+        prog (float (y + 1) /. f_height)
       done;
-      prog (float (y + 1) /. f_height)
-    done;
-    ximg
+      ximg
 
   | _ -> failwith "not supported";;
 
@@ -171,15 +171,15 @@ let mask_of_image win img = (* It is really inefficient *)
   let width, height = Images.size img in
   begin match img with
     | Index8 t ->
-      if t.Index8.transparent >= 0
-      then draw_mask t t.Index8.transparent Index8.unsafe_get
-      else Some (plain_mask win width height)
+        if t.Index8.transparent >= 0
+        then draw_mask t t.Index8.transparent Index8.unsafe_get
+        else Some (plain_mask win width height)
     | Index16 t ->
-      if t.Index16.transparent >= 0
-      then draw_mask t t.Index16.transparent Index16.unsafe_get
-      else Some (plain_mask win width height)
+        if t.Index16.transparent >= 0
+        then draw_mask t t.Index16.transparent Index16.unsafe_get
+        else Some (plain_mask win width height)
     | _ ->
-      Some (plain_mask win width height)
+        Some (plain_mask win width height)
   end;;
 
 let pixmap_of win ximage =

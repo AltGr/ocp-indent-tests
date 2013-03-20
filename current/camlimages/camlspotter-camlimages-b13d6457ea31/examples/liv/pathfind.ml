@@ -31,12 +31,12 @@ let tilde_subst s =
         match s.[1] with
         | '/' -> Filename.concat (Sys.getenv "HOME") (String.sub s  2  (len - 2))
         | _ ->
-          let final = next_slash s 1 in
-          let user = String.sub s 1 (pred final) in
-          let pwnam = getpwnam user in
-          if succ final >= len then pwnam.pw_dir else
-            Filename.concat pwnam.pw_dir
-              (String.sub s (succ final) (len - succ final))
+            let final = next_slash s 1 in
+            let user = String.sub s 1 (pred final) in
+            let pwnam = getpwnam user in
+            if succ final >= len then pwnam.pw_dir else
+              Filename.concat pwnam.pw_dir
+                (String.sub s (succ final) (len - succ final))
   with
   | Unix_error (_, _, _) -> s
   | Sys_error _ -> s

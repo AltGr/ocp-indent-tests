@@ -56,11 +56,11 @@ let rec disp_frame () =
   let frame, image, mask = frames.(!pos) in
   begin match mask with
     | Some bmp ->
-      Gdk.GC.set_clip_origin gc ~x: frame.frame_left ~y: frame.frame_top;
-      Gdk.GC.set_clip_mask gc bmp
+        Gdk.GC.set_clip_origin gc ~x: frame.frame_left ~y: frame.frame_top;
+        Gdk.GC.set_clip_mask gc bmp
     | None ->
-      Gdk.GC.set_clip_origin gc ~x: 0 ~y: 0;
-      Gdk.GC.set_clip_rectangle gc rect
+        Gdk.GC.set_clip_origin gc ~x: 0 ~y: 0;
+        Gdk.GC.set_clip_rectangle gc rect
   end;
   Gdk.Draw.image drawing gc image.data ~xsrc: 0 ~ysrc:0
     ~xdest: frame.frame_left ~ydest: frame.frame_top

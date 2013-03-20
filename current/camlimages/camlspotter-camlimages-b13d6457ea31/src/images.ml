@@ -206,9 +206,9 @@ let file_format filename =
     raise Wrong_file_type
   with
   | Exit ->
-    match !result with
-    |  Some r -> r
-    |  None -> assert false;;
+      match !result with
+      |  Some r -> r
+      |  None -> assert false;;
 
 (************************************************ Generic image manupilation *)
 
@@ -223,17 +223,17 @@ let load filename load_options =
         let _ = methods.check_header filename in
         match methods.load with
           Some load ->
-          result := Some (load filename load_options);
-          raise Exit
+            result := Some (load filename load_options);
+            raise Exit
         | None -> raise Wrong_file_type
       with
       | Wrong_file_type -> ()) !methods_list;
     raise Wrong_file_type
   with
   | Exit ->
-    match !result with
-    |  Some r -> r
-    |  None -> assert false;;
+      match !result with
+      |  Some r -> r
+      |  None -> assert false;;
 
 let save filename formatopt save_options t =
   try
@@ -248,7 +248,7 @@ let save filename formatopt save_options t =
     | None -> raise Wrong_file_type
   with
   | Not_found ->
-    raise Wrong_file_type;;
+      raise Wrong_file_type;;
 
 let size img =
   match img with
@@ -331,12 +331,12 @@ let unoptimize_sequence seq =
           let src = coe frame.frame_image in
           begin match src, newimage with
             | Rgb24 _, _ | Cmyk32 _, _ -> (* non transparent *)
-              blit src 0 0 newimage frame.frame_left frame.frame_top
-                (width src) (height src)
+                blit src 0 0 newimage frame.frame_left frame.frame_top
+                  (width src) (height src)
             | Rgba32 src32, Rgba32 dst32 -> (* transparent *)
-              Rgba32.map Color.Rgba.merge
-                src32 0 0 dst32 frame.frame_left frame.frame_top
-                (width src) (height src)
+                Rgba32.map Color.Rgba.merge
+                  src32 0 0 dst32 frame.frame_left frame.frame_top
+                  (width src) (height src)
             | _ -> assert false
           end;
           (newimage, { frame_left = 0;
@@ -356,19 +356,19 @@ let load_sequence filename load_options =
         let _ = methods.check_header filename in
         match methods.load_sequence, methods.load with
         | Some load, _ ->
-          result := Some (load filename load_options);
-          raise Exit
+            result := Some (load filename load_options);
+            raise Exit
         | None, Some load ->
-          result := Some (make_sequence (load filename load_options));
+            result := Some (make_sequence (load filename load_options));
         | None, None -> raise Wrong_file_type
       with
       | Wrong_file_type -> ()) !methods_list;
     raise Wrong_file_type
   with
   | Exit ->
-    match !result with
-    |  Some r -> r
-    |  None -> assert false;;
+      match !result with
+      |  Some r -> r
+      |  None -> assert false;;
 
 let save_sequence filename formatopt save_options seq =
   try
@@ -383,7 +383,7 @@ let save_sequence filename formatopt save_options seq =
     | None -> raise Wrong_file_type
   with
   | Not_found ->
-    raise Wrong_file_type;;
+      raise Wrong_file_type;;
 
 let blocks img = 
   match img with

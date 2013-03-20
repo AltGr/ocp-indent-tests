@@ -166,29 +166,29 @@ let rec set_frame_bits frame start len bits =
   (*TODO: Make the pattern match more accurate, read the match syntax*)
   | 0 -> return ()
   | len ->
-    Bitstring.put frame (start + len - 1) (Bitstring.get bits (len - 1));
-    set_frame_bits frame start (len-1) bits
+      Bitstring.put frame (start + len - 1) (Bitstring.get bits (len - 1));
+      set_frame_bits frame start (len-1) bits
 
 let forward_frame st tupple port frame =
   (* Printf.printf "Outputing frame to port %s\n" (OP.Port.string_of_port
    * port);*)
   match port with 
   | OP.Port.Port(port) -> 
-    if Hashtbl.mem st.Switch.int_ports port then
-      let out_p = ( Hashtbl.find st.Switch.int_ports port)  in
-      (Net.Manager.send_raw out_p.Switch.mgr out_p.Switch.port_name [frame];
-       return ())
-    else
-      return (Printf.printf "Port %d not registered \n" port)
+      if Hashtbl.mem st.Switch.int_ports port then
+        let out_p = ( Hashtbl.find st.Switch.int_ports port)  in
+        (Net.Manager.send_raw out_p.Switch.mgr out_p.Switch.port_name [frame];
+         return ())
+      else
+        return (Printf.printf "Port %d not registered \n" port)
   | OP.Port.No_port -> return ()
   | OP.Port.In_port ->
-    let port = (OP.Port.int_of_port tupple.OP.Match.in_port) in 
-    if Hashtbl.mem st.Switch.int_ports port then
-      let out_p = ( Hashtbl.find st.Switch.int_ports port)  in
-      (Net.Manager.send_raw out_p.Switch.mgr out_p.Switch.port_name [frame];
-       return ())
-    else
-      return (Printf.printf "Port %d not registered \n" port)
+      let port = (OP.Port.int_of_port tupple.OP.Match.in_port) in 
+      if Hashtbl.mem st.Switch.int_ports port then
+        let out_p = ( Hashtbl.find st.Switch.int_ports port)  in
+        (Net.Manager.send_raw out_p.Switch.mgr out_p.Switch.port_name [frame];
+         return ())
+      else
+        return (Printf.printf "Port %d not registered \n" port)
   (*           | Table
    *           | Normal
    *           | Flood
@@ -202,23 +202,23 @@ let rec apply_of_actions st tuple actions frame =
   match actions with 
   | [] -> return ()
   | head :: actions -> 
-    match head with
-    | Entry.FORWARD (port) ->
-      forward_frame st tuple port frame; 
-      apply_of_actions st tuple actions frame
-    | Entry.SET_DL_SRC(eaddr) ->
-      (* Printf.printf "setting src mac addr to %s\n" (OP.eaddr_to_string
-       * eaddr); *)
-      set_frame_bits frame 48 48 (OP.bitstring_of_eaddr eaddr);
-      apply_of_actions st tuple actions frame
-    | Entry.SET_DL_DST(eaddr) ->
-      (* Printf.printf "setting dst mac addr to %s\n" (OP.eaddr_to_string
-       * eaddr); *)
-      set_frame_bits frame 0 48 (OP.bitstring_of_eaddr eaddr);
-      apply_of_actions st tuple actions frame
-    | _ ->
-      (Printf.printf "Unsupported action\n");
-      apply_of_actions st tuple actions frame
+      match head with
+      | Entry.FORWARD (port) ->
+          forward_frame st tuple port frame; 
+          apply_of_actions st tuple actions frame
+      | Entry.SET_DL_SRC(eaddr) ->
+          (* Printf.printf "setting src mac addr to %s\n" (OP.eaddr_to_string
+           * eaddr); *)
+          set_frame_bits frame 48 48 (OP.bitstring_of_eaddr eaddr);
+          apply_of_actions st tuple actions frame
+      | Entry.SET_DL_DST(eaddr) ->
+          (* Printf.printf "setting dst mac addr to %s\n" (OP.eaddr_to_string
+           * eaddr); *)
+          set_frame_bits frame 0 48 (OP.bitstring_of_eaddr eaddr);
+          apply_of_actions st tuple actions frame
+      | _ ->
+          (Printf.printf "Unsupported action\n");
+          apply_of_actions st tuple actions frame
 
 
 let portnum = ref 0
@@ -301,35 +301,35 @@ let process_of_packet state (remote_addr, remote_port) ofp t =
       )
   | OP.Get_config_req(h) 
     -> let resp = OP.Switch.init_switch_config in
-    Channel.write_bitstring t (OP.Switch.bitstring_of_switch_config 
-        h.OP.Header.xid resp);
-    Channel.flush t
+      Channel.write_bitstring t (OP.Switch.bitstring_of_switch_config 
+          h.OP.Header.xid resp);
+      Channel.flush t
 (*
       | OP.Flow_mod(h,fm) 
         -> Printf.printf "Flow modification received\n"
  *)
   | _ -> 
-    OS.Console.log "New packet received"; 
-    incr errornum; 
-    let err = (BITSTRING{(OP.Header.build_h 
-                            (OP.Header.create  OP.Header.ERROR 
-                               (OP.Header.get_len + 4 )  
-                               (Int32.of_int !errornum))):(OP.Header.get_len*8):bitstring;
-                         (* OFPET_BAD_REQUEST
-                          * OFPBRC_BAD_TYPE*)
-                         1:16; 1:16})  in 
-    Channel.write_bitstring t err;
-    Channel.flush t; 
-    return () 
+      OS.Console.log "New packet received"; 
+      incr errornum; 
+      let err = (BITSTRING{(OP.Header.build_h 
+                              (OP.Header.create  OP.Header.ERROR 
+                                 (OP.Header.get_len + 4 )  
+                                 (Int32.of_int !errornum))):(OP.Header.get_len*8):bitstring;
+                           (* OFPET_BAD_REQUEST
+                            * OFPBRC_BAD_TYPE*)
+                           1:16; 1:16})  in 
+      Channel.write_bitstring t err;
+      Channel.flush t; 
+      return () 
 
 
 let rec rd_data len t = 
   match len with
   | 0 -> return Bitstring.empty_bitstring
   | _ -> lwt data = (Channel.read_some ~len:len t) in 
-    let nbytes = ((Bitstring.bitstring_length data)/8) in
-    lwt more_data = (rd_data (len - nbytes) t) in
-    return (Bitstring.concat [ data; more_data ])
+      let nbytes = ((Bitstring.bitstring_length data)/8) in
+      lwt more_data = (rd_data (len - nbytes) t) in
+      return (Bitstring.concat [ data; more_data ])
 
 
 let listen mgr loc init =
@@ -349,8 +349,8 @@ let listen mgr loc init =
         >> echo ()
       with
       | Nettypes.Closed -> 
-        (* TODO Need to remove the t from st.Switch.controllers *)
-        return ()
+          (* TODO Need to remove the t from st.Switch.controllers *)
+          return ()
       | OP.Unparsed (m, bs) -> cp (sp "# unparsed! m=%s" m); echo ()
 
     in echo () 

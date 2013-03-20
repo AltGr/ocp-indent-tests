@@ -84,39 +84,39 @@ let handle_parse_exn e =
   let r =
     match e with
     | Malformed_request req ->
-      Some
-        (`Code 400,
-         ("request 1st line format should be: " ^
-          "'&lt;method&gt; &lt;url&gt; &lt;version&gt;'" ^
-          "<br />\nwhile received request 1st line was:<br />\n" ^ req))
+        Some
+          (`Code 400,
+           ("request 1st line format should be: " ^
+            "'&lt;method&gt; &lt;url&gt; &lt;version&gt;'" ^
+            "<br />\nwhile received request 1st line was:<br />\n" ^ req))
     | Invalid_HTTP_method meth ->
-      Some
-        (`Code 501,
-         ("Method '" ^ meth ^ "' isn't supported (yet)"))
+        Some
+          (`Code 501,
+           ("Method '" ^ meth ^ "' isn't supported (yet)"))
     | Malformed_request_URI uri ->
-      Some
-        (`Code 400,
-         ("Malformed URL: '" ^ uri ^ "'"))
+        Some
+          (`Code 400,
+           ("Malformed URL: '" ^ uri ^ "'"))
     | Invalid_HTTP_version version ->
-      Some
-        (`Code 505,
-         ("HTTP version '" ^ version ^ "' isn't supported (yet)"))
+        Some
+          (`Code 505,
+           ("HTTP version '" ^ version ^ "' isn't supported (yet)"))
     | Malformed_query query ->
-      Some
-        (`Code 400,
-         (sprintf "Malformed query string '%s'" query))
+        Some
+          (`Code 400,
+           (sprintf "Malformed query string '%s'" query))
     | Malformed_query_part (binding, query) ->
-      Some
-        (`Code 400,
-         (sprintf "Malformed query part '%s' in query '%s'" binding query))
+        Some
+          (`Code 400,
+           (sprintf "Malformed query part '%s' in query '%s'" binding query))
     | _ -> None in
 
   match r with
   | Some (status, body) ->
-    printf "HTTP request parse error: %s\n%!" (Printexc.to_string e);
-    respond_error ~status ~body ()
+      printf "HTTP request parse error: %s\n%!" (Printexc.to_string e);
+      respond_error ~status ~body ()
   | None ->
-    fail e
+      fail e
 
 let daemon_callback spec =
   let conn_id = ref 0 in
@@ -153,8 +153,8 @@ let daemon_callback spec =
                 return (s, true)
               with
               |e ->
-                wakeup_exn finished_u e;
-                fail e
+                  wakeup_exn finished_u e;
+                  fail e
             end
         in
         lwt stream, close =
@@ -175,9 +175,9 @@ let daemon_callback spec =
     try_lwt
       loop () <&> write_streams
     with exn ->
-      printf "HTTP: uncaught exception: %s\n%!" (Printexc.to_string exn);
-      (* XXX perhaps there should be a higher-level exn handler for 500s *)
-      spec.exn_handler exn
+        printf "HTTP: uncaught exception: %s\n%!" (Printexc.to_string exn);
+        (* XXX perhaps there should be a higher-level exn handler for 500s *)
+        spec.exn_handler exn
   in
   daemon_callback
 

@@ -57,14 +57,14 @@ let rec to_fct t f =
   | String s -> f (escape_string s)
   | Null     -> f "null"
   | Array a   ->
-    f "[";
-    list_iter_between (fun i -> to_fct i f) (fun () -> f ", ") a;
-    f "]";
+      f "[";
+      list_iter_between (fun i -> to_fct i f) (fun () -> f ", ") a;
+      f "]";
   | Object a   ->
-    f "{";
-    list_iter_between (fun (k, v) -> to_fct (String k) f; f ": "; to_fct v f)
-      (fun () -> f ", ") a;
-    f "}"
+      f "{";
+      list_iter_between (fun (k, v) -> to_fct (String k) f; f ": "; to_fct v f)
+        (fun () -> f ", ") a;
+      f "}"
 
 let to_buffer t buf =
   to_fct t (fun s -> Buffer.add_string buf s)
@@ -175,24 +175,24 @@ module Parser = struct
     let s = String.create len in
     let rec iter indx = function
       | c :: cs ->
-        String.set s indx c;
-        iter (indx + 1) cs
+          String.set s indx c;
+          iter (indx + 1) cs
       | [] -> () in
     iter 0 cs;
     s
 
   let string_of_error = function
     | Unexpected_char (l, c, state) ->
-      Printf.sprintf "Line %d: Unexpected char %C (x%X) encountered in state %s"
-        l c (Char.code c) state
+        Printf.sprintf "Line %d: Unexpected char %C (x%X) encountered in state %s"
+          l c (Char.code c) state
     | Invalid_value (l, v, t) ->
-      Printf.sprintf "Line %d: '%s' is an invalid %s" l v t
+        Printf.sprintf "Line %d: '%s' is an invalid %s" l v t
     | Invalid_leading_zero (l, s) ->
-      Printf.sprintf "Line %d: '%s' should not have leading zeros" l s
+        Printf.sprintf "Line %d: '%s' should not have leading zeros" l s
     | Unterminated_value (l, s) ->
-      Printf.sprintf "Line %d: unterminated %s" l s
+        Printf.sprintf "Line %d: unterminated %s" l s
     | Internal_error (l, m) ->
-      Printf.sprintf "Line %d: Internal error: %s" l m
+        Printf.sprintf "Line %d: Internal error: %s" l m
 
   let raise_unexpected_char s c t =
     raise (Parse_error (Unexpected_char (s.line_num, c, t)))
@@ -209,16 +209,16 @@ module Parser = struct
     match s.stack, v with
     | [], _ -> s.cursor <- Done v
     | IObject_needs_key fields :: tl, String key ->
-      s.stack <- IObject_needs_value (fields, key) :: tl;
-      s.cursor <- Expect_object_elem_colon
+        s.stack <- IObject_needs_value (fields, key) :: tl;
+        s.cursor <- Expect_object_elem_colon
     | IObject_needs_value (fields, key) :: tl, _ ->
-      s.stack <- IObject ((key, v) :: fields) :: tl;
-      s.cursor <- Expect_comma_or_end
+        s.stack <- IObject ((key, v) :: fields) :: tl;
+        s.cursor <- Expect_comma_or_end
     | IArray l :: tl, _ ->
-      s.stack <- IArray (v :: l) :: tl;
-      s.cursor <- Expect_comma_or_end
+        s.stack <- IArray (v :: l) :: tl;
+        s.cursor <- Expect_comma_or_end
     | io :: tl, _ ->
-      raise_internal_error s ("unexpected " ^ (ivalue_to_str io) ^ " on stack at finish_value")
+        raise_internal_error s ("unexpected " ^ (ivalue_to_str io) ^ " on stack at finish_value")
 
   let pop_stack s =
     match s.stack with
@@ -234,7 +234,7 @@ module Parser = struct
       let check = function
         | [] | [ '0' ] -> ()
         | '0' :: tl when List.length tl > 0 ->
-          raise_invalid_leading_zero s (clist_to_string ris)
+            raise_invalid_leading_zero s (clist_to_string ris)
         | _ -> () in
       check ris;
       clist_to_string ris in
@@ -271,146 +271,146 @@ module Parser = struct
 
     match s.cursor with
     | Start ->
-      (match c with
-       | 'n' -> s.cursor <- In_null 3
-       | 't' -> s.cursor <- In_true 3
-       | 'f' -> s.cursor <- In_false 4
-       | '-' | '0' .. '9' -> s.cursor <- In_int [c]
-       | '"' -> s.cursor <- In_string []
-       | '{' -> s.cursor <- Expect_object_elem_start
-       | '[' -> s.stack <- (IArray []) :: s.stack
-       | ']' when s.stack <> [] -> pop_stack s
-       | _ when is_space c -> update_line_num s c
-       | _ -> raise_unexpected_char s c "start")
+        (match c with
+         | 'n' -> s.cursor <- In_null 3
+         | 't' -> s.cursor <- In_true 3
+         | 'f' -> s.cursor <- In_false 4
+         | '-' | '0' .. '9' -> s.cursor <- In_int [c]
+         | '"' -> s.cursor <- In_string []
+         | '{' -> s.cursor <- Expect_object_elem_start
+         | '[' -> s.stack <- (IArray []) :: s.stack
+         | ']' when s.stack <> [] -> pop_stack s
+         | _ when is_space c -> update_line_num s c
+         | _ -> raise_unexpected_char s c "start")
 
     | Expect_value ->
-      (match c with
-       | 'n' -> s.cursor <- In_null 3
-       | 't' -> s.cursor <- In_true 3
-       | 'f' -> s.cursor <- In_false 4
-       | '-' | '0' .. '9' -> s.cursor <- In_int [c]
-       | '"' -> s.cursor <- In_string []
-       | '{' -> s.cursor <- Expect_object_elem_start
-       | '[' -> s.stack <- (IArray []) :: s.stack; s.cursor <- Start
-       | _ when is_space c -> update_line_num s c
-       | _ -> raise_unexpected_char s c "value")
+        (match c with
+         | 'n' -> s.cursor <- In_null 3
+         | 't' -> s.cursor <- In_true 3
+         | 'f' -> s.cursor <- In_false 4
+         | '-' | '0' .. '9' -> s.cursor <- In_int [c]
+         | '"' -> s.cursor <- In_string []
+         | '{' -> s.cursor <- Expect_object_elem_start
+         | '[' -> s.stack <- (IArray []) :: s.stack; s.cursor <- Start
+         | _ when is_space c -> update_line_num s c
+         | _ -> raise_unexpected_char s c "value")
 
     | In_null rem ->
-      (match c, rem with
-       | 'u', 3 -> s.cursor <- In_null 2
-       | 'l', 2 -> s.cursor <- In_null 1
-       | 'l', 1 -> finish_value s Null
-       | _ -> raise_unexpected_char s c "null")
+        (match c, rem with
+         | 'u', 3 -> s.cursor <- In_null 2
+         | 'l', 2 -> s.cursor <- In_null 1
+         | 'l', 1 -> finish_value s Null
+         | _ -> raise_unexpected_char s c "null")
 
     | In_true rem ->
-      (match c, rem with
-       | 'r', 3 -> s.cursor <- In_true 2
-       | 'u', 2 -> s.cursor <- In_true 1
-       | 'e', 1 -> finish_value s (Bool true)
-       | _ -> raise_unexpected_char s c "true")
+        (match c, rem with
+         | 'r', 3 -> s.cursor <- In_true 2
+         | 'u', 2 -> s.cursor <- In_true 1
+         | 'e', 1 -> finish_value s (Bool true)
+         | _ -> raise_unexpected_char s c "true")
 
     | In_false rem ->
-      (match c, rem with
-       | 'a', 4 -> s.cursor <- In_false 3
-       | 'l', 3 -> s.cursor <- In_false 2
-       | 's', 2 -> s.cursor <- In_false 1
-       | 'e', 1 -> finish_value s (Bool false)
-       | _ -> raise_unexpected_char s c "false")
+        (match c, rem with
+         | 'a', 4 -> s.cursor <- In_false 3
+         | 'l', 3 -> s.cursor <- In_false 2
+         | 's', 2 -> s.cursor <- In_false 1
+         | 'e', 1 -> finish_value s (Bool false)
+         | _ -> raise_unexpected_char s c "false")
 
     | In_int is ->
-      (match c with
-       | '0' .. '9' -> s.cursor <- In_int (c :: is)
-       | '.' -> s.cursor <- In_float (is, [])
-       | 'e' | 'E' -> s.cursor <- In_int_exp (is, [])
-       | ',' | ']' | '}' -> finish_int is; parse_char s c
-       | _ when is_space c -> update_line_num s c; finish_int is
-       | _ -> raise_unexpected_char s c "int")
+        (match c with
+         | '0' .. '9' -> s.cursor <- In_int (c :: is)
+         | '.' -> s.cursor <- In_float (is, [])
+         | 'e' | 'E' -> s.cursor <- In_int_exp (is, [])
+         | ',' | ']' | '}' -> finish_int is; parse_char s c
+         | _ when is_space c -> update_line_num s c; finish_int is
+         | _ -> raise_unexpected_char s c "int")
 
     | In_float (is, fs) ->
-      (match c with
-       | '0' .. '9' -> s.cursor <- In_float (is, c :: fs)
-       | 'e' | 'E' -> s.cursor <- In_float_exp (is, fs, [])
-       | ',' | ']' | '}' -> finish_float is fs; parse_char s c
-       | _ when is_space c -> update_line_num s c; finish_float is fs
-       | _ -> raise_unexpected_char s c "float")
+        (match c with
+         | '0' .. '9' -> s.cursor <- In_float (is, c :: fs)
+         | 'e' | 'E' -> s.cursor <- In_float_exp (is, fs, [])
+         | ',' | ']' | '}' -> finish_float is fs; parse_char s c
+         | _ when is_space c -> update_line_num s c; finish_float is fs
+         | _ -> raise_unexpected_char s c "float")
 
     | In_int_exp (is, es) ->
-      (match c with
-       | '+' | '-' | '0' .. '9' -> s.cursor <- In_int_exp (is, c :: es)
-       | ',' | ']' | '}' -> finish_int_exp is es; parse_char s c
-       | _ when is_space c -> update_line_num s c; finish_int_exp is es
-       | _ -> raise_unexpected_char s c "int_exp")
+        (match c with
+         | '+' | '-' | '0' .. '9' -> s.cursor <- In_int_exp (is, c :: es)
+         | ',' | ']' | '}' -> finish_int_exp is es; parse_char s c
+         | _ when is_space c -> update_line_num s c; finish_int_exp is es
+         | _ -> raise_unexpected_char s c "int_exp")
 
     | In_float_exp (is, fs, es) ->
-      (match c with
-       | '+' | '-' | '0' .. '9' -> s.cursor <- In_float_exp (is, fs, c :: es)
-       | ',' | ']' | '}' -> finish_float_exp is fs es; parse_char s c
-       | _ when is_space c -> update_line_num s c; finish_float_exp is fs es
-       | _ -> raise_unexpected_char s c "float_exp")
+        (match c with
+         | '+' | '-' | '0' .. '9' -> s.cursor <- In_float_exp (is, fs, c :: es)
+         | ',' | ']' | '}' -> finish_float_exp is fs es; parse_char s c
+         | _ when is_space c -> update_line_num s c; finish_float_exp is fs es
+         | _ -> raise_unexpected_char s c "float_exp")
 
     | In_string cs ->
-      (match c with
-       | '\\' -> s.cursor <- In_string_control cs
-       | '"' -> finish_value s (String (clist_to_string (List.rev cs)))
-       | _ when is_valid_unescaped_char c -> s.cursor <- In_string (c :: cs)
-       | _ ->  raise_unexpected_char s c "string")
+        (match c with
+         | '\\' -> s.cursor <- In_string_control cs
+         | '"' -> finish_value s (String (clist_to_string (List.rev cs)))
+         | _ when is_valid_unescaped_char c -> s.cursor <- In_string (c :: cs)
+         | _ ->  raise_unexpected_char s c "string")
 
     | In_string_control cs ->
-      (match c with
-       | '"' | '\\' | '/' -> s.cursor <- In_string (c :: cs)
-       | 'b' -> s.cursor <- In_string ('\b' :: cs)
-       | 'f' -> s.cursor <- In_string ('\x0c' :: cs)
-       | 'n' -> s.cursor <- In_string ('\n' :: cs)
-       | 'r' -> s.cursor <- In_string ('\r' :: cs)
-       | 't' -> s.cursor <- In_string ('\t' :: cs)
-       | 'u' -> s.cursor <- In_string_hex (cs, [], 4)
-       | _ -> raise_unexpected_char s c "string_control")
+        (match c with
+         | '"' | '\\' | '/' -> s.cursor <- In_string (c :: cs)
+         | 'b' -> s.cursor <- In_string ('\b' :: cs)
+         | 'f' -> s.cursor <- In_string ('\x0c' :: cs)
+         | 'n' -> s.cursor <- In_string ('\n' :: cs)
+         | 'r' -> s.cursor <- In_string ('\r' :: cs)
+         | 't' -> s.cursor <- In_string ('\t' :: cs)
+         | 'u' -> s.cursor <- In_string_hex (cs, [], 4)
+         | _ -> raise_unexpected_char s c "string_control")
 
     | In_string_hex (cs, hs, rem) ->
-      if is_hex_char c then begin
-        let hs = c :: hs in
-        if rem > 1 then
-          s.cursor <- In_string_hex (cs, hs, rem - 1)
-        else
-          (* TODO: We currently just leave the unicode escapes in place. *)
-          s.cursor <- In_string (hs @ ('u' :: '\\' :: cs))
-      end else
-        raise_unexpected_char s c "string_unicode"
+        if is_hex_char c then begin
+          let hs = c :: hs in
+          if rem > 1 then
+            s.cursor <- In_string_hex (cs, hs, rem - 1)
+          else
+            (* TODO: We currently just leave the unicode escapes in place. *)
+            s.cursor <- In_string (hs @ ('u' :: '\\' :: cs))
+        end else
+          raise_unexpected_char s c "string_unicode"
 
     | Expect_object_elem_start ->
-      (match c with
-       | '"' -> s.stack <- (IObject_needs_key []) :: s.stack; s.cursor <- In_string []
-       | '}' -> finish_value s (Object [])
-       | _ when is_space c -> update_line_num s c
-       | _ -> raise_unexpected_char s c "object_start")
+        (match c with
+         | '"' -> s.stack <- (IObject_needs_key []) :: s.stack; s.cursor <- In_string []
+         | '}' -> finish_value s (Object [])
+         | _ when is_space c -> update_line_num s c
+         | _ -> raise_unexpected_char s c "object_start")
 
     | Expect_object_elem_colon ->
-      (match c with
-       | ':' -> s.cursor <- Start
-       | _ when is_space c -> update_line_num s c
-       | _ -> raise_unexpected_char s c "object_elem_colon")
+        (match c with
+         | ':' -> s.cursor <- Start
+         | _ when is_space c -> update_line_num s c
+         | _ -> raise_unexpected_char s c "object_elem_colon")
 
     | Expect_comma_or_end ->
-      (match c with
-       | ',' when is_parsing_object s -> s.cursor <- Expect_object_key
-       | ',' -> s.cursor <- Expect_value
-       | '}' when is_parsing_object s -> pop_stack s
-       | '}' -> raise_unexpected_char s c "comma_or_end"
-       | ']' when not (is_parsing_object s) -> pop_stack s
-       | ']' -> raise_unexpected_char s c "comma_or_end"
-       | _ when is_space c -> update_line_num s c
-       | _ -> raise_unexpected_char s c "comma_or_end")
+        (match c with
+         | ',' when is_parsing_object s -> s.cursor <- Expect_object_key
+         | ',' -> s.cursor <- Expect_value
+         | '}' when is_parsing_object s -> pop_stack s
+         | '}' -> raise_unexpected_char s c "comma_or_end"
+         | ']' when not (is_parsing_object s) -> pop_stack s
+         | ']' -> raise_unexpected_char s c "comma_or_end"
+         | _ when is_space c -> update_line_num s c
+         | _ -> raise_unexpected_char s c "comma_or_end")
 
     | Expect_object_key ->
-      (match c with
-       | '"' ->
-         (match s.stack with
-          | IObject fields :: tl -> s.stack <- IObject_needs_key fields :: tl
-          | io :: _ -> raise_internal_error s ("unexpected " ^ (ivalue_to_str io) ^ " on stack at object_key")
-          | [] -> raise_internal_error s "empty stack at object_key");
-         s.cursor <- In_string []
-       | _ when is_space c -> update_line_num s c
-       | _ -> raise_unexpected_char s c "object_key")
+        (match c with
+         | '"' ->
+             (match s.stack with
+              | IObject fields :: tl -> s.stack <- IObject_needs_key fields :: tl
+              | io :: _ -> raise_internal_error s ("unexpected " ^ (ivalue_to_str io) ^ " on stack at object_key")
+              | [] -> raise_internal_error s "empty stack at object_key");
+             s.cursor <- In_string []
+         | _ when is_space c -> update_line_num s c
+         | _ -> raise_unexpected_char s c "object_key")
 
     | Done _ -> raise_internal_error s "parse called when parse_state is 'Done'"
 
@@ -442,8 +442,8 @@ module Parser = struct
     match parse state (fun () -> ' ') with
     | Json_value v -> Some v
     | Json_parse_incomplete _ ->
-      if state.cursor = Start then None
-      else raise_unterminated_value state (current_cursor_value state.cursor)
+        if state.cursor = Start then None
+        else raise_unterminated_value state (current_cursor_value state.cursor)
 
   let num_chars_parsed state = state.num_chars_parsed
 
@@ -451,9 +451,9 @@ module Parser = struct
     match parse (init_parse_state ()) str with
     | Json_value v -> v
     | Json_parse_incomplete st ->
-      match finish_parse st with
-      | Some v -> v
-      | None -> raise_unterminated_value st (current_cursor_value st.cursor)
+        match finish_parse st with
+        | Some v -> v
+        | None -> raise_unterminated_value st (current_cursor_value st.cursor)
 
   let of_string str =
     let i = ref (-1) in

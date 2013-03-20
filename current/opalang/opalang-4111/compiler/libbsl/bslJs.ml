@@ -132,7 +132,7 @@ struct
                  BslKey.pp key
                  (Format.pp_list "." Format.pp_print_string) path1
                  (Format.pp_list "." Format.pp_print_string) path2
-             ;
+               ;
                value2
           ) ty_spec_map
       in
@@ -154,7 +154,7 @@ struct
                  key
                  value
                  value2
-             ;
+               ;
                value2
           ) renaming
       in
@@ -417,7 +417,7 @@ let fold_source_elt_classic ~dynloader_interface ~filename ~lang
                       BslKey.pp key
                       path
                       path
-                  ;
+                    ;
                     tyitem
               in
               let () = SeparatedEnv.SideEffect.add_ty_spec_map key tyitem in
@@ -470,7 +470,7 @@ let fold_source_elt_classic ~dynloader_interface ~filename ~lang
                     )
                       BslKey.pp key
                       (Format.pp_list "." Format.pp_print_string) conflict_path
-                  ;
+                    ;
                     tyitem
               in
               let () = SeparatedEnv.SideEffect.add_ty_spec_map key tyitem in
@@ -643,7 +643,7 @@ let fold_source_elt_doc_like ~dynloader_interface ~filename
                 BslKey.pp key
                 path
                 path
-            ;
+              ;
               tyitem
         in
         let () = SeparatedEnv.SideEffect.add_ty_spec_map key tyitem in
@@ -684,7 +684,7 @@ let fold_source_elt_doc_like ~dynloader_interface ~filename
               )
                 BslKey.pp key
                 (Format.pp_list "." Format.pp_print_string) conflict_path
-            ;
+              ;
               tyitem
         in
         SeparatedEnv.SideEffect.add_ty_spec_map key tyitem;

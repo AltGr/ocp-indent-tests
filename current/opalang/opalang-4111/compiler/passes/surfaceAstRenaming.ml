@@ -834,7 +834,7 @@ and f_module_fields all_env hierar fields =
         let ty =
           if defined_typed_vars=[] && defined_row_vars=[] && defined_col_vars = [] then ty
           else ( TypeForall (defined_typed_vars, defined_row_vars, defined_col_vars, ty)
-            , Parser_utils.nlabel ty) in
+               , Parser_utils.nlabel ty) in
         f_env, (field,ty)) all_env.f fields in
   {f_env with ftypevars = original_ftypevars; frowvars = original_frowvars; fcolvars = original_fcolvars}, fields
 

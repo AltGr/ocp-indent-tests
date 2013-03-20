@@ -162,10 +162,10 @@ let pass_static_inclusion_directory ~options lcode =
                 OManager.warning ~wclass:warning_many_files_1000 "Suspicious include: you are attempting to include more than 1000 files in directory %s." path
               else if number = 10000 then
                 OManager.warning ~wclass:warning_many_files_1000 "Suspicious include: you are attempting to include more than 10000 files in directory %s." path
-                 ;
-                   let reduced = Base.String.remove_prefix_if_possible prefix y in
-                   OManager.verbose "Embedding file %s" reduced;
-                   (number+1, (Base.String.remove_prefix_if_possible prefix y)::acc)) (0,[])
+              ;
+              let reduced = Base.String.remove_prefix_if_possible prefix y in
+              OManager.verbose "Embedding file %s" reduced;
+              (number+1, (Base.String.remove_prefix_if_possible prefix y)::acc)) (0,[])
             path
         in
 

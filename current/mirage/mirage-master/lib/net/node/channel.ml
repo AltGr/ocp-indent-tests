@@ -48,10 +48,10 @@ module Make(Flow:FLOW) :
   let ibuf_refill t = 
     match_lwt Flow.read t.flow with
     |Some buf ->
-      t.ibuf <- buf;
-      return ()
+        t.ibuf <- buf;
+        return ()
     |None ->
-      fail Closed
+        fail Closed
 
   (* Read one character from the input channel *)
   let rec read_char t =
@@ -88,7 +88,7 @@ let read_stream ?len t =
       lwt v = read_some ?len t in
       return (Some v)
     with Closed ->
-      return None
+        return None
   )
 
 (* Read until a character is found *)
@@ -101,14 +101,14 @@ let read_until t ch =
     let rlen = idx - off in
     (bitmatch t.ibuf with
   | { _:8; rest:-1:bitstring } when rlen = 0 ->
-    t.ibuf <- rest;
-    return (true, Bitstring.empty_bitstring)
+      t.ibuf <- rest;
+      return (true, Bitstring.empty_bitstring)
   | { r:rlen:bitstring; _:8; rest:-1:bitstring } ->
-    t.ibuf <- rest;
-    return (true, r)
+      t.ibuf <- rest;
+      return (true, r)
   | { _ } ->
-    printf "Flow: unexpected bitmatch failure in read_until\n%!";
-    exit 1
+      printf "Flow: unexpected bitmatch failure in read_until\n%!";
+      exit 1
 )
 with Not_found -> begin
   let r = t.ibuf in
@@ -124,7 +124,7 @@ let read_crlf t =
   let rec get acc =
     match_lwt read_until t '\n' with
     |(false, v) ->
-      get (v :: acc)
+        get (v :: acc)
     |(true, v) -> begin
         (* chop the CR if present *)
         let vlen = Bitstring.bitstring_length v in
@@ -216,10 +216,10 @@ let close = function
 
 let connect mgr = function
   |`TCPv4 (src, dst, fn) ->
-    TCPv4.connect mgr ?src dst (fun t -> fn (TCPv4 t))
+      TCPv4.connect mgr ?src dst (fun t -> fn (TCPv4 t))
   |_ -> fail (Failure "unknown protocol")
 
 let listen mgr = function
   |`TCPv4 (src, fn) ->
-    TCPv4.listen mgr src (fun dst t -> fn dst (TCPv4 t))
+      TCPv4.listen mgr src (fun dst t -> fn dst (TCPv4 t))
   |_ -> fail (Failure "unknown protocol")

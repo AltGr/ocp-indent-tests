@@ -33,7 +33,7 @@ let force l =
   | Value v -> v
   | Exception e -> raise e
   | Delayed f ->
-    l := Exception Undefined;
-    try let v = f () in l := Value v; v
-    with e -> l := Exception e; raise e
+      l := Exception Undefined;
+      try let v = f () in l := Value v; v
+      with e -> l := Exception e; raise e
 ;;

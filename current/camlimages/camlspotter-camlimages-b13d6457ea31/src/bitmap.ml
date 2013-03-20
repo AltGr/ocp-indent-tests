@@ -80,10 +80,10 @@ module Make(B:Bitdepth) = struct
     if blk.block_data = Destroyed then () else begin
       match blk.swap with
       | Some fname ->
-        begin match blk.block_data with
-          | Swapped -> Sys.remove fname; blk.block_data <- Destroyed
-          | InMemory _ | Destroyed -> () 
-        end
+          begin match blk.block_data with
+            | Swapped -> Sys.remove fname; blk.block_data <- Destroyed
+            | InMemory _ | Destroyed -> () 
+          end
       | None -> ()
     end;
     swappable_blocks :=
@@ -98,21 +98,21 @@ module Make(B:Bitdepth) = struct
     let halflength = fulllength / 2 in
     let rec sub = function
       | 0 ->
-        let len = String.length init in
-        String.unsafe_blit init 0 buf 0 len;
-        sub len
+          let len = String.length init in
+          String.unsafe_blit init 0 buf 0 len;
+          sub len
       | x when x <= halflength ->
-        String.unsafe_blit buf 0 buf x x;
-        sub (x * 2)
+          String.unsafe_blit buf 0 buf x x;
+          sub (x * 2)
       | x (* when x > halflength *) ->
-        String.unsafe_blit buf 0 buf x (fulllength - x) in
+          String.unsafe_blit buf 0 buf x (fulllength - x) in
     sub 0;;
 
   let check_init init =
     match init with
     | Some v ->
-      if String.length v <> bytes_per_pixel
-      then failwith "bitmap fill value is incorrect"
+        if String.length v <> bytes_per_pixel
+        then failwith "bitmap fill value is incorrect"
     | None -> ();;
 
   let memory width height init =
@@ -171,15 +171,15 @@ module Make(B:Bitdepth) = struct
     | {block_data = Destroyed} -> failwith "swap_out: Already destroyed"
     | {swap = None} -> failwith "No swap file set"
     | {swap = Some fname; block_data = InMemory s; block_size = size} as blk ->
-      begin try
-        debugs (Printf.sprintf "swap out %s" fname (* blk.block_size*));
-        let oc = open_out_bin fname in
-        output oc s 0 size;
-        close_out oc;
-        blk.block_data <- Swapped
-      with
-      | e -> prerr_endline "Swap-out failed"; raise e
-      end
+        begin try
+          debugs (Printf.sprintf "swap out %s" fname (* blk.block_size*));
+          let oc = open_out_bin fname in
+          output oc s 0 size;
+          close_out oc;
+          blk.block_data <- Swapped
+        with
+        | e -> prerr_endline "Swap-out failed"; raise e
+        end
     | _ -> ();;
 
   let touch_block blk = blk.last_used <- Sys.time ();;
@@ -191,10 +191,10 @@ module Make(B:Bitdepth) = struct
       match sorted with
       | [] -> ()
       | x :: xs ->
-        swap_out x;
-        swapper xs
-          (i - (x.block_size + Camlimages.word_size - 1) /
-               Camlimages.word_size) in
+          swap_out x;
+          swapper xs
+            (i - (x.block_size + Camlimages.word_size - 1) /
+                 Camlimages.word_size) in
     swapper sorted words;;
 
   let require bytes =
@@ -206,25 +206,25 @@ module Make(B:Bitdepth) = struct
   let swap_in = function
     | {block_data = Destroyed} -> raise (Failure "swap_in: Already destroyed")
     | {block_data = InMemory s} as blk ->
-      touch_block blk;
-      s
-    | {swap = Some fname; block_data = Swapped; block_size = size} as blk ->
-      begin try
-        debugs ("swap in "^fname);
-        require size;
-        let ic = open_in_bin fname in
-        let s = string_create size in
-        really_input ic s 0 size;
-        close_in ic;
-        blk.block_data <- InMemory s;
-        Sys.remove fname;
         touch_block blk;
         s
-      with
-      | e -> prerr_endline
-               (Printf.sprintf "Swap-in failed (%s)" (Printexc.to_string e));
-        raise e
-      end
+    | {swap = Some fname; block_data = Swapped; block_size = size} as blk ->
+        begin try
+          debugs ("swap in "^fname);
+          require size;
+          let ic = open_in_bin fname in
+          let s = string_create size in
+          really_input ic s 0 size;
+          close_in ic;
+          blk.block_data <- InMemory s;
+          Sys.remove fname;
+          touch_block blk;
+          s
+        with
+        | e -> prerr_endline
+                 (Printf.sprintf "Swap-in failed (%s)" (Printexc.to_string e));
+            raise e
+        end
     | _ -> assert false;;
 
   let alloc_swappable_block width height init =
@@ -404,74 +404,74 @@ module Make(B:Bitdepth) = struct
        in your applications. *)
     match t.blocks_x, t.blocks_y with
     | 1, _ -> (* optimized *)
-      let bly = y / t.block_size_height in
-      let y' = y mod t.block_size_height in
-      let blk = t.data.(0).(bly) in
-      let src = swap_in blk in
-      let size = w * bytes_per_pixel in
-      let adrs = (blk.block_width * y' + x) * bytes_per_pixel in
-      let str = string_create size in
-      String.unsafe_blit src adrs str 0 size;
-      str
-    | _, _ ->
-      let bly = y / t.block_size_height in
-      let y' = y mod t.block_size_height in
-      let str = string_create (w * bytes_per_pixel) in
-      let blx_start = x / t.block_size_width in
-      let blx_last = (x + w - 1) / t.block_size_width in
-      for blx = blx_start to blx_last do
-        let blk = t.data.(blx).(bly) in
+        let bly = y / t.block_size_height in
+        let y' = y mod t.block_size_height in
+        let blk = t.data.(0).(bly) in
         let src = swap_in blk in
-        let x1 =
-          if blx = blx_start then x mod t.block_size_width else 0 in
-        let x2 =
-          if blx = blx_last then (x + w - 1) mod t.block_size_width else
-            (blk.block_width - 1) in
-        let w' = x2 - x1 + 1 in
-        let size = w' * bytes_per_pixel in
-        let adrs = (blk.block_width * y' + x1) * bytes_per_pixel in
-        let offset =
-          if blx = blx_start then 0
-          else (t.block_size_width * blx - x) * bytes_per_pixel in
-        String.unsafe_blit src adrs str offset size
-      done;
-      str;;
+        let size = w * bytes_per_pixel in
+        let adrs = (blk.block_width * y' + x) * bytes_per_pixel in
+        let str = string_create size in
+        String.unsafe_blit src adrs str 0 size;
+        str
+    | _, _ ->
+        let bly = y / t.block_size_height in
+        let y' = y mod t.block_size_height in
+        let str = string_create (w * bytes_per_pixel) in
+        let blx_start = x / t.block_size_width in
+        let blx_last = (x + w - 1) / t.block_size_width in
+        for blx = blx_start to blx_last do
+          let blk = t.data.(blx).(bly) in
+          let src = swap_in blk in
+          let x1 =
+            if blx = blx_start then x mod t.block_size_width else 0 in
+          let x2 =
+            if blx = blx_last then (x + w - 1) mod t.block_size_width else
+              (blk.block_width - 1) in
+          let w' = x2 - x1 + 1 in
+          let size = w' * bytes_per_pixel in
+          let adrs = (blk.block_width * y' + x1) * bytes_per_pixel in
+          let offset =
+            if blx = blx_start then 0
+            else (t.block_size_width * blx - x) * bytes_per_pixel in
+          String.unsafe_blit src adrs str offset size
+        done;
+        str;;
 
   let set_strip t x y w str =
     (* No region checks for performance. You should wrap this to make safe
        in your applications. *)
     match t.blocks_x, t.blocks_y with
     | 1, _ -> (* optimized *)
-      let bly = y / t.block_size_height in
-      let y' = y mod t.block_size_height in
-      let blk = t.data.(0).(bly) in
-      let dst = swap_in blk in
-      let size = w * bytes_per_pixel in
-      let adrs = (blk.block_width * y' + x) * bytes_per_pixel in
-      String.unsafe_blit str 0 dst adrs size
-    | _, _ ->
-      let bly = y / t.block_size_height in
-      let y' = y mod t.block_size_height in
-      let blx_start = x / t.block_size_width in
-      let blx_last = (x + w - 1) / t.block_size_width in
-      for blx = blx_start to blx_last do
-        let blk = t.data.(blx).(bly) in
+        let bly = y / t.block_size_height in
+        let y' = y mod t.block_size_height in
+        let blk = t.data.(0).(bly) in
         let dst = swap_in blk in
-        let x1 =
-          if blx = blx_start then x mod t.block_size_width else 0 in
-        let x2 =
-          if blx = blx_last then (x + w - 1) mod t.block_size_width else
-            (blk.block_width - 1)
-        in
-        let w' = x2 - x1 + 1 in
-        let size = w' * bytes_per_pixel in
-        let adrs = (blk.block_width *  y' + x1) * bytes_per_pixel in
-        let offset =
-          if blx = blx_start then 0
-          else (t.block_size_width * blx - x) * bytes_per_pixel
-        in
-        String.unsafe_blit str offset dst adrs size
-      done;;
+        let size = w * bytes_per_pixel in
+        let adrs = (blk.block_width * y' + x) * bytes_per_pixel in
+        String.unsafe_blit str 0 dst adrs size
+    | _, _ ->
+        let bly = y / t.block_size_height in
+        let y' = y mod t.block_size_height in
+        let blx_start = x / t.block_size_width in
+        let blx_last = (x + w - 1) / t.block_size_width in
+        for blx = blx_start to blx_last do
+          let blk = t.data.(blx).(bly) in
+          let dst = swap_in blk in
+          let x1 =
+            if blx = blx_start then x mod t.block_size_width else 0 in
+          let x2 =
+            if blx = blx_last then (x + w - 1) mod t.block_size_width else
+              (blk.block_width - 1)
+          in
+          let w' = x2 - x1 + 1 in
+          let size = w' * bytes_per_pixel in
+          let adrs = (blk.block_width *  y' + x1) * bytes_per_pixel in
+          let offset =
+            if blx = blx_start then 0
+            else (t.block_size_width * blx - x) * bytes_per_pixel
+          in
+          String.unsafe_blit str offset dst adrs size
+        done;;
 
   (* scanline access (special case of strip access) *)
   let get_scanline t y = get_strip t 0 y t.width;;
@@ -480,19 +480,19 @@ module Make(B:Bitdepth) = struct
   let get_scanline_ptr t =
     match t.blocks_x, t.blocks_y with
     | 1, 1 -> (* optimized *)
-      Some (fun y ->
-        let blk = t.data.(0).(0) in
-        let src = swap_in blk in
-        let adrs = (blk.block_width * y) * bytes_per_pixel in
-        (src, adrs), blk.block_height - y)
+        Some (fun y ->
+          let blk = t.data.(0).(0) in
+          let src = swap_in blk in
+          let adrs = (blk.block_width * y) * bytes_per_pixel in
+          (src, adrs), blk.block_height - y)
     | 1, _ -> (* optimized *)
-      Some (fun y ->
-        let bly = y / t.block_size_height in
-        let y' = y mod t.block_size_height in
-        let blk = Array.unsafe_get (Array.unsafe_get t.data 0) bly in
-        let src = swap_in blk in
-        let adrs = (blk.block_width * y') * bytes_per_pixel in
-        (src, adrs), blk.block_height - y')
+        Some (fun y ->
+          let bly = y / t.block_size_height in
+          let y' = y mod t.block_size_height in
+          let blk = Array.unsafe_get (Array.unsafe_get t.data 0) bly in
+          let src = swap_in blk in
+          let adrs = (blk.block_width * y') * bytes_per_pixel in
+          (src, adrs), blk.block_height - y')
     | _, _ -> None
 
   let set_scanline t y str =
@@ -511,29 +511,29 @@ module Make(B:Bitdepth) = struct
     match t.blocks_x, t.blocks_y with
     | 1, 1 -> swap_in t.data.(0).(0)
     | 1, h ->
-      let s = string_create size in
-      let scanline_size = bytes_per_pixel * t.width in
-      for y = 0 to h - 1 do
-        let str = swap_in t.data.(0).(y) in
-        String.unsafe_blit str 0 s (scanline_size * y) scanline_size
-      done;
-      s
-    | w, h ->
-      let s = string_create size in
-      for x = 0 to w - 1 do
+        let s = string_create size in
+        let scanline_size = bytes_per_pixel * t.width in
         for y = 0 to h - 1 do
-          let blk = t.data.(x).(y) in
-          let str = swap_in blk in
-          let scanline_size = bytes_per_pixel * blk.block_width in
-          for i = 0 to blk.block_height - 1 do
-            String.unsafe_blit str (scanline_size * i)
-              s (((y * t.block_size_height + i) * t.width +
-                x * t.block_size_width) * bytes_per_pixel)
-              scanline_size
+          let str = swap_in t.data.(0).(y) in
+          String.unsafe_blit str 0 s (scanline_size * y) scanline_size
+        done;
+        s
+    | w, h ->
+        let s = string_create size in
+        for x = 0 to w - 1 do
+          for y = 0 to h - 1 do
+            let blk = t.data.(x).(y) in
+            let str = swap_in blk in
+            let scanline_size = bytes_per_pixel * blk.block_width in
+            for i = 0 to blk.block_height - 1 do
+              String.unsafe_blit str (scanline_size * i)
+                s (((y * t.block_size_height + i) * t.width +
+                  x * t.block_size_width) * bytes_per_pixel)
+                scanline_size
+            done
           done
-        done
-      done;
-      s;;
+        done;
+        s;;
 
   (* sub-bitmap *)
   let sub t x y w h =

@@ -47,8 +47,8 @@ let rec init n f =
       match !count with
       | 0 -> raise No_more_elements
       | _ ->
-        decr count;
-        f (n - 1 - !count));
+          decr count;
+          f (n - 1 - !count));
     clone = (fun () -> init !count f);
     fast = true;
   }      
@@ -156,8 +156,8 @@ let peek t =
   match get t with
   | None -> None
   | Some x ->
-    push t x;
-    Some x
+      push t x;
+      Some x
 
 let junk t =
   try
@@ -213,10 +213,10 @@ let iter2 f t u =
     loop ()
   with
     No_more_elements ->
-    match !push_t with
-    | None -> ()
-    | Some e ->
-      push t e
+      match !push_t with
+      | None -> ()
+      | Some e ->
+          push t e
 
 let iter2i f t u =
   let push_t = ref None in
@@ -231,9 +231,9 @@ let iter2i f t u =
     loop 0
   with
     No_more_elements ->
-    match !push_t with
-    | None -> ()
-    | Some e -> push t e
+      match !push_t with
+      | None -> ()
+      | Some e -> push t e
 
 let fold f init t =
   let acc = ref init in
@@ -271,11 +271,11 @@ let fold2 f init t u =
     loop()
   with
     No_more_elements ->
-    match !push_t with
-    | None -> !acc
-    | Some e ->
-      push t e;
-      !acc
+      match !push_t with
+      | None -> !acc
+      | Some e ->
+          push t e;
+          !acc
 
 let fold2i f init t u =
   let acc = ref init in
@@ -291,11 +291,11 @@ let fold2i f init t u =
     loop 0
   with
     No_more_elements ->
-    match !push_t with
-    | None -> !acc
-    | Some e ->
-      push t e;
-      !acc
+      match !push_t with
+      | None -> !acc
+      | Some e ->
+          push t e;
+          !acc
 
 let find f t =
   let rec loop () =
@@ -351,12 +351,12 @@ let rec append ta tb =
       ta.next()
     with
       No_more_elements ->
-      (* add one indirection because tb can mute *)
-      t.next <- (fun () -> tb.next());
-      t.count <- (fun () -> tb.count());
-      t.clone <- (fun () -> tb.clone());
-      t.fast <- tb.fast;
-      t.next()
+        (* add one indirection because tb can mute *)
+        t.next <- (fun () -> tb.next());
+        t.count <- (fun () -> tb.count());
+        t.clone <- (fun () -> tb.clone());
+        t.fast <- tb.fast;
+        t.next()
   );
   t
 
@@ -369,7 +369,7 @@ let rec concat t =
         tn.next()
       with
         No_more_elements ->
-        concat_next());
+          concat_next());
     !concat_ref ()
   in
   concat_ref := concat_next;
@@ -382,9 +382,9 @@ let of_list l =
         match !lr with
         | [] -> raise No_more_elements
         | h :: t ->
-          decr count;
-          lr := t;
-          h
+            decr count;
+            lr := t;
+            h
       )
       ~count:(fun () ->
         if !count < 0 then count := List.length !lr;

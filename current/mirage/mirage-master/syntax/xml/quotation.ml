@@ -27,7 +27,7 @@ let destruct_aq s =
     and code = String.sub s (pos + 1) (len - pos - 1) in
     name, code
   with Not_found ->
-    "", s
+      "", s
 
 let parse_quot_string entity _loc s =
   let ast = Parser.parse ?enc:(Parser.get_encoding ()) ?entity _loc s in
@@ -40,55 +40,55 @@ let aq_expander =
     method expr =
       function
       | Camlp4.PreCast.Ast.ExAnt (_loc, s) ->
-        let n, c = destruct_aq s in
-        let e = AQ.parse_expr _loc c in
-        begin match n with
-          | "opt"   -> <:expr< match $e$ with [ Some xml -> xml | None -> [] ] >>
-          | "int"   -> <:expr< [`Data (string_of_int $e$)] >> 
-          | "flo"   -> <:expr< [`Data (string_of_float $e$)] >>
-          | "str"   -> <:expr< [`Data $e$] >>
-          | "alist" -> <:expr< List.map (fun (k,v) -> (("",k),v)) $e$ >> 
-          | "list"  -> <:expr< List.flatten $e$ >>
-          | "attrs" ->
+          let n, c = destruct_aq s in
+          let e = AQ.parse_expr _loc c in
+          begin match n with
+            | "opt"   -> <:expr< match $e$ with [ Some xml -> xml | None -> [] ] >>
+            | "int"   -> <:expr< [`Data (string_of_int $e$)] >> 
+            | "flo"   -> <:expr< [`Data (string_of_float $e$)] >>
+            | "str"   -> <:expr< [`Data $e$] >>
+            | "alist" -> <:expr< List.map (fun (k,v) -> (("",k),v)) $e$ >> 
+            | "list"  -> <:expr< List.flatten $e$ >>
+            | "attrs" ->
 
-            <:expr<
-              let key_value str =
-                try
-                  let pos = String.index str '=' in
-                  let k = String.sub str 0 pos in
-                  let v = String.sub str (pos+1) (String.length str - pos - 1) in
-                  let v =
-                    if   (v.[0] = '"' && v.[String.length v - 1] = '"')
-                      || (v.[0] = '\'' && v.[String.length v - 1] = '\'') then
-                      String.sub v 1 (String.length v - 2)
-                    else
+                <:expr<
+                  let key_value str =
+                    try
+                      let pos = String.index str '=' in
+                      let k = String.sub str 0 pos in
+                      let v = String.sub str (pos+1) (String.length str - pos - 1) in
+                      let v =
+                        if   (v.[0] = '"' && v.[String.length v - 1] = '"')
+                          || (v.[0] = '\'' && v.[String.length v - 1] = '\'') then
+                          String.sub v 1 (String.length v - 2)
+                        else
+                          raise Parsing.Parse_error in
+                      (("",k),v)
+                    with _ ->
                       raise Parsing.Parse_error in
-                  (("",k),v)
-                with _ ->
-                  raise Parsing.Parse_error in
 
-              let rec split ?(accu=[]) c s =
-                try
-                  let i = String.index s c in
-                  let prefix = String.sub s 0 i in
-                  let suffix =
-                    if i = String.length s - 1 then
-                      ""
-                    else
-                      String.sub s (i+1) (String.length s - i - 1) in
-                  split ~accu:[prefix :: accu] c suffix
-                with _ ->
-                  List.rev [s :: accu] in
+                  let rec split ?(accu=[]) c s =
+                    try
+                      let i = String.index s c in
+                      let prefix = String.sub s 0 i in
+                      let suffix =
+                        if i = String.length s - 1 then
+                          ""
+                        else
+                          String.sub s (i+1) (String.length s - i - 1) in
+                      split ~accu:[prefix :: accu] c suffix
+                    with _ ->
+                      List.rev [s :: accu] in
 
-              match $e$ with [
-                [`Data str] -> List.map (fun x -> key_value x) (split ' ' str) 
-              | _ -> raise Parsing.Parse_error ] >>
+                  match $e$ with [
+                    [`Data str] -> List.map (fun x -> key_value x) (split ' ' str) 
+                  | _ -> raise Parsing.Parse_error ] >>
 
-          | "" -> <:expr< $e$ >>
-          | x  ->
-            Printf.eprintf "[ERROR] %s is not a valid tag.\nAllowed tags are [opt|int|flo|str|list|alist|attrs] or the empty one." x;
-            Loc.raise _loc Parsing.Parse_error
-        end
+            | "" -> <:expr< $e$ >>
+            | x  ->
+                Printf.eprintf "[ERROR] %s is not a valid tag.\nAllowed tags are [opt|int|flo|str|list|alist|attrs] or the empty one." x;
+                Loc.raise _loc Parsing.Parse_error
+          end
       | e -> super#expr e
   end
 

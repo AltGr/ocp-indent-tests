@@ -319,9 +319,9 @@ let input_line chan =
   let rec build_result buf pos = function
       [] -> buf
     | hd :: tl ->
-      let len = string_length hd in
-      string_blit hd 0 buf (pos - len) len;
-      build_result buf (pos - len) tl in
+        let len = string_length hd in
+        string_blit hd 0 buf (pos - len) len;
+        build_result buf (pos - len) tl in
   let rec scan accu len =
     let n = input_scan_line chan in
     if n = 0 then begin                   (* n = 0: we are at EOF *)
@@ -335,7 +335,7 @@ let input_line chan =
       match accu with
         [] -> res
       |  _ -> let len = len + n - 1 in
-        build_result (string_create len) len (res :: accu)
+          build_result (string_create len) len (res :: accu)
     end else begin                        (* n < 0: newline not found *)
       let beg = string_create (-n) in
       ignore(unsafe_input chan beg 0 (-n));

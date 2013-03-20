@@ -33,20 +33,20 @@ type t = {
 let input t src hdr buf =
   match get_icmpv4_ty buf with
   |0 -> (* echo reply *)
-    return (printf "ICMP: discarding echo reply\n%!")
+      return (printf "ICMP: discarding echo reply\n%!")
   |8 -> (* echo request *)
-    let csum =
-      let orig_csum = get_icmpv4_csum buf in
-      let shift = if orig_csum > 0xffff -0x0800 then 0x0801 else 0x0800 in
-      (orig_csum + shift) land 0xffff in
-    lwt header = Ipv4.get_writebuf ~proto:`ICMP ~dest_ip:src t.ip in
-    set_icmpv4_ty buf 0;
-    set_icmpv4_csum buf csum;
-    let header = Cstruct.sub header 0 0 in
-    Ipv4.writev t.ip ~header [buf]
+      let csum =
+        let orig_csum = get_icmpv4_csum buf in
+        let shift = if orig_csum > 0xffff -0x0800 then 0x0801 else 0x0800 in
+        (orig_csum + shift) land 0xffff in
+      lwt header = Ipv4.get_writebuf ~proto:`ICMP ~dest_ip:src t.ip in
+      set_icmpv4_ty buf 0;
+      set_icmpv4_csum buf csum;
+      let header = Cstruct.sub header 0 0 in
+      Ipv4.writev t.ip ~header [buf]
   |ty ->
-    printf "ICMP unknown ty %d\n" ty; 
-    return ()
+      printf "ICMP unknown ty %d\n" ty; 
+      return ()
 
 let create ip =
   let t = { ip } in

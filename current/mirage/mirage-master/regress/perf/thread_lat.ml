@@ -45,8 +45,8 @@ let main () =
       function
       |0 -> acc
       |n ->
-        let th = jitter_t t in
-        loop (th::acc) (n-1)
+          let th = jitter_t t in
+          loop (th::acc) (n-1)
     in
     (loop [] num), u
   in

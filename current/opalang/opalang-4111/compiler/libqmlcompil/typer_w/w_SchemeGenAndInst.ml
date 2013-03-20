@@ -137,7 +137,7 @@ let __generalize ~forbid_non_gen_vars ~extra_variables initial_ty =
             if var.W_Algebra.tv_level >
                 !W_CoreTypes.current_binding_level then (
               if (List.memq ty ignored_tys)
-              ||
+                 ||
                  (List.memq ty !found_ty_parameters) then
                 ()  (* Do nothing since either this variable is always
                        generalized for the current future scheme, hence is
@@ -230,7 +230,7 @@ let __generalize ~forbid_non_gen_vars ~extra_variables initial_ty =
            in the future type scheme we are currently trying to create). *)
         if var.W_Algebra.rv_level > !W_CoreTypes.current_binding_level then (
           if (List.memq var ignored_row_vars)
-          ||
+             ||
              (List.memq var !found_row_parameters) then
             ()  (* Do nothing since either this variable is always generalized
                    for the current future scheme, hence is already in the
@@ -293,7 +293,7 @@ let __generalize ~forbid_non_gen_vars ~extra_variables initial_ty =
            in the future type scheme we are currently trying to create). *)
         if var.W_Algebra.cv_level > !W_CoreTypes.current_binding_level then (
           if (List.memq var ignored_col_vars)
-          ||
+             ||
              (List.memq var !found_column_parameters) then
             ()  (* Do nothing since either this variable is always generalized
                    for the current future scheme, hence is already in the

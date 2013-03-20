@@ -137,158 +137,158 @@ let load filename opts =
       match dGifGetRecordType ic with
       | Terminate -> raise Exit
       | Image_desc ->
-        let desc = dGifGetImageDesc ic in
-        (* reset progress bar *)
-        begin match prog with
-          | Some p -> p 0.0
-          | None -> ()
-        end;
+          let desc = dGifGetImageDesc ic in
+          (* reset progress bar *)
+          begin match prog with
+            | Some p -> p 0.0
+            | None -> ()
+          end;
 
-        if debug then
-          debug_endline
-            (sprintf "Size=%dx%d Colors=%d"
-               desc.desc_width desc.desc_height
-               (Array.length desc.desc_colormap));
+          if debug then
+            debug_endline
+              (sprintf "Size=%dx%d Colors=%d"
+                 desc.desc_width desc.desc_height
+                 (Array.length desc.desc_colormap));
 
-        let img = Index8.create desc.desc_width desc.desc_height in
-        img.transparent <- !transparent;
-        let cmap = img.colormap in
-        cmap.max <- 256;
-        cmap.map <-
-          (if Array.length desc.desc_colormap = 0
-           then sinfo.s_colormap
-           else desc.desc_colormap);
+          let img = Index8.create desc.desc_width desc.desc_height in
+          img.transparent <- !transparent;
+          let cmap = img.colormap in
+          cmap.max <- 256;
+          cmap.map <-
+            (if Array.length desc.desc_colormap = 0
+             then sinfo.s_colormap
+             else desc.desc_colormap);
 
-        if debug then
-          for i = 0 to Array.length cmap.map -1 do
-            prerr_string
-              (sprintf " %2d: %02xh %02xh %02xh   "
-                 i cmap.map.(i).r cmap.map.(i).g cmap.map.(i).b);
-            if i mod 4 = 3 then prerr_endline "";
-          done;
+          if debug then
+            for i = 0 to Array.length cmap.map -1 do
+              prerr_string
+                (sprintf " %2d: %02xh %02xh %02xh   "
+                   i cmap.map.(i).r cmap.map.(i).g cmap.map.(i).b);
+              if i mod 4 = 3 then prerr_endline "";
+            done;
 
-        (* Interlaced gif encoding
-           dst              src
-           0   <----------- 0
-           8   <----------- 1
-           16  <----------- 2
-           ... <----------- ...
-           ... <----------- x-1
-           4   <----------- x
-           12  <----------- x+1
-           20  <----------- x+2
-           ... <----------- ...
-           ... <----------- y-1
-           2   <----------- y
-           6   <----------- y+1
-           10  <----------- y+2
-           14  <----------- y+3
-           ... <----------- ...
-           ... <----------- z-1
-           1   <----------- z
-           3   <----------- z+1
-           5   <----------- z+2
-           7   <----------- z+3
-           9   <----------- z+4
-           11  <----------- z+5
-           ... <----------- ...
-               <----------- image.height - 1
-        *)
+          (* Interlaced gif encoding
+             dst              src
+             0   <----------- 0
+             8   <----------- 1
+             16  <----------- 2
+             ... <----------- ...
+             ... <----------- x-1
+             4   <----------- x
+             12  <----------- x+1
+             20  <----------- x+2
+             ... <----------- ...
+             ... <----------- y-1
+             2   <----------- y
+             6   <----------- y+1
+             10  <----------- y+2
+             14  <----------- y+3
+             ... <----------- ...
+             ... <----------- z-1
+             1   <----------- z
+             3   <----------- z+1
+             5   <----------- z+2
+             7   <----------- z+3
+             9   <----------- z+4
+             11  <----------- z+5
+             ... <----------- ...
+                 <----------- image.height - 1
+          *)
 
-        let interlace_reader () =
-          let lines = ref 0 in
-          let rec loop src dest dest_step =
-            if dest >= desc.desc_height then src else begin
+          let interlace_reader () =
+            let lines = ref 0 in
+            let rec loop src dest dest_step =
+              if dest >= desc.desc_height then src else begin
+                let line = dGifGetLine ic in
+                Index8.set_scanline img dest line;
+                incr lines;
+                begin match prog with
+                  | Some p -> p (float !lines /. float desc.desc_height)
+                  | None -> ()
+                end;
+                loop (src + 1) (dest + dest_step) dest_step
+              end in
+            let src_1 = loop     0 0 8 in
+            let src_2 = loop src_1 4 8 in
+            let src_3 = loop src_2 2 4 in
+            ignore (loop src_3 1 2) in
+
+          let normal_reader () =
+            for y = 0 to desc.desc_height - 1 do
               let line = dGifGetLine ic in
-              Index8.set_scanline img dest line;
-              incr lines;
+              Index8.set_scanline img y line;
               begin match prog with
-                | Some p -> p (float !lines /. float desc.desc_height)
+                | Some p -> p (float (y + 1) /. float desc.desc_height)
                 | None -> ()
               end;
-              loop (src + 1) (dest + dest_step) dest_step
-            end in
-          let src_1 = loop     0 0 8 in
-          let src_2 = loop src_1 4 8 in
-          let src_3 = loop src_2 2 4 in
-          ignore (loop src_3 1 2) in
+            done in
 
-        let normal_reader () =
-          for y = 0 to desc.desc_height - 1 do
-            let line = dGifGetLine ic in
-            Index8.set_scanline img y line;
-            begin match prog with
-              | Some p -> p (float (y + 1) /. float desc.desc_height)
-              | None -> ()
-            end;
-          done in
+          begin
+            try
+              if desc.desc_interlace
+              then interlace_reader ()
+              else normal_reader ()
+            with
+            | Failure _e -> prerr_endline "Short file";
+          end;
 
-        begin
-          try
-            if desc.desc_interlace
-            then interlace_reader ()
-            else normal_reader ()
-          with
-          | Failure _e -> prerr_endline "Short file";
-        end;
-
-        let frame = {
-          frame_left = desc.desc_left;
-          frame_top = desc.desc_top;
-          frame_bitmap = img;
-          frame_extensions = !current_extensions;
-          frame_delay = !delay;
-        } in
-        current_extensions := [];
-        transparent := (-1);
-        delay := 0;
-        frames := frame :: !frames
+          let frame = {
+            frame_left = desc.desc_left;
+            frame_top = desc.desc_top;
+            frame_bitmap = img;
+            frame_extensions = !current_extensions;
+            frame_delay = !delay;
+          } in
+          current_extensions := [];
+          transparent := (-1);
+          delay := 0;
+          frames := frame :: !frames
       | Extension ->
-        debug_endline "EXTENSION";
-        let func, exts = dGifGetExtension ic in
-        let ext = gif_parse_extension func exts in
-        begin match ext with
-          | GifGraphics (str :: _ as exts) ->
-            if debug then begin
-              prerr_string "GRP: ";
-              for i = 0 to String.length str - 1 do
-                prerr_string (Printf.sprintf "%02x " (int_of_char str.[i]))
-              done
-            end;
-            List.iter debug_endline exts;
-            if String.length str < 4 then raise Exit;
-            if int_of_char str.[0] land 0x1 <> 0 then begin
-              debug_endline
-                (Printf.sprintf "TRANSPARENT %d" (int_of_char str.[3]));
-              transparent := int_of_char str.[3]
-            end;
-            delay := int_of_char str.[1] + int_of_char str.[2] * 256;
-          | _ -> ()
-        end;
-        current_extensions := ext :: !current_extensions
+          debug_endline "EXTENSION";
+          let func, exts = dGifGetExtension ic in
+          let ext = gif_parse_extension func exts in
+          begin match ext with
+            | GifGraphics (str :: _ as exts) ->
+                if debug then begin
+                  prerr_string "GRP: ";
+                  for i = 0 to String.length str - 1 do
+                    prerr_string (Printf.sprintf "%02x " (int_of_char str.[i]))
+                  done
+                end;
+                List.iter debug_endline exts;
+                if String.length str < 4 then raise Exit;
+                if int_of_char str.[0] land 0x1 <> 0 then begin
+                  debug_endline
+                    (Printf.sprintf "TRANSPARENT %d" (int_of_char str.[3]));
+                  transparent := int_of_char str.[3]
+                end;
+                delay := int_of_char str.[1] + int_of_char str.[2] * 256;
+            | _ -> ()
+          end;
+          current_extensions := ext :: !current_extensions
       | Undefined | Screen_desc -> raise (Failure "Gif.load")
     done;
     raise (Failure "impos")
   with
   | Exit ->
-    debug_endline "CLOSING";
-    dGifCloseFile ic;
-    debug_endline "FINISHED";
-    { screen_width = sinfo.s_width;
-      screen_height = sinfo.s_height;
-      screen_colormap = {max = 256; map = sinfo.s_colormap; };
-      frames = (List.rev !frames);
-      loops = !loops; }
+      debug_endline "CLOSING";
+      dGifCloseFile ic;
+      debug_endline "FINISHED";
+      { screen_width = sinfo.s_width;
+        screen_height = sinfo.s_height;
+        screen_colormap = {max = 256; map = sinfo.s_colormap; };
+        frames = (List.rev !frames);
+        loops = !loops; }
   | Failure e ->
-    prerr_endline ("Gif.load Error " ^ e);
-    debug_endline "CLOSING";
-    dGifCloseFile ic;
-    debug_endline "FINISHED";
-    { screen_width = sinfo.s_width;
-      screen_height = sinfo.s_height;
-      screen_colormap = {max = 256; map = sinfo.s_colormap; };
-      frames = (List.rev !frames);
-      loops = !loops };;
+      prerr_endline ("Gif.load Error " ^ e);
+      debug_endline "CLOSING";
+      dGifCloseFile ic;
+      debug_endline "FINISHED";
+      { screen_width = sinfo.s_width;
+        screen_height = sinfo.s_height;
+        screen_colormap = {max = 256; map = sinfo.s_colormap; };
+        frames = (List.rev !frames);
+        loops = !loops };;
 
 let seq_of_gifseq gifseq = {
   seq_width = gifseq.screen_width;
@@ -362,11 +362,11 @@ let save filename opts sequence =
           try
             begin match ext with
               | GifApplication ["NETSCAPE2.0"; _] ->
-                (* Overridden and written already *)
-                if !loop_written then raise Exit
+                  (* Overridden and written already *)
+                  if !loop_written then raise Exit
               | GifGraphics [str] ->
-                (* delayed *)
-                graphics_ext := Some str; raise Exit
+                  (* delayed *)
+                  graphics_ext := Some str; raise Exit
               | _ -> ()
             end;
             eGifPutExtension oc (gif_make_extension ext)
@@ -430,26 +430,26 @@ let save filename opts sequence =
     eGifCloseFile oc
   with
   | Failure s as e ->
-    debug_endline ("ERROR " ^ s);
-    eGifCloseFile oc;
-    raise e;;
+      debug_endline ("ERROR " ^ s);
+      eGifCloseFile oc;
+      raise e;;
 
 let save_image name opts image =
   match image with
   | Index8 bmp ->
-    save name opts {
-      screen_width = bmp.width;
-      screen_height = bmp.height;
-      screen_colormap = bmp.colormap;
-      frames = [ {
-                 frame_left = 0;
-                 frame_top = 0;
-                 frame_bitmap = bmp;
-                 frame_extensions = []; (* not implemented *)
-                 frame_delay = 0;
-               }; ];
-      loops = 0;
-    }
+      save name opts {
+        screen_width = bmp.width;
+        screen_height = bmp.height;
+        screen_colormap = bmp.colormap;
+        frames = [ {
+                   frame_left = 0;
+                   frame_top = 0;
+                   frame_bitmap = bmp;
+                   frame_extensions = []; (* not implemented *)
+                   frame_delay = 0;
+                 }; ];
+        loops = 0;
+      }
   | _ -> raise Wrong_image_type;;
 
 let check_header filename =
@@ -468,8 +468,8 @@ let check_header filename =
     | _ -> raise Wrong_file_type
   with
   | _ ->
-    close_in ic;
-    raise Wrong_file_type;;
+      close_in ic;
+      raise Wrong_file_type;;
 
 add_methods Gif {
   check_header = check_header;

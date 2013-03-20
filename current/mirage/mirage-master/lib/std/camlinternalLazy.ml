@@ -30,8 +30,8 @@ let force_lazy_block (blk : 'arg lazy_t) =
     Obj.set_tag (Obj.repr blk) Obj.forward_tag;
     result
   with e ->
-    Obj.set_field (Obj.repr blk) 0 (Obj.repr (fun () -> raise e));
-    raise e
+      Obj.set_field (Obj.repr blk) 0 (Obj.repr (fun () -> raise e));
+      raise e
 ;;
 
 (* Assume [blk] is a block with tag lazy *)

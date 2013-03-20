@@ -90,9 +90,9 @@ let rec find id =
         try
           Hashtbl.find device_waiters id
         with Not_found ->
-          let seq = Lwt_sequence.create () in
-          Hashtbl.add device_waiters id seq;
-          seq
+            let seq = Lwt_sequence.create () in
+            Hashtbl.add device_waiters id seq;
+            seq
       in
       let th,u = Lwt.task () in
       let node = Lwt_sequence.add_r u seq in
@@ -130,13 +130,13 @@ let device_t () =
         (* Check for any waiting threads *)
         match Hashtbl.find_all device_waiters p_id with
         |[] ->
-          printf "Devices: [%s:%s] no waiters\n%!" provider#id p_id;
-          return ()
+            printf "Devices: [%s:%s] no waiters\n%!" provider#id p_id;
+            return ()
         |[waiters] ->
-          printf "Devices: [%s:%s] waking waiters\n%!" provider#id p_id;
-          Hashtbl.remove device_waiters p_id;
-          Lwt_sequence.iter_l (fun w -> Lwt.wakeup w entry) waiters;
-          return ()
+            printf "Devices: [%s:%s] waking waiters\n%!" provider#id p_id;
+            Hashtbl.remove device_waiters p_id;
+            Lwt_sequence.iter_l (fun w -> Lwt.wakeup w entry) waiters;
+            return ()
         |_ -> assert false
       end
     )

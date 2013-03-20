@@ -155,14 +155,14 @@ let read name =
   match Internal.file_chunks name with
   |None -> return None
   |Some c ->
-    let chunks = ref c in
-    return (Some (Lwt_stream.from (fun () ->
-          match !chunks with
-          |hd :: tl -> 
-            chunks := tl;
-            return (Some (Bitstring.bitstring_of_string hd))
-          |[] -> return None
-        )))
+      let chunks = ref c in
+      return (Some (Lwt_stream.from (fun () ->
+            match !chunks with
+            |hd :: tl -> 
+                chunks := tl;
+                return (Some (Bitstring.bitstring_of_string hd))
+            |[] -> return None
+          )))
 
 let create vbd : OS.Devices.kv_ro Lwt.t =  
   return (object

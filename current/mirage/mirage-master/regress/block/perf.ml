@@ -48,8 +48,8 @@ type 'a ll = Cons of 'a * (unit -> 'a ll)
 let rec take n list = match n, list with
   | 0, _ -> [], list
   | n, Cons(x, xs) ->
-    let xs, rest = take (n-1) (xs ()) in
-    x :: xs, rest
+      let xs, rest = take (n-1) (xs ()) in
+      x :: xs, rest
 
 (* A lazy-list of (offset, length) pairs corresponding to sequential blocks
    (size [block_size] from a disk of size [disk_size]. When we hit the end

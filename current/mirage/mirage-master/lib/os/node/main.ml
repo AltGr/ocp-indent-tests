@@ -33,17 +33,17 @@ let exit_hooks = Lwt_sequence.create ()
 let rec call_hooks hooks  =
   match Lwt_sequence.take_opt_l hooks with
   | None ->
-    return ()
+      return ()
   | Some f ->
-    (* Run the hooks in parallel *)
-    let _ =
-      try_lwt
-        f ()
-      with exn ->
-        Printf.printf "enter_t: exn %s\n%!" (Printexc.to_string exn);
-        return ()
-    in
-    call_hooks hooks
+      (* Run the hooks in parallel *)
+      let _ =
+        try_lwt
+          f ()
+        with exn ->
+            Printf.printf "enter_t: exn %s\n%!" (Printexc.to_string exn);
+            return ()
+      in
+      call_hooks hooks
 
 (* Main runloop, which registers a callback so it can be invoked
    when timeouts expire. Thus, the program may only call this function
@@ -57,15 +57,15 @@ let run t =
     (* Attempt to advance the main loop thread *)
     match Lwt.poll t with
     | Some x ->
-      (* The main thread has completed, so return the value *)
-      x
+        (* The main thread has completed, so return the value *)
+        x
     | None -> 
-      (* If we have nothing to do, then check for the next
-         timeout and block the domain *)
-      let timeout = Time.select_next Clock.time in
-      (match timeout with 
-       | None -> block_domain ()
-       | Some tm -> block_domain_timeout tm)
+        (* If we have nothing to do, then check for the next
+           timeout and block the domain *)
+        let timeout = Time.select_next Clock.time in
+        (match timeout with 
+         | None -> block_domain ()
+         | Some tm -> block_domain_timeout tm)
   in
   (* Register a callback for the JS runtime to restart this function *)
   callback_register fn;

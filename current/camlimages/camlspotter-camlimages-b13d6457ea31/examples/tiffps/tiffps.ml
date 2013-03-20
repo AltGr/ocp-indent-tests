@@ -65,17 +65,17 @@ type scanlined_loader = {
 let scanline_open name =
   match Images.file_format name with
   | Jpeg, _ ->
-    let w,h,ic = Jpeg.open_in name in
-    let y = ref 0 in 
-    w, h, 200.0,
-    { read_next_line = (fun buf -> Jpeg.read_scanline ic buf !y; incr y);
-      close = (fun () -> Jpeg.close_in ic) }
+      let w,h,ic = Jpeg.open_in name in
+      let y = ref 0 in 
+      w, h, 200.0,
+      { read_next_line = (fun buf -> Jpeg.read_scanline ic buf !y; incr y);
+        close = (fun () -> Jpeg.close_in ic) }
   | Tiff, _ ->
-    let w, h, dpi, _, ic = Tiff.open_in name in
-    let y = ref 0 in
-    w, h, dpi,
-    { read_next_line = (fun buf -> Tiff.read_scanline ic buf !y; incr y);
-      close = (fun () -> Tiff.close_in ic) }
+      let w, h, dpi, _, ic = Tiff.open_in name in
+      let y = ref 0 in
+      w, h, dpi,
+      { read_next_line = (fun buf -> Tiff.read_scanline ic buf !y; incr y);
+        close = (fun () -> Tiff.close_in ic) }
   | _ -> assert false;;
 
 type rot = Rot0 | Rot90 | Rot180 | Rot270 | RotMax;;
@@ -160,7 +160,7 @@ let main () =
         List.map int_of_string
           (split_str (function '+' | 'x' -> true | _ -> false) s) with
       | [w; h; x; y] ->
-        conf.crop <- Some {cx = x; cy = y; cw = w; ch = h}
+          conf.crop <- Some {cx = x; cy = y; cw = w; ch = h}
       | _ -> assert false),
     "?x?+?+? : cropping";
     "-a4max", Arg.Unit (fun () ->
@@ -279,8 +279,8 @@ let main () =
       | MaxBox (w, h) -> w, h
       | MinBox (w, h) -> w, h
       | _ ->
-        paper_width -. border *. 2.0,
-        paper_height -. border *. 2.0 in
+          paper_width -. border *. 2.0,
+          paper_height -. border *. 2.0 in
 
     (* open the file just to get the image size info. *)
     let imgw, imgh, _orgdpi, th = scanline_open conf.name in
@@ -290,10 +290,10 @@ let main () =
     let w, h, x1, y1 =
       match conf.crop with
       | Some crop ->
-        (* check cropping area *)
-        if crop.cx + crop.cw > imgw then crop.cw <- imgw - crop.cx;
-        if crop.cy + crop.ch > imgh then crop.ch <- imgh - crop.cy;
-        crop.cw, crop.ch, crop.cx, crop.cy
+          (* check cropping area *)
+          if crop.cx + crop.cw > imgw then crop.cw <- imgw - crop.cx;
+          if crop.cy + crop.ch > imgh then crop.ch <- imgh - crop.cy;
+          crop.cw, crop.ch, crop.cx, crop.cy
       | None -> imgw, imgh, 0, 0 in
 
     (* auto rotation *)
@@ -310,9 +310,9 @@ let main () =
         | _ -> if rw > rh then rh else rw in
       match conf.size with
       | MinBox _ -> (* smaller is better *)
-        conf.rot <- if ratio0 < ratio90 then Rot0 else Rot90
+          conf.rot <- if ratio0 < ratio90 then Rot0 else Rot90
       | _ -> (* larger is better *)
-        conf.rot <- if ratio0 > ratio90 then Rot0 else Rot90
+          conf.rot <- if ratio0 > ratio90 then Rot0 else Rot90
     end;
 
     (* from the point of view of the image *)
@@ -326,16 +326,16 @@ let main () =
     let ratio =
       match conf.size with
       | DPI dpi ->
-        prerr_endline (sprintf "%s : %f dpi" conf.name dpi);
-        paper_width /. 8.26 /. dpi
+          prerr_endline (sprintf "%s : %f dpi" conf.name dpi);
+          paper_width /. 8.26 /. dpi
       | _ ->
-        let ratio =
-          if limitw /. float w  *. float h < limith
-          then limitw /. float w
-          else limith /. float h in
-        let dpi = paper_width /. 8.26 /. ratio in
-        prerr_endline (sprintf "%s : %f dpi" conf.name dpi);
-        ratio in
+          let ratio =
+            if limitw /. float w  *. float h < limith
+            then limitw /. float w
+            else limith /. float h in
+          let dpi = paper_width /. 8.26 /. ratio in
+          prerr_endline (sprintf "%s : %f dpi" conf.name dpi);
+          ratio in
 
     (* if just for printing dpi, quit. *)
     if !justdpi then raise Exit;
@@ -359,8 +359,8 @@ let main () =
         | TopRight (x, y) -> x +. prw, y -. prh
         | Center (x, y) -> x -. prw /. 2.0 , y -. prh /. 2.0
         | A4Center ->
-          (paper_width -. prw) /. 2.0,
-          (paper_height -. prh) /. 2.0 in
+            (paper_width -. prw) /. 2.0,
+            (paper_height -. prh) /. 2.0 in
       match conf.rot with
       | Rot0 -> x, y
       | Rot180 -> prw +. x, prh +. y
@@ -408,20 +408,20 @@ let main () =
         let print_pixel =
           if not conf.mono then
             function x ->
-              let adrs = x * 3 in
-              for i = 0 to 2 do
-                print_string (sprintf "%02x" (Char.code buf.[adrs+i]))
-              done
+                let adrs = x * 3 in
+                for i = 0 to 2 do
+                  print_string (sprintf "%02x" (Char.code buf.[adrs+i]))
+                done
           else
             let mono r g b =
               (r * 256 / 3 + g * 256 / 2 + b * 256 / 6) / 256 in
             function x ->
-              let adrs = x * 3 in
-              let m =
-                mono (Char.code buf.[adrs])
-                  (Char.code buf.[adrs + 1])
-                  (Char.code buf.[adrs + 2]) in
-              for i = 0 to 2 do print_string (sprintf "%02x" m) done in
+                let adrs = x * 3 in
+                let m =
+                  mono (Char.code buf.[adrs])
+                    (Char.code buf.[adrs + 1])
+                    (Char.code buf.[adrs + 2]) in
+                for i = 0 to 2 do print_string (sprintf "%02x" m) done in
         if not conf.mirror
         then for x = x1 to x1 + w - 1 do print_pixel x done
         else for x = x1 + w - 1 downto x1 do print_pixel x done;

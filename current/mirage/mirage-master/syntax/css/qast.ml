@@ -50,43 +50,43 @@ let get_string _loc m =
 
 let rec meta_t _loc = function
   | String s ->
-    <:expr< Css.Exprs [[Css.Str $`str:s$]] >>
+      <:expr< Css.Exprs [[Css.Str $`str:s$]] >>
 
   | Decl (a,b) ->
-    let elts  = get_exprs _loc (meta_t _loc a) in
-    let props = get_props _loc (meta_t _loc b) in
-    <:expr< Css.Props [ Css.Decl ($elts$, $props$) ] >>
+      let elts  = get_exprs _loc (meta_t _loc a) in
+      let props = get_props _loc (meta_t _loc b) in
+      <:expr< Css.Props [ Css.Decl ($elts$, $props$) ] >>
 
   | Rule (a,b) ->
-    let name  = get_string _loc (meta_t _loc a) in
-    let props = get_exprs _loc (meta_t _loc b) in
-    <:expr< Css.Props [ Css.Prop ($name$, $props$) ] >>
+      let name  = get_string _loc (meta_t _loc a) in
+      let props = get_exprs _loc (meta_t _loc b) in
+      <:expr< Css.Props [ Css.Prop ($name$, $props$) ] >>
 
   | Fun (a,b) ->
-    let name = get_string _loc (meta_t _loc a) in
-    let args = get_exprs _loc (meta_t _loc b) in
-    <:expr< Css.Exprs [[Css.Fun ($name$, $args$) ]] >>
+      let name = get_string _loc (meta_t _loc a) in
+      let args = get_exprs _loc (meta_t _loc b) in
+      <:expr< Css.Exprs [[Css.Fun ($name$, $args$) ]] >>
 
   | Comma (a,b) ->
-    let e1 = get_exprs _loc (meta_t _loc a) in
-    let e2 = get_exprs _loc (meta_t _loc b) in
-    <:expr< Css.Exprs ($e1$ @ $e2$) >>
+      let e1 = get_exprs _loc (meta_t _loc a) in
+      let e2 = get_exprs _loc (meta_t _loc b) in
+      <:expr< Css.Exprs ($e1$ @ $e2$) >>
 
   | ESeq (a,b) ->
-    let e1 = get_expr _loc (meta_t _loc a) in
-    let e2 = get_expr _loc (meta_t _loc b) in
-    <:expr< Css.Exprs [ ($e1$ @ $e2$) ] >>
+      let e1 = get_expr _loc (meta_t _loc a) in
+      let e2 = get_expr _loc (meta_t _loc b) in
+      <:expr< Css.Exprs [ ($e1$ @ $e2$) ] >>
 
   | RSeq (a,b) ->
-    let e1 = get_props _loc (meta_t _loc a) in
-    let e2 = get_props _loc (meta_t _loc b) in
-    <:expr< Css.Props ($e1$ @ $e2$) >>
+      let e1 = get_props _loc (meta_t _loc a) in
+      let e2 = get_props _loc (meta_t _loc b) in
+      <:expr< Css.Props ($e1$ @ $e2$) >>
 
   | Nil ->
-    <:expr< Css.Exprs [[]] >>
+      <:expr< Css.Exprs [[]] >>
 
   | Ant (l, str) ->
-    Ast.ExAnt (l, str)
+      Ast.ExAnt (l, str)
 
 let meta_t _loc t =
   let m = meta_t _loc t in

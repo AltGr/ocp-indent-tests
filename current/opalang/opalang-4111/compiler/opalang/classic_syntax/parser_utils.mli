@@ -194,9 +194,9 @@ val make_function2 :
   ([< `dot of string
    | `double_dot of string
    | `function_call of
-       [< `expr of (string, parsing_directive) expr | `hole of annot ]
-         list &
-       [< `expr of (string, parsing_directive) expr | `hole of annot ] list ] *
+        [< `expr of (string, parsing_directive) expr | `hole of annot ]
+          list &
+        [< `expr of (string, parsing_directive) expr | `hole of annot ] list ] *
      annot)
     list ->  (string, parsing_directive) expr_node
 
@@ -228,12 +228,12 @@ val default_value_in_expr_update :
          (('b, [> `coerce ] as 'c) SurfaceAst.expr_node * QmlLoc.annot)
            QmlAst.Db.update
   | `noassign of
-      'a *
-        [< `novalue of 'b * QmlLoc.annot
-        | `value of
-            (('b, 'c) SurfaceAst.expr_node * QmlLoc.annot)
-              QmlAst.Db.update ] *
-        'd ]
+       'a *
+         [< `novalue of 'b * QmlLoc.annot
+         | `value of
+              (('b, 'c) SurfaceAst.expr_node * QmlLoc.annot)
+                QmlAst.Db.update ] *
+         'd ]
     list ->
   ('a *
      (('b, 'c) SurfaceAst.expr_node * QmlLoc.annot) QmlAst.Db.update)
@@ -242,9 +242,9 @@ val default_value_in_expr_update :
 val default_value_in_expr_record : bool ->
   [< `binding of 'a * (string, [> `coerce ] as 'c) SurfaceAst.expr
   | `noassign of 'a *
-        [< `novalue of string * QmlLoc.annot
-        | `value of (string, 'c) SurfaceAst.expr ] *
-        string SurfaceAst.ty option ] list ->
+         [< `novalue of string * QmlLoc.annot
+         | `value of (string, 'c) SurfaceAst.expr ] *
+         string SurfaceAst.ty option ] list ->
   ('a * (string, 'c) SurfaceAst.expr) list
 val default_value_in_pat_record : bool ->
   (string * [< `novalue of string * QmlLoc.annot

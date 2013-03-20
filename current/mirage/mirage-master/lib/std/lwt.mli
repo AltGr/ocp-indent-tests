@@ -132,7 +132,7 @@ val wrap : (unit -> 'a) -> 'a t
       try
         return (f ())
       with exn ->
-        fail exn
+          fail exn
     ]}
 *)
 

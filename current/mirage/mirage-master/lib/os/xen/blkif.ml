@@ -460,9 +460,9 @@ module Single_request = struct
         match !state with
         | None -> return None
         | Some x ->
-          let item, state' = from x in
-          state := state';
-          return (Some item)
+            let item, state' = from x in
+            state := state';
+            return (Some item)
       )
 end
 
@@ -503,20 +503,20 @@ let read_single_request t r =
             | Some Not_supported -> fail (IO_error "unsupported")
             | None -> fail (IO_error "unknown error")
             | Some OK ->
-              (* Get the pages, and convert them into Istring views *)
-              return (Lwt_stream.of_list (List.rev (snd (List.fold_left
-                        (fun (i, acc) page ->
-                          let start_offset = match i with
-                            |0 -> r.start_offset * 512
-                            |_ -> 0 in
-                          let end_offset = match i with
-                            |n when n = len-1 -> (r.end_offset + 1) * 512
-                            |_ -> 4096 in
-                          let bytes = end_offset - start_offset in
-                          let subpage = Io_page.sub page start_offset bytes in
-                          i + 1, subpage :: acc
-                        ) (0, []) pages
-                    ))))
+                (* Get the pages, and convert them into Istring views *)
+                return (Lwt_stream.of_list (List.rev (snd (List.fold_left
+                          (fun (i, acc) page ->
+                            let start_offset = match i with
+                              |0 -> r.start_offset * 512
+                              |_ -> 0 in
+                            let end_offset = match i with
+                              |n when n = len-1 -> (r.end_offset + 1) * 512
+                              |_ -> 4096 in
+                            let bytes = end_offset - start_offset in
+                            let subpage = Io_page.sub page start_offset bytes in
+                            i + 1, subpage :: acc
+                          ) (0, []) pages
+                      ))))
           )
       )
 

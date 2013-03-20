@@ -1102,7 +1102,7 @@ let il_of_qml ?(can_skip_toplvl=false) (env:env) (private_env:private_env) (expr
         (* code simplification for common cases, handler being a lambda *)
         match handler with
         | IL.LetFun ([(IL.Value (_, handler_name)) as handler_id, _, _, _] as list,
-              IL.ApplyCont (IL.Continuation if_c1_name, IL.Value (_, if_handler_name)))
+            IL.ApplyCont (IL.Continuation if_c1_name, IL.Value (_, if_handler_name)))
           when Ident.equal c1_name if_c1_name && Ident.equal handler_name if_handler_name
           ->
             let term parent =

@@ -73,8 +73,8 @@
     {[
       try_lwt
         <expr>
-          finally
-          <expr>
+      finally
+      <expr>
     ]}
 
     and:
@@ -84,8 +84,8 @@
         <expr>
       with
       <branches>
-      finally
-        <expr>
+    finally
+      <expr>
     ]}
 
     For example:
@@ -95,8 +95,8 @@
         f x
       with
       | Failure msg ->
-        prerr_endline msg;
-        return ()
+          prerr_endline msg;
+          return ()
     ]}
 
     is expanded to:
@@ -105,10 +105,10 @@
       catch (fun _ -> f x)
         (function
          | Failure msg ->
-           prerr_endline msg;
-           return ()
+             prerr_endline msg;
+             return ()
          | exn ->
-           Lwt.fail exn)
+             Lwt.fail exn)
     ]}
 
     Note that the [exn -> Lwt.fail exn] branch is automatically addedd
@@ -163,7 +163,7 @@
     {[
       match_lwt <expr> with
       | <patt_1> -> <expr_1>
-          ...
+            ...
       | <patt_n> -> <expr_n>
     ]}
 *)

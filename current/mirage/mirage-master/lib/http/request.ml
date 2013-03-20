@@ -78,8 +78,8 @@ let init_request finished ic =
     *)
 
     |_ ->  (* Empty body for methods other than POST *)
-      Lwt.wakeup finished ();
-      return [`String ""]
+        Lwt.wakeup finished ();
+        return [`String ""]
   in
   lwt query_post_params, body =
     match meth with
@@ -122,9 +122,9 @@ let param ?meth ?default r name =
      | Some `GET -> List.assoc name r.r_get_params
      | Some `POST -> List.assoc name r.r_post_params)
   with Not_found ->
-    (match default with
-     | None -> raise (Param_not_found name)
-     | Some value -> value)
+      (match default with
+       | None -> raise (Param_not_found name)
+       | Some value -> value)
 
 let param_all ?meth r name =
   (match (meth: meth option) with
@@ -142,8 +142,8 @@ let authorization r =
   match Message.header r.r_msg ~name:"authorization" with
   | [] -> None
   | h :: _ -> 
-    let credentials = Base64.decode (remove_basic_auth h) in
-    (match Re.split_delim auth_sep_RE credentials with
-     | [username; password] -> Some (`Basic (username, password))
-     | l -> None)
+      let credentials = Base64.decode (remove_basic_auth h) in
+      (match Re.split_delim auth_sep_RE credentials with
+       | [username; password] -> Some (`Basic (username, password))
+       | l -> None)
 

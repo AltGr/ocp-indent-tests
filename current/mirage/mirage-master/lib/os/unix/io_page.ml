@@ -29,8 +29,8 @@ let alloc ~nr_pages =
     function
     |0 -> ()
     |n ->
-      Queue.add (create page_size) free_list;
-      inner (n-1)
+        Queue.add (create page_size) free_list;
+        inner (n-1)
   in
   inner nr_pages
 

@@ -44,13 +44,13 @@ let unmarshal buf =
         |3 -> Window_size_shift (get_uint8 buf 2)
         |4 -> SACK_ok
         |5 -> 
-          let num = ((get_uint8 buf 1) - 2) / 8 in
-          let rec to_int32_list off acc = function
-            |0 -> acc
-            |n ->
-              let x = (BE.get_uint32 buf off), (BE.get_uint32 buf (off+4)) in
-              to_int32_list (off+8) (x::acc) (n-1)
-          in SACK (to_int32_list 2 [] num)
+            let num = ((get_uint8 buf 1) - 2) / 8 in
+            let rec to_int32_list off acc = function
+              |0 -> acc
+              |n ->
+                  let x = (BE.get_uint32 buf off), (BE.get_uint32 buf (off+4)) in
+                  to_int32_list (off+8) (x::acc) (n-1)
+            in SACK (to_int32_list 2 [] num)
         |8 -> Timestamp ((BE.get_uint32 buf 2), (BE.get_uint32 buf 6))
         |n -> Unknown (n, (copy_buffer buf 2 (len buf - 2)))
       ) buf in
@@ -61,40 +61,40 @@ let write_iter buf =
   let set_tlen t l = set_uint8 buf 0 t; set_uint8 buf 1 l in
   function
   |Noop ->
-    set_uint8 buf 0 1;
-    1
+      set_uint8 buf 0 1;
+      1
   |MSS sz ->
-    set_tlen 2 4;
-    BE.set_uint16 buf 2 sz;
-    4
+      set_tlen 2 4;
+      BE.set_uint16 buf 2 sz;
+      4
   |Window_size_shift shift ->
-    set_tlen 3 3;
-    set_uint8 buf 2 shift;
-    3
+      set_tlen 3 3;
+      set_uint8 buf 2 shift;
+      3
   |SACK_ok ->
-    set_tlen 4 2;
-    2
+      set_tlen 4 2;
+      2
   |SACK acks ->
-    let tlen = (List.length acks * 8) + 2 in
-    set_tlen 5 tlen;
-    let rec fn off = function
-      |(le,re)::tl ->
-        BE.set_uint32 buf off le;
-        BE.set_uint32 buf (off+4) re;
-        fn (off+8) tl
-      |[] -> () in
-    fn 2 acks;
-    tlen
+      let tlen = (List.length acks * 8) + 2 in
+      set_tlen 5 tlen;
+      let rec fn off = function
+        |(le,re)::tl ->
+            BE.set_uint32 buf off le;
+            BE.set_uint32 buf (off+4) re;
+            fn (off+8) tl
+        |[] -> () in
+      fn 2 acks;
+      tlen
   |Timestamp (tsval,tsecr) ->
-    set_tlen 8 10;
-    BE.set_uint32 buf 2 tsval;
-    BE.set_uint32 buf 6 tsecr;
-    10
+      set_tlen 8 10;
+      BE.set_uint32 buf 2 tsval;
+      BE.set_uint32 buf 6 tsecr;
+      10
   |Unknown (kind,contents) ->
-    let tlen = String.length contents in
-    set_tlen kind tlen;
-    set_buffer contents 0 buf 0 tlen;
-    tlen
+      let tlen = String.length contents in
+      set_tlen kind tlen;
+      set_buffer contents 0 buf 0 tlen;
+      tlen
 
 let marshal buf ts =
   let open Cstruct in
@@ -102,9 +102,9 @@ let marshal buf ts =
   let rec write fn off buf =
     function
     |hd::tl ->
-      let wlen = fn buf hd in
-      let buf = shift buf wlen in
-      write fn (off+wlen) buf tl
+        let wlen = fn buf hd in
+        let buf = shift buf wlen in
+        write fn (off+wlen) buf tl
     |[] -> off
   in
   let tlen = write write_iter 0 buf ts in
@@ -122,7 +122,7 @@ let to_string = function
   |Window_size_shift b -> Printf.sprintf "Window>>%d" b
   |SACK_ok -> "SACK_ok"
   |SACK x -> Printf.(sprintf "SACK=(%s)" (String.concat ","
-          (List.map (fun (l,r) -> sprintf "%lu,%lu" l r) x)))
+            (List.map (fun (l,r) -> sprintf "%lu,%lu" l r) x)))
   |Timestamp (a,b) -> Printf.sprintf "Timestamp(%lu,%lu)" a b
   |Unknown (t,_) -> Printf.sprintf "%d?" t
 

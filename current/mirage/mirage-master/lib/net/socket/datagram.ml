@@ -41,13 +41,13 @@ module UDPv4 = struct
     let dst = (ipv4_addr_to_uint32 dstaddr, dstport) in
     match R.udpv4_sendto fd buf off len dst with
     |R.OK len' ->
-      if len' != len then
-        fail (Error "partial UDP send")
-      else
-        return ()
+        if len' != len then
+          fail (Error "partial UDP send")
+        else
+          return ()
     |R.Retry -> 
-      Activations.write fd >>
-      send mgr (dstaddr, dstport) buf
+        Activations.write fd >>
+        send mgr (dstaddr, dstport) buf
     |R.Err err -> fail (Error err)
 
   let recv mgr (addr,port) fn =
@@ -56,18 +56,18 @@ module UDPv4 = struct
     let rec listen () =
       match R.udpv4_recvfrom lfd buf 0 (Cstruct.len buf) with
       |R.OK (frm_addr, frm_port, len) ->
-        let frm_addr = ipv4_addr_of_uint32 frm_addr in
-        let dst = (frm_addr, frm_port) in
-        let req = Cstruct.sub buf 0 len in
-        (* Be careful to catch an exception here, as otherwise
-           ignore_result may raise it at some other random point *)
-        Lwt.ignore_result (
-          try_lwt
-            fn dst req
-          with exn ->
-            return (Printf.printf "EXN: %s\n%!" (Printexc.to_string exn))
-        );
-        listen ()
+          let frm_addr = ipv4_addr_of_uint32 frm_addr in
+          let dst = (frm_addr, frm_port) in
+          let req = Cstruct.sub buf 0 len in
+          (* Be careful to catch an exception here, as otherwise
+             ignore_result may raise it at some other random point *)
+          Lwt.ignore_result (
+            try_lwt
+              fn dst req
+            with exn ->
+                return (Printf.printf "EXN: %s\n%!" (Printexc.to_string exn))
+          );
+          listen ()
       |R.Retry -> Activations.read lfd >> listen ()
       |R.Err _ -> return ()
     in 

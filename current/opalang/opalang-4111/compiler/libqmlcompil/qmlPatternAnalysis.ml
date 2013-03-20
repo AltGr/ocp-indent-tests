@@ -1560,7 +1560,7 @@ struct
           | Or { cases = cases ; default = default } ->
               let cases = Option.default_map cases  (fun x-> cases@[Term x]) default in
               List.foldl Normalize.get_names_and_types_1 cases ([],[])
-              ,List.map (aux name) cases
+            ,List.map (aux name) cases
 
           | _ -> Normalize.get_names_and_types_1 o ([],[]),[aux name o]
         in

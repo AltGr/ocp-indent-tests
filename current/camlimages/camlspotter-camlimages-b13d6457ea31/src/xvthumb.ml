@@ -29,8 +29,8 @@ let read_id ic =
     end
   with
   | _ ->
-    prerr_endline "wrong header id";
-    raise Wrong_image_type;;
+      prerr_endline "wrong header id";
+      raise Wrong_image_type;;
 
 let read_header ic =
   read_id ic;
@@ -49,26 +49,26 @@ let read_header ic =
     done; raise Exit
   with
   | Exit ->
-    let info =
-      match !info with
-        Some info -> info
-      | None -> raise Wrong_image_type
-    in
-    try
-      let str = input_line ic in
-      let tokens =
-        List.map int_of_string
-          (Mstring.split_str (function ' ' -> true | _ -> false) str)
+      let info =
+        match !info with
+          Some info -> info
+        | None -> raise Wrong_image_type
       in
-      match tokens with
-        [w;h;cols] when cols <= 255 ->
-        info, w, h
+      try
+        let str = input_line ic in
+        let tokens =
+          List.map int_of_string
+            (Mstring.split_str (function ' ' -> true | _ -> false) str)
+        in
+        match tokens with
+          [w;h;cols] when cols <= 255 ->
+            info, w, h
+        | _ ->
+            prerr_endline ("GEOM get failed: " ^ str);
+            raise Wrong_image_type
+      with
       | _ ->
-        prerr_endline ("GEOM get failed: " ^ str);
-        raise Wrong_image_type
-    with
-    | _ ->
-      raise Wrong_image_type;;
+          raise Wrong_image_type;;
 
 let cmap_332 () =
   { max = 256;
@@ -85,8 +85,8 @@ let load_body ic w h =
     Index8.create_with w h [] (cmap_332 ()) (-1) str
   with
   | _ ->
-    prerr_endline "short";
-    raise Wrong_image_type;;
+      prerr_endline "short";
+      raise Wrong_image_type;;
 
 let load name =
   let ic = open_in_bin name in
@@ -150,15 +150,15 @@ let create img =
     match img with
     | Rgb24 t -> Rgb24.resize None t nw nh
     | Index8 t ->
-      let rgb24 = Index8.to_rgb24 t in
-      let resized = Rgb24.resize None rgb24 nw nh in
-      Rgb24.destroy rgb24;
-      resized
+        let rgb24 = Index8.to_rgb24 t in
+        let resized = Rgb24.resize None rgb24 nw nh in
+        Rgb24.destroy rgb24;
+        resized
     | Index16 t ->
-      let rgb24 = Index16.to_rgb24 t in
-      let resized = Rgb24.resize None rgb24 nw nh in
-      Rgb24.destroy rgb24;
-      resized
+        let rgb24 = Index16.to_rgb24 t in
+        let resized = Rgb24.resize None rgb24 nw nh in
+        Rgb24.destroy rgb24;
+        resized
     | Rgba32 _ | Cmyk32 _ -> failwith "RGBA and CMYK not supported"
   in
   let thumb = Index8.create_with nw nh [] (cmap_332 ()) (-1)

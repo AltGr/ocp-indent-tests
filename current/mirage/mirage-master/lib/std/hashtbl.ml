@@ -56,9 +56,9 @@ let resize hashfun tbl =
     let rec insert_bucket = function
         Empty -> ()
       | Cons(key, data, rest) ->
-        insert_bucket rest; (* preserve original order of elements *)
-        let nidx = (hashfun key) mod nsize in
-        ndata.(nidx) <- Cons(key, data, ndata.(nidx)) in
+          insert_bucket rest; (* preserve original order of elements *)
+          let nidx = (hashfun key) mod nsize in
+          ndata.(nidx) <- Cons(key, data, ndata.(nidx)) in
     for i = 0 to osize - 1 do
       insert_bucket odata.(i)
     done;
@@ -75,75 +75,75 @@ let add h key info =
 let remove h key =
   let rec remove_bucket = function
       Empty ->
-      Empty
+        Empty
     | Cons(k, i, next) ->
-      if compare k key = 0
-      then begin h.size <- pred h.size; next end
-      else Cons(k, i, remove_bucket next) in
+        if compare k key = 0
+        then begin h.size <- pred h.size; next end
+        else Cons(k, i, remove_bucket next) in
   let i = (hash key) mod (Array.length h.data) in
   h.data.(i) <- remove_bucket h.data.(i)
 
 let rec find_rec key = function
     Empty ->
-    raise Not_found
+      raise Not_found
   | Cons(k, d, rest) ->
-    if compare key k = 0 then d else find_rec key rest
+      if compare key k = 0 then d else find_rec key rest
 
 let find h key =
   match h.data.((hash key) mod (Array.length h.data)) with
     Empty -> raise Not_found
   | Cons(k1, d1, rest1) ->
-    if compare key k1 = 0 then d1 else
-      match rest1 with
-        Empty -> raise Not_found
-      | Cons(k2, d2, rest2) ->
-        if compare key k2 = 0 then d2 else
-          match rest2 with
-            Empty -> raise Not_found
-          | Cons(k3, d3, rest3) ->
-            if compare key k3 = 0 then d3 else find_rec key rest3
+      if compare key k1 = 0 then d1 else
+        match rest1 with
+          Empty -> raise Not_found
+        | Cons(k2, d2, rest2) ->
+            if compare key k2 = 0 then d2 else
+              match rest2 with
+                Empty -> raise Not_found
+              | Cons(k3, d3, rest3) ->
+                  if compare key k3 = 0 then d3 else find_rec key rest3
 
 let find_all h key =
   let rec find_in_bucket = function
       Empty ->
-      []
+        []
     | Cons(k, d, rest) ->
-      if compare k key = 0
-      then d :: find_in_bucket rest
-      else find_in_bucket rest in
+        if compare k key = 0
+        then d :: find_in_bucket rest
+        else find_in_bucket rest in
   find_in_bucket h.data.((hash key) mod (Array.length h.data))
 
 let replace h key info =
   let rec replace_bucket = function
       Empty ->
-      raise Not_found
+        raise Not_found
     | Cons(k, i, next) ->
-      if compare k key = 0
-      then Cons(k, info, next)
-      else Cons(k, i, replace_bucket next) in
+        if compare k key = 0
+        then Cons(k, info, next)
+        else Cons(k, i, replace_bucket next) in
   let i = (hash key) mod (Array.length h.data) in
   let l = h.data.(i) in
   try
     h.data.(i) <- replace_bucket l
   with Not_found ->
-    h.data.(i) <- Cons(key, info, l);
-    h.size <- succ h.size;
-    if h.size > Array.length h.data lsl 1 then resize hash h
+      h.data.(i) <- Cons(key, info, l);
+      h.size <- succ h.size;
+      if h.size > Array.length h.data lsl 1 then resize hash h
 
 let mem h key =
   let rec mem_in_bucket = function
     | Empty ->
-      false
+        false
     | Cons(k, d, rest) ->
-      compare k key = 0 || mem_in_bucket rest in
+        compare k key = 0 || mem_in_bucket rest in
   mem_in_bucket h.data.((hash key) mod (Array.length h.data))
 
 let iter f h =
   let rec do_bucket = function
       Empty ->
-      ()
+        ()
     | Cons(k, d, rest) ->
-      f k d; do_bucket rest in
+        f k d; do_bucket rest in
   let d = h.data in
   for i = 0 to Array.length d - 1 do
     do_bucket d.(i)
@@ -153,9 +153,9 @@ let fold f h init =
   let rec do_bucket b accu =
     match b with
       Empty ->
-      accu
+        accu
     | Cons(k, d, rest) ->
-      do_bucket rest (f k d accu) in
+        do_bucket rest (f k d accu) in
   let d = h.data in
   let accu = ref init in
   for i = 0 to Array.length d - 1 do
@@ -211,67 +211,67 @@ struct
   let remove h key =
     let rec remove_bucket = function
         Empty ->
-        Empty
+          Empty
       | Cons(k, i, next) ->
-        if H.equal k key
-        then begin h.size <- pred h.size; next end
-        else Cons(k, i, remove_bucket next) in
+          if H.equal k key
+          then begin h.size <- pred h.size; next end
+          else Cons(k, i, remove_bucket next) in
     let i = (safehash key) mod (Array.length h.data) in
     h.data.(i) <- remove_bucket h.data.(i)
 
   let rec find_rec key = function
       Empty ->
-      raise Not_found
+        raise Not_found
     | Cons(k, d, rest) ->
-      if H.equal key k then d else find_rec key rest
+        if H.equal key k then d else find_rec key rest
 
   let find h key =
     match h.data.((safehash key) mod (Array.length h.data)) with
       Empty -> raise Not_found
     | Cons(k1, d1, rest1) ->
-      if H.equal key k1 then d1 else
-        match rest1 with
-          Empty -> raise Not_found
-        | Cons(k2, d2, rest2) ->
-          if H.equal key k2 then d2 else
-            match rest2 with
-              Empty -> raise Not_found
-            | Cons(k3, d3, rest3) ->
-              if H.equal key k3 then d3 else find_rec key rest3
+        if H.equal key k1 then d1 else
+          match rest1 with
+            Empty -> raise Not_found
+          | Cons(k2, d2, rest2) ->
+              if H.equal key k2 then d2 else
+                match rest2 with
+                  Empty -> raise Not_found
+                | Cons(k3, d3, rest3) ->
+                    if H.equal key k3 then d3 else find_rec key rest3
 
   let find_all h key =
     let rec find_in_bucket = function
         Empty ->
-        []
+          []
       | Cons(k, d, rest) ->
-        if H.equal k key
-        then d :: find_in_bucket rest
-        else find_in_bucket rest in
+          if H.equal k key
+          then d :: find_in_bucket rest
+          else find_in_bucket rest in
     find_in_bucket h.data.((safehash key) mod (Array.length h.data))
 
   let replace h key info =
     let rec replace_bucket = function
         Empty ->
-        raise Not_found
+          raise Not_found
       | Cons(k, i, next) ->
-        if H.equal k key
-        then Cons(k, info, next)
-        else Cons(k, i, replace_bucket next) in
+          if H.equal k key
+          then Cons(k, info, next)
+          else Cons(k, i, replace_bucket next) in
     let i = (safehash key) mod (Array.length h.data) in
     let l = h.data.(i) in
     try
       h.data.(i) <- replace_bucket l
     with Not_found ->
-      h.data.(i) <- Cons(key, info, l);
-      h.size <- succ h.size;
-      if h.size > Array.length h.data lsl 1 then resize safehash h
+        h.data.(i) <- Cons(key, info, l);
+        h.size <- succ h.size;
+        if h.size > Array.length h.data lsl 1 then resize safehash h
 
   let mem h key =
     let rec mem_in_bucket = function
       | Empty ->
-        false
+          false
       | Cons(k, d, rest) ->
-        H.equal k key || mem_in_bucket rest in
+          H.equal k key || mem_in_bucket rest in
     mem_in_bucket h.data.((safehash key) mod (Array.length h.data))
 
   let iter = iter

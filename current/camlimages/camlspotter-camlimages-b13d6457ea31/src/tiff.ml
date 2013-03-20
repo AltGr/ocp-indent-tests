@@ -43,25 +43,25 @@ let load name opts =
   let img, buf =
     match colormodel with
     | RGB ->
-      let img = Rgb24.create w h in
-      Rgb24 img,
-      String.create (w * 3)
+        let img = Rgb24.create w h in
+        Rgb24 img,
+        String.create (w * 3)
     | CMYK ->
-      let img = Cmyk32.create w h in
-      Cmyk32 img,
-      String.create (w * 4)
+        let img = Cmyk32.create w h in
+        Cmyk32 img,
+        String.create (w * 4)
     | WHITEBLACK ->
-      let img = Index8.create w h in
-      img.Index8.colormap.map <- [| {r = 255; g = 255; b = 255};
-                                    {r = 0; g = 0; b = 0} |];
-      Index8 img,
-      String.create ((w + 7) / 8)
+        let img = Index8.create w h in
+        img.Index8.colormap.map <- [| {r = 255; g = 255; b = 255};
+                                      {r = 0; g = 0; b = 0} |];
+        Index8 img,
+        String.create ((w + 7) / 8)
     | BLACKWHITE ->
-      let img = Index8.create w h in
-      img.Index8.colormap.map <- [| {r = 0; g = 0; b = 0};
-                                    {r = 255; g = 255; b = 255} |];
-      Index8 img,
-      String.create ((w + 7) / 8) in
+        let img = Index8.create w h in
+        img.Index8.colormap.map <- [| {r = 0; g = 0; b = 0};
+                                      {r = 255; g = 255; b = 255} |];
+        Index8 img,
+        String.create ((w + 7) / 8) in
 
   let set_scanline =
     match colormodel, img with
@@ -69,14 +69,14 @@ let load name opts =
     | _, Cmyk32 img -> fun buf y -> Cmyk32.set_scanline img y buf
     | BLACKWHITE, Index8 img
     | WHITEBLACK, Index8 img ->
-      let bits = [| 128; 64; 32; 16; 8; 4; 2; 1 |] in
-      fun buf y ->
-        for x = 0 to w - 1 do
-          let c = x lsr 3 in
-          let b = x land 7 in
-          if Char.code buf.[c] land Array.unsafe_get bits b <> 0 then
-            Index8.unsafe_set img x y 1
-        done
+        let bits = [| 128; 64; 32; 16; 8; 4; 2; 1 |] in
+        fun buf y ->
+          for x = 0 to w - 1 do
+            let c = x lsr 3 in
+            let b = x land 7 in
+            if Char.code buf.[c] land Array.unsafe_get bits b <> 0 then
+              Index8.unsafe_set img x y 1
+          done
     | _ -> assert false in
 
   for y = 0 to h - 1 do
@@ -92,15 +92,15 @@ let load name opts =
 let save name _opts image =
   match image with
   | Rgb24 bmp ->
-    let resolution = (* resolution in DPI *)
-      match Images.dpi bmp.infos with
-      | Some r -> r
-      | None -> 200.0 in
-    let oc = open_out name bmp.width bmp.height resolution in
-    for y = 0 to bmp.height - 1 do
-      write_scanline oc (Rgb24.get_scanline bmp y) y
-    done;
-    close_out oc
+      let resolution = (* resolution in DPI *)
+        match Images.dpi bmp.infos with
+        | Some r -> r
+        | None -> 200.0 in
+      let oc = open_out name bmp.width bmp.height resolution in
+      for y = 0 to bmp.height - 1 do
+        write_scanline oc (Rgb24.get_scanline bmp y) y
+      done;
+      close_out oc
   | _ -> raise Wrong_image_type;;
 
 let check_header filename =
@@ -112,18 +112,18 @@ let check_header filename =
     Pervasives.close_in ic;
     match str with
     | "MM\000\042" ->
-      { header_width = -1;
-        header_height = -1;
-        header_infos = [Images.Info_BigEndian]; }
+        { header_width = -1;
+          header_height = -1;
+          header_infos = [Images.Info_BigEndian]; }
     | "II\042\000" ->
-      { header_width = -1;
-        header_height = -1;
-        header_infos = [Images.Info_LittleEndian]; }
+        { header_width = -1;
+          header_height = -1;
+          header_infos = [Images.Info_LittleEndian]; }
     | _ -> raise Wrong_file_type
   with
   | _ ->
-    Pervasives.close_in ic;
-    raise Wrong_file_type;;
+      Pervasives.close_in ic;
+      raise Wrong_file_type;;
 
 add_methods Tiff
   { check_header = check_header;

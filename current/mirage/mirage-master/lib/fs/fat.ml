@@ -285,9 +285,9 @@ let follow_chain format fat cluster =
         | End -> i :: list
         | Free | Bad -> list (* corrupt file *)
         | Used j ->
-          if IntSet.mem i set
-          then list (* infinite loop: corrupt file *)
-          else inner (i :: list, IntSet.add i set) j
+            if IntSet.mem i set
+            then list (* infinite loop: corrupt file *)
+            else inner (i :: list, IntSet.add i set) j
       end in
   List.rev (inner ([], IntSet.empty) cluster)
 
@@ -310,9 +310,9 @@ let extend boot format fat (last: int option) n =
   let rec inner acc start = function
     | 0 -> acc (* in reverse disk order *)
     | i ->
-      match find_free_from boot format fat start with
-      | None -> acc (* out of space *)
-      | Some c -> inner (c :: acc) (c + 1) (i - 1) in
+        match find_free_from boot format fat start with
+        | None -> acc (* out of space *)
+        | Some c -> inner (c :: acc) (c + 1) (i - 1) in
   let to_allocate = inner [] (match last with None -> initial | Some x -> x) n in
   if n = 0
   then [], []
@@ -325,7 +325,7 @@ let extend boot format fat (last: int option) n =
     let updates = fst(List.fold_left (fun (acc, last) next ->
           (match last with
            | Some last ->
-             to_bitstring format last fat (Used next) :: acc
+               to_bitstring format last fat (Used next) :: acc
            | None -> acc), Some next
         ) ([], last) to_allocate) in
 
@@ -624,91 +624,91 @@ module Dir_entry = struct
     start_cluster: 16: littleendian;
     file_size: 32: littleendian
   } ->
-let x = int_of_char filename.[0] in
-if x = 0
-then End
-else
-  let deleted = x = 0xe5 in
-  filename.[0] <- char_of_int (if x = 0x05 then 0xe5 else x);
-  Dos {
-    filename = remove_padding filename;
-    ext = remove_padding ext;
-    read_only = read_only;
-    deleted = deleted;
-    hidden = hidden;
-    system = system;
-    volume = volume;
-    subdir = subdir;
-    archive = archive;
-    create = time_of_int create_date create_time create_time_ms;
-    access = time_of_int last_access_date 0 0;
-    modify = time_of_int last_modify_date last_modify_time 0;
-    start_cluster = start_cluster;
-    file_size = file_size
-  }
-| { _ } ->
-  let (s, off, len) = bits in
-  if len = 0
+  let x = int_of_char filename.[0] in
+  if x = 0
   then End
-  else failwith (Printf.sprintf "Not a dir entry off=%d len=%d" off len)
+  else
+    let deleted = x = 0xe5 in
+    filename.[0] <- char_of_int (if x = 0x05 then 0xe5 else x);
+    Dos {
+      filename = remove_padding filename;
+      ext = remove_padding ext;
+      read_only = read_only;
+      deleted = deleted;
+      hidden = hidden;
+      system = system;
+      volume = volume;
+      subdir = subdir;
+      archive = archive;
+      create = time_of_int create_date create_time create_time_ms;
+      access = time_of_int last_access_date 0 0;
+      modify = time_of_int last_modify_date last_modify_time 0;
+      start_cluster = start_cluster;
+      file_size = file_size
+    }
+  | { _ } ->
+    let (s, off, len) = bits in
+    if len = 0
+    then End
+    else failwith (Printf.sprintf "Not a dir entry off=%d len=%d" off len)
 
 let to_bitstring = function
   | End ->
-    let zeroes = String.make 32 (char_of_int 0) in
-    BITSTRING {
-      zeroes: (32 * 8): string
-    }
+      let zeroes = String.make 32 (char_of_int 0) in
+      BITSTRING {
+        zeroes: (32 * 8): string
+      }
   | Lfn l ->
-    let seq = l.lfn_seq lor (if l.lfn_last then 0x40 else 0) lor (if l.lfn_deleted then 0x80 else 0) in
-    let utf = add_padding (char_of_int 0xff) 26 l.lfn_utf16_name in
-    let utf1 = String.sub utf 0 10 in
-    let utf2 = String.sub utf 10 12 in
-    let utf3 = String.sub utf 22 4 in
-    let checksum = l.lfn_checksum in
-    BITSTRING {
-      seq: 8;
-      utf1: (10 * 8): string;
-      0x0f: 8;
-      0: 8;
-      checksum: 8;
-      utf2: (12 * 8): string;
-      0: 16;
-      utf3: (4 * 8): string
-    }
+      let seq = l.lfn_seq lor (if l.lfn_last then 0x40 else 0) lor (if l.lfn_deleted then 0x80 else 0) in
+      let utf = add_padding (char_of_int 0xff) 26 l.lfn_utf16_name in
+      let utf1 = String.sub utf 0 10 in
+      let utf2 = String.sub utf 10 12 in
+      let utf3 = String.sub utf 22 4 in
+      let checksum = l.lfn_checksum in
+      BITSTRING {
+        seq: 8;
+        utf1: (10 * 8): string;
+        0x0f: 8;
+        0: 8;
+        checksum: 8;
+        utf2: (12 * 8): string;
+        0: 16;
+        utf3: (4 * 8): string
+      }
   | Dos x ->
-    let filename = add_padding ' ' 8 x.filename in
-    let y = int_of_char filename.[0] in
-    filename.[0] <- char_of_int (if y = 0xe5 then 0x05 else y);
-    if x.deleted then filename.[0] <- char_of_int 0xe5;
-    let ext = add_padding ' ' 3 x.ext in
-    let create_time_ms = x.create.ms in
-    let create_time = int_of_time x.create in
-    let create_date = int_of_date x.create in
-    let last_access_date = int_of_date x.access in
-    let last_modify_time = int_of_time x.modify in
-    let last_modify_date = int_of_date x.modify in
-    BITSTRING {
-      filename: (8 * 8): string;
-      ext: (3 * 8): string;
-      false: 1; (* unused *)
-      false: 1; (* device *)
-      x.archive: 1;
-      x.subdir: 1;
-      x.volume: 1;
-      x.system: 1;
-      x.hidden: 1;
-      x.read_only: 1;
-      0: 8; (* reserved *)
-      create_time_ms: 8; (* high precision create time 0-199 in units of 10ms *)
-      create_time: 16: littleendian;
-      create_date: 16: littleendian;
-      last_access_date: 16: littleendian;
-      0: 16: littleendian;
-      last_modify_time: 16: littleendian;
-      last_modify_date: 16: littleendian;
-      x.start_cluster: 16: littleendian;
-      x.file_size: 32: littleendian
-    }
+      let filename = add_padding ' ' 8 x.filename in
+      let y = int_of_char filename.[0] in
+      filename.[0] <- char_of_int (if y = 0xe5 then 0x05 else y);
+      if x.deleted then filename.[0] <- char_of_int 0xe5;
+      let ext = add_padding ' ' 3 x.ext in
+      let create_time_ms = x.create.ms in
+      let create_time = int_of_time x.create in
+      let create_date = int_of_date x.create in
+      let last_access_date = int_of_date x.access in
+      let last_modify_time = int_of_time x.modify in
+      let last_modify_date = int_of_date x.modify in
+      BITSTRING {
+        filename: (8 * 8): string;
+        ext: (3 * 8): string;
+        false: 1; (* unused *)
+        false: 1; (* device *)
+        x.archive: 1;
+        x.subdir: 1;
+        x.volume: 1;
+        x.system: 1;
+        x.hidden: 1;
+        x.read_only: 1;
+        0: 8; (* reserved *)
+        create_time_ms: 8; (* high precision create time 0-199 in units of 10ms *)
+        create_time: 16: littleendian;
+        create_date: 16: littleendian;
+        last_access_date: 16: littleendian;
+        0: 16: littleendian;
+        last_modify_time: 16: littleendian;
+        last_modify_date: 16: littleendian;
+        x.start_cluster: 16: littleendian;
+        x.file_size: 32: littleendian
+      }
 
 let entry_size = 32 (* bytes *)
 
@@ -725,38 +725,38 @@ let fold f initial bits =
   let rec inner lfns acc = function
     | [] -> acc
     | (offset, b) :: bs ->
-      begin match of_bitstring b with
-        | Dos { deleted = true }
-        | Dos { volume = true } (* pretend the volume label doesn't exist *)
-        | Lfn { lfn_deleted = true } -> inner lfns acc bs
+        begin match of_bitstring b with
+          | Dos { deleted = true }
+          | Dos { volume = true } (* pretend the volume label doesn't exist *)
+          | Lfn { lfn_deleted = true } -> inner lfns acc bs
 
-        | Lfn lfn -> inner ((offset, lfn) :: lfns) acc bs
-        | Dos d ->
-          let expected_checksum = compute_checksum d in
-          (* TESTING ONLY *)
-          let b' = to_bitstring (Dos d) in
-          if Bitstring.compare b b' <> 0 then begin
-            Printf.printf "On disk:\n";
-            Bitstring.hexdump_bitstring stdout b;
-            Printf.printf "Regenerated:\n";
-            Bitstring.hexdump_bitstring stdout b'
-          end;
-          (* reconstruct UTF text from LFNs *)
-          let lfns = List.sort (fun a b -> compare (snd a).lfn_seq (snd b).lfn_seq) lfns in
-          List.iter
-            (fun (_, l) -> if l.lfn_checksum <> expected_checksum then begin
-                Printf.printf "Filename: %s.%s; expected_checksum = %d; actual = %d\n%!" d.filename d.ext expected_checksum l.lfn_checksum
-              end) lfns;
-          let utfs = List.rev (List.fold_left (fun acc (_, lfn) -> lfn.lfn_utf16_name :: acc) [] lfns) in
-          let reconstructed = {
-            utf_filename = String.concat "" utfs;
-            dos = offset, d;
-            lfns = lfns;
-          } in
-          let acc' = f acc offset reconstructed in
-          inner [] acc' bs
-        | End -> acc
-      end in
+          | Lfn lfn -> inner ((offset, lfn) :: lfns) acc bs
+          | Dos d ->
+              let expected_checksum = compute_checksum d in
+              (* TESTING ONLY *)
+              let b' = to_bitstring (Dos d) in
+              if Bitstring.compare b b' <> 0 then begin
+                Printf.printf "On disk:\n";
+                Bitstring.hexdump_bitstring stdout b;
+                Printf.printf "Regenerated:\n";
+                Bitstring.hexdump_bitstring stdout b'
+              end;
+              (* reconstruct UTF text from LFNs *)
+              let lfns = List.sort (fun a b -> compare (snd a).lfn_seq (snd b).lfn_seq) lfns in
+              List.iter
+                (fun (_, l) -> if l.lfn_checksum <> expected_checksum then begin
+                    Printf.printf "Filename: %s.%s; expected_checksum = %d; actual = %d\n%!" d.filename d.ext expected_checksum l.lfn_checksum
+                  end) lfns;
+              let utfs = List.rev (List.fold_left (fun acc (_, lfn) -> lfn.lfn_utf16_name :: acc) [] lfns) in
+              let reconstructed = {
+                utf_filename = String.concat "" utfs;
+                dos = offset, d;
+                lfns = lfns;
+              } in
+              let acc' = f acc offset reconstructed in
+              inner [] acc' bs
+          | End -> acc
+        end in
   inner [] initial (blocks bits)
 
 (** [list bits] returns a list of valid (not deleted) directory entries
@@ -769,10 +769,10 @@ let next bits =
   let rec inner offset = function
     | [] -> None
     | b :: bs ->
-      begin match of_bitstring b with
-        | End -> Some offset
-        | _ -> inner (8 * 32 + offset) bs
-      end in
+        begin match of_bitstring b with
+          | End -> Some offset
+          | _ -> inner (8 * 32 + offset) bs
+        end in
   inner 0 (Bitstring.bitstring_chop (8 * 32) bits)
 
 (** [add block t] return the update required to add [t] to the directory [block].
@@ -808,21 +808,21 @@ let find name list =
 let remove block filename =
   match find filename (list block) with
   | Some r ->
-    let offsets = fst r.dos :: (List.map fst r.lfns) in
-    List.rev (List.fold_left
-        (fun acc offset ->
-          let b = Bitstring.takebits (8 * entry_size) (Bitstring.dropbits (8 * offset) block) in
-          let update = match of_bitstring b with
-            | Lfn lfn ->
-              let lfn' = { lfn with lfn_deleted = true } in
-              Update.make (Int64.of_int offset) (to_bitstring (Lfn lfn'))
-            | Dos dos ->
-              let dos' = { dos with deleted = true } in
-              Update.make (Int64.of_int offset) (to_bitstring (Dos dos'))
-            | End -> assert false
-          in
-          update :: acc
-        ) [] offsets)
+      let offsets = fst r.dos :: (List.map fst r.lfns) in
+      List.rev (List.fold_left
+          (fun acc offset ->
+            let b = Bitstring.takebits (8 * entry_size) (Bitstring.dropbits (8 * offset) block) in
+            let update = match of_bitstring b with
+              | Lfn lfn ->
+                  let lfn' = { lfn with lfn_deleted = true } in
+                  Update.make (Int64.of_int offset) (to_bitstring (Lfn lfn'))
+              | Dos dos ->
+                  let dos' = { dos with deleted = true } in
+                  Update.make (Int64.of_int offset) (to_bitstring (Dos dos'))
+              | End -> assert false
+            in
+            update :: acc
+          ) [] offsets)
   | None -> [] (* no updates implies nothing to remove *)
 
 let modify block filename file_size start_cluster =
@@ -973,25 +973,25 @@ module FATFilesystem = functor(B: BLOCK) -> struct
       | File d -> Lwt.map Dir_entry.list (read_whole_file x d) in
     let rec inner sofar current = function
       | [] ->
-        begin match current with
-          | Dir ds ->
-            Lwt.return (Success (Dir ds))
-          | File { Dir_entry.dos = _, { Dir_entry.subdir = true } } ->
-            let ds = readdir current in
-            Lwt.map (fun ds -> Success (Dir ds)) ds
-          | File ( { Dir_entry.dos = _, { Dir_entry.subdir = false } } as d ) ->
-            Lwt.return (Success (File d))
-        end
+          begin match current with
+            | Dir ds ->
+                Lwt.return (Success (Dir ds))
+            | File { Dir_entry.dos = _, { Dir_entry.subdir = true } } ->
+                let ds = readdir current in
+                Lwt.map (fun ds -> Success (Dir ds)) ds
+            | File ( { Dir_entry.dos = _, { Dir_entry.subdir = false } } as d ) ->
+                Lwt.return (Success (File d))
+          end
       | p :: ps ->
-        lwt entries = readdir current in
-        begin match Dir_entry.find p entries, ps with
-          | Some { Dir_entry.dos = _, { Dir_entry.subdir = false } }, _ :: _ ->
-            Lwt.return (Error (Not_a_directory (Path.of_string_list (List.rev (p :: sofar)))))
-          | Some d, _ ->
-            inner (p::sofar) (File d) ps
-          | None, _ ->
-            Lwt.return (Error(No_directory_entry (Path.of_string_list (List.rev sofar), p)))
-        end in
+          lwt entries = readdir current in
+          begin match Dir_entry.find p entries, ps with
+            | Some { Dir_entry.dos = _, { Dir_entry.subdir = false } }, _ :: _ ->
+                Lwt.return (Error (Not_a_directory (Path.of_string_list (List.rev (p :: sofar)))))
+            | Some d, _ ->
+                inner (p::sofar) (File d) ps
+            | None, _ ->
+                Lwt.return (Error(No_directory_entry (Path.of_string_list (List.rev sofar), p)))
+          end in
     inner [] (Dir (Dir_entry.list x.root)) (Path.to_string_list path)
 
   (** Updates to files and directories involve writing to the following disk areas: *)
@@ -1006,12 +1006,12 @@ module FATFilesystem = functor(B: BLOCK) -> struct
   let chain_of_file x path : int list option Lwt.t =
     let chain_of_find_result : find result -> int list option = function
       | Success (Dir ds) ->
-        begin match Dir_entry.find (Path.filename path) ds with
-          | None -> assert false
-          | Some f ->
-            let start_cluster = (snd f.Dir_entry.dos).Dir_entry.start_cluster in
-            Some(Fat_entry.follow_chain x.format x.fat start_cluster)
-        end
+          begin match Dir_entry.find (Path.filename path) ds with
+            | None -> assert false
+            | Some f ->
+                let start_cluster = (snd f.Dir_entry.dos).Dir_entry.start_cluster in
+                Some(Fat_entry.follow_chain x.format x.fat start_cluster)
+          end
       | _ -> None in
     if Path.is_root path 
     then Lwt.return None
@@ -1035,45 +1035,45 @@ module FATFilesystem = functor(B: BLOCK) -> struct
       Int64.(to_int(div (add bytes_needed (sub bpc 1L)) bpc)) in
     match location, bytes_needed > 0L with
     | Rootdir, true ->
-      Lwt.return (Error No_space)
+        Lwt.return (Error No_space)
     | (Rootdir | Chain _), false ->
-      let writes = Update.map_updates updates sectors bps in
-      lwt () = Lwt_util.iter_serial (write_update x) writes in
-      if location = Rootdir then x.root <- Update.apply x.root update;
-      Lwt.return (Success ())
+        let writes = Update.map_updates updates sectors bps in
+        lwt () = Lwt_util.iter_serial (write_update x) writes in
+        if location = Rootdir then x.root <- Update.apply x.root update;
+        Lwt.return (Success ())
     | Chain cs, true ->
-      let last = if cs = [] then None else Some (List.hd (List.tl cs)) in
-      let fat_allocations, new_clusters = Fat_entry.extend x.boot x.format x.fat last clusters_needed in
-      (* Split the FAT allocations into multiple sectors. Note there might
-         be more than one per sector. *)
-      let fat_allocations_sectors = List.concat (List.map (fun x -> Update.split x bps) fat_allocations) in
-      let fat_sectors = Boot_sector.sectors_of_fat x.boot in
-      let fat_writes = Update.map_updates fat_allocations_sectors fat_sectors bps in
+        let last = if cs = [] then None else Some (List.hd (List.tl cs)) in
+        let fat_allocations, new_clusters = Fat_entry.extend x.boot x.format x.fat last clusters_needed in
+        (* Split the FAT allocations into multiple sectors. Note there might
+           be more than one per sector. *)
+        let fat_allocations_sectors = List.concat (List.map (fun x -> Update.split x bps) fat_allocations) in
+        let fat_sectors = Boot_sector.sectors_of_fat x.boot in
+        let fat_writes = Update.map_updates fat_allocations_sectors fat_sectors bps in
 
-      let new_sectors = sectors_of_chain x new_clusters in
-      let data_writes = Update.map_updates updates (sectors @ new_sectors) bps in
-      lwt () = Lwt_util.iter_serial (write_update x) data_writes in
-      lwt () = Lwt_util.iter_serial (write_update x) fat_writes in
-      lwt (_: unit result) = update_directory_containing x path
-          (fun bits ds ->
-            let enoent = Error(No_directory_entry (Path.directory path, Path.filename path)) in
-            let filename = Path.filename path in
-            match Dir_entry.find filename ds with
-            | None ->
-              enoent
-            | Some d ->
-              let file_size = Dir_entry.file_size_of d in
-              let new_file_size = max file_size (Int32.of_int (Int64.to_int (Update.total_length update))) in
-              let start_cluster = List.hd (cs @ new_clusters) in
-              begin match Dir_entry.modify bits filename new_file_size start_cluster with
-                | [] ->
+        let new_sectors = sectors_of_chain x new_clusters in
+        let data_writes = Update.map_updates updates (sectors @ new_sectors) bps in
+        lwt () = Lwt_util.iter_serial (write_update x) data_writes in
+        lwt () = Lwt_util.iter_serial (write_update x) fat_writes in
+        lwt (_: unit result) = update_directory_containing x path
+            (fun bits ds ->
+              let enoent = Error(No_directory_entry (Path.directory path, Path.filename path)) in
+              let filename = Path.filename path in
+              match Dir_entry.find filename ds with
+              | None ->
                   enoent
-                | x ->
-                  Success x
-              end
-          ) in
-      x.fat <- List.fold_left (fun fat update -> Update.apply fat update) x.fat fat_allocations;
-      Lwt.return (Success ())
+              | Some d ->
+                  let file_size = Dir_entry.file_size_of d in
+                  let new_file_size = max file_size (Int32.of_int (Int64.to_int (Update.total_length update))) in
+                  let start_cluster = List.hd (cs @ new_clusters) in
+                  begin match Dir_entry.modify bits filename new_file_size start_cluster with
+                    | [] ->
+                        enoent
+                    | x ->
+                        Success x
+                  end
+            ) in
+        x.fat <- List.fold_left (fun fat update -> Update.apply fat update) x.fat fat_allocations;
+        Lwt.return (Success ())
 
   and update_directory_containing x path f =
     let parent_path = Path.directory path in
@@ -1082,23 +1082,23 @@ module FATFilesystem = functor(B: BLOCK) -> struct
     | Error x -> Lwt.return (Error x)
     | Success (File _) -> Lwt.return (Error(Not_a_directory parent_path))
     | Success (Dir ds) ->
-      lwt c = chain_of_file x parent_path in
-      let sectors, location = match c with
-        | None -> Boot_sector.sectors_of_root_dir x.boot, Rootdir
-        | Some c -> sectors_of_chain x c, Chain c in
-      lwt contents = read_sectors sectors in
-      begin match f contents ds with
-        | Error x -> Lwt.return (Error x)
-        | Success updates ->
-          (* XXX: need to rewrite the Success/Error stuff in terms of
-                     Lwt exceptions. *)
-          lwt _ = Lwt_util.iter_serial
-              (fun update ->
-                lwt _ = write_to_location x parent_path location update in
-                Lwt.return ()
-              ) updates in
-          Lwt.return (Success ())
-      end
+        lwt c = chain_of_file x parent_path in
+        let sectors, location = match c with
+          | None -> Boot_sector.sectors_of_root_dir x.boot, Rootdir
+          | Some c -> sectors_of_chain x c, Chain c in
+        lwt contents = read_sectors sectors in
+        begin match f contents ds with
+          | Error x -> Lwt.return (Error x)
+          | Success updates ->
+              (* XXX: need to rewrite the Success/Error stuff in terms of
+                         Lwt exceptions. *)
+              lwt _ = Lwt_util.iter_serial
+                  (fun update ->
+                    lwt _ = write_to_location x parent_path location update in
+                    Lwt.return ()
+                  ) updates in
+              Lwt.return (Success ())
+        end
 
   (** [write x f offset bs] writes bitstring [bs] at [offset] in file [f] on
       filesystem [x] *)
@@ -1153,21 +1153,21 @@ module FATFilesystem = functor(B: BLOCK) -> struct
     | Error x -> Lwt.return (Error x)
     | Success (File f) -> Lwt.return (Success (Stat.File (entry_of_file f)))
     | Success (Dir ds) ->
-      let ds' = List.map entry_of_file ds in
-      if Path.is_root path
-      then Lwt.return (Success (Stat.Dir (entry_of_file Dir_entry.fake_root_entry, ds')))
-      else
-        let filename = Path.filename path in
-        let parent_path = Path.directory path in
-        lwt f = find x parent_path in
-        match f with
-        | Error x -> Lwt.return (Error x)
-        | Success (File _) -> assert false (* impossible by initial match *)
-        | Success (Dir ds) ->
-          begin match Dir_entry.find filename ds with
-            | None -> assert false (* impossible by initial match *)
-            | Some f -> Lwt.return (Success (Stat.Dir (entry_of_file f, ds')))
-          end
+        let ds' = List.map entry_of_file ds in
+        if Path.is_root path
+        then Lwt.return (Success (Stat.Dir (entry_of_file Dir_entry.fake_root_entry, ds')))
+        else
+          let filename = Path.filename path in
+          let parent_path = Path.directory path in
+          lwt f = find x parent_path in
+          match f with
+          | Error x -> Lwt.return (Error x)
+          | Success (File _) -> assert false (* impossible by initial match *)
+          | Success (Dir ds) ->
+              begin match Dir_entry.find filename ds with
+                | None -> assert false (* impossible by initial match *)
+                | Some f -> Lwt.return (Success (Stat.Dir (entry_of_file f, ds')))
+              end
 
   let read_file x { Dir_entry.dos = _, ({ Dir_entry.file_size = file_size } as f) } the_start length =
     let bps = x.boot.Boot_sector.bytes_per_sector in
@@ -1197,8 +1197,8 @@ module FATFilesystem = functor(B: BLOCK) -> struct
     match f with
     | Success (Dir _) -> Lwt.return (Error (Is_a_directory path))
     | Success (File f) -> 
-      lwt contents = read_file x f the_start length in
-      Lwt.return (Success contents)
+        lwt contents = read_file x f the_start length in
+        Lwt.return (Success contents)
     | Error x -> Lwt.return (Error x)
 
 end
@@ -1252,19 +1252,19 @@ let make_kvro ~id ~vbd =
     lwt file_size = size key in
     match file_size with
     | Some file_size ->
-      let next () =
-        let toread = max 0 (min block_size (Int64.to_int file_size - !offset)) in
-        if toread = 0
-        then return None
-        else begin
-          lwt r = FS.read fs path !offset toread in
-          match r with
-          | Success bs ->
-            offset := !offset + block_size;
-            return (Some bs)
-          | _ -> return None
-        end in
-      return (Some(Lwt_stream.from next))
+        let next () =
+          let toread = max 0 (min block_size (Int64.to_int file_size - !offset)) in
+          if toread = 0
+          then return None
+          else begin
+            lwt r = FS.read fs path !offset toread in
+            match r with
+            | Success bs ->
+                offset := !offset + block_size;
+                return (Some bs)
+            | _ -> return None
+          end in
+        return (Some(Lwt_stream.from next))
     | None -> return (Some(Lwt_stream.from (fun () -> return None))) in
   let iter_s f =
     lwt fs = FS.make () in
@@ -1272,14 +1272,14 @@ let make_kvro ~id ~vbd =
       lwt s = FS.stat fs path in
       match s with
       | Success(Stat.Dir(_, ds)) ->
-        Lwt_list.fold_left_s
-          (fun acc d ->
-            let fn = Dir_entry.filename_of d in
-            let path' = Path.cd path fn in
-            ls_lR acc path') acc ds
+          Lwt_list.fold_left_s
+            (fun acc d ->
+              let fn = Dir_entry.filename_of d in
+              let path' = Path.cd path fn in
+              ls_lR acc path') acc ds
       | Success(Stat.File f) ->
-        let fn = Dir_entry.filename_of f in
-        return (fn :: acc)
+          let fn = Dir_entry.filename_of f in
+          return (fn :: acc)
       | _ -> fail (Failure "assert false") in
     lwt file_list = ls_lR [] (Path.of_string "/") in
     Lwt_list.iter_s f file_list 
@@ -1303,14 +1303,14 @@ let _ =
       (* One dependency: a Blkif entry to mount *)
       match deps with
       |[{node=Blkif vbd} ] ->
-        (*          Printf.printf "FS.FAT provider: %s depends on vbd %s\n%!" id ent.id;*)
-        lwt t = make_kvro ~id ~vbd in
-        return OS.Devices.({
-            provider=self;
-            id=self#id;
-            depends=deps;
-            node=KV_RO t
-          })
+          (*          Printf.printf "FS.FAT provider: %s depends on vbd %s\n%!" id ent.id;*)
+          lwt t = make_kvro ~id ~vbd in
+          return OS.Devices.({
+              provider=self;
+              id=self#id;
+              depends=deps;
+              node=KV_RO t
+            })
       |_ -> raise_lwt (Failure "bad deps")
   end
   in
@@ -1322,8 +1322,8 @@ let _ =
       |"-fat_kv_ro" -> begin
           match Regexp.Re.(split_delim (from_string ":") env.(i+1)) with
           |[p_id;p_dep_id] ->
-            let p_dep_ids=[p_dep_id] in
-            fs := ({OS.Devices.p_dep_ids; p_cfg=[]; p_id}) :: !fs
+              let p_dep_ids=[p_dep_id] in
+              fs := ({OS.Devices.p_dep_ids; p_cfg=[]; p_id}) :: !fs
           |_ -> failwith "FS.FAT: bad -fat_kv_ro flag, must be id:dep_id"
         end
       |_ -> ()) env;

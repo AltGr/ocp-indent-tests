@@ -125,7 +125,7 @@ let permission_of_action ?args ~keys _action =
         debug "DENYING access: arg_keys and arg_values lengths don't match: arg_keys=[%s], arg_values=[%s]"
           ((List.fold_left (fun ss s->ss^s^",") "" arg_keys))
           ((List.fold_left (fun ss s->ss^(Rpc.to_string s)^",") "" arg_values))
-      ;
+        ;
         get_keyERR_permission_name action "DENY_WRGLEN" (* will always deny *)  
       end
       else (* keys and values have the same length *)

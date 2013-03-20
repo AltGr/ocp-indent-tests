@@ -125,31 +125,31 @@ let uchar_utf8 i =
     | 0 -> raise Malformed
     | 1 -> b0
     | 2 ->
-      let b1 = i () in
-      if b1 lsr 6 != 0b10 then raise Malformed else
-        ((b0 land 0x1F) lsl 6) lor (b1 land 0x3F)
+        let b1 = i () in
+        if b1 lsr 6 != 0b10 then raise Malformed else
+          ((b0 land 0x1F) lsl 6) lor (b1 land 0x3F)
     | 3 ->
-      let b1 = i () in
-      let b2 = i () in
-      if b2 lsr 6 != 0b10 then raise Malformed else
-        begin match b0 with
-          | 0xE0 -> if b1 < 0xA0 || 0xBF < b1 then raise Malformed else ()
-          | 0xED -> if b1 < 0x80 || 0x9F < b1 then raise Malformed else ()
-          | _ -> if b1 lsr 6 != 0b10 then raise Malformed else ()
-        end;
-      ((b0 land 0x0F) lsl 12) lor ((b1 land 0x3F) lsl 6) lor (b2 land 0x3F)
+        let b1 = i () in
+        let b2 = i () in
+        if b2 lsr 6 != 0b10 then raise Malformed else
+          begin match b0 with
+            | 0xE0 -> if b1 < 0xA0 || 0xBF < b1 then raise Malformed else ()
+            | 0xED -> if b1 < 0x80 || 0x9F < b1 then raise Malformed else ()
+            | _ -> if b1 lsr 6 != 0b10 then raise Malformed else ()
+          end;
+        ((b0 land 0x0F) lsl 12) lor ((b1 land 0x3F) lsl 6) lor (b2 land 0x3F)
     | 4 -> 
-      let b1 = i () in
-      let b2 = i () in
-      let b3 = i () in
-      if  b3 lsr 6 != 0b10 || b2 lsr 6 != 0b10 then raise Malformed else
-        begin match b0 with
-          | 0xF0 -> if b1 < 0x90 || 0xBF < b1 then raise Malformed else ()
-          | 0xF4 -> if b1 < 0x80 || 0x8F < b1 then raise Malformed else ()
-          | _ -> if b1 lsr 6 != 0b10 then raise Malformed else ()
-        end;
-      ((b0 land 0x07) lsl 18) lor ((b1 land 0x3F) lsl 12) lor 
-        ((b2 land 0x3F) lsl 6) lor (b3 land 0x3F)
+        let b1 = i () in
+        let b2 = i () in
+        let b3 = i () in
+        if  b3 lsr 6 != 0b10 || b2 lsr 6 != 0b10 then raise Malformed else
+          begin match b0 with
+            | 0xF0 -> if b1 < 0x90 || 0xBF < b1 then raise Malformed else ()
+            | 0xF4 -> if b1 < 0x80 || 0x8F < b1 then raise Malformed else ()
+            | _ -> if b1 lsr 6 != 0b10 then raise Malformed else ()
+          end;
+        ((b0 land 0x07) lsl 18) lor ((b1 land 0x3F) lsl 12) lor 
+          ((b2 land 0x3F) lsl 6) lor (b3 land 0x3F)
     | _ -> assert false  
   end
 
@@ -284,14 +284,14 @@ struct
     | `Unknown_ns_prefix e -> bracket "unknown namespace prefix (" e ")"
     | `Illegal_char_ref s -> bracket "illegal character reference (#" s ")"
     | `Illegal_char_seq s ->
-      bracket "character sequence illegal here (\"" s "\")"
+        bracket "character sequence illegal here (\"" s "\")"
     | `Expected_char_seqs (exps, fnd) -> 
-      let exps = 
-        let exp acc v = cat acc (bracket "\"" v "\", ") in
-        List.fold_left exp String.empty exps
-      in
-      cat (str "expected one of these character sequence: ") 
-        (cat exps (bracket "found \"" fnd "\""))
+        let exps = 
+          let exp acc v = cat acc (bracket "\"" v "\", ") in
+          List.fold_left exp String.empty exps
+        in
+        cat (str "expected one of these character sequence: ") 
+          (cat exps (bracket "found \"" fnd "\""))
 
   type limit =                                        (* XML is odd to parse. *)
     | Stag of name   (* '<' qname *) 
@@ -353,12 +353,12 @@ struct
     let i = match src with
       | `Fun f -> f
       | `String (pos, s) -> 
-        let len = Std_string.length s in
-        let pos = ref (pos - 1) in
-        fun () -> 
-          incr pos;
-          if !pos = len then raise End_of_file else 
-            Char.code (Std_string.get s !pos)
+          let len = Std_string.length s in
+          let pos = ref (pos - 1) in
+          fun () -> 
+            incr pos;
+            if !pos = len then raise End_of_file else 
+              Char.code (Std_string.get s !pos)
     in
     let bindings = 
       let h = Ht.create 15 in 
@@ -453,44 +453,44 @@ struct
     let reset uchar i = i.uchar <- uchar; i.col <- 0; nextc i in 
     match i.enc with
     | None ->                                 (* User doesn't know encoding. *)
-      begin match nextc i; i.c with          
-        | 0xFE ->                                           (* UTF-16BE BOM. *)
-          nextc i; if i.c <> 0xFF then err i `Malformed_char_stream;
-          reset uchar_utf16be i;
-          true                                 
-        | 0xFF ->                                           (* UTF-16LE BOM. *)
-          nextc i; if i.c <> 0xFE then err i `Malformed_char_stream;
-          reset uchar_utf16le i;
-          true   
-        | 0xEF ->                                              (* UTF-8 BOM. *)
-          nextc i; if i.c <> 0xBB then err i `Malformed_char_stream;
-          nextc i; if i.c <> 0xBF then err i `Malformed_char_stream;
-          reset uchar_utf8 i;
-          true
-        | 0x3C | _ ->                    (* UTF-8 or other, try declaration. *)
-          i.uchar <- uchar_utf8; 
-          false  
-      end
+        begin match nextc i; i.c with          
+          | 0xFE ->                                           (* UTF-16BE BOM. *)
+              nextc i; if i.c <> 0xFF then err i `Malformed_char_stream;
+              reset uchar_utf16be i;
+              true                                 
+          | 0xFF ->                                           (* UTF-16LE BOM. *)
+              nextc i; if i.c <> 0xFE then err i `Malformed_char_stream;
+              reset uchar_utf16le i;
+              true   
+          | 0xEF ->                                              (* UTF-8 BOM. *)
+              nextc i; if i.c <> 0xBB then err i `Malformed_char_stream;
+              nextc i; if i.c <> 0xBF then err i `Malformed_char_stream;
+              reset uchar_utf8 i;
+              true
+          | 0x3C | _ ->                    (* UTF-8 or other, try declaration. *)
+              i.uchar <- uchar_utf8; 
+              false  
+        end
     | Some e ->                                      (* User knows encoding. *)
-      begin match e with                              
-        | `US_ASCII -> reset uchar_ascii i
-        | `ISO_8859_1 -> reset uchar_iso_8859_1 i
-        | `UTF_8 ->                                  (* Skip BOM if present. *)
-          reset uchar_utf8 i; if i.c = u_bom then (i.col <- 0; nextc i)
-        | `UTF_16 ->                             (* Which UTF-16 ? look BOM. *)
-          let b0 = nextc i; i.c in
-          let b1 = nextc i; i.c in
-          begin match b0, b1 with                
-            | 0xFE, 0xFF -> reset uchar_utf16be i
-            | 0xFF, 0xFE -> reset uchar_utf16le i
-            | _ -> err i `Malformed_char_stream;
-          end
-        | `UTF_16BE ->                               (* Skip BOM if present. *)
-          reset uchar_utf16be i; if i.c = u_bom then (i.col <- 0; nextc i)
-        | `UTF_16LE ->
-          reset uchar_utf16le i; if i.c = u_bom then (i.col <- 0; nextc i)
-      end;
-      true                                      (* Ignore xml declaration. *)
+        begin match e with                              
+          | `US_ASCII -> reset uchar_ascii i
+          | `ISO_8859_1 -> reset uchar_iso_8859_1 i
+          | `UTF_8 ->                                  (* Skip BOM if present. *)
+              reset uchar_utf8 i; if i.c = u_bom then (i.col <- 0; nextc i)
+          | `UTF_16 ->                             (* Which UTF-16 ? look BOM. *)
+              let b0 = nextc i; i.c in
+              let b1 = nextc i; i.c in
+              begin match b0, b1 with                
+                | 0xFE, 0xFF -> reset uchar_utf16be i
+                | 0xFF, 0xFE -> reset uchar_utf16le i
+                | _ -> err i `Malformed_char_stream;
+              end
+          | `UTF_16BE ->                               (* Skip BOM if present. *)
+              reset uchar_utf16be i; if i.c = u_bom then (i.col <- 0; nextc i)
+          | `UTF_16LE ->
+              reset uchar_utf16le i; if i.c = u_bom then (i.col <- 0; nextc i)
+        end;
+        true                                      (* Ignore xml declaration. *)
 
 
   let p_ncname i =                               (* {NCName} (Namespace 1.1) *)  
@@ -534,7 +534,7 @@ struct
               nextc i
             done
         with Exit -> 
-          c := -1; while i.c <> u_scolon do addc_ident i i.c; nextc i done
+            c := -1; while i.c <> u_scolon do addc_ident i i.c; nextc i done
       end;
     nextc i;
     if is_char !c then (clear_ident i; addc_ident i !c; Buffer.contents i.ident)
@@ -550,9 +550,9 @@ struct
     let ent = p_ncname i in
     accept i u_scolon;
     try Ht.find predefined_entities ent with Not_found -> 
-      match i.fun_entity ent with
-      | Some s -> s
-      | None -> err i (`Unknown_entity_ref ent)
+        match i.fun_entity ent with
+        | Some s -> s
+        | None -> err i (`Unknown_entity_ref ent)
 
   let p_reference i =                                        (* {Reference} *)
     nextc i; if i.c = u_sharp then p_charref i else p_entity_ref i
@@ -661,11 +661,11 @@ struct
 
   let rec skip_misc i ~allow_xmlpi = match i.limit with          (* {Misc}* *)
     | Pi (p,l) when (str_empty p && str_eq n_xml (String.lowercase l)) -> 
-      if allow_xmlpi then () else err i (`Illegal_char_seq l)
+        if allow_xmlpi then () else err i (`Illegal_char_seq l)
     | Pi _ -> skip_pi i; p_limit i; skip_misc i ~allow_xmlpi
     | Comment -> skip_comment i; p_limit i; skip_misc i ~allow_xmlpi
     | Text when is_white i.c -> 
-      skip_white_eof i; p_limit i; skip_misc i ~allow_xmlpi
+        skip_white_eof i; p_limit i; skip_misc i ~allow_xmlpi
     | _ -> ()
 
   let p_dollar addc i =
@@ -724,43 +724,43 @@ struct
     in
     match i.limit with
     | Pi (p, l) when (str_empty p && str_eq l n_xml) ->  
-      let v = skip_white i; p_ncname i in
-      if not (str_eq v n_version) then err_expected_seqs i [ n_version ] v;
-      p_val_exp i [v_version_1_0; v_version_1_1];
-      skip_white i;
-      if i.c <> u_qmark then begin
-        let n = p_ncname i in
-        if str_eq n n_encoding then begin
-          let enc = String.lowercase (p_val i) in
-          if not ignore_enc then begin 
-            if str_eq enc v_utf_8 then i.uchar <- uchar_utf8 else
-            if str_eq enc v_utf_16be then i.uchar <- uchar_utf16be else
-            if str_eq enc v_utf_16le then i.uchar <- uchar_utf16le else
-            if str_eq enc v_iso_8859_1 then i.uchar <- uchar_iso_8859_1 else
-            if str_eq enc v_us_ascii then i.uchar <- uchar_ascii else
-            if str_eq enc v_ascii then i.uchar <- uchar_ascii else
-            if str_eq enc v_utf_16 then 
-              if ignore_utf16 then () else (err i `Malformed_char_stream)
-              (* A BOM should have been found. *)
-            else
-              err i (`Unknown_encoding enc)
-          end;
-          skip_white i;
-          if i.c <> u_qmark then begin 
-            let n = p_ncname i in 
-            if str_eq n n_standalone then p_val_exp i yes_no else
-              err_expected_seqs i [ n_standalone; str "?>" ] n 
-          end
-        end 
-        else if str_eq n n_standalone then
-          p_val_exp i yes_no
-        else
-          err_expected_seqs i [ n_encoding; n_standalone; str "?>" ] n
-      end;
-      skip_white i;
-      accept i u_qmark;
-      accept i u_gt;
-      p_limit i
+        let v = skip_white i; p_ncname i in
+        if not (str_eq v n_version) then err_expected_seqs i [ n_version ] v;
+        p_val_exp i [v_version_1_0; v_version_1_1];
+        skip_white i;
+        if i.c <> u_qmark then begin
+          let n = p_ncname i in
+          if str_eq n n_encoding then begin
+            let enc = String.lowercase (p_val i) in
+            if not ignore_enc then begin 
+              if str_eq enc v_utf_8 then i.uchar <- uchar_utf8 else
+              if str_eq enc v_utf_16be then i.uchar <- uchar_utf16be else
+              if str_eq enc v_utf_16le then i.uchar <- uchar_utf16le else
+              if str_eq enc v_iso_8859_1 then i.uchar <- uchar_iso_8859_1 else
+              if str_eq enc v_us_ascii then i.uchar <- uchar_ascii else
+              if str_eq enc v_ascii then i.uchar <- uchar_ascii else
+              if str_eq enc v_utf_16 then 
+                if ignore_utf16 then () else (err i `Malformed_char_stream)
+                (* A BOM should have been found. *)
+              else
+                err i (`Unknown_encoding enc)
+            end;
+            skip_white i;
+            if i.c <> u_qmark then begin 
+              let n = p_ncname i in 
+              if str_eq n n_standalone then p_val_exp i yes_no else
+                err_expected_seqs i [ n_standalone; str "?>" ] n 
+            end
+          end 
+          else if str_eq n n_standalone then
+            p_val_exp i yes_no
+          else
+            err_expected_seqs i [ n_encoding; n_standalone; str "?>" ] n
+        end;
+        skip_white i;
+        accept i u_qmark;
+        accept i u_gt;
+        p_limit i
     | _ -> ()
 
   let p_dtd_signal i =(* {Misc}* {doctypedecl} {Misc}* *)
@@ -838,13 +838,13 @@ struct
 
   let p_el_end_signal i n = match i.scopes with
     | (n', prefixes, strip) :: scopes ->
-      if i.c <> u_gt then err_expected_chars i [ u_gt ];
-      if not (str_eq n n') then err_expected_seqs i [name_str n'] (name_str n); 
-      i.scopes <- scopes;
-      i.stripping <- strip;
-      List.iter (Ht.remove i.ns) prefixes;
-      if scopes = [] then i.c <- u_end_doc else (nextc i; p_limit i);
-      `El_end
+        if i.c <> u_gt then err_expected_chars i [ u_gt ];
+        if not (str_eq n n') then err_expected_seqs i [name_str n'] (name_str n); 
+        i.scopes <- scopes;
+        i.stripping <- strip;
+        List.iter (Ht.remove i.ns) prefixes;
+        if scopes = [] then i.c <- u_end_doc else (nextc i; p_limit i);
+        `El_end
     | _ -> assert false
 
   let p_signal i = 
@@ -858,8 +858,8 @@ struct
         | Etag n -> p_el_end_signal i n
         | Dollar when i.templates -> `Data (p_dollar addc_data i)
         | Text | Cdata | Dollar ->
-          let d = p_data i in
-          if str_empty d then find i else `Data d
+            let d = p_data i in
+            if str_empty d then find i else `Data d
         | Pi _ -> skip_pi i; p_limit i; find i
         | Comment -> skip_comment i; p_limit i; find i
         | Dtd -> err i (`Illegal_char_seq (str "<!D"))
@@ -867,17 +867,17 @@ struct
       in
       begin match i.peek with          
         | `El_start (n, _) ->                   (* finish to input start el. *)
-          skip_white i;
-          if i.c = u_gt then (accept i u_gt; p_limit i) else
-          if i.c = u_slash then 
-            begin 
-              let tag = match i.scopes with
-                | (tag, _, _) :: _ -> tag | _ -> assert false
-              in
-              (nextc i; i.limit <- Etag tag) 
-            end
-          else
-            err_expected_chars i [ u_slash; u_gt ]
+            skip_white i;
+            if i.c = u_gt then (accept i u_gt; p_limit i) else
+            if i.c = u_slash then 
+              begin 
+                let tag = match i.scopes with
+                  | (tag, _, _) :: _ -> tag | _ -> assert false
+                in
+                (nextc i; i.limit <- Etag tag) 
+              end
+            else
+              err_expected_chars i [ u_slash; u_gt ]
         | _ -> ()
       end;
       find i
@@ -930,27 +930,27 @@ struct
   let input_tree ~el ~data i = match input i with
     | `Data d -> data d 
     | `El_start tag -> 
-      let rec aux i tags context = match input i with
-        | `El_start tag -> aux i (tag :: tags) ([] :: context)
-        | `El_end -> 
-          begin match tags, context with
-            | tag :: tags', childs :: context' ->
-              let el = el tag (List.rev childs) in 
-              begin match context' with
-                | parent :: context'' -> aux i tags' ((el :: parent) :: context'')
-                | [] -> el
+        let rec aux i tags context = match input i with
+          | `El_start tag -> aux i (tag :: tags) ([] :: context)
+          | `El_end -> 
+              begin match tags, context with
+                | tag :: tags', childs :: context' ->
+                    let el = el tag (List.rev childs) in 
+                    begin match context' with
+                      | parent :: context'' -> aux i tags' ((el :: parent) :: context'')
+                      | [] -> el
+                    end
+                | _ -> assert false
               end
-            | _ -> assert false
-          end
-        | `Data d ->
-          begin match context with
-            | childs :: context' -> aux i tags (((data d) :: childs) :: context')
-            | [] -> assert false
-          end
-        | `Raw _ -> assert false
-        | `Dtd _ -> assert false
-      in 
-      aux i (tag :: []) ([] :: [])
+          | `Data d ->
+              begin match context with
+                | childs :: context' -> aux i tags (((data d) :: childs) :: context')
+                | [] -> assert false
+              end
+          | `Raw _ -> assert false
+          | `Dtd _ -> assert false
+        in 
+        aux i (tag :: []) ([] :: [])
     | _ -> invalid_arg err_input_tree
 
 
@@ -989,11 +989,11 @@ struct
     let outs, outc = match d with 
       | `Buffer b -> (Std_buffer.add_substring b), (Std_buffer.add_char b)
       | `Fun f -> 
-        let os s p l = 
-          for i = p to p + l - 1 do f (Char.code (Std_string.get s p)) done 
-        in
-        let oc c = f (Char.code c) in 
-        os, oc
+          let os s p l = 
+            for i = p to p + l - 1 do f (Char.code (Std_string.get s p)) done 
+          in
+          let oc c = f (Char.code c) in 
+          os, oc
     in
     let prefixes = 
       let h = Ht.create 10 in 
@@ -1014,9 +1014,9 @@ struct
       if str_eq ns ns_xmlns && str_eq local n_xmlns then (String.empty, n_xmlns)
       else (Ht.find o.prefixes ns, local)
     with Not_found -> 
-      match o.fun_prefix ns with
-      | None -> invalid_arg (err_prefix (str_utf_8 ns))
-      | Some prefix -> prefix, local
+        match o.fun_prefix ns with
+        | None -> invalid_arg (err_prefix (str_utf_8 ns))
+        | Some prefix -> prefix, local
 
   let bind_prefixes o atts = 
     let add acc ((ns, local), uri) = 
@@ -1074,13 +1074,13 @@ struct
     if o.depth = -1 then 
       begin match s with
         | `Dtd d ->
-          begin match d with 
-            | Some dtd ->
-              outs o "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-              out_utf_8 o dtd; o.outc '\n' 
-            | None -> ()
-          end;
-          o.depth <- 0
+            begin match d with 
+              | Some dtd ->
+                  outs o "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+                  out_utf_8 o dtd; o.outc '\n' 
+              | None -> ()
+            end;
+            o.depth <- 0
         | `Data _ | `Raw _-> invalid_arg err_data
         | `El_start _ -> invalid_arg err_el_start
         | `El_end -> invalid_arg err_el_end
@@ -1088,54 +1088,54 @@ struct
     else
       begin match s with
         | `El_start (n, atts) -> 
-          if o.last_el_start then (outs o ">"; unindent o);
-          indent o;
-          let uris = bind_prefixes o atts in
-          let qn = prefix_name o n in
-          o.outc '<'; out_qname o qn; List.iter (out_attribute o) atts;
-          o.scopes <- (qn, uris) :: o.scopes;
-          o.depth <- o.depth + 1;
-          o.last_el_start <- true
+            if o.last_el_start then (outs o ">"; unindent o);
+            indent o;
+            let uris = bind_prefixes o atts in
+            let qn = prefix_name o n in
+            o.outc '<'; out_qname o qn; List.iter (out_attribute o) atts;
+            o.scopes <- (qn, uris) :: o.scopes;
+            o.depth <- o.depth + 1;
+            o.last_el_start <- true
         | `El_end -> 
-          begin match o.scopes with
-            | (n, uris) :: scopes' ->
-              o.depth <- o.depth - 1;
-              if o.last_el_start then outs o "/>" else
-                begin 
-                  indent o;
-                  outs o "</"; out_qname o n; o.outc '>';
-                end;
-              o.scopes <- scopes';
-              List.iter (Ht.remove o.prefixes) uris;
-              o.last_el_start <- false;
-              if o.depth = 0 then (if o.nl then o.outc '\n'; o.depth <- -1;) 
-              else unindent o
-            | [] -> invalid_arg err_el_end
-          end
+            begin match o.scopes with
+              | (n, uris) :: scopes' ->
+                  o.depth <- o.depth - 1;
+                  if o.last_el_start then outs o "/>" else
+                    begin 
+                      indent o;
+                      outs o "</"; out_qname o n; o.outc '>';
+                    end;
+                  o.scopes <- scopes';
+                  List.iter (Ht.remove o.prefixes) uris;
+                  o.last_el_start <- false;
+                  if o.depth = 0 then (if o.nl then o.outc '\n'; o.depth <- -1;) 
+                  else unindent o
+              | [] -> invalid_arg err_el_end
+            end
         | `Data d -> 
-          if o.last_el_start then (outs o ">"; unindent o);
-          indent o;
-          out_data o d;
-          unindent o;
-          o.last_el_start <- false
+            if o.last_el_start then (outs o ">"; unindent o);
+            indent o;
+            out_data o d;
+            unindent o;
+            o.last_el_start <- false
         | `Raw d ->
-          if o.last_el_start then (outs o ">"; unindent o);
-          out_raw o d;
-          o.last_el_start <- false
+            if o.last_el_start then (outs o ">"; unindent o);
+            out_raw o d;
+            o.last_el_start <- false
         | `Dtd _ -> failwith err_dtd
       end
 
   let output_tree frag o v =
     let rec aux o = function
       | (v :: rest) :: context ->
-        begin match frag v with
-          | `El (tag, childs) ->
-            output o (`El_start tag);
-            aux o (childs :: rest :: context)
-          | (`Data d) as signal -> 
-            output o signal;
-            aux o (rest :: context)
-        end
+          begin match frag v with
+            | `El (tag, childs) ->
+                output o (`El_start tag);
+                aux o (childs :: rest :: context)
+            | (`Data d) as signal -> 
+                output o signal;
+                aux o (rest :: context)
+          end
       | [] :: [] -> ()
       | [] :: context -> output o `El_end; aux o context
       | [] -> assert false
@@ -1208,12 +1208,12 @@ let id x = x
 
 let rec output_t o = function
   | (`Data _ as d) :: t ->
-    output o d;
-    output_t o t
+      output o d;
+      output_t o t
   | (`El _ as e) :: t   ->
-    output_tree id o e;
-    output o (`Dtd None);
-    output_t o t
+      output_tree id o e;
+      output o (`Dtd None);
+      output_t o t
   | [] -> ()
 
 let to_string t =
@@ -1255,38 +1255,38 @@ let of_string ?entity ?(templates : (string * t) list = []) ?enc str =
     | [ `El ((("","xxx"), []), body) ]-> body
     | _ -> raise Parsing.Parse_error
   with Error (pos, e) ->
-    Printf.eprintf "[XMLM:%d-%d] %s: %s\n"(fst pos) (snd pos) str (error_message e);
-    raise Parsing.Parse_error
+      Printf.eprintf "[XMLM:%d-%d] %s: %s\n"(fst pos) (snd pos) str (error_message e);
+      raise Parsing.Parse_error
 
-      (*----------------------------------------------------------------------------
-        Copyright (c) 2007-2009, Daniel C. Bünzli
-        All rights reserved.
+        (*----------------------------------------------------------------------------
+          Copyright (c) 2007-2009, Daniel C. Bünzli
+          All rights reserved.
 
-        Redistribution and use in source and binary forms, with or without
-        modification, are permitted provided that the following conditions are
-        met:
+          Redistribution and use in source and binary forms, with or without
+          modification, are permitted provided that the following conditions are
+          met:
 
-        1. Redistributions of source code must retain the above copyright
-           notice, this list of conditions and the following disclaimer.
+          1. Redistributions of source code must retain the above copyright
+             notice, this list of conditions and the following disclaimer.
 
-        2. Redistributions in binary form must reproduce the above copyright
-           notice, this list of conditions and the following disclaimer in the
-           documentation and/or other materials provided with the
-           distribution.
+          2. Redistributions in binary form must reproduce the above copyright
+             notice, this list of conditions and the following disclaimer in the
+             documentation and/or other materials provided with the
+             distribution.
 
-        3. Neither the name of the Daniel C. Bünzli nor the names of
-           contributors may be used to endorse or promote products derived
-           from this software without specific prior written permission.
+          3. Neither the name of the Daniel C. Bünzli nor the names of
+             contributors may be used to endorse or promote products derived
+             from this software without specific prior written permission.
 
-        THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-        "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-        LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-        A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-        OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-        SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-        LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-        DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-        THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-        (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-        OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-        ----------------------------------------------------------------------------*)
+          THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+          "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+          LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+          A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+          OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+          SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+          LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+          DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+          THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+          (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+          OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+          ----------------------------------------------------------------------------*)

@@ -1,7 +1,7 @@
 ocsigen http://ocsigen.org/download/ocsigenserver-2.2.0.tar.gz -c with=2,type=4,match_clause=4 --syntax lwt
 async https://ocaml.janestreet.com/ocaml-core/109.07.00/individual/async-109.07.00.tar.gz -c JaneStreet,type=2
-camlimages https://bitbucket.org/camlspotter/camlimages/get/4.0.2.tar.gz
+camlimages https://bitbucket.org/camlspotter/camlimages/get/4.0.2.tar.gz -c match_clause=4
 core https://ocaml.janestreet.com/ocaml-core/109.07.00/individual/core-109.07.00.tar.gz -c JaneStreet,type=2
 xen-api https://github.com/xen-org/xen-api/archive/master.zip
-mirage https://github.com/avsm/mirage/archive/master.tar.gz --syntax lwt
+mirage https://github.com/avsm/mirage/archive/master.tar.gz --syntax lwt -c match_clause=4
 opalang https://github.com/MLstate/opalang/archive/v4111.tar.gz -c match_clause=4

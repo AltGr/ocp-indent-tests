@@ -35,7 +35,7 @@ let flow_removed_cb controller dpid evt =
   let (flow, reason, duration_sec, duration_usec, packet_count, byte_count, dpid) = 
     match evt with
     | OE.Flow_removed (flow, reason, duration_sec, duration_usec, packet_count, byte_count, dpid) -> 
-      (flow, reason, duration_sec, duration_usec, packet_count, byte_count, dpid)
+        (flow, reason, duration_sec, duration_usec, packet_count, byte_count, dpid)
     | _ -> invalid_arg "bogus flow_removed event match!"
   in
   let pkt = (OP.Flow_mod.create flow (Int64.of_int 0) OP.Flow_mod.ADD 

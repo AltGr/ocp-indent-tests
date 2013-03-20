@@ -141,8 +141,8 @@ let string_of_last_type_error () =
   match !last_type_error with
   | None -> ""
   | Some (t,s) ->
-    Printf.sprintf "==type conflict==\ntype: %s\nis not a subtype of\ntype: %s\n=================\n"
-      (to_string t) (to_string s)
+      Printf.sprintf "==type conflict==\ntype: %s\nis not a subtype of\ntype: %s\n=================\n"
+        (to_string t) (to_string s)
 
 let is_subtype_of (t1:t) (t2:t) =
   let table = Hashtbl.create 128 in
@@ -162,8 +162,8 @@ let is_subtype_of (t1:t) (t2:t) =
         | Tuple ts   , Tuple ss   -> List.for_all2 (<:) ts ss
         | Dict(_,ts) , Dict(_,ss) -> List.for_all (fun (x1,_,y1) -> List.exists (fun (x2,m,y2) -> m=m && x1=x2 && y1 <: y2) ss) ts
         | Sum (_,ts) , Sum (_,ss) ->
-          List.for_all (fun (x2,y2) -> List.exists (fun (x1,y1) -> x1=x2 && List.for_all2 (<:) y1 y2) ts) ss
-          && List.for_all (fun (x1,_) -> List.exists (fun (x2,_) -> x1=x2) ss) ts (* TODO: this can be improved later *)
+            List.for_all (fun (x2,y2) -> List.exists (fun (x1,y1) -> x1=x2 && List.for_all2 (<:) y1 y2) ts) ss
+            && List.for_all (fun (x1,_) -> List.exists (fun (x2,_) -> x1=x2) ss) ts (* TODO: this can be improved later *)
         | Unit, Unit
         | Int None, Int _ -> true
         | Int (Some x), Int None -> false
@@ -206,16 +206,16 @@ let split_par ?limit c s =
     match limit with
     | Some i when n>=i -> [s]
     | _ ->
-      try 
-        let i = index_par c s in
-        let h = String.sub s 0 i in
-        let t =
-          try aux (n-1) (String.sub s (i+1) (String.length s - i - 1))
-          with _ -> []
-        in
-        h :: t
-      with _ ->
-        [s] in
+        try 
+          let i = index_par c s in
+          let h = String.sub s 0 i in
+          let t =
+            try aux (n-1) (String.sub s (i+1) (String.length s - i - 1))
+            with _ -> []
+          in
+          h :: t
+        with _ ->
+            [s] in
   aux 1 s
 
 exception Parse_error of string
@@ -231,56 +231,56 @@ let rec of_string s : t  = match s.[0] with
   | 'C' -> Char
   | 'S' -> String
   | '[' ->
-    let s = String.sub s 1 (String.length s - 2) in
-    List (of_string s)
+      let s = String.sub s 1 (String.length s - 2) in
+      List (of_string s)
   | '!' ->
-    let s = String.sub s 1 (String.length s - 2) in
-    Array (of_string s)
+      let s = String.sub s 1 (String.length s - 2) in
+      Array (of_string s)
   | '(' ->
-    let s = String.sub s 1 (String.length s - 2) in
-    let ss = split_par '*' s in
-    Tuple (List.map of_string ss)
+      let s = String.sub s 1 (String.length s - 2) in
+      let ss = split_par '*' s in
+      Tuple (List.map of_string ss)
   | '{' ->
-    let kind = match s.[1] with 'R' -> `R | 'O' -> `O | _ -> parse_error s in
-    let s = String.sub s 2 (String.length s - 3) in
-    let ss = split_par '*' s in
-    let ss = List.map (split_par ~limit:3 ':') ss in
-    let ss = List.map (fun x -> match x with 
-        | [s;"I";t] -> (s, `RO, of_string t) 
-        | [s;"M";t] -> (s, `RW, of_string t) 
-        | _ -> parse_error s) ss in
-    Dict (kind,ss)
+      let kind = match s.[1] with 'R' -> `R | 'O' -> `O | _ -> parse_error s in
+      let s = String.sub s 2 (String.length s - 3) in
+      let ss = split_par '*' s in
+      let ss = List.map (split_par ~limit:3 ':') ss in
+      let ss = List.map (fun x -> match x with 
+          | [s;"I";t] -> (s, `RO, of_string t) 
+          | [s;"M";t] -> (s, `RW, of_string t) 
+          | _ -> parse_error s) ss in
+      Dict (kind,ss)
   | '<' ->
-    let kind = match s.[1] with 'P' -> `P | 'N' -> `N | _ -> parse_error s in
-    let s = String.sub s 2 (String.length s - 3) in
-    let ss = split_par '*' s in
-    let ss = List.map (split_par ~limit:2 ':') ss in
-    let ss = List.map (fun x -> match x with
-        | [s;"()"] -> (s, [])
-        | [s;t] ->
-          let t = String.sub t 1 (String.length t - 2) in
-          (s, List.map of_string (split_par '*' t))
-        | _ -> parse_error s) ss in
-    Sum (kind,ss)
+      let kind = match s.[1] with 'P' -> `P | 'N' -> `N | _ -> parse_error s in
+      let s = String.sub s 2 (String.length s - 3) in
+      let ss = split_par '*' s in
+      let ss = List.map (split_par ~limit:2 ':') ss in
+      let ss = List.map (fun x -> match x with
+          | [s;"()"] -> (s, [])
+          | [s;t] ->
+              let t = String.sub t 1 (String.length t - 2) in
+              (s, List.map of_string (split_par '*' t))
+          | _ -> parse_error s) ss in
+      Sum (kind,ss)
   | '?' -> Option (of_string (String.sub s 1 (String.length s - 1)))
   | 'R' ->
-    begin match split_par ~limit:3 '@' s with
-      | [ "R"; var; t ] -> Rec (var, of_string t)
-      | _ -> parse_error s
-    end
+      begin match split_par ~limit:3 '@' s with
+        | [ "R"; var; t ] -> Rec (var, of_string t)
+        | _ -> parse_error s
+      end
   | '@' -> Var (String.sub s 1 (String.length s - 1))
   | '#' ->
-    begin match split_par '#' s with
-      | ["";s;t] ->
-        let ss = String.sub s 1 (String.length s - 2) in
-        let tt = String.sub t 1 (String.length t - 2) in
-        Arrow (of_string ss, of_string tt)
-      | _ -> parse_error s
-    end
+      begin match split_par '#' s with
+        | ["";s;t] ->
+            let ss = String.sub s 1 (String.length s - 2) in
+            let tt = String.sub t 1 (String.length t - 2) in
+            Arrow (of_string ss, of_string tt)
+        | _ -> parse_error s
+      end
   | 'E' ->
-    begin match split_par '/' s with
-      | ["E"; var; t ] -> Ext (var, of_string t)
-      | _ -> parse_error s
-    end
+      begin match split_par '/' s with
+        | ["E"; var; t ] -> Ext (var, of_string t)
+        | _ -> parse_error s
+      end
   | _   -> parse_error s
 

@@ -75,12 +75,12 @@ let read_suffix_file f =
           match tokens with
           | [] -> ()
           | x :: l ->
-            try
-              ignore (String.index x '/');
-              List.iter (function sufx -> add_suffix (sufx, ContentType x)) l
-            with
-            | Not_found ->
-              List.iter (function sufx -> add_suffix (sufx, ContentEncoding x)) l
+              try
+                ignore (String.index x '/');
+                List.iter (function sufx -> add_suffix (sufx, ContentType x)) l
+              with
+              | Not_found ->
+                  List.iter (function sufx -> add_suffix (sufx, ContentEncoding x)) l
       done
     with End_of_file -> close_in ic
   with Sys_error _ -> ();;
@@ -103,24 +103,24 @@ let guess link_as_link f =
   | S_CHR -> Special "chr"
   | S_BLK -> Special "blk"
   | S_LNK ->
-    begin
-      try
-        let st = Unix.stat f in
-        match st.st_kind with
-        | S_DIR -> Special "lnkdir"
-        | _ -> begin try from_header f with _ -> Special "lnk" end
-      with
-      | _ -> Special "lnk"
-    end
+      begin
+        try
+          let st = Unix.stat f in
+          match st.st_kind with
+          | S_DIR -> Special "lnkdir"
+          | _ -> begin try from_header f with _ -> Special "lnk" end
+        with
+        | _ -> Special "lnk"
+      end
   | S_FIFO -> Special "fifo"
   | S_SOCK -> Special "sock"
   | _ ->
-    begin
-      try from_header f
-      with
-      | _ ->
-        Hashtbl.find suffixes (String.lowercase (snd (Livmisc.get_extension f)))
-    end;;
+      begin
+        try from_header f
+        with
+        | _ ->
+            Hashtbl.find suffixes (String.lowercase (snd (Livmisc.get_extension f)))
+      end;;
 
 let guess = guess false
 and lguess = guess true;;

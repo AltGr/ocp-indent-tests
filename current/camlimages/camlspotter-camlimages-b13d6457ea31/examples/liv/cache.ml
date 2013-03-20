@@ -56,11 +56,11 @@ let find_empty_or_eldest t =
       match t.(i) with
       | None -> found := Some (i, None); raise Exit
       | Some elt ->
-        match !found with
-        | None -> found := Some (i, Some elt)
-        | Some (_j, Some elt') when elt.time < elt'.time ->
-          found := Some (i, Some elt)
-        | _ -> ()
+          match !found with
+          | None -> found := Some (i, Some elt)
+          | Some (_j, Some elt') when elt.time < elt'.time ->
+              found := Some (i, Some elt)
+          | _ -> ()
     done
   with Exit -> () end;
   match !found with
@@ -70,7 +70,7 @@ let find_empty_or_eldest t =
 let add t key data at_remove =
   let slot =
     try find_pos t key with Not_found ->
-      try find_empty_or_eldest t with Not_found -> 0 
+        try find_empty_or_eldest t with Not_found -> 0 
   in
   begin match t.(slot) with
     | Some elt -> elt.at_remove elt.data

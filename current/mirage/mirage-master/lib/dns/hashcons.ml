@@ -120,10 +120,10 @@ let hashcons t d =
     end else begin
       match Weak.get_copy bucket i with
       | Some v when v.node = d -> 
-        begin match Weak.get bucket i with
-          | Some v -> v
-          | None -> loop (i+1)
-        end
+          begin match Weak.get bucket i with
+            | Some v -> v
+            | None -> loop (i+1)
+          end
       | _ -> loop (i+1)
     end
   in
@@ -261,10 +261,10 @@ module Make(H : HashedType) : (S with type key = H.t) = struct
       end else begin
         match Weak.get_copy bucket i with
         | Some v when H.equal v.node d -> 
-          begin match Weak.get bucket i with
-            | Some v -> v
-            | None -> loop (i+1)
-          end
+            begin match Weak.get bucket i with
+              | Some v -> v
+              | None -> loop (i+1)
+            end
         | _ -> loop (i+1)
       end
     in

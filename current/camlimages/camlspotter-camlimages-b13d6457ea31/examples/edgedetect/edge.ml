@@ -90,13 +90,13 @@ List.iter (fun file ->
       let oimage = OImages.load file [] in
       match OImages.tag oimage with
       | Index8 img ->
-        let rgb = img#to_rgb24 in
-        img#destroy;
-        rgb
+          let rgb = img#to_rgb24 in
+          img#destroy;
+          rgb
       | Index16 img ->
-        let rgb = img#to_rgb24 in
-        img#destroy;
-        rgb
+          let rgb = img#to_rgb24 in
+          img#destroy;
+          rgb
       | Rgb24 img -> img
       | _ -> raise (Invalid_argument "not supported") in
 

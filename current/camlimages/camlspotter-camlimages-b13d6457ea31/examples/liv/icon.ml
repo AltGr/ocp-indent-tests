@@ -48,14 +48,14 @@ let create_xvthumb name =
   let w, h, img =
     match format with
     | Jpeg ->
-      OJpeg.load_thumbnail name []
-        { spec_width = Pixel 80; spec_height = Pixel 60;
-          spec_aspect = Keep_at_most; spec_switch = Smaller_only;
-          spec_x = 0; spec_y = 0 }
+        OJpeg.load_thumbnail name []
+          { spec_width = Pixel 80; spec_height = Pixel 60;
+            spec_aspect = Keep_at_most; spec_switch = Smaller_only;
+            spec_x = 0; spec_y = 0 }
     | _ ->
-      let img = OImages.load name [] in
-      let w, h = img#width, img#height in
-      w, h, img in
+        let img = OImages.load name [] in
+        let w, h = img#width, img#height in
+        w, h, img in
 
   let thumb = OXvthumb.create img in
   OXvthumb.save thumbpath
@@ -76,14 +76,14 @@ let create_livthumb name =
   let w, h, img =
     match format with
     | Jpeg ->
-      OJpeg.load_thumbnail name []
-        { spec_width = Pixel 80; spec_height = Pixel 60;
-          spec_aspect = Keep_at_most; spec_switch = Smaller_only;
-          spec_x = 0; spec_y = 0 }
+        OJpeg.load_thumbnail name []
+          { spec_width = Pixel 80; spec_height = Pixel 60;
+            spec_aspect = Keep_at_most; spec_switch = Smaller_only;
+            spec_x = 0; spec_y = 0 }
     | _ ->
-      let img = OImages.load name [] in
-      let w, h = img#width, img#height in
-      w, h, img in
+        let img = OImages.load name [] in
+        let w, h = img#width, img#height in
+        w, h, img in
 
   let ratiow = 80.0 /. float w in
   let ratioh = 60.0 /. float h in
@@ -114,37 +114,37 @@ let load_icon name typ =
       inf, pixmap_of_image Gui.root_win None img
     with
     | _ ->
-      let mj, mn = typ in
-      try
-        if mj <> "image" then raise Exit;
-        let inf, img =
-          if !xvmode then begin
-            create_xvthumb name;
-            let inf, img = OXvthumb.load thumb in
-            inf, img#coerce
-          end else begin
-            create_livthumb name;
-            "", OImages.load thumb []
-          end in
-        inf, pixmap_of_image Gui.root_win None img
-      with
-      | _ ->
-        let iconpath =
-          try Hashtbl.find Iconcap.table (mj, mn) with
-          | Not_found -> Hashtbl.find Iconcap.table (mj,"*") in
-        let iconpath =
-          Pathfind.find
-            [ "."; "~/.liv"; "/usr/share/icons/"; "/usr/share/pixmaps"; ]
-            iconpath in
+        let mj, mn = typ in
+        try
+          if mj <> "image" then raise Exit;
+          let inf, img =
+            if !xvmode then begin
+              create_xvthumb name;
+              let inf, img = OXvthumb.load thumb in
+              inf, img#coerce
+            end else begin
+              create_livthumb name;
+              "", OImages.load thumb []
+            end in
+          inf, pixmap_of_image Gui.root_win None img
+        with
+        | _ ->
+            let iconpath =
+              try Hashtbl.find Iconcap.table (mj, mn) with
+              | Not_found -> Hashtbl.find Iconcap.table (mj,"*") in
+            let iconpath =
+              Pathfind.find
+                [ "."; "~/.liv"; "/usr/share/icons/"; "/usr/share/pixmaps"; ]
+                iconpath in
 
-        (* prerr_endline ("loading "^iconpath); *)
-        (mj ^ "/" ^ mn),
-        begin
-          try Hashtbl.find mime_icons iconpath with
-          | Not_found ->
-            let pixmap =
-              pixmap_of_image Gui.root_win None (OImages.load iconpath []) in
-            Hashtbl.add mime_icons iconpath pixmap;
-            pixmap
-        end in
+            (* prerr_endline ("loading "^iconpath); *)
+            (mj ^ "/" ^ mn),
+            begin
+              try Hashtbl.find mime_icons iconpath with
+              | Not_found ->
+                  let pixmap =
+                    pixmap_of_image Gui.root_win None (OImages.load iconpath []) in
+                  Hashtbl.add mime_icons iconpath pixmap;
+                  pixmap
+            end in
   inf, pixmap;;

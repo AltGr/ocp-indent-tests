@@ -30,13 +30,13 @@ let rec pow2 = function
   };
 *)
 
-        cstruct ring_hdr {
-        uint32_t req_prod;
-        uint32_t req_event;
-        uint32_t rsp_prod;
-        uint32_t rsp_event;
-        uint64_t stuff
-      } as little_endian
+          cstruct ring_hdr {
+          uint32_t req_prod;
+          uint32_t req_event;
+          uint32_t rsp_prod;
+          uint32_t rsp_event;
+          uint64_t stuff
+        } as little_endian
 
 (* Allocate a multi-page ring, returning the grants and pages *)
 let allocate ~domid ~order =
@@ -160,7 +160,7 @@ module Front = struct
         Hashtbl.remove t.wakers id;
         Lwt.wakeup u resp
       with Not_found ->
-        printf "RX: ack id wakener not found\n%!"
+          printf "RX: ack id wakener not found\n%!"
     );
     (* Check for any sleepers waiting for free space *)
     match Lwt_sequence.take_opt_l t.waiters with

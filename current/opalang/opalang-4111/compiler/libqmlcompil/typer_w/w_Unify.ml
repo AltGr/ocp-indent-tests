@@ -404,7 +404,7 @@ and __unify_simple_type is_under_coercion env seen_expansions ty1 ty2 =
              lose its generality. *)
           if (var1.W_Algebra.tv_level <> W_CoreTypes.generic_binding_level &&
               var2.W_Algebra.tv_level <> W_CoreTypes.generic_binding_level)
-          ||
+             ||
              (var1.W_Algebra.tv_level = W_CoreTypes.generic_binding_level &&
               var2.W_Algebra.tv_level = W_CoreTypes.generic_binding_level) then (
             (* To try to preserve as far as we can the names given by the user to

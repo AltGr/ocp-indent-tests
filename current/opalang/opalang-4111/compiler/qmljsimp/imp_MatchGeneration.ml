@@ -534,7 +534,7 @@ let build_decision ~env ~penv ~menv ~minimal_condition ~rev_guards ~matched ~dec
         SumCondition.pp minimal_condition
         (Format.pp_list " / " (JsPrint.pp#expr ~leading:false)) rev_guards
         SumCondition.pp menv.condition
-    ;
+      ;
       acc
       #<Else>
         aux (penv, menv, minimal_condition, rev_guards) decision

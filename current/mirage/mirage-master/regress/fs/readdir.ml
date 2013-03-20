@@ -37,22 +37,22 @@ let path = Path.of_string "/" in
 lwt listdir = FS.stat fs path in
 (match listdir with
  | Success(Stat.Dir(_, ds)) ->
-   printf "Directory for A:%s\n\n" (Path.to_string path);
-   List.iter
-     (fun x -> printf "%s\n" (Dir_entry.to_string x)) ds;
-   printf "%9d files\n%!" (List.length ds);
+     printf "Directory for A:%s\n\n" (Path.to_string path);
+     List.iter
+       (fun x -> printf "%s\n" (Dir_entry.to_string x)) ds;
+     printf "%9d files\n%!" (List.length ds);
  | Success(Stat.File _) ->
-   printf "Not a directory.\n%!"
+     printf "Not a directory.\n%!"
  | Error (Not_a_directory path) ->
-   printf "Not a directory (%s).\n%!" (Path.to_string path)
+     printf "Not a directory (%s).\n%!" (Path.to_string path)
  | Error (Is_a_directory path) ->
-   printf "Is a directory (%s).\n%!" (Path.to_string path)
+     printf "Is a directory (%s).\n%!" (Path.to_string path)
  | Error (Directory_not_empty path) ->
-   printf "Directory isn't empty (%s).\n%!" (Path.to_string path)
+     printf "Directory isn't empty (%s).\n%!" (Path.to_string path)
  | Error (No_directory_entry (path, name)) ->
-   printf "No directory %s in %s.\n%!" name (Path.to_string path)
+     printf "No directory %s in %s.\n%!" name (Path.to_string path)
  | Error (File_already_exists name) ->
-   printf "File already exists (%s).\n%!" name
+     printf "File already exists (%s).\n%!" name
  | Error No_space ->
-   printf "Out of space.\n%!");
+     printf "Out of space.\n%!");
 return ()

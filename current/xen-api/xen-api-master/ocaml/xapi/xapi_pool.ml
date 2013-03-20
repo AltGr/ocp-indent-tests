@@ -1332,94 +1332,94 @@ let enable_external_auth ~__context ~pool ~config ~service_name ~auth_type =
         raise (Api_errors.Server_error(Api_errors.pool_auth_already_enabled, [(Ref.string_of host)]))
       end
     with Not_found -> () (* that's expected, no host had external_auth enabled*)
-                      ;
-                        (* 1b. assert that there are no duplicate hostnames in the pool *)
-                        if (List.length hosts)
-                          <>
-                            (List.length
-                               (Listext.List.setify 
-                                  (List.map (fun h->Db.Host.get_hostname ~__context ~self:h) hosts))
-                            )
-                        then begin
-                          let errmsg = "At least two hosts in the pool have the same hostname" in
-                          debug "%s" errmsg;
-                          raise (Api_errors.Server_error(Api_errors.pool_auth_enable_failed_duplicate_hostname,
-                              [(Ref.string_of (List.hd hosts));errmsg]))
-                        end
-                        else
-                          (* 2. tries to enable the external authentication in each host of the pool *)
-                          let host_error_msg = ref ("","","") in
-                          let rollback_list = 
-                            let _rollback_list = ref [] in 
-                            (* builds a list of hosts to rollback, if any *)
-                            if List.for_all (*List.for_all goes through the list up to the point when the predicate fails, inclusive *)
-                                (fun h ->
-                                  try(* forward the call to the host in the pool *)
-                                    begin
-                                      debug "trying to enable external authentication on host %s" (Db.Host.get_name_label ~__context ~self:h);
-                                      call_fn_on_host ~__context (Client.Host.enable_external_auth ~config ~service_name ~auth_type) h;
-                                      _rollback_list := h::!_rollback_list; (* add h to potential rollback list *)
-                                      true (* h was successfully enabled. try next in the pool *)
-                                    end
-                                  with 
-                                  | Api_errors.Server_error (err,[msg]) as e -> begin
-                                      debug "received exception while enabling external authentication for host %s: %s" 
-                                        (Db.Host.get_name_label ~__context ~self:h) (err^": "^msg);
-                                      host_error_msg := (err,msg,ExnHelper.string_of_exn e);
-                                      (* error enabling h. we add h here so that we also explicitly disable it during rollback *)
-                                      (* [that's because it might be in an inconsistent external_auth state] *)
-                                      _rollback_list := h::!_rollback_list;
-                                      false
-                                    end
-                                  | e -> begin 
-                                      debug "received exception while enabling external authentication for host %s: %s" 
-                                        (Db.Host.get_name_label ~__context ~self:h) (ExnHelper.string_of_exn e);
-                                      host_error_msg := ("","",ExnHelper.string_of_exn e);
-                                      (* error enabling h. we add h here so that we also explicitly disable it during rollback *)
-                                      (* [that's because it might be in an inconsistent external_auth state] *)
-                                      _rollback_list := h::!_rollback_list;
-                                      false
-                                    end
-                                ) hosts
-                            then (* if List.for_all returned true, then we have successfully enabled all hosts in the pool *)
-                              begin
-                                _rollback_list := [] (* we do not need to rollback any hosts in this case *)
-                              end;
-                            !_rollback_list
-                          in
-                          (* 3. if any failed, then do a best-effort rollback, disabling any host that has been just enabled *)
-                          if (List.length rollback_list > 0) 
-                          then begin (* FAILED *)
-                            let failed_host = (* the failed host is the first item in the rollback list *)
-                              (List.hd rollback_list) in
-                            let failed_host_name_label = Db.Host.get_name_label ~__context ~self:failed_host in
-                            match !host_error_msg with (err_of_e,msg_of_e,string_of_e) ->
-                              debug "Rolling back any enabled host, because failed to enable external authentication for host %s in the pool: %s" failed_host_name_label string_of_e;
-                              List.iter (fun host -> 
-                                (* best-effort attempt to disable all enabled hosts, swallowing any exceptions *)
-                                try (call_fn_on_host ~__context (Client.Host.disable_external_auth ~config) host) 
-                                with e-> (debug "During rollback: Failed to disable external authentication for host %s: %s" 
-                                      (Db.Host.get_name_label ~__context ~self:host) (ExnHelper.string_of_exn e)
-                                  )
-                              ) (List.rev rollback_list);
-                              (* we bubble up the exception returned by the failed host *)
-                              match err_of_e with 
-                              | "" -> (* generic unknown exception *)
-                                raise (Api_errors.Server_error(Api_errors.pool_auth_enable_failed, [(Ref.string_of failed_host);string_of_e]))
-                              | err_of_e when err_of_e=Api_errors.auth_unknown_type ->
-                                raise (Api_errors.Server_error(Api_errors.auth_unknown_type, [msg_of_e]))
-                              | err_of_e when Stringext.String.startswith Api_errors.auth_enable_failed err_of_e ->
-                                raise (Api_errors.Server_error(Api_errors.pool_auth_prefix^err_of_e, [(Ref.string_of failed_host);msg_of_e]))
-                              | _ -> (* Api_errors.Server_error *)
-                                raise (Api_errors.Server_error(Api_errors.pool_auth_enable_failed, [(Ref.string_of failed_host);string_of_e]))
-                          end
+      ;
+      (* 1b. assert that there are no duplicate hostnames in the pool *)
+      if (List.length hosts)
+        <>
+          (List.length
+             (Listext.List.setify 
+                (List.map (fun h->Db.Host.get_hostname ~__context ~self:h) hosts))
+          )
+      then begin
+        let errmsg = "At least two hosts in the pool have the same hostname" in
+        debug "%s" errmsg;
+        raise (Api_errors.Server_error(Api_errors.pool_auth_enable_failed_duplicate_hostname,
+            [(Ref.string_of (List.hd hosts));errmsg]))
+      end
+      else
+        (* 2. tries to enable the external authentication in each host of the pool *)
+        let host_error_msg = ref ("","","") in
+        let rollback_list = 
+          let _rollback_list = ref [] in 
+          (* builds a list of hosts to rollback, if any *)
+          if List.for_all (*List.for_all goes through the list up to the point when the predicate fails, inclusive *)
+              (fun h ->
+                try(* forward the call to the host in the pool *)
+                  begin
+                    debug "trying to enable external authentication on host %s" (Db.Host.get_name_label ~__context ~self:h);
+                    call_fn_on_host ~__context (Client.Host.enable_external_auth ~config ~service_name ~auth_type) h;
+                    _rollback_list := h::!_rollback_list; (* add h to potential rollback list *)
+                    true (* h was successfully enabled. try next in the pool *)
+                  end
+                with 
+                | Api_errors.Server_error (err,[msg]) as e -> begin
+                    debug "received exception while enabling external authentication for host %s: %s" 
+                      (Db.Host.get_name_label ~__context ~self:h) (err^": "^msg);
+                    host_error_msg := (err,msg,ExnHelper.string_of_exn e);
+                    (* error enabling h. we add h here so that we also explicitly disable it during rollback *)
+                    (* [that's because it might be in an inconsistent external_auth state] *)
+                    _rollback_list := h::!_rollback_list;
+                    false
+                  end
+                | e -> begin 
+                    debug "received exception while enabling external authentication for host %s: %s" 
+                      (Db.Host.get_name_label ~__context ~self:h) (ExnHelper.string_of_exn e);
+                    host_error_msg := ("","",ExnHelper.string_of_exn e);
+                    (* error enabling h. we add h here so that we also explicitly disable it during rollback *)
+                    (* [that's because it might be in an inconsistent external_auth state] *)
+                    _rollback_list := h::!_rollback_list;
+                    false
+                  end
+              ) hosts
+          then (* if List.for_all returned true, then we have successfully enabled all hosts in the pool *)
+            begin
+              _rollback_list := [] (* we do not need to rollback any hosts in this case *)
+            end;
+          !_rollback_list
+        in
+        (* 3. if any failed, then do a best-effort rollback, disabling any host that has been just enabled *)
+        if (List.length rollback_list > 0) 
+        then begin (* FAILED *)
+          let failed_host = (* the failed host is the first item in the rollback list *)
+            (List.hd rollback_list) in
+          let failed_host_name_label = Db.Host.get_name_label ~__context ~self:failed_host in
+          match !host_error_msg with (err_of_e,msg_of_e,string_of_e) ->
+            debug "Rolling back any enabled host, because failed to enable external authentication for host %s in the pool: %s" failed_host_name_label string_of_e;
+            List.iter (fun host -> 
+              (* best-effort attempt to disable all enabled hosts, swallowing any exceptions *)
+              try (call_fn_on_host ~__context (Client.Host.disable_external_auth ~config) host) 
+              with e-> (debug "During rollback: Failed to disable external authentication for host %s: %s" 
+                    (Db.Host.get_name_label ~__context ~self:host) (ExnHelper.string_of_exn e)
+                )
+            ) (List.rev rollback_list);
+            (* we bubble up the exception returned by the failed host *)
+            match err_of_e with 
+            | "" -> (* generic unknown exception *)
+              raise (Api_errors.Server_error(Api_errors.pool_auth_enable_failed, [(Ref.string_of failed_host);string_of_e]))
+            | err_of_e when err_of_e=Api_errors.auth_unknown_type ->
+              raise (Api_errors.Server_error(Api_errors.auth_unknown_type, [msg_of_e]))
+            | err_of_e when Stringext.String.startswith Api_errors.auth_enable_failed err_of_e ->
+              raise (Api_errors.Server_error(Api_errors.pool_auth_prefix^err_of_e, [(Ref.string_of failed_host);msg_of_e]))
+            | _ -> (* Api_errors.Server_error *)
+              raise (Api_errors.Server_error(Api_errors.pool_auth_enable_failed, [(Ref.string_of failed_host);string_of_e]))
+        end
 
-                          else begin (* OK *)
-                            debug "External authentication enabled for all hosts in the pool";
+        else begin (* OK *)
+          debug "External authentication enabled for all hosts in the pool";
 
-                            (* CA-59647: remove subjects that do not belong to the new domain *)
-                            revalidate_subjects ~__context;
-                          end
+          (* CA-59647: remove subjects that do not belong to the new domain *)
+          revalidate_subjects ~__context;
+        end
   )
 
 (* CP-719: Calls Host.disable_external_auth() on each of the hosts in the pool

@@ -86,8 +86,8 @@ module Tx = struct
   let close pcb =
     match state pcb.state with
     | Established | Close_wait ->
-      User_buffer.Tx.wait_for_flushed pcb.utx >>
-      Segment.Tx.output ~flags:Segment.Tx.Fin pcb.txq []
+        User_buffer.Tx.wait_for_flushed pcb.utx >>
+        Segment.Tx.output ~flags:Segment.Tx.Fin pcb.txq []
     |_ -> return ()
 
   (* Thread that transmits ACKs in response to received packets,
@@ -122,18 +122,18 @@ module Rx = struct
     match verify_checksum pkt with
     | false -> return (printf "RX.input: checksum error\n%!")
     | true ->
-      (* URG_TODO: Deal correctly with incomming RST segment *)
-      let sequence = Sequence.of_int32 (Wire.get_tcpv4_sequence pkt) in
-      let ack_number = Sequence.of_int32 (Wire.get_tcpv4_ack_number pkt) in
-      let fin = Wire.get_fin pkt in
-      let syn = Wire.get_syn pkt in
-      let ack = Wire.get_ack pkt in
-      let window = Wire.get_tcpv4_window pkt in
-      let data = Wire.get_payload pkt in
-      let seg = Segment.Rx.make ~sequence ~fin ~syn ~ack ~ack_number ~window ~data in
-      let {rxq} = pcb in
-      (* Coalesce any outstanding segments and retrieve ready segments *)
-      Segment.Rx.input rxq seg
+        (* URG_TODO: Deal correctly with incomming RST segment *)
+        let sequence = Sequence.of_int32 (Wire.get_tcpv4_sequence pkt) in
+        let ack_number = Sequence.of_int32 (Wire.get_tcpv4_ack_number pkt) in
+        let fin = Wire.get_fin pkt in
+        let syn = Wire.get_syn pkt in
+        let ack = Wire.get_ack pkt in
+        let window = Wire.get_tcpv4_window pkt in
+        let data = Wire.get_payload pkt in
+        let seg = Segment.Rx.make ~sequence ~fin ~syn ~ack ~ack_number ~window ~data in
+        let {rxq} = pcb in
+        (* Coalesce any outstanding segments and retrieve ready segments *)
+        Segment.Rx.input rxq seg
 
   (* Thread that spools the data into an application receive buffer,
      and notifies the ACK subsystem that new data is here *)
@@ -155,19 +155,19 @@ module Rx = struct
           end in
       match data with
       |None ->
-        (* lwt _ = Ack.Delayed.pushack ack (Window.rx_nxt wnd) in *)
-        State.tick pcb.state State.Recv_fin;
-        Lwt.wakeup urx_close_u ();
-        User_buffer.Rx.add_r urx None >>
-        rx_application_t ()
+          (* lwt _ = Ack.Delayed.pushack ack (Window.rx_nxt wnd) in *)
+          State.tick pcb.state State.Recv_fin;
+          Lwt.wakeup urx_close_u ();
+          User_buffer.Rx.add_r urx None >>
+          rx_application_t ()
       |Some data ->
-        let rec queue = function
-          |hd::tl ->
-            User_buffer.Rx.add_r urx (Some hd) >>
-            queue tl
-          |[] -> return () in
-        lwt _ = queue data in
-        rx_application_t ()
+          let rec queue = function
+            |hd::tl ->
+                User_buffer.Rx.add_r urx (Some hd) >>
+                queue tl
+            |[] -> return () in
+          lwt _ = queue data in
+          rx_application_t ()
     in   
     rx_application_t ()
 end
@@ -198,17 +198,17 @@ let clearpcb t id tx_isn =
   (* TODO: add more info to log msgs *)
   match (hashtbl_find t.channels id) with
   | Some _ ->
-    (* printf "TCP: removing pcb from tables\n%!";*)
-    Hashtbl.remove t.channels id
+      (* printf "TCP: removing pcb from tables\n%!";*)
+      Hashtbl.remove t.channels id
   | None ->
-    match (hashtbl_find t.listens id) with
-    | Some (isn, _) -> 
-      if isn = tx_isn then begin
-        printf "TCP: removing incomplete listen pcb\n%!";
-        Hashtbl.remove t.listens id
-      end
-    | None ->
-      printf "TCP: error in removing pcb - no such connection\n%!"
+      match (hashtbl_find t.listens id) with
+      | Some (isn, _) -> 
+          if isn = tx_isn then begin
+            printf "TCP: removing incomplete listen pcb\n%!";
+            Hashtbl.remove t.listens id
+          end
+      | None ->
+          printf "TCP: error in removing pcb - no such connection\n%!"
 
 
 let pcb_allocs = ref 0
@@ -303,108 +303,108 @@ let input_no_pcb t pkt id =
   match verify_checksum pkt with
   |false -> return (printf "RX.input: checksum error\n%!")
   |true ->
-    match Wire.get_rst pkt with
-    |true -> begin
-        match (hashtbl_find t.connects id) with
-        | Some (wakener, _) -> begin
-            (* URG_TODO: check if RST ack num is valid before it is accepted *)
-            Hashtbl.remove t.connects id;
-            Lwt.wakeup wakener None;
-            return ()
-          end
-        | None -> 
-          match (hashtbl_find t.listens id) with
-          | Some (_, (_, (pcb, th))) -> begin
-              Hashtbl.remove t.listens id;
-              tick pcb.state Recv_rst;
-              Lwt.cancel th;
+      match Wire.get_rst pkt with
+      |true -> begin
+          match (hashtbl_find t.connects id) with
+          | Some (wakener, _) -> begin
+              (* URG_TODO: check if RST ack num is valid before it is accepted *)
+              Hashtbl.remove t.connects id;
+              Lwt.wakeup wakener None;
               return ()
             end
           | None -> 
-            (* Incoming RST possibly to listen port - ignore per RFC793 pg65 *)
-            return ()
-      end
-    |false -> begin
-        let sequence = Wire.get_tcpv4_sequence pkt in
-        let options = Wire.get_options pkt in
-        let ack_number = Wire.get_tcpv4_ack_number pkt in
-        let syn = Wire.get_syn pkt in
-        let fin = Wire.get_fin pkt in
-        match syn with
-        | true -> begin
-            match Wire.get_ack pkt with
-            | true -> begin
-                match (hashtbl_find t.connects id) with
-                | Some (wakener, tx_isn) -> begin
-                    if Sequence.(to_int32 (incr tx_isn)) = ack_number then begin
-                      Hashtbl.remove t.connects id;
-                      let tx_wnd = Wire.get_tcpv4_window pkt in
-                      let rx_wnd = 65535 in
-                      (* TODO: fix hardcoded value - it assumes that this value was sent in the SYN *)
-                      let rx_wnd_scaleoffer = wscale_default in
-                      lwt (pcb, th) = new_client_connection
-                          t ~tx_wnd ~sequence ~ack_number ~options ~tx_isn ~rx_wnd ~rx_wnd_scaleoffer id in
-                      Lwt.wakeup wakener (Some (pcb, th));
-                      return ()
-                    end else begin
-                      (* Normally sending a RST reply to a random pkt would be in order but 
-                         here we stay quiet since we are actively trying to connect this id *)
-                      return ()
-                    end
-                  end
-                | None -> 
-                  (* Incomming SYN-ACK with no pending connect
-                     and no matching pcb - send RST *)
-                  Tx.send_rst t id ~sequence ~ack_number ~syn ~fin
-              end
-            | false -> begin
-                match (hashtbl_find t.listeners id.local_port) with
-                | Some (_, pushf) -> begin
-                    let tx_isn = Sequence.of_int ((Random.int 65535) + 0xCAFE0000) in
-                    let tx_wnd = Wire.get_tcpv4_window pkt in
-                    (* TODO: make this configurable per listener *)
-                    let rx_wnd = 65535 in
-                    let rx_wnd_scaleoffer = wscale_default in
-                    lwt newconn = new_server_connection
-                        t ~tx_wnd ~sequence ~options ~tx_isn ~rx_wnd ~rx_wnd_scaleoffer ~pushf id in
-                    return ()
-                  end
-                | None -> begin
-                    Tx.send_rst t id ~sequence ~ack_number ~syn ~fin
-                  end
-              end
-          end
-        | false -> begin
-            match Wire.get_ack pkt with
-            | true -> begin
-                match (hashtbl_find t.listens id) with
-                | Some (tx_isn, (pushf, newconn)) -> begin
-                    if Sequence.(to_int32 (incr tx_isn)) = ack_number then begin
-                      (* Established connection - promote to active channels *)
-                      Hashtbl.remove t.listens id;
-                      Hashtbl.add t.channels id newconn;
-                      (* send new connection up to listener *)
-                      pushf (Some newconn);
-                      Rx.input t pkt newconn
-                    end else begin
-                      (* No RST because we are trying to connect on this id *)
-                      return ()
-                    end
-                  end
-                | None -> 
+              match (hashtbl_find t.listens id) with
+              | Some (_, (_, (pcb, th))) -> begin
+                  Hashtbl.remove t.listens id;
+                  tick pcb.state Recv_rst;
+                  Lwt.cancel th;
+                  return ()
+                end
+              | None -> 
+                  (* Incoming RST possibly to listen port - ignore per RFC793 pg65 *)
+                  return ()
+        end
+      |false -> begin
+          let sequence = Wire.get_tcpv4_sequence pkt in
+          let options = Wire.get_options pkt in
+          let ack_number = Wire.get_tcpv4_ack_number pkt in
+          let syn = Wire.get_syn pkt in
+          let fin = Wire.get_fin pkt in
+          match syn with
+          | true -> begin
+              match Wire.get_ack pkt with
+              | true -> begin
                   match (hashtbl_find t.connects id) with
-                  | Some _ ->
-                    (* No RST because we are trying to connect on this id *)
-                    return ()
-                  | None ->
-                    (* ACK but no matching pcb and no listen - send RST *)
-                    Tx.send_rst t id ~sequence ~ack_number ~syn ~fin
-              end
-            | false ->
-              (* What the hell is this packet? No SYN,ACK,RST *)
-              return ()
-          end
-      end
+                  | Some (wakener, tx_isn) -> begin
+                      if Sequence.(to_int32 (incr tx_isn)) = ack_number then begin
+                        Hashtbl.remove t.connects id;
+                        let tx_wnd = Wire.get_tcpv4_window pkt in
+                        let rx_wnd = 65535 in
+                        (* TODO: fix hardcoded value - it assumes that this value was sent in the SYN *)
+                        let rx_wnd_scaleoffer = wscale_default in
+                        lwt (pcb, th) = new_client_connection
+                            t ~tx_wnd ~sequence ~ack_number ~options ~tx_isn ~rx_wnd ~rx_wnd_scaleoffer id in
+                        Lwt.wakeup wakener (Some (pcb, th));
+                        return ()
+                      end else begin
+                        (* Normally sending a RST reply to a random pkt would be in order but 
+                           here we stay quiet since we are actively trying to connect this id *)
+                        return ()
+                      end
+                    end
+                  | None -> 
+                      (* Incomming SYN-ACK with no pending connect
+                         and no matching pcb - send RST *)
+                      Tx.send_rst t id ~sequence ~ack_number ~syn ~fin
+                end
+              | false -> begin
+                  match (hashtbl_find t.listeners id.local_port) with
+                  | Some (_, pushf) -> begin
+                      let tx_isn = Sequence.of_int ((Random.int 65535) + 0xCAFE0000) in
+                      let tx_wnd = Wire.get_tcpv4_window pkt in
+                      (* TODO: make this configurable per listener *)
+                      let rx_wnd = 65535 in
+                      let rx_wnd_scaleoffer = wscale_default in
+                      lwt newconn = new_server_connection
+                          t ~tx_wnd ~sequence ~options ~tx_isn ~rx_wnd ~rx_wnd_scaleoffer ~pushf id in
+                      return ()
+                    end
+                  | None -> begin
+                      Tx.send_rst t id ~sequence ~ack_number ~syn ~fin
+                    end
+                end
+            end
+          | false -> begin
+              match Wire.get_ack pkt with
+              | true -> begin
+                  match (hashtbl_find t.listens id) with
+                  | Some (tx_isn, (pushf, newconn)) -> begin
+                      if Sequence.(to_int32 (incr tx_isn)) = ack_number then begin
+                        (* Established connection - promote to active channels *)
+                        Hashtbl.remove t.listens id;
+                        Hashtbl.add t.channels id newconn;
+                        (* send new connection up to listener *)
+                        pushf (Some newconn);
+                        Rx.input t pkt newconn
+                      end else begin
+                        (* No RST because we are trying to connect on this id *)
+                        return ()
+                      end
+                    end
+                  | None -> 
+                      match (hashtbl_find t.connects id) with
+                      | Some _ ->
+                          (* No RST because we are trying to connect on this id *)
+                          return ()
+                      | None ->
+                          (* ACK but no matching pcb and no listen - send RST *)
+                          Tx.send_rst t id ~sequence ~ack_number ~syn ~fin
+                end
+              | false ->
+                  (* What the hell is this packet? No SYN,ACK,RST *)
+                  return ()
+            end
+        end
 
 
 (* Main input function for TCP packets *)
@@ -449,8 +449,8 @@ let closelistener l =
   printf "TCP: Closing listener on port %d\n%!" l.port;
   match (hashtbl_find l.t.listeners l.port) with
   | Some (st, pushf) ->
-    pushf None;
-    Hashtbl.remove l.t.listeners l.port
+      pushf None;
+      Hashtbl.remove l.t.listeners l.port
   | None -> ()
 
 
@@ -496,7 +496,7 @@ let rec connecttimer t id tx_isn options window count =
         return ()
     end
   | None ->
-    return ()
+      return ()
 
 let connect t ~dest_ip ~dest_port = 
   let id = getid t dest_ip dest_port in

@@ -373,7 +373,7 @@ struct
               project_root := Filename.concat (Unix.getcwd ()) dir
             else
               project_root := dir
-          ;
+            ;
             OManager.verbose "Setting project root to %s" !project_root;
           end
         else
@@ -472,12 +472,12 @@ struct
           "--api",
           Arg.Set generate_interface_and_compile,
           " Generate interfaces (json and text) and continue compilation"
-        ;
+          ;
 
           "--api-only",
           Arg.Set generate_interface,
           " Generate interfaces (json and text) and exit"
-        ;
+          ;
         ] @ (
           if List.length available_back_end_list > 1 then [
 
@@ -492,7 +492,7 @@ struct
           "--build-dir",
           Arg.String (fun s -> build_dir := s),
           " set the build directory : default is _build. You must set an absolute path."
-        ;
+          ;
 
           "--backtrace",
           Arg.Unit (fun () -> backtrace:=true),
@@ -502,14 +502,14 @@ struct
           "--ccopt",
           Arg.String add_ccopt,
           "<opt>  Pass option <opt> to the C compiler and linker"
-        ;
+          ;
 
-        "--cclib",
-        Arg.String add_cclib,
-        "<opt>  Pass option <opt> to the C linker"
-        ;
+          "--cclib",
+          Arg.String add_cclib,
+          "<opt>  Pass option <opt> to the C linker"
+          ;
 
-        ("--compile-release",   Arg.Set compile_release, " use this option to make a release : errors should be ignored, activate static file embedding.");
+          ("--compile-release",   Arg.Set compile_release, " use this option to make a release : errors should be ignored, activate static file embedding.");
           ("--constant-sharing", Arg.Set constant_sharing, " Activate the constant sharing pass");
           ("--constant-sharing-client", Arg.Set constant_sharing, " Activate the constant sharing pass on javascript code");
           ("--no-constant-sharing", Arg.Clear constant_sharing, " Deactivate the constant sharing pass");
@@ -559,49 +559,49 @@ struct
             | Some true -> ()
           ),
           "<version> Ensure that the compiler is newer than the given version"
-        ;
+          ;
 
-        "--maximal-version",
-        Arg.String (fun s ->
-          match BuildInfos.assert_maximal_version s with
-          | None ->
-              OManager.error (
-                "option --maximal-version: @{<bright>%s@} not recognized@\n"^^
-                "@[<2>@{<bright>Hint@}:@\n"^^
-                "try e.g. v%%d, or %%d@]"
-              )
-                s
-          | Some false ->
-              OManager.error (
-                "@[<2>This application needs an older version of Opa@\n"^^
-                "Required version: %s or earlier@\n"^^
-                "Current version:  %s/%d@]"
-              )
-                s
-                BuildInfos.opa_version_name
-                BuildInfos.opa_git_version
-          | Some true -> ()
-        ),
-        "<version> Ensure that the compiler is older than the given version"
-        ;
+          "--maximal-version",
+          Arg.String (fun s ->
+            match BuildInfos.assert_maximal_version s with
+            | None ->
+                OManager.error (
+                  "option --maximal-version: @{<bright>%s@} not recognized@\n"^^
+                  "@[<2>@{<bright>Hint@}:@\n"^^
+                  "try e.g. v%%d, or %%d@]"
+                )
+                  s
+            | Some false ->
+                OManager.error (
+                  "@[<2>This application needs an older version of Opa@\n"^^
+                  "Required version: %s or earlier@\n"^^
+                  "Current version:  %s/%d@]"
+                )
+                  s
+                  BuildInfos.opa_version_name
+                  BuildInfos.opa_git_version
+            | Some true -> ()
+          ),
+          "<version> Ensure that the compiler is older than the given version"
+          ;
 
-        "--mlcopt",
-        Arg.String add_mlcopt,
-        "<opt> Give option to ocaml compilation"
-        ;
+          "--mlcopt",
+          Arg.String add_mlcopt,
+          "<opt> Give option to ocaml compilation"
+          ;
 
-        "--mllopt",
-        Arg.String add_mllopt,
-        "<opt> Give option to ocaml linking"
-        ;
-        (* n *)
+          "--mllopt",
+          Arg.String add_mllopt,
+          "<opt> Give option to ocaml linking"
+          ;
+          (* n *)
 
-        "--no-assert",
-        Arg.Set no_assert,
-        " Ignore @assert directives. (e.g. for a release)"
-        ;
+          "--no-assert",
+          Arg.Set no_assert,
+          " Ignore @assert directives. (e.g. for a release)"
+          ;
 
-        ("--no-server",         Arg.Unit (fun () -> no_server := Some true), " Executable will not start a server service");
+          ("--no-server",         Arg.Unit (fun () -> no_server := Some true), " Executable will not start a server service");
           ("--force-server",      Arg.Unit (fun () -> no_server := Some false), " Force the compile to execute passes that are meaningless without server");
           ("--no-stdlib",         Arg.Tuple [Arg.Clear stdlib], " Do not use standard libraries");
 

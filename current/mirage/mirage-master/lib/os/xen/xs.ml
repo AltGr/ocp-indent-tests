@@ -124,7 +124,7 @@ let read_watchevent_timeout xsh token timeout callback =
             try_lwt
               Time.with_timeout timeout process_incoming_event
             with Time.Timeout ->
-              return false
+                return false
           in
           success := s;
           return ()

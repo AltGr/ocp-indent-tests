@@ -84,11 +84,11 @@ let pkt_send con =
   match Xb.has_old_output con.xb with
   | true -> fail Partial_not_empty
   | false ->
-    let rec loop_output () = 
-      lwt w = Xb.output con.xb in
-      if w then return () else loop_output ()
-    in
-    loop_output ()
+      let rec loop_output () = 
+        lwt w = Xb.output con.xb in
+        if w then return () else loop_output ()
+      in
+      loop_output ()
 
 (* receive one packet - can sleep *)
 let pkt_recv_one con =
@@ -145,14 +145,14 @@ let rec dispatcher con =
   lwt pkt = pkt_recv_one con in
   match Xs_packet.get_ty pkt with
   | Xb.Op.Watchevent  ->
-    queue_watchevent con pkt;
-    dispatcher con
+      queue_watchevent con pkt;
+      dispatcher con
   | _ ->
-    let rid = Xs_packet.get_rid pkt in
-    if not(Hashtbl.mem rid_to_wakeup rid)
-    then Printf.printf "Unknown rid:%d in ty:%s\n%!" rid (Xb_op.to_string (Xs_packet.get_ty pkt))
-    else Lwt.wakeup (Hashtbl.find rid_to_wakeup rid) pkt;
-    dispatcher con
+      let rid = Xs_packet.get_rid pkt in
+      if not(Hashtbl.mem rid_to_wakeup rid)
+      then Printf.printf "Unknown rid:%d in ty:%s\n%!" rid (Xb_op.to_string (Xs_packet.get_ty pkt))
+      else Lwt.wakeup (Hashtbl.find rid_to_wakeup rid) pkt;
+      dispatcher con
 
 let create () = 
   let xb = Xb.init () in
@@ -255,7 +255,7 @@ let transaction_end tid commit con =
     ack (rpc (Queueop.transaction_end tid commit) con) >>
     return true
   with | Xb.Eagain ->
-    return false
+      return false
 
 let introduce domid mfn port con =
   ack (rpc (Queueop.introduce domid mfn port) con)

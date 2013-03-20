@@ -69,10 +69,10 @@ let concat_aux init al =
   let rec fill pos = function
     | [] -> ()
     | h::t ->
-      for i = 0 to length h - 1 do
-        unsafe_set res (pos + i) (unsafe_get h i);
-      done;
-      fill (pos + length h) t;
+        for i = 0 to length h - 1 do
+          unsafe_set res (pos + i) (unsafe_get h i);
+        done;
+        fill (pos + length h) t;
   in
   fill 0 al;
   res
@@ -83,7 +83,7 @@ let concat al =
     match aa with
     | [] -> [||]
     | a :: rem ->
-      if length a > 0 then concat_aux (unsafe_get a 0) aa else find_init rem
+        if length a > 0 then concat_aux (unsafe_get a 0) aa else find_init rem
   in find_init al
 
 let sub a ofs len =
@@ -155,11 +155,11 @@ let rec list_length accu = function
 let of_list = function
     [] -> [||]
   | hd::tl as l ->
-    let a = create (list_length 0 l) hd in
-    let rec fill i = function
-        [] -> a
-      | hd::tl -> unsafe_set a i hd; fill (i+1) tl in
-    fill 1 tl
+      let a = create (list_length 0 l) hd in
+      let rec fill i = function
+          [] -> a
+        | hd::tl -> unsafe_set a i hd; fill (i+1) tl in
+      fill 1 tl
 
 let fold_left f x a =
   let r = ref x in

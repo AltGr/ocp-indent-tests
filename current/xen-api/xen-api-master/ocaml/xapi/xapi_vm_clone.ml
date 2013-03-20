@@ -331,7 +331,7 @@ let copy_vm_record ?(snapshot_info_record) ~__context ~vm ~disk_op ~new_name ~ne
     ~order:0L
     ~suspend_SR:Ref.null
     ~version:0L
-;
+  ;
 
   (* update the VM's parent field in case of snapshot. Note this must be done after "ref"
      has been created, so that its "children" field can be updated by the database layer *)

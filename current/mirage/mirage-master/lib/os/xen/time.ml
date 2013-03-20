@@ -83,14 +83,14 @@ let in_the_past now t =
 let rec restart_threads now =
   match SleepQueue.lookup_min !sleep_queue with
   | Some{ canceled = true } ->
-    sleep_queue := SleepQueue.remove_min !sleep_queue;
-    restart_threads now
+      sleep_queue := SleepQueue.remove_min !sleep_queue;
+      restart_threads now
   | Some{ time = time; thread = thread } when in_the_past now time ->
-    sleep_queue := SleepQueue.remove_min !sleep_queue;
-    Lwt.wakeup thread ();
-    restart_threads now
+      sleep_queue := SleepQueue.remove_min !sleep_queue;
+      Lwt.wakeup thread ();
+      restart_threads now
   | _ ->
-    ()
+      ()
 
 (* +-----------------------------------------------------------------+
    | Event loop                                                      |
@@ -104,12 +104,12 @@ let min_timeout a b = match a, b with
 let rec get_next_timeout now =
   match SleepQueue.lookup_min !sleep_queue with
   | Some{ canceled = true } ->
-    sleep_queue := SleepQueue.remove_min !sleep_queue;
-    get_next_timeout now 
+      sleep_queue := SleepQueue.remove_min !sleep_queue;
+      get_next_timeout now 
   | Some{ time = time } ->
-    Some (if time = 0. then 0. else max 0. (time -. (now ())))
+      Some (if time = 0. then 0. else max 0. (time -. (now ())))
   | None ->
-    None
+      None
 
 let select_next now =
   (* Transfer all sleepers added since the last iteration to the main

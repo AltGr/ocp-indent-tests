@@ -36,31 +36,31 @@ let rec iter_serial f l =
 let rec map f l =
   match l with
     [] ->
-    return []
+      return []
   | v :: r ->
-    let t = f v in
-    let rt = map f r in
-    t >>= (fun v' ->
-      rt >>= (fun l' ->
-        return (v' :: l')))
+      let t = f v in
+      let rt = map f r in
+      t >>= (fun v' ->
+        rt >>= (fun l' ->
+          return (v' :: l')))
 
 let map_with_waiting_action f wa l =
   let rec loop l =
     match l with
       [] ->
-      return []
+        return []
     | v :: r ->
-      let t = f v in
-      let rt = loop r in
-      t >>= (fun v' ->
-        (* Perform the specified "waiting action" for the next    *)
-        (* item in the list.                                      *)
-        if r <> [] then
-          wa (List.hd r)
-        else
-          ();
-        rt >>= (fun l' ->
-          return (v' :: l')))
+        let t = f v in
+        let rt = loop r in
+        t >>= (fun v' ->
+          (* Perform the specified "waiting action" for the next    *)
+          (* item in the list.                                      *)
+          if r <> [] then
+            wa (List.hd r)
+          else
+            ();
+          rt >>= (fun l' ->
+            return (v' :: l')))
   in
   if l <> [] then
     wa (List.hd l)
@@ -71,11 +71,11 @@ let map_with_waiting_action f wa l =
 let rec map_serial f l =
   match l with
     [] ->
-    return []
+      return []
   | v :: r ->
-    f v >>= (fun v' ->
-      map_serial f r >>= (fun l' ->
-        return (v' :: l')))
+      f v >>= (fun v' ->
+        map_serial f r >>= (fun l' ->
+          return (v' :: l')))
 
 let rec fold_left f a = function
   | [] -> return a
@@ -99,7 +99,7 @@ let leave_region reg sz =
     reg.count <- reg.count - sz + sz';
     Lwt.wakeup_later w ()
   with Queue.Empty ->
-    reg.count <- reg.count - sz
+      reg.count <- reg.count - sz
 
 let run_in_region_1 reg sz thr =
   (catch

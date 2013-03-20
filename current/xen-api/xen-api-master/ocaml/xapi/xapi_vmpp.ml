@@ -88,7 +88,7 @@ let unzip b64zdata = (* todo: remove i/o, make this more efficient *)
         Pervasiveext.finally
           (fun ()->let (_: int) = Unix.write fd zdata 0 (String.length zdata) in ())
           (fun ()->Unix.close fd;)
-      ;
+        ;
         Unixext.with_file tmp_path [ Unix.O_RDONLY ] 0o0
           (fun gz_fd_in ->
             Gzip.decompress_passive gz_fd_in
@@ -104,7 +104,7 @@ let unzip b64zdata = (* todo: remove i/o, make this more efficient *)
           )
       )
       (fun ()->Sys.remove tmp_path)
-  ;
+    ;
     (Some !data)
   with e->
     debug "error %s unzipping zdata: %s" (ExnHelper.string_of_exn e) b64zdata;
@@ -137,7 +137,7 @@ let get_alerts ~__context ~vmpp ~hours_from_now =
           with e->
             debug "error %s parsing sexpr: %s"
               (ExnHelper.string_of_exn e) sexpr_str
-          ;
+            ;
             (SExpr.Node [])
           )
         in

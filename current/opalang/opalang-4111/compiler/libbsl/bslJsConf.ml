@@ -296,7 +296,7 @@ let parse_line pos files line =
                 )
                   FilePos.pp pos
                   str
-            ;
+              ;
               let add a b = StringSet.add b a in
               List.fold_left add set files
             in

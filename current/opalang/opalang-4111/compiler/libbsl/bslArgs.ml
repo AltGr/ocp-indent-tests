@@ -30,5 +30,5 @@ let get () = !x
 
 let options = [
   ("--no-absolute-plugin", Base.Arg.Unit (fun () -> x := {no_absolute = true})
-   , "Plugin paths should not be considered as absolute path (package will not refers to plugin with an absolute path)")
+  , "Plugin paths should not be considered as absolute path (package will not refers to plugin with an absolute path)")
 ]

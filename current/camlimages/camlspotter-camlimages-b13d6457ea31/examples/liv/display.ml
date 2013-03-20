@@ -155,39 +155,39 @@ let root_prev_pos = ref None;;
 let display_pixbuf pixbuf =
   match !root_mode with
   | `CENTER | `RANDOM ->
-    let width = GdkPixbuf.get_width pixbuf 
-    and height = GdkPixbuf.get_height pixbuf in
-    let x, y =
-      let w = screen_width - width
-      and h = screen_height - height in
-      match !root_mode with
-      | `RANDOM ->
+      let width = GdkPixbuf.get_width pixbuf 
+      and height = GdkPixbuf.get_height pixbuf in
+      let x, y =
         let w = screen_width - width
         and h = screen_height - height in
+        match !root_mode with
+        | `RANDOM ->
+            let w = screen_width - width
+            and h = screen_height - height in
 
-        let overwrap x y =
-          match !root_prev_pos with
-          | None -> 0
-          | Some (pw, ph, px, py) ->
-            let w = min (x + w - 1) (px + pw - 1) - max x px in
-            let h = min (y + h - 1) (py + ph - 1) - max y py in
-            if w < 0 || h < 0 then 0 else w * h in
+            let overwrap x y =
+              match !root_prev_pos with
+              | None -> 0
+              | Some (pw, ph, px, py) ->
+                  let w = min (x + w - 1) (px + pw - 1) - max x px in
+                  let h = min (y + h - 1) (py + ph - 1) - max y py in
+                  if w < 0 || h < 0 then 0 else w * h in
 
-        let random_x_y () =
-          let x = if w <= 0 then w / 2 else Random.int w
-          and y = if h <= 0 then h / 2 else Random.int h in
-          (x, y), overwrap x y in
+            let random_x_y () =
+              let x = if w <= 0 then w / 2 else Random.int w
+              and y = if h <= 0 then h / 2 else Random.int h in
+              (x, y), overwrap x y in
 
-        let min = ref (random_x_y ()) in
-        for i = 0 to 5 do
-          let (x, y), over = random_x_y () in
-          if snd !min > over then min := (x, y), over
-        done;
-        let x, y = fst !min in
-        root_prev_pos := Some (w, h, x, y);
-        x, y
-      | _ -> w/2, h/2 in
-    ROOT.display_at pixbuf x y
+            let min = ref (random_x_y ()) in
+            for i = 0 to 5 do
+              let (x, y), over = random_x_y () in
+              if snd !min > over then min := (x, y), over
+            done;
+            let x, y = fst !min in
+            root_prev_pos := Some (w, h, x, y);
+            x, y
+        | _ -> w/2, h/2 in
+      ROOT.display_at pixbuf x y
   | _ -> WINDOW.display pixbuf;;
 
 let sort_filters (filters : filter list) =
@@ -217,11 +217,11 @@ let resize w h cond old =
     let xmag,ymag =
       match cond with
       | `ATMOST ->
-        let mag = if xmag > ymag then ymag else xmag in
-        if mag > 1.0 then 1.0, 1.0 else mag, mag
+          let mag = if xmag > ymag then ymag else xmag in
+          if mag > 1.0 then 1.0, 1.0 else mag, mag
       | `ATLEAST ->
-        let mag = if xmag > ymag then xmag else ymag in
-        if mag < 1.0 then 1.0, 1.0 else mag, mag
+          let mag = if xmag > ymag then xmag else ymag in
+          if mag < 1.0 then 1.0, 1.0 else mag, mag
       | `NOASPECT -> xmag, ymag in
 
     let nw = truncate (float old_width *. xmag)
@@ -267,8 +267,8 @@ let create_pixbuf (_id : int) image filters =
   let rec filter_pixbuf pixbuf = function
     | [] -> pixbuf
     | `SIZE (w, h, cond) :: _fs -> 
-      (* original pixbuf will be GC'ed automatically *)
-      resize w h cond pixbuf
+        (* original pixbuf will be GC'ed automatically *)
+        resize w h cond pixbuf
   in
   filter_pixbuf pixbuf filters
 ;;
@@ -279,9 +279,9 @@ let rec display id image filters =
   let start_waiting () =
     match !waiting with
     | Some (id, image, filters) ->
-      prerr_endline "aborted!";
-      waiting := None;
-      display id image filters
+        prerr_endline "aborted!";
+        waiting := None;
+        display id image filters
     | None -> () 
   in
 
@@ -302,8 +302,8 @@ let rec display id image filters =
       start_waiting ()
     with
     | Exit -> (* abort! *)
-      working := None;
-      start_waiting ()
+        working := None;
+        start_waiting ()
   end;;
 
 let redisplay new_filters =

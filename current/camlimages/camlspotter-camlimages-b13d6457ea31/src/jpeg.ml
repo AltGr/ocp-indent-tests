@@ -81,26 +81,26 @@ let load_aux prog ic w h =
   let img = Rgb24.create w h in
   begin match Rgb24.get_scanline_ptr img with 
     | Some f ->
-      let load_once_at = max 1 (h / 10) in
-      let rec load_scanlines y =
-        if y >= h then ()
-        else begin
-          let (string, off), at_most = f y in
-          let lines_read = min load_once_at at_most in
-          read_scanlines ic string off lines_read;
-          prog y;
-          load_scanlines (y + lines_read)
-        end
-      in
-      load_scanlines 0
+        let load_once_at = max 1 (h / 10) in
+        let rec load_scanlines y =
+          if y >= h then ()
+          else begin
+            let (string, off), at_most = f y in
+            let lines_read = min load_once_at at_most in
+            read_scanlines ic string off lines_read;
+            prog y;
+            load_scanlines (y + lines_read)
+          end
+        in
+        load_scanlines 0
     | None -> 
-      (* CR jfuruse: check overflow *)
-      let scanline = String.create (w * 3) in
-      for y = 0 to h - 1 do
-        read_scanline ic scanline 0;
-        Rgb24.set_scanline img y scanline;
-        prog y
-      done
+        (* CR jfuruse: check overflow *)
+        let scanline = String.create (w * 3) in
+        for y = 0 to h - 1 do
+          read_scanline ic scanline 0;
+          Rgb24.set_scanline img y scanline;
+          prog y
+        done
   end;
   close_in ic;
   Rgb24 img;;
@@ -124,14 +124,14 @@ let save name opts image =
   let prog = Images.save_progress opts in
   match image with
   | Rgb24 bmp ->
-    let oc = open_out name bmp.width bmp.height quality in
-    for y = 0 to bmp.height - 1 do
-      write_scanline oc (Rgb24.get_scanline bmp y);
-      match prog with
-      | Some p -> p (float (y + 1) /. float bmp.height)
-      | None -> ()
-    done;
-    close_out oc
+      let oc = open_out name bmp.width bmp.height quality in
+      for y = 0 to bmp.height - 1 do
+        write_scanline oc (Rgb24.get_scanline bmp y);
+        match prog with
+        | Some p -> p (float (y + 1) /. float bmp.height)
+        | None -> ()
+      done;
+      close_out oc
   | _ -> raise Wrong_image_type;;
 
 let save_as_cmyk name opts trans image =
@@ -155,15 +155,15 @@ let save_as_cmyk name opts trans image =
     buf in
   match image with
   | Rgb24 bmp ->
-    let oc = open_out_cmyk name bmp.width bmp.height quality in
-    for y = 0 to bmp.height - 1 do
-      let buf = get_cmyk_scanline bmp.width (Rgb24.get_scanline bmp y) in
-      write_scanline oc buf;
-      match prog with
-      | Some p -> p (float (y + 1) /. float bmp.height)
-      | None -> ()
-    done;
-    close_out oc
+      let oc = open_out_cmyk name bmp.width bmp.height quality in
+      for y = 0 to bmp.height - 1 do
+        let buf = get_cmyk_scanline bmp.width (Rgb24.get_scanline bmp y) in
+        write_scanline oc buf;
+        match prog with
+        | Some p -> p (float (y + 1) /. float bmp.height)
+        | None -> ()
+      done;
+      close_out oc
   | _ -> raise Wrong_image_type;;
 
 let save_cmyk_sample name opts =
@@ -211,18 +211,18 @@ let rec find_jpeg_size ic =
     match ch with
     | 0xda -> raise Not_found
     | _ when ch >= 0xc0 && ch <= 0xc3 ->
-      really_input ic str 0 3;
-      really_input ic str 0 4;
-      int_of_char str.[2] lsl 8 + int_of_char str.[3], (* width *)
-      int_of_char str.[0] lsl 8 + int_of_char str.[1]  (* height *)
+        really_input ic str 0 3;
+        really_input ic str 0 4;
+        int_of_char str.[2] lsl 8 + int_of_char str.[3], (* width *)
+        int_of_char str.[0] lsl 8 + int_of_char str.[1]  (* height *)
     | _ ->
-      (* skip this block *)
-      let blocklen =
-        really_input ic str 0 2;
-        int_of_char str.[0] lsl 8 + int_of_char str.[1] in
-      let s = String.create (blocklen - 2) in
-      really_input ic s 0 (blocklen - 2);
-      loop () in
+        (* skip this block *)
+        let blocklen =
+          really_input ic str 0 2;
+          int_of_char str.[0] lsl 8 + int_of_char str.[1] in
+        let s = String.create (blocklen - 2) in
+        really_input ic s 0 (blocklen - 2);
+        loop () in
   try loop () with
   | _ -> raise Not_found (* any error returns Not_found *);;
 
@@ -249,8 +249,8 @@ let check_header filename =
       raise Wrong_file_type
   with
   | _ ->
-    Pervasives.close_in ic;
-    raise Wrong_file_type;;
+      Pervasives.close_in ic;
+      raise Wrong_file_type;;
 
 add_methods Jpeg
   { check_header = check_header;

@@ -396,7 +396,7 @@ module Utils = struct
                               | Some s -> Some (rfld, type_of_selected gamma ty s)
                        )
                        rflds)
-                    , rv)
+                   , rv)
                 )
           | ty -> OManager.i_error "Try to select fields on %a" QmlPrint.pp#ty ty
     in

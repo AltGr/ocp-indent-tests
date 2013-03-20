@@ -184,7 +184,7 @@ let populate_audit_record_with_obj_names_of_refs line =
   with e ->
     D.debug "error populating audit record arg names: %s" 
       (ExnHelper.string_of_exn e)
-  ;
+    ;
     line
 
 let action_params_whitelist =
@@ -237,7 +237,7 @@ let zip data = (* todo: remove i/o, make this more efficient *)
           (fun ()->Unix.close fd_in)
       )
       (fun ()-> Sys.remove tmp_path)
-  ;
+    ;
     let b64zdata = Base64.encode !zdata in
     b64zdata
   with e->

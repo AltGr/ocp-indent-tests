@@ -53,25 +53,25 @@ let datapath_join_cb controller dpid evt =
 let aggr_flow_stats_reply_cb controller dpid evt =
   match evt with 
   | OE.Aggr_flow_stats_reply(xid, packets, bytes, flows, dpid) -> 
-    OS.Console.log (sp "* dpid:0x%012Lx evt:%s" dpid (OE.string_of_event evt))
+      OS.Console.log (sp "* dpid:0x%012Lx evt:%s" dpid (OE.string_of_event evt))
   | _ -> invalid_arg "bogus aggr_flow_stats_reply event match!"
 
 let desc_stats_reply_cb controller dpid evt =
   match evt with 
   | OE.Desc_stats_reply(mfr_desc, hw_desc, sw_desc, serial_num, dp_desc, dpid) -> 
-    OS.Console.log (sp "* dpid:0x%012Lx evt:%s" dpid (OE.string_of_event evt))
+      OS.Console.log (sp "* dpid:0x%012Lx evt:%s" dpid (OE.string_of_event evt))
   | _ -> invalid_arg "bogus desc_stats_reply event match!"
 
 let flow_stats_reply_cb controller dpid evt =
   match evt with 
   | OE.Flow_stats_reply(xid, more, flows, dpid) -> 
-    OS.Console.log (sp "* dpid:0x%012Lx evt:%s" dpid (OE.string_of_event evt))
+      OS.Console.log (sp "* dpid:0x%012Lx evt:%s" dpid (OE.string_of_event evt))
   | _ -> invalid_arg "bogus flow_stats_reply event match!"
 
 let port_status_cb controller dpid evt = 
   match evt with 
   | OE.Port_status (r, ph, dpid) ->
-    Printf.printf "Port status updated\n"
+      Printf.printf "Port status updated\n"
   | _ ->  invalid_arg "bogus flow_stats_reply event match!"
 
 let init controller = 

@@ -79,18 +79,18 @@ let remove_asterisks str =
   for i = 0 to n-1 do
     match !phase with
     | false ->
-      if str.[i] == '\n' then begin
-        phase := true;
-        Buffer.add_char res ' '
-      end else if i == 0 && str.[i] == '*' then
-        phase := true
-      else
-        Buffer.add_char res str.[i]
+        if str.[i] == '\n' then begin
+          phase := true;
+          Buffer.add_char res ' '
+        end else if i == 0 && str.[i] == '*' then
+          phase := true
+        else
+          Buffer.add_char res str.[i]
     | true -> 
-      if not (List.mem str.[i] ['\n'; '\t'; ' '; '*']) then begin
-        phase := false;
-        Buffer.add_char res str.[i]
-      end
+        if not (List.mem str.[i] ['\n'; '\t'; ' '; '*']) then begin
+          phase := false;
+          Buffer.add_char res str.[i]
+        end
   done;
   Buffer.contents res
 
@@ -124,9 +124,9 @@ let get_childlist graph node =
 let rec invert_graph g = function 
   | [] -> g
   | (node, lch) :: tl -> 
-    let newg = add_node g node in
-    let newg = List.fold_left (fun g ch -> add_edge g ch node) newg lch in
-    invert_graph newg tl
+      let newg = add_node g node in
+      let newg = List.fold_left (fun g ch -> add_edge g ch node) newg lch in
+      invert_graph newg tl
 
 (* JSON *)
 
@@ -212,15 +212,15 @@ let rec print_one_t = function
   | Raw_html s -> s
   | Node ("", _, _) -> ""
   | Node (tag, atts, subs) ->
-    "<" ^ tag ^
-    (match atts with
-     | [] -> ""
-     | _ -> " " ^
-            String.concat " " (List.map
-                (fun (a,v) -> (Printf.sprintf "%s=\"%s\" " a (escape_entities (escape_quotes v)))) atts)
-    ) ^ ">" ^
-    (print_t_list subs) ^
-    (Printf.sprintf "</%s>" tag)
+      "<" ^ tag ^
+      (match atts with
+       | [] -> ""
+       | _ -> " " ^
+              String.concat " " (List.map
+                  (fun (a,v) -> (Printf.sprintf "%s=\"%s\" " a (escape_entities (escape_quotes v)))) atts)
+      ) ^ ">" ^
+      (print_t_list subs) ^
+      (Printf.sprintf "</%s>" tag)
 
 and print_t_list l =
   String.concat "" (List.map print_one_t l)
@@ -263,8 +263,8 @@ class gen () =
       | Odoc_info.Newline -> node "br" []
       | Odoc_info.Block t -> node "div" ~atts:["class", "block"] (self#t_of_text t)
       | Odoc_info.Title (n, l_opt, t) ->
-        (*  (match l_opt with None -> [] | Some t -> ["name",t]) *)
-        node ("h" ^ string_of_int n) (self#t_of_text t)
+          (*  (match l_opt with None -> [] | Some t -> ["name",t]) *)
+          node ("h" ^ string_of_int n) (self#t_of_text t)
       | Odoc_info.Latex s -> node "span" ~atts:["class", "latex"] [self#t_of_raw s]
       | Odoc_info.Link (s, t) -> node "a" ~atts: ["href", s] (self#t_of_text t)
       | Odoc_info.Ref (name, ref_opt, _) -> self#t_of_Ref name ref_opt
@@ -273,29 +273,29 @@ class gen () =
       | Odoc_info.Module_list l -> Leaf "" (* self#json_of_Module_list l *)
       | Odoc_info.Index_list -> Leaf "" (* node "index_list" [] *)
       | Odoc_info.Custom (s,t) ->
-        if s = "{html" then
-          Raw_html (String.concat "" (List.map (fun (Odoc_info.Raw s) -> remove_asterisks s) t))
-        else
-          node "div" ~atts:["class", s] (self#t_of_text t)
+          if s = "{html" then
+            Raw_html (String.concat "" (List.map (fun (Odoc_info.Raw s) -> remove_asterisks s) t))
+          else
+            node "div" ~atts:["class", s] (self#t_of_text t)
 
     method t_of_Ref name ref_opt =
       let code = node "span" ~atts:["class", "code"] [Leaf name] in
       let k =
         match ref_opt with
         | None ->
-          "none"
+            "none"
         | Some kind ->
-          match kind with
-          | Odoc_info.RK_module -> "module"
-          | Odoc_info.RK_module_type -> "module_type"
-          | Odoc_info.RK_class -> "class"
-          | Odoc_info.RK_class_type -> "class_type"
-          | Odoc_info.RK_value -> "value"
-          | Odoc_info.RK_type -> "type"
-          | Odoc_info.RK_exception -> "exception"
-          | Odoc_info.RK_attribute -> "attribute"
-          | Odoc_info.RK_method -> "method"
-          | Odoc_info.RK_section t -> "section"
+            match kind with
+            | Odoc_info.RK_module -> "module"
+            | Odoc_info.RK_module_type -> "module_type"
+            | Odoc_info.RK_class -> "class"
+            | Odoc_info.RK_class_type -> "class_type"
+            | Odoc_info.RK_value -> "value"
+            | Odoc_info.RK_type -> "type"
+            | Odoc_info.RK_exception -> "exception"
+            | Odoc_info.RK_attribute -> "attribute"
+            | Odoc_info.RK_method -> "method"
+            | Odoc_info.RK_section t -> "section"
       in
       node "a" ~atts:[("href", "{" ^ k ^ "|" ^ name ^ "}")] [code]
 
@@ -336,15 +336,15 @@ class gen () =
 
     method json_of_parameter = function
       | Parameter.Simple_name sn ->
-        Object (["name", String sn.Parameter.sn_name;
-                 "type", self#json_of_type_expr sn.Parameter.sn_type] @
-                (match sn.Parameter.sn_text with
-                 | None -> []
-                 | Some t -> ["comment", self#json_of_comment t])
-        )
+          Object (["name", String sn.Parameter.sn_name;
+                   "type", self#json_of_type_expr sn.Parameter.sn_type] @
+                  (match sn.Parameter.sn_text with
+                   | None -> []
+                   | Some t -> ["comment", self#json_of_comment t])
+          )
       | Parameter.Tuple (l,texpr) ->
-        Object ["tuple", Object
-                  ["type", self#json_of_type_expr texpr; "contents", Array (List.map self#json_of_parameter l)]]
+          Object ["tuple", Object
+                    ["type", self#json_of_type_expr texpr; "contents", Array (List.map self#json_of_parameter l)]]
 
     method json_of_class c = Empty
     method json_of_class_type c = Empty
@@ -420,18 +420,18 @@ class gen () =
     method json_of_type_kind priv = function
       | Type.Type_abstract -> Object ["type", String "abstract"]
       | Type.Type_variant cons ->
-        Object ["type", String "variant"; "private", String (string_of_bool (priv = Type.Private));
-                "constructors", Array (List.map self#json_of_variant_constructor cons)]
+          Object ["type", String "variant"; "private", String (string_of_bool (priv = Type.Private));
+                  "constructors", Array (List.map self#json_of_variant_constructor cons)]
       | Type.Type_record fields ->
-        Object ["type", String "record"; "private", String (string_of_bool (priv = Type.Private));
-                "fields", Array (List.map self#json_of_record_field fields)]
+          Object ["type", String "record"; "private", String (string_of_bool (priv = Type.Private));
+                  "fields", Array (List.map self#json_of_record_field fields)]
 
     method json_of_variant_constructor c =
       let desc = match c.Type.vc_text with
         | None -> []
         | Some t ->
-          completed_descr_cnt <- completed_descr_cnt + 1;
-          ["description", html_to_json (self#t_of_text t)]
+            completed_descr_cnt <- completed_descr_cnt + 1;
+            ["description", html_to_json (self#t_of_text t)]
       in
       descr_cnt <- descr_cnt + 1;
       Object (["name", String c.Type.vc_name] @ desc @ ["type", Array (List.map self#json_of_type_expr c.Type.vc_args)])
@@ -440,8 +440,8 @@ class gen () =
       let desc = match f.Type.rf_text with
         | None -> []
         | Some t ->
-          completed_descr_cnt <- completed_descr_cnt + 1;
-          ["description", html_to_json (self#t_of_text t)]
+            completed_descr_cnt <- completed_descr_cnt + 1;
+            ["description", html_to_json (self#t_of_text t)]
       in
       descr_cnt <- descr_cnt + 1;
       Object (["name", String f.Type.rf_name; "mutable", json_of_bool f.Type.rf_mutable] @
@@ -457,8 +457,8 @@ class gen () =
       let desc = match i.i_desc with
         | None -> []
         | Some t ->
-          completed_descr_cnt <- completed_descr_cnt + 1;
-          ["description", html_to_json (self#t_of_text t)]
+            completed_descr_cnt <- completed_descr_cnt + 1;
+            ["description", html_to_json (self#t_of_text t)]
       in
       let authors = match List.map (fun s -> String s) i.i_authors with
         | [] -> []
@@ -514,39 +514,39 @@ class gen () =
 
     method json_of_module_type_kind = function
       | Module_type_struct l ->
-        "module_structure", Array (List.map self#json_of_module_element l)
+          "module_structure", Array (List.map self#json_of_module_element l)
       | Module_type_functor (mparam, mk) ->
-        "module_functor", Object ["parameter", self#json_of_module_parameter mparam;
-                                  self#json_of_module_type_kind mk]
+          "module_functor", Object ["parameter", self#json_of_module_parameter mparam;
+                                    self#json_of_module_type_kind mk]
       | Module_type_alias ma ->
-        "module_alias", Object (self#json_of_module_type_alias ma)
+          "module_alias", Object (self#json_of_module_type_alias ma)
       | Module_type_with (mk, s) ->
-        "module_with", Object [ self#json_of_module_type_kind mk;
-                                "with", String s]
+          "module_with", Object [ self#json_of_module_type_kind mk;
+                                  "with", String s]
       | Module_type_typeof s ->
-        "module_typeof", String s
+          "module_typeof", String s
 
     method json_of_module_kind = function
       | Module_struct l ->
-        "module_structure", Array (List.map self#json_of_module_element l)
+          "module_structure", Array (List.map self#json_of_module_element l)
       | Module_alias ma ->
-        "module_alias", self#json_of_module_alias ma
+          "module_alias", self#json_of_module_alias ma
       | Module_functor (mparam, mk) ->
-        "module_functor", Object ["parameter", self#json_of_module_parameter mparam;
-                                  self#json_of_module_kind mk]
+          "module_functor", Object ["parameter", self#json_of_module_parameter mparam;
+                                    self#json_of_module_kind mk]
       | Module_apply (mk1, mk2) ->
-        "module_apply", Array [ Object [self#json_of_module_kind mk1];
-                                Object [self#json_of_module_kind mk2]]
+          "module_apply", Array [ Object [self#json_of_module_kind mk1];
+                                  Object [self#json_of_module_kind mk2]]
       | Module_with (mk, s) ->
-        "module_with", Object [self#json_of_module_type_kind mk;
-                               "with", String s]
+          "module_with", Object [self#json_of_module_type_kind mk;
+                                 "with", String s]
       | Module_constraint (mk, mtk) ->
-        "module_constraint", Object [self#json_of_module_kind mk;
-                                     self#json_of_module_type_kind mtk]
+          "module_constraint", Object [self#json_of_module_kind mk;
+                                       self#json_of_module_type_kind mtk]
       | Module_typeof s ->
-        "module_typeof", String s
+          "module_typeof", String s
       | Module_unpack (s, al) ->
-        "module_unpack", Object (("code", String s) :: self#json_of_module_type_alias al)
+          "module_unpack", Object (("code", String s) :: self#json_of_module_type_alias al)
 
     method json_of_module m =
       let name = "name", String m.Module.m_name in
@@ -573,8 +573,8 @@ class gen () =
         let oc = open_out (!Odoc_args.target_dir ^ "/index.json") in
         let make_record = function
           | (name, Object ["module", Object m], (dc, cdc)) ->
-            let info = List.assoc "info" m in
-            Object ["name", String name; "info", info; "descr_cnt", Number dc; "compl_descr_cnt", Number cdc]
+              let info = List.assoc "info" m in
+              Object ["name", String name; "info", info; "descr_cnt", Number dc; "compl_descr_cnt", Number cdc]
           | _ -> Empty
         in
         let modules = Array (List.map make_record ml) in

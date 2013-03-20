@@ -33,9 +33,9 @@ let resize tbl =
     let rec insert_bucket = function
       | Empty -> ()
       | Cons(data, rest) ->
-        insert_bucket rest; (* preserve original order of elements *)
-        let nidx = data.hkey mod nsize in
-        ndata.(nidx) <- Cons(data, ndata.(nidx))
+          insert_bucket rest; (* preserve original order of elements *)
+          let nidx = data.hkey mod nsize in
+          ndata.(nidx) <- Cons(data, ndata.(nidx))
     in
     for i = 0 to osize - 1 do
       insert_bucket odata.(i)
@@ -56,20 +56,20 @@ let find h key hkey =
   match h.data.(hkey mod (Array.length h.data)) with
   | Empty -> raise Not_found
   | Cons(d1, rest1) ->
-    if key = d1.node then d1 else
-      match rest1 with
-      | Empty -> raise Not_found
-      | Cons(d2, rest2) ->
-        if key = d2.node then d2 else
-          match rest2 with
-          | Empty -> raise Not_found
-          | Cons(d3, rest3) ->
-            if key = d3.node then d3 else begin
-              let rec find = function
-                | Empty -> raise Not_found
-                | Cons(d, rest) -> if key = d.node then d else find rest
-              in find rest3
-            end
+      if key = d1.node then d1 else
+        match rest1 with
+        | Empty -> raise Not_found
+        | Cons(d2, rest2) ->
+            if key = d2.node then d2 else
+              match rest2 with
+              | Empty -> raise Not_found
+              | Cons(d3, rest3) ->
+                  if key = d3.node then d3 else begin
+                    let rec find = function
+                      | Empty -> raise Not_found
+                      | Cons(d, rest) -> if key = d.node then d else find rest
+                    in find rest3
+                  end
 
 let gentag =
   let r = ref 0 in
@@ -80,9 +80,9 @@ let hashcons h node =
   try
     find h node hkey
   with Not_found ->
-    let hnode = { hkey = hkey; tag = gentag(); node = node } in
-    add h hkey hnode;
-    hnode
+      let hnode = { hkey = hkey; tag = gentag(); node = node } in
+      add h hkey hnode;
+      hnode
 
 let iter f h =
   let rec bucket_iter = function
@@ -157,21 +157,21 @@ struct
     match h.data.(hkey mod (Array.length h.data)) with
       Empty -> raise Not_found
     | Cons(d1, rest1) ->
-      if H.equal (key, d1.node) then d1 else
-        match rest1 with
-          Empty -> raise Not_found
-        | Cons(d2, rest2) ->
-          if H.equal (key, d2.node) then d2 else
-            match rest2 with
-              Empty -> raise Not_found | Cons(d3, rest3) ->
-              if H.equal (key, d3.node) then d3 else begin
-                let rec find = function
-                    Empty ->
-                    raise Not_found
-                  | Cons(d, rest) ->
-                    if H.equal (key, d.node) then d else find rest
-                in find rest3
-              end
+        if H.equal (key, d1.node) then d1 else
+          match rest1 with
+            Empty -> raise Not_found
+          | Cons(d2, rest2) ->
+              if H.equal (key, d2.node) then d2 else
+                match rest2 with
+                  Empty -> raise Not_found | Cons(d3, rest3) ->
+                    if H.equal (key, d3.node) then d3 else begin
+                      let rec find = function
+                          Empty ->
+                            raise Not_found
+                        | Cons(d, rest) ->
+                            if H.equal (key, d.node) then d else find rest
+                      in find rest3
+                    end
 
 
   let hashcons h node =
@@ -181,9 +181,9 @@ struct
       hnode
     with
     | Not_found ->
-      let hnode = { hkey = hkey; tag = gentag(); node = node } in
-      add h hkey hnode;
-      hnode
+        let hnode = { hkey = hkey; tag = gentag(); node = node } in
+        add h hkey hnode;
+        hnode
 
   let iter = iter
 

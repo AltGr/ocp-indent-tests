@@ -312,7 +312,7 @@ let return k x =
       The stack should not be checked and nothing should be pushed
     *)
       (applied_step_contents land check_stack_step <> 0)
-   ||
+      ||
       (*
         The stack is ok, and we should not push
       *)

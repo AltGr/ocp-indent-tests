@@ -50,34 +50,34 @@ let gen_catch mc =
 let gen_binding l =
   let rec aux n = function
     | [] ->
-      assert false
+        assert false
     | [(_loc, p, e)] ->
-      <:binding< $lid:"__pa_lwt_" ^ string_of_int n$ = $e$ >>
+        <:binding< $lid:"__pa_lwt_" ^ string_of_int n$ = $e$ >>
     | (_loc, p, e) :: l ->
-      <:binding< $lid:"__pa_lwt_" ^ string_of_int n$ = $e$ and $aux (n + 1) l$ >>
+        <:binding< $lid:"__pa_lwt_" ^ string_of_int n$ = $e$ and $aux (n + 1) l$ >>
   in
   aux 0 l
 
 let gen_bind l e =
   let rec aux n = function
     | [] ->
-      e
+        e
     | (_loc, p, e) :: l ->
-      if !Pa_lwt_options.debug then
-        <:expr< Lwt.backtrace_bind (fun exn -> try raise exn with exn -> exn) $lid:"__pa_lwt_" ^ string_of_int n$ (fun $p$ -> $aux (n + 1) l$) >>
-      else
-        <:expr< Lwt.bind $lid:"__pa_lwt_" ^ string_of_int n$ (fun $p$ -> $aux (n + 1) l$) >>
+        if !Pa_lwt_options.debug then
+          <:expr< Lwt.backtrace_bind (fun exn -> try raise exn with exn -> exn) $lid:"__pa_lwt_" ^ string_of_int n$ (fun $p$ -> $aux (n + 1) l$) >>
+        else
+          <:expr< Lwt.bind $lid:"__pa_lwt_" ^ string_of_int n$ (fun $p$ -> $aux (n + 1) l$) >>
   in
   aux 0 l
 
 let gen_top_bind _loc l =
   let rec aux n vars = function
     | [] ->
-      <:expr< Lwt.return ($tup:Ast.exCom_of_list (List.rev vars)$) >>
+        <:expr< Lwt.return ($tup:Ast.exCom_of_list (List.rev vars)$) >>
     | (_loc, p, e) :: l ->
-      let id = "__pa_lwt_" ^ string_of_int n in
-      if !Pa_lwt_options.debug then
-        <:expr< Lwt.backtrace_bind (fun exn -> try raise exn with exn -> exn) $lid:id$ (fun $lid:id$ -> $aux (n + 1) (<:expr< $lid:id$ >> :: vars) l$) >>
+        let id = "__pa_lwt_" ^ string_of_int n in
+        if !Pa_lwt_options.debug then
+          <:expr< Lwt.backtrace_bind (fun exn -> try raise exn with exn -> exn) $lid:id$ (fun $lid:id$ -> $aux (n + 1) (<:expr< $lid:id$ >> :: vars) l$) >>
 else
   <:expr< Lwt.bind $lid:id$ (fun $lid:id$ -> $aux (n + 1) (<:expr< $lid:id$ >> :: vars) l$) >>
 in
@@ -109,106 +109,106 @@ for_scheme:
 
 expr: LEVEL "top"
     [ [ "try_lwt"; e = expr LEVEL ";"; c = cases; f = finally ->
-        begin match c, f with
-          | None, None ->
-            if !Pa_lwt_options.debug then
-              <:expr< Lwt.backtrace_catch (fun exn -> try raise exn with exn -> exn) (fun () -> $e$) Lwt.fail >>
-            else
-              <:expr< Lwt.catch (fun () -> $e$) Lwt.fail >>
-          | Some c, None ->
-            if !Pa_lwt_options.debug then
-              <:expr< Lwt.backtrace_catch (fun exn -> try raise exn with exn -> exn) (fun () -> $e$) (function $c$) >>
-            else
-              <:expr< Lwt.catch (fun () -> $e$) (function $c$) >>
-          | None, Some f ->
-            if !Pa_lwt_options.debug then
-              <:expr< Lwt.backtrace_finalize (fun exn -> try raise exn with exn -> exn) (fun () -> $e$) (fun () -> (begin $f$ end)) >>
-            else
-              <:expr< Lwt.finalize (fun () -> $e$) (fun () -> (begin $f$ end)) >>
-          | Some c, Some f ->
-            if !Pa_lwt_options.debug then
-              <:expr< Lwt.backtrace_try_bind (fun exn -> try raise exn with exn -> exn) (fun () -> $e$)
-                        (fun __pa_lwt_x -> Lwt.backtrace_bind (fun exn -> try raise exn with exn -> exn) (begin $f$ end) (fun () -> Lwt.return __pa_lwt_x))
-                        (fun __pa_lwt_e -> Lwt.backtrace_bind (fun exn -> try raise exn with exn -> exn) (begin $f$ end) (fun () -> match __pa_lwt_e with $c$))
-              >>
-            else
-              <:expr< Lwt.try_bind (fun () -> $e$)
-                        (fun __pa_lwt_x -> Lwt.bind (begin $f$ end) (fun () -> Lwt.return __pa_lwt_x))
-                        (fun __pa_lwt_e -> Lwt.bind (begin $f$ end) (fun () -> match __pa_lwt_e with $c$))
-              >>
-        end
-
-                                                | "lwt"; l = letb_binding; "in"; e = expr LEVEL ";" ->
-        <:expr< let $gen_binding l$ in $gen_bind l e$ >>
-
-                                                                               | "for_lwt"; p = patt; scheme = for_scheme; "do"; seq = do_sequence ->
-        (match p, scheme with
-         | <:patt< $lid:id$ >>, `CountTo(s, e) ->
-           <:expr< let __pa_lwt_max = $e$ in
-                   let rec __pa_lwt_loop $lid:id$ =
-                     if $lid:id$ > __pa_lwt_max then
-                       Lwt.return ()
-                     else
-                       Lwt.bind (begin $seq$ end) (fun () -> __pa_lwt_loop ($lid:id$ + 1))
-                   in
-                   __pa_lwt_loop $s$
-           >>
-
-         | <:patt< $lid:id$ >>, `CountDownTo(s, e) ->
-           <:expr< let __pa_lwt_min = $e$ in
-                   let rec __pa_lwt_loop $lid:id$ =
-                     if $lid:id$ < __pa_lwt_min then
-                       Lwt.return ()
-                     else
-                       Lwt.bind (begin $seq$ end) (fun () -> __pa_lwt_loop ($lid:id$ - 1))
-                   in
-                   __pa_lwt_loop $s$
-           >>
-
-         | p, `IterOver(e) ->
-           <:expr< Lwt_stream.iter_s (fun $p$ -> $seq$) $e$ >>
-
-         | _ ->
-           Loc.raise _loc (Failure "syntax error"))
-
-                                                                                                                               | "raise_lwt"; e = SELF ->
-        if !Pa_lwt_options.debug then
-          <:expr< Lwt.fail (try raise $e$ with exn -> exn) >>
-        else
-          <:expr< Lwt.fail $e$ >>
-
-                                                                                                                                            | "while_lwt"; cond = sequence; "do"; body = sequence; "done" ->
-        <:expr<
-          let rec __pa_lwt_loop () =
-            if $cond$ then
-              Lwt.bind (begin $body$ end) __pa_lwt_loop
-            else
-              Lwt.return ()
-          in
-          __pa_lwt_loop ()
+begin match c, f with
+  | None, None ->
+      if !Pa_lwt_options.debug then
+        <:expr< Lwt.backtrace_catch (fun exn -> try raise exn with exn -> exn) (fun () -> $e$) Lwt.fail >>
+      else
+        <:expr< Lwt.catch (fun () -> $e$) Lwt.fail >>
+  | Some c, None ->
+      if !Pa_lwt_options.debug then
+        <:expr< Lwt.backtrace_catch (fun exn -> try raise exn with exn -> exn) (fun () -> $e$) (function $c$) >>
+      else
+        <:expr< Lwt.catch (fun () -> $e$) (function $c$) >>
+  | None, Some f ->
+      if !Pa_lwt_options.debug then
+        <:expr< Lwt.backtrace_finalize (fun exn -> try raise exn with exn -> exn) (fun () -> $e$) (fun () -> (begin $f$ end)) >>
+      else
+        <:expr< Lwt.finalize (fun () -> $e$) (fun () -> (begin $f$ end)) >>
+  | Some c, Some f ->
+      if !Pa_lwt_options.debug then
+        <:expr< Lwt.backtrace_try_bind (fun exn -> try raise exn with exn -> exn) (fun () -> $e$)
+                  (fun __pa_lwt_x -> Lwt.backtrace_bind (fun exn -> try raise exn with exn -> exn) (begin $f$ end) (fun () -> Lwt.return __pa_lwt_x))
+                  (fun __pa_lwt_e -> Lwt.backtrace_bind (fun exn -> try raise exn with exn -> exn) (begin $f$ end) (fun () -> match __pa_lwt_e with $c$))
         >>
-
-                                                                                                                                                                                                 | "match_lwt"; e = sequence; "with"; c = match_case ->
-        <:expr<
-          Lwt.bind (begin $e$ end) (function $c$)
+      else
+        <:expr< Lwt.try_bind (fun () -> $e$)
+                  (fun __pa_lwt_x -> Lwt.bind (begin $f$ end) (fun () -> Lwt.return __pa_lwt_x))
+                  (fun __pa_lwt_e -> Lwt.bind (begin $f$ end) (fun () -> match __pa_lwt_e with $c$))
         >>
-      ] ];
+end
+
+                                                            | "lwt"; l = letb_binding; "in"; e = expr LEVEL ";" ->
+<:expr< let $gen_binding l$ in $gen_bind l e$ >>
+
+                                                                                           | "for_lwt"; p = patt; scheme = for_scheme; "do"; seq = do_sequence ->
+(match p, scheme with
+ | <:patt< $lid:id$ >>, `CountTo(s, e) ->
+     <:expr< let __pa_lwt_max = $e$ in
+             let rec __pa_lwt_loop $lid:id$ =
+               if $lid:id$ > __pa_lwt_max then
+                 Lwt.return ()
+               else
+                 Lwt.bind (begin $seq$ end) (fun () -> __pa_lwt_loop ($lid:id$ + 1))
+             in
+             __pa_lwt_loop $s$
+     >>
+
+ | <:patt< $lid:id$ >>, `CountDownTo(s, e) ->
+     <:expr< let __pa_lwt_min = $e$ in
+             let rec __pa_lwt_loop $lid:id$ =
+               if $lid:id$ < __pa_lwt_min then
+                 Lwt.return ()
+               else
+                 Lwt.bind (begin $seq$ end) (fun () -> __pa_lwt_loop ($lid:id$ - 1))
+             in
+             __pa_lwt_loop $s$
+     >>
+
+ | p, `IterOver(e) ->
+     <:expr< Lwt_stream.iter_s (fun $p$ -> $seq$) $e$ >>
+
+ | _ ->
+     Loc.raise _loc (Failure "syntax error"))
+
+                                                                                                                                           | "raise_lwt"; e = SELF ->
+if !Pa_lwt_options.debug then
+  <:expr< Lwt.fail (try raise $e$ with exn -> exn) >>
+else
+  <:expr< Lwt.fail $e$ >>
+
+                                                                                                                                                        | "while_lwt"; cond = sequence; "do"; body = sequence; "done" ->
+<:expr<
+  let rec __pa_lwt_loop () =
+    if $cond$ then
+      Lwt.bind (begin $body$ end) __pa_lwt_loop
+    else
+      Lwt.return ()
+  in
+  __pa_lwt_loop ()
+>>
+
+                                                                                                                                                                                                             | "match_lwt"; e = sequence; "with"; c = match_case ->
+<:expr<
+  Lwt.bind (begin $e$ end) (function $c$)
+>>
+] ];
 
 str_item:
   [ [ "lwt"; l = letb_binding -> begin
         match l with
         | [(_loc, p, e)] ->
-          <:str_item<
-            let $p$ = Lwt_main.run $e$
-          >>
+            <:str_item<
+              let $p$ = Lwt_main.run $e$
+            >>
         | _ ->
-          <:str_item<
-            let $tup:Ast.paCom_of_list (List.map (fun (_loc, p, e) -> p) l)$ =
-              Lwt_main.run begin
-                let $gen_binding l$ in
-                $gen_top_bind _loc l$
-              end
-          >>
+            <:str_item<
+              let $tup:Ast.paCom_of_list (List.map (fun (_loc, p, e) -> p) l)$ =
+                Lwt_main.run begin
+                  let $gen_binding l$ in
+                  $gen_top_bind _loc l$
+                end
+            >>
       end
            | "lwt"; l = letb_binding; "in"; e = expr ->
       <:str_item< let () = Lwt_main.run (let $gen_binding l$ in $gen_bind l e$) >>

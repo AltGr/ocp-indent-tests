@@ -33,6 +33,6 @@ let parse_length s = (* return in pt *)
       (List.assoc (String.lowercase unit) units) *. float_of_string digit
     with
     | Not_found -> (* think it is in "pt" *)
-      float_of_string s in
+        float_of_string s in
   prerr_endline (Printf.sprintf "%s -> %fpt" s v);
   v;;

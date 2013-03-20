@@ -34,11 +34,11 @@ let decision l =
   let l = List.map (fun (a,b,i) -> (a,b,Return i)) l in
   let rec merge2 = function
     | (a1,b1,d1) :: (a2,b2,d2) :: rest ->
-      let x =
-        if b1 + 1 = a2 then d2
-        else Lte (a2 - 1,Return (-1), d2)
-      in
-      (a1,b2, Lte (b1,d1, x)) :: (merge2 rest)
+        let x =
+          if b1 + 1 = a2 then d2
+          else Lte (a2 - 1,Return (-1), d2)
+        in
+        (a1,b2, Lte (b1,d1, x)) :: (merge2 rest)
     | rest -> rest in
   let rec aux = function
     | _::_::_ as l -> aux (merge2 l)
@@ -52,20 +52,20 @@ let limit = 8192
 let decision_table l =
   let rec aux m accu = function
     | ((a,b,i) as x)::rem when (b < limit && i < 255)-> 
-      aux (min a m) (x::accu) rem
+        aux (min a m) (x::accu) rem
     | rem -> m,accu,rem in
   match (aux max_int [] l : int * 'a list * 'b list) with
   | _,[], _ -> decision l
   | min,((_,max,_)::_ as l1), l2 ->
-    let arr = Array.create (max-min+1) 0 in
-    List.iter (fun (a,b,i) -> for j = a to b do arr.(j-min) <- i + 1 done) l1;
-    Lte (min-1, Return (-1), Lte (max, Table (min,arr), decision l2))
+      let arr = Array.create (max-min+1) 0 in
+      List.iter (fun (a,b,i) -> for j = a to b do arr.(j-min) <- i + 1 done) l1;
+      Lte (min-1, Return (-1), Lte (max, Table (min,arr), decision l2))
 
 let rec simplify min max = function
   | Lte (i,yes,no) ->
-    if i >= max then simplify min max yes 
-    else if i < min then simplify min max no
-    else Lte (i, simplify min i yes, simplify (i+1) max no)
+      if i >= max then simplify min max yes 
+      else if i < min then simplify min max no
+      else Lte (i, simplify min i yes, simplify (i+1) max no)
   | x -> x
 
 
@@ -78,10 +78,10 @@ let get_tables () =
 let table_name t =
   try Hashtbl.find tables t
   with Not_found ->
-    incr tables_counter;
-    let n = Printf.sprintf "__ulex_table_%i" !tables_counter in
-    Hashtbl.add tables t n;
-    n
+      incr tables_counter;
+      let n = Printf.sprintf "__ulex_table_%i" !tables_counter in
+      Hashtbl.add tables t n;
+      n
 
 let output_byte buf b =
   Buffer.add_char buf '\\';
@@ -105,14 +105,14 @@ let partition_name i = Printf.sprintf "__ulex_partition_%i" i
 let partition (i,p) =
   let rec gen_tree = function 
     | Lte (i,yes,no) ->
-      <:expr< if (c <= $`int:i$) 
-             then $gen_tree yes$ else $gen_tree no$ >>
+        <:expr< if (c <= $`int:i$) 
+               then $gen_tree yes$ else $gen_tree no$ >>
     | Return i ->
-      <:expr< $`int:i$ >>
+        <:expr< $`int:i$ >>
     | Table (offset, t) ->
-      let c = if offset = 0 then <:expr< c >> 
-        else <:expr< (c - $`int:offset$) >> in
-      <:expr< Char.code ($lid: table_name t$.[$c$]) - 1>>
+        let c = if offset = 0 then <:expr< c >> 
+          else <:expr< (c - $`int:offset$) >> in
+        <:expr< Char.code ($lid: table_name t$.[$c$]) - 1>>
   in
   let body = gen_tree (simplify (-1) (Cset.max_code) (decision_table p)) in
   let f = partition_name i in
@@ -129,13 +129,13 @@ let best_final final =
 
 let call_state auto state =
   match auto.(state) with (_,trans,final) ->
-    if Array.length trans = 0 
-    then match best_final final with
-      | Some i -> <:expr< $`int:i$ >>
-      | None -> assert false
-    else
-      let f = Printf.sprintf "__ulex_state_%i" state in
-      <:expr< $lid:f$ lexbuf >>
+      if Array.length trans = 0 
+      then match best_final final with
+        | Some i -> <:expr< $`int:i$ >>
+        | None -> assert false
+      else
+        let f = Printf.sprintf "__ulex_state_%i" state in
+        <:expr< $lid:f$ lexbuf >>
 
 
 let gen_state auto _loc i (part,trans,final) = 
@@ -156,9 +156,9 @@ let gen_state auto _loc i (part,trans,final) =
   match best_final final with
   | None -> ret body
   | Some i -> 
-    if Array.length trans = 0 then <:binding<>> else
-      ret
-        <:expr< do { Ulexing.mark lexbuf $`int:i$;  $body$ } >>
+      if Array.length trans = 0 then <:binding<>> else
+        ret
+          <:expr< do { Ulexing.mark lexbuf $`int:i$;  $body$ } >>
 
 
 let gen_definition _loc l =
@@ -225,8 +225,8 @@ let regexp_for_string s =
                                                                                                   | x = LIDENT ->
                                                                                                     try  Hashtbl.find named_regexps x
                                                                                                     with Not_found ->
-                                                                                                      failwith 
-                                                                                                        ("pa_ulex (error): reference to unbound regexp name `"^x^"'")
+                                                                                                        failwith 
+                                                                                                          ("pa_ulex (error): reference to unbound regexp name `"^x^"'")
     ]
   ];
 

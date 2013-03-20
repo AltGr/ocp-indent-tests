@@ -49,8 +49,8 @@ let normalize_filename file =
       (fun acc -> function
         | "." -> acc
         | ".." ->
-          begin try List.tl acc with
-            | _ -> if is_absolute then acc else ".." :: acc end
+            begin try List.tl acc with
+              | _ -> if is_absolute then acc else ".." :: acc end
         | tkn -> tkn :: acc)
       [] tkns in
   (if is_absolute then "/" else "") ^

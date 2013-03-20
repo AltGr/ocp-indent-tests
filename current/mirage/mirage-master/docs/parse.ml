@@ -17,21 +17,21 @@ let string_val k l =
     | String x -> x
     | _        -> ""
   with Not_found ->
-    Printf.eprintf "string_val %s %s\n%!" k (Json.to_string (Object l)); exit 1
+      Printf.eprintf "string_val %s %s\n%!" k (Json.to_string (Object l)); exit 1
 
 let object_val k l =
   try match List.assoc k l with
     | Object x -> x
     | _        -> []
   with Not_found ->
-    Printf.eprintf "string_val %s %s\n%!" k (Json.to_string (Object l)); exit 1
+      Printf.eprintf "string_val %s %s\n%!" k (Json.to_string (Object l)); exit 1
 
 let array_val k l =
   try match List.assoc k l with
     | Array x -> x
     | _       -> []
   with Not_found ->
-    []
+      []
 
 let get_object = function
   | Object x -> x

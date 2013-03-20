@@ -20,9 +20,9 @@ let library = ref None;; (* We do not want more than 1 engine, don't we ? *)
 let get_library () =
   match !library with
   | None ->
-    let e = init () in
-    library := Some e;
-    e
+      let e = init () in
+      library := Some e;
+      e
   | Some e -> e;;
 
 class face file id =

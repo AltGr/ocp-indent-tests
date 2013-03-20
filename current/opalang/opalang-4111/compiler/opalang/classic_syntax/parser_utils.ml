@@ -1622,7 +1622,7 @@ and rewrite_record_extend (e:(_,_) expr) (ts:tree list) =
            ),
            nlabel e
          )], [] )
-     , nlabel e))
+    , nlabel e))
 
 let rewrite_add_recval x =
   let rec aux (e, l) =

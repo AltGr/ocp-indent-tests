@@ -40,13 +40,13 @@ let get_target_dnsnode owner db =
   match simple_lookup key db.trie with
     Some n -> n
   | None -> 
-    try 
-      Hashtbl.find db.names key
-    with Not_found -> 
-      let n = { owner = hashcons_domainname owner;
-                rrsets = []; }
-      in Hashtbl.add db.names key n ; 
-      n
+      try 
+        Hashtbl.find db.names key
+      with Not_found -> 
+          let n = { owner = hashcons_domainname owner;
+                    rrsets = []; }
+          in Hashtbl.add db.names key n ; 
+          n
 
 (* Get the dnsnode that represents this name, making a new one if needed,
    inserting it into the trie, and returning both trie node and dnsnode *)
@@ -84,7 +84,7 @@ let add_ns_rr target ttl owner db =
     add_rrset { ttl = ttl; rdata = NS [ targetnode ] } owner db;
     fix_flags (canon2key owner) db.trie  
   with TTLMismatch -> 
-    fix_flags (canon2key owner) db.trie; raise TTLMismatch
+      fix_flags (canon2key owner) db.trie; raise TTLMismatch
 
 let add_cname_rr target ttl owner db =
   let targetnode = get_target_dnsnode target db in
@@ -98,7 +98,7 @@ let add_soa_rr master rp serial refresh retry expiry min ttl owner db =
     add_rrset { ttl = ttl; rdata = SOA [ rdata ] } owner db;
     fix_flags (canon2key owner) db.trie
   with TTLMismatch -> 
-    fix_flags (canon2key owner) db.trie; raise TTLMismatch
+      fix_flags (canon2key owner) db.trie; raise TTLMismatch
 
 let add_mb_rr target ttl owner db =
   let targetnode = get_target_dnsnode target db in

@@ -966,7 +966,7 @@ struct
           | Some a -> r := Some a; raise StopExists
           | None -> ())
         tA
-    ;
+      ;
       None
     with StopExists -> !r
 

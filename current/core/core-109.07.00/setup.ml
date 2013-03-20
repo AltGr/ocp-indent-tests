@@ -266,9 +266,9 @@ module OASISUtils = struct
           OASISString.replace_chars
             (fun c ->
               if ('a' <= c && c <= 'z')
-              ||
+                 ||
                  ('A' <= c && c <= 'Z')
-              ||
+                 ||
                  ('0' <= c && c <= '9') then
                 c
               else

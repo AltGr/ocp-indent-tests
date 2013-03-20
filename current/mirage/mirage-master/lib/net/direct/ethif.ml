@@ -36,14 +36,14 @@ type t = {
 let input t frame =
   match get_ethernet_ethertype frame with
   |0x0806 -> (* ARP *)
-    Arp.input t.arp frame
+      Arp.input t.arp frame
   |0x0800 -> (* IPv4 *)
-    let payload = Cstruct.shift frame sizeof_ethernet in 
-    t.ipv4 payload
+      let payload = Cstruct.shift frame sizeof_ethernet in 
+      t.ipv4 payload
   |0x86dd -> (* IPv6 *)
-    return (printf "Ethif: discarding ipv6\n%!")
+      return (printf "Ethif: discarding ipv6\n%!")
   |etype ->
-    return (printf "Ethif: unknown frame %x\n%!" etype)
+      return (printf "Ethif: unknown frame %x\n%!" etype)
 
 (* Loop and listen for frames *)
 let rec listen t =

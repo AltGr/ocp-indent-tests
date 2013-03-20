@@ -37,8 +37,8 @@ let build_req_header headers meth address path body =
     match body with
     |None   -> headers
     |Some s ->
-      let content_length_h = content_length_header (string_of_int (String.length s)) in
-      default_content_type_h :: content_length_h :: headers 
+        let content_length_h = content_length_header (string_of_int (String.length s)) in
+        default_content_type_h :: content_length_h :: headers 
   in
   let hdrcnt = List.length headers in
   let add_header ht (n, v) = (Hashtbl.replace ht n v; ht) in
@@ -85,7 +85,7 @@ let parse_url url =
     OS.Console.log (Printf.sprintf "[PARSE_URL] host=%s port=%d path=%s" host port path);
     (host, port, path)
   with exc ->
-    failwith (sprintf "Can't parse url: %s (exception: %s)" url (Printexc.to_string exc))
+      failwith (sprintf "Can't parse url: %s (exception: %s)" url (Printexc.to_string exc))
 
 (*
 let call mgr ?src ?headers kind request_body url =

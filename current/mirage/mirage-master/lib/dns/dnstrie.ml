@@ -263,15 +263,15 @@ let lookup key trie =
         `ConflictGT -> last_lt := node; None
       | `ConflictLT | `OutOfKey -> None
       | `Match -> 
-        if ((String.length key) = node.byte) 
-        then node.data
-        else begin
-          if not (node.data = None) || node.least_child < key.[node.byte] 
-          then last_lt := node; 
-          match (child_lookup key.[node.byte] node) with
-            None -> None
-          | Some child -> simple_lookup key child
-        end
+          if ((String.length key) = node.byte) 
+          then node.data
+          else begin
+            if not (node.data = None) || node.least_child < key.[node.byte] 
+            then last_lt := node; 
+            match (child_lookup key.[node.byte] node) with
+              None -> None
+            | Some child -> simple_lookup key child
+          end
     in
 
     (* Find the source of synthesis, and look it up *)
@@ -293,8 +293,8 @@ let lookup key trie =
                                  not_optional !last_soa.data,
                                  not_optional nsec1.data)
         | (ss_key, None) -> let nsec2 = lookup_nsec ss_key in 
-          `NXDomainNSEC (not_optional !last_soa.data,
-            not_optional nsec1.data, not_optional nsec2.data)
+            `NXDomainNSEC (not_optional !last_soa.data,
+              not_optional nsec1.data, not_optional nsec2.data)
       else 
         (* No DNSSEC: simple answers. *)
         match lookup_wildcard key last_branch with 
@@ -331,36 +331,36 @@ let lookup key trie =
     | `ConflictGT -> last_lt := node; lookup_failed key last_branch
     | `OutOfKey -> lookup_noerror key 
     | `Match -> 
-      begin 
         begin 
-          match node.flags with 
-            Nothing -> () 
-          | Records -> last_rr := node
-          | ZoneHead -> last_rr := node; 
-            last_soa := node; last_cut := node; secured := false
-          | SecureZoneHead -> last_rr := node; 
-            last_soa := node; last_cut := node; secured := true
-          | Delegation -> last_rr := node; last_cut := node
-        end;
-        if ((String.length key) = node.byte) then 
-          match node.data with 
-            Some answer -> 
-            if (!last_cut.byte > !last_soa.byte) 
-            then `Delegated (!secured, not_optional !last_cut.data)
-            else `Found (!secured, answer, not_optional !last_soa.data)
-          | None -> lookup_noerror key 
-        else begin
-          if not (node.data = None) || node.least_child < key.[node.byte] 
-          then last_lt := node; 
-          match (child_lookup key.[node.byte] node) with
-            None -> lookup_failed key node
-          | Some child -> 
-            begin 
-              assert (child.byte > node.byte);
-              lookup_r key child node
-            end
+          begin 
+            match node.flags with 
+              Nothing -> () 
+            | Records -> last_rr := node
+            | ZoneHead -> last_rr := node; 
+                last_soa := node; last_cut := node; secured := false
+            | SecureZoneHead -> last_rr := node; 
+                last_soa := node; last_cut := node; secured := true
+            | Delegation -> last_rr := node; last_cut := node
+          end;
+          if ((String.length key) = node.byte) then 
+            match node.data with 
+              Some answer -> 
+                if (!last_cut.byte > !last_soa.byte) 
+                then `Delegated (!secured, not_optional !last_cut.data)
+                else `Found (!secured, answer, not_optional !last_soa.data)
+            | None -> lookup_noerror key 
+          else begin
+            if not (node.data = None) || node.least_child < key.[node.byte] 
+            then last_lt := node; 
+            match (child_lookup key.[node.byte] node) with
+              None -> lookup_failed key node
+            | Some child -> 
+                begin 
+                  assert (child.byte > node.byte);
+                  lookup_r key child node
+                end
+          end
         end
-      end
   in
 
   lookup_r key trie trie
@@ -375,11 +375,11 @@ let rec lookup_or_insert key trie ?(parent = trie) factory =
     match node.data with 
       Some d -> d
     | None -> 
-      let d = factory () in 
-      node.data <- Some d; 
-      assert (node.flags = Nothing); 
-      node.flags <- Records; 
-      d 
+        let d = factory () in 
+        node.data <- Some d; 
+        assert (node.flags = Nothing); 
+        node.flags <- Records; 
+        d 
   in
   if not (cmp_edge trie key = `Match) then begin
     (* Need to break this edge into two pieces *)
@@ -416,10 +416,10 @@ let rec lookup_or_insert key trie ?(parent = trie) factory =
                               least_child = '\255';
                               flags = Nothing;
                             } in 
-        assert (child.edge.[0] = key.[trie.byte]);
-        child_update trie child.edge.[0] child;
-        trie.least_child <- min trie.least_child key.[trie.byte];
-        get_data_or_call_factory child
+          assert (child.edge.[0] = key.[trie.byte]);
+          child_update trie child.edge.[0] child;
+          trie.least_child <- min trie.least_child key.[trie.byte];
+          get_data_or_call_factory child
     end
   end
 
@@ -444,15 +444,15 @@ let rec fix_flags key node =
     match node.data with 
       None -> node.flags <- Nothing
     | Some dnsnode -> List.iter (set_flags node) dnsnode.rrsets;
-      if !soa then 
-        if !dnskey then 
-          node.flags <- SecureZoneHead
+        if !soa then 
+          if !dnskey then 
+            node.flags <- SecureZoneHead
+          else
+            node.flags <- ZoneHead
+        else if !ns then 
+          node.flags <- Delegation 
         else
-          node.flags <- ZoneHead
-      else if !ns then 
-        node.flags <- Delegation 
-      else
-        node.flags <- Records
+          node.flags <- Records
   end else match (child_lookup key.[node.byte] node) with
       None -> ()
     | Some child -> fix_flags key child
@@ -476,13 +476,13 @@ let rec delete key ?(gparent = None) ?(parent = None) node =
     in begin   
       node.data <- None;
       match parent with None -> () | Some p -> 
-        match child_count node with
-          1 -> collapse_node p node
-        | 0 -> 
-          begin 
-            child_delete p node.edge.[0];
-            if ((p.data = None) && (child_count p = 1)) then 
-              match gparent with None -> () | Some gp -> collapse_node gp p
-          end
-        | _ -> ()
+          match child_count node with
+            1 -> collapse_node p node
+          | 0 -> 
+              begin 
+                child_delete p node.edge.[0];
+                if ((p.data = None) && (child_count p = 1)) then 
+                  match gparent with None -> () | Some gp -> collapse_node gp p
+              end
+          | _ -> ()
     end

@@ -59,15 +59,15 @@ let compute spec orgw orgh =
   let w, h =
     match spec.spec_width, spec.spec_height, spec.spec_aspect  with
     | Scale s, Guess, asp when asp <> Dont_keep ->
-      truncate (float orgw *. s), truncate (float orgh *. s)
+        truncate (float orgw *. s), truncate (float orgh *. s)
     | Guess, Scale s, asp when asp <> Dont_keep  ->
-      truncate (float orgw *. s), truncate (float orgh *. s)
+        truncate (float orgw *. s), truncate (float orgh *. s)
     | Scale sw, Scale sh, _ (* asp is ignored *) ->
-      truncate (float orgw *. sw), truncate (float orgh *. sh)
+        truncate (float orgw *. sw), truncate (float orgh *. sh)
     | Pixel w, Guess, asp when asp <> Dont_keep ->
-      let s = float w /. float orgw in w, truncate (float orgh *. s)
+        let s = float w /. float orgw in w, truncate (float orgh *. s)
     | Guess, Pixel h, asp when asp <> Dont_keep ->
-      let s = float h /. float orgh in truncate (float orgw *. s), h
+        let s = float h /. float orgh in truncate (float orgw *. s), h
     | Pixel w, Pixel h, _ (* asp is ignored *) -> w, h
     | _ -> raise (Invalid_argument "Geometry.compute") in
 
@@ -77,9 +77,9 @@ let compute spec orgw orgh =
   let scalew', scaleh' =
     match spec.spec_aspect with
     | Keep_at_most ->
-      if scalew < scaleh then scalew, scalew else scaleh, scaleh
+        if scalew < scaleh then scalew, scalew else scaleh, scaleh
     | Keep_at_least ->
-      if scalew < scaleh then scaleh, scaleh else scalew, scalew
+        if scalew < scaleh then scaleh, scaleh else scalew, scalew
     | Dont_keep -> scalew, scaleh in
 
   let scalew'', scaleh'' =

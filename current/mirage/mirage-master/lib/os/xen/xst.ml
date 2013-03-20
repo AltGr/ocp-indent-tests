@@ -52,8 +52,8 @@ let transaction xsh (f: ops -> 'a Lwt.t) : 'a Lwt.t =
       result := Some fres; 
       return ()
     with exn ->
-      lwt _ = Xsraw.transaction_end tid false xsh in
-      fail exn
+        lwt _ = Xsraw.transaction_end tid false xsh in
+        fail exn
     ) >>
     lwt r = Xsraw.transaction_end tid true xsh in
     if r then return () else loop_until_committed ()

@@ -16,9 +16,9 @@ let number_of_char_pair bo c1 c2 = match bo with
 
 let char_pair_of_number bo num = match bo with
   | Little_endian ->
-    (Char.chr (num land 0xFF), Char.chr ((num lsr 8) land 0xFF ))
+      (Char.chr (num land 0xFF), Char.chr ((num lsr 8) land 0xFF ))
   | Big_endian ->
-    (Char.chr ((num lsr 8) land 0xFF), Char.chr (num land 0xFF))
+      (Char.chr ((num lsr 8) land 0xFF), Char.chr (num land 0xFF))
 
 let next_in_string bo s pos bytes =
   if (pos + 1 >= bytes) then raise MalFormed;
@@ -64,11 +64,11 @@ let stream_from_char_stream opt_bo s =
         let o = match !bo with
           | Some o -> o
           | None ->
-            let o = match (Char.code c1, Char.code c2) with
-              | (0xff,0xfe) -> Little_endian
-              | _ -> Big_endian in
-            bo := Some o;
-            o in
+              let o = match (Char.code c1, Char.code c2) with
+                | (0xff,0xfe) -> Little_endian
+                | _ -> Big_endian in
+              bo := Some o;
+              o in
         Some (from_stream o s (number_of_char_pair o c1 c2))
       with Stream.Failure -> None)
 

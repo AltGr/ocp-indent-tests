@@ -245,26 +245,26 @@ module Marshal = struct
       |`Max_size s -> uint16 `Max_size s
       |`Interface_mtu s -> uint16 `Interface_mtu s
       |`Message_type mtype ->
-        let mcode = function
-          |`Discover -> "\001"
-          |`Offer -> "\002"
-          |`Request -> "\003"
-          |`Decline -> "\004"
-          |`Ack -> "\005"
-          |`Nak -> "\006"
-          |`Release -> "\007"
-          |`Inform -> "\008"
-          |`Unknown x -> String.make 1 x in
-        to_byte `Message_type :: "\001" :: [mcode mtype]
+          let mcode = function
+            |`Discover -> "\001"
+            |`Offer -> "\002"
+            |`Request -> "\003"
+            |`Decline -> "\004"
+            |`Ack -> "\005"
+            |`Nak -> "\006"
+            |`Release -> "\007"
+            |`Inform -> "\008"
+            |`Unknown x -> String.make 1 x in
+          to_byte `Message_type :: "\001" :: [mcode mtype]
       |`Server_identifier id -> ip_one `Server_identifier id
       |`Parameter_request ps ->
-        to_byte `Parameter_request :: (size (List.length ps)) :: 
-          List.map to_byte ps
+          to_byte `Parameter_request :: (size (List.length ps)) :: 
+            List.map to_byte ps
       |`Client_id s ->
-        let s' = "\000" ^ s in (* only support domain name ids *)
-        str `Client_id s'
+          let s' = "\000" ^ s in (* only support domain name ids *)
+          str `Client_id s'
       |`Domain_search s ->
-        assert false (* not supported yet, requires annoying DNS compression *)
+          assert false (* not supported yet, requires annoying DNS compression *)
       |`End -> [to_byte `End]
       |`Unknown (c,x) -> [ (String.make 1 c); x ]
     in String.concat "" bits
@@ -357,35 +357,35 @@ module Unmarshal = struct
       |`Netbios_name_server -> cont (`Netbios_name_server (get_addrs ipv4_addr_of_bytes))
       |`Message -> cont (`Message (slice (getint ())))
       |`Message_type ->
-        check '\001';
-        let mcode = match (getc ()) with
-          |'\001' -> `Discover
-          |'\002' -> `Offer 
-          |'\003' -> `Request 
-          |'\004' -> `Decline
-          |'\005' -> `Ack
-          |'\006' -> `Nak
-          |'\007' -> `Release
-          |'\008'  -> `Inform
-          |x -> `Unknown x in
-        cont (`Message_type mcode)
+          check '\001';
+          let mcode = match (getc ()) with
+            |'\001' -> `Discover
+            |'\002' -> `Offer 
+            |'\003' -> `Request 
+            |'\004' -> `Decline
+            |'\005' -> `Ack
+            |'\006' -> `Nak
+            |'\007' -> `Release
+            |'\008'  -> `Inform
+            |x -> `Unknown x in
+          cont (`Message_type mcode)
       |`Parameter_request ->
-        let len = getint () in
-        let params = ref [] in
-        for i = 1 to len do
-          params := (msg_of_code (getc ())) :: !params
-        done;
-        cont (`Parameter_request (List.rev !params))
+          let len = getint () in
+          let params = ref [] in
+          for i = 1 to len do
+            params := (msg_of_code (getc ())) :: !params
+          done;
+          cont (`Parameter_request (List.rev !params))
       |`Max_size ->
-        let l1 = getint () lsl 8 in
-        cont (`Max_size (getint () + l1))
+          let l1 = getint () lsl 8 in
+          cont (`Max_size (getint () + l1))
       |`Interface_mtu ->
-        let l1 = getint () lsl 8 in
-        cont (`Interface_mtu (getint () + l1))
+          let l1 = getint () lsl 8 in
+          cont (`Interface_mtu (getint () + l1))
       |`Client_id ->
-        let len = getint () in 
-        let _ = getint () in 
-        cont (`Client_id (slice len))
+          let len = getint () in 
+          let _ = getint () in 
+          cont (`Client_id (slice len))
       |`End -> acc
       |`Unknown c -> cont (`Unknown (c, (slice (getint ()))))
     in

@@ -114,8 +114,8 @@ let check_header filename =
       header_infos = [] }
   with
   | _ ->
-    close_in ic;
-    raise Wrong_file_type;;
+      close_in ic;
+      raise Wrong_file_type;;
 
 (* Reading pixmaps. *)
 let read_raw_pixel24 ic =
@@ -216,12 +216,12 @@ let rec read_ppm_ic ic =
     | P1 -> Index8 (read_ascii_pbm_ic ic l c)
     | P4 -> Index8 (read_raw_pbm_ic ic l c) 
     | P2 | P3 | P5 | P6 ->
-      let max = read_max ic in
-      match mn with
-      | P2 -> Index8 (read_ascii_pgm_ic ic l c max)
-      | P3 -> Rgb24 (read_ascii_ppm_ic ic l c max)
-      | P5 -> Index8 (read_raw_pgm_ic ic l c max)
-      | _ -> Rgb24 (read_raw_ppm_ic ic l c max) in
+        let max = read_max ic in
+        match mn with
+        | P2 -> Index8 (read_ascii_pgm_ic ic l c max)
+        | P3 -> Rgb24 (read_ascii_ppm_ic ic l c max)
+        | P5 -> Index8 (read_raw_pgm_ic ic l c max)
+        | _ -> Rgb24 (read_raw_ppm_ic ic l c max) in
   img;;
 
 let read_ppm s =
@@ -231,7 +231,7 @@ let read_ppm s =
     close_in ic;
     img
   with End_of_file ->
-    close_in ic; invalid_arg "read_ppm: premature end of file";;
+      close_in ic; invalid_arg "read_ppm: premature end of file";;
 
 let load_ppm s = 
   match read_ppm s with

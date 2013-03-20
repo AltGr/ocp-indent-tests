@@ -34,10 +34,10 @@ module TCPv4 = struct
     let vlen = Cstruct.len view in
     match Tcp.Pcb.write_available t with
     |len when len < vlen -> (* block for window to open *)
-      Tcp.Pcb.write_wait_for t vlen >>
-      write t view
+        Tcp.Pcb.write_wait_for t vlen >>
+        write t view
     |len -> (* full write *)
-      Tcp.Pcb.write t view
+        Tcp.Pcb.write t view
 
   let writev t views =
     Tcp.Pcb.writev t views
@@ -112,16 +112,16 @@ let close = function
 
 let connect mgr = function
   |`TCPv4 (src, dst, fn) ->
-    TCPv4.connect mgr ?src dst (fun t -> fn (TCPv4 t))
+      TCPv4.connect mgr ?src dst (fun t -> fn (TCPv4 t))
   |`Shmem (src, dst, fn) ->
-    Shmem.connect mgr ?src dst (fun t -> fn (Shmem t))
+      Shmem.connect mgr ?src dst (fun t -> fn (Shmem t))
   |_ -> fail (Failure "unknown protocol")
 
 let listen mgr = function
   |`TCPv4 (src, fn) ->
-    TCPv4.listen mgr src (fun dst t -> fn dst (TCPv4 t))
+      TCPv4.listen mgr src (fun dst t -> fn dst (TCPv4 t))
   |`Shmem (src, fn) ->
-    Shmem.listen mgr src (fun dst t -> fn dst (Shmem t))
+      Shmem.listen mgr src (fun dst t -> fn dst (Shmem t))
   |_ -> fail (Failure "unknown protocol")
 
 

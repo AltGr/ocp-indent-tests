@@ -53,8 +53,8 @@ let serialize_1_1 (n, c) =
     | `Discard -> "Max-Age=0" :: attrs
     | `Session -> "Discard" :: attrs
     | `Until stamp ->
-      let offset = int_of_float (stamp -. (OS.Clock.time ())) in
-      ("Max-Age=" ^ (string_of_int (min 0 offset))) :: attrs
+        let offset = int_of_float (stamp -. (OS.Clock.time ())) in
+        ("Max-Age=" ^ (string_of_int (min 0 offset))) :: attrs
     | `Age tml -> ("Max-Age=" ^ (string_of_int (duration tml))) :: attrs in
   let attrs = match c.domain with None -> attrs
                                 | Some d -> ("Domain=" ^ d) :: attrs in
@@ -72,8 +72,8 @@ let serialize_1_0 (n, c) =
     | `Session -> attrs
     | `Until stamp -> ("expires=" ^ (fmt_time stamp)) :: attrs
     | `Age tml ->
-      let age = float (duration tml) in
-      ("expires=" ^ (fmt_time ((OS.Clock.time ()) +. age))) :: attrs in
+        let age = float (duration tml) in
+        ("expires=" ^ (fmt_time ((OS.Clock.time ()) +. age))) :: attrs in
   let attrs = (n ^ (match c.value with "" -> ""
                                      | v -> "=" ^ v)) :: attrs in
   ("Set-Cookie", String.concat "; " attrs)

@@ -176,17 +176,17 @@ let iter lenfn pfn buf =
   fun () ->
     match !body with
     |Some buf when len buf = 0 ->
-      body := None;
-      None
+        body := None;
+        None
     |Some buf -> begin
         match lenfn buf with
         |None ->
-          body := None;
-          None
+            body := None;
+            None
         |Some plen ->
-          let p,rest = split buf plen in
-          body := Some rest;
-          Some (pfn p)
+            let p,rest = split buf plen in
+            body := Some rest;
+            Some (pfn p)
       end
     |None -> None
 

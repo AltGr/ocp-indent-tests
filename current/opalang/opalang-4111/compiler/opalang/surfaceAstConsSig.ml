@@ -207,7 +207,7 @@ sig
     val static_content : ?label:annot -> ?factory_helper:(ident, 'a) expr -> bool -> string -> (ident, [> `static_content of (string * bool) ] as 'a) expr
     val static_resource: ?label:annot -> ?factory_helper:(ident, 'a) expr -> string -> (ident, [> `static_resource of string ] as 'a) expr
     val server_entry_point : ?label:annot -> (ident, [> `server_entry_point ] as
-          'a) expr  -> (ident, 'a) expr
+        'a) expr  -> (ident, 'a) expr
     val with_thread_context : ?label:annot -> (ident, [> `with_thread_context]
         as 'a)  expr -> (ident, 'a)  expr -> (ident, 'a) expr
   end

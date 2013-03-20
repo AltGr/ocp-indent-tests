@@ -59,8 +59,8 @@ let with_rule r fn =
     let (_ : string) = Stack.pop parse_tree in
     res
   with e ->
-    let (_ : string) = Stack.pop parse_tree in
-    raise e
+      let (_ : string) = Stack.pop parse_tree in
+      raise e
 
 module Lazy_tokens = struct
 
@@ -94,8 +94,8 @@ module Lazy_tokens = struct
         match !l with
         | []   -> parse_error ()
         | h::t ->
-          l := t;
-          h
+            l := t;
+            h
   }
 
   let make lexer lexbuf = {
@@ -197,7 +197,7 @@ module Lazy_tokens = struct
     try
       expect token tokens
     with _ ->
-      ()
+        ()
 
   let _ =
     let tokens = dummy [EQ;COMMA] [LEFT;OPEN] in
@@ -218,31 +218,31 @@ let rec elt tokens =
   with_rule "elt" (fun () ->
     match look 3 tokens with
     | [STRING s1; EQ; STRING s2] ->
-      ef "%s=%s " s1 s2;
-      seek 3 tokens;
-      ESeq (String s1, ESeq( String "=", String s2))
+        ef "%s=%s " s1 s2;
+        seek 3 tokens;
+        ESeq (String s1, ESeq( String "=", String s2))
     | [STRING s1; EQ; DOLLAR aq] ->
-      ef "%s=$%s$" s1 aq;
-      seek 3 tokens;
-      ESeq(String s1, ESeq(String "=", Ant (Location.get (), aq)))
+        ef "%s=$%s$" s1 aq;
+        seek 3 tokens;
+        ESeq(String s1, ESeq(String "=", Ant (Location.get (), aq)))
     | [STRING s1; LEFT; _ ] ->
-      ef "%s(" s1;
-      seek 2 tokens;
-      let exprs = exprs tokens in
-      expect RIGHT tokens;
-      ef ") << %s >>" (Printer.to_string exprs);
-      Fun(String s1, exprs)
+        ef "%s(" s1;
+        seek 2 tokens;
+        let exprs = exprs tokens in
+        expect RIGHT tokens;
+        ef ") << %s >>" (Printer.to_string exprs);
+        Fun(String s1, exprs)
     | [STRING s; _; _ ] ->
-      ef "%s " s;
-      seek 1 tokens;
-      String s
+        ef "%s " s;
+        seek 1 tokens;
+        String s
     | [DOLLAR aq; _; _  ] ->
-      ef "$%s$ " aq;
-      seek 1 tokens;
-      Ant (Location.get (), aq)
+        ef "$%s$ " aq;
+        seek 1 tokens;
+        Ant (Location.get (), aq)
     | _ ->
-      ef "--\n";
-      parse_error ())
+        ef "--\n";
+        parse_error ())
 
 and expr tokens =
   with_rule "expr" (fun () ->
@@ -252,8 +252,8 @@ and expr tokens =
       let expr = expr tokens in
       ESeq (elt, expr)
     with Parse_error _ ->
-      restore ~snapshot tokens;
-      elt)
+        restore ~snapshot tokens;
+        elt)
 
 and exprs tokens =
   with_rule "exprs" (fun () ->
@@ -261,42 +261,42 @@ and exprs tokens =
     let expr = expr tokens in
     match look 1 tokens with
     | [COMMA] ->
-      ef "        COMMA\n";
-      seek 1 tokens;
-      let exprs = exprs tokens in
-      Comma (expr, exprs)
+        ef "        COMMA\n";
+        seek 1 tokens;
+        let exprs = exprs tokens in
+        Comma (expr, exprs)
     | _ ->
-      expr)
+        expr)
 
 and prop tokens =
   with_rule "prop" (fun () ->
     match look 2 tokens with
     | [PROP p; _ ] ->
-      ef "    PROP: %s\n" p;
-      seek 1 tokens;
-      let exprs = exprs tokens in
-      expect SEMI tokens;
-      Rule (String p, exprs)
-    | _ ->
-      let snapshot = copy tokens in
-      try
+        ef "    PROP: %s\n" p;
+        seek 1 tokens;
         let exprs = exprs tokens in
-        expect OPEN tokens;
-        ef "    (\n";
-        let props = props tokens in
-        expect CLOSE tokens;
-        ef "    )\n";
-        maybe SEMI tokens;
-        Decl(exprs, props)
-      with e ->
-        restore ~snapshot tokens;
-        match look 1 tokens with
-        | [DOLLAR aq] ->
-          ef "      DOLLAR: %s\n" aq;
-          seek 1 tokens;
+        expect SEMI tokens;
+        Rule (String p, exprs)
+    | _ ->
+        let snapshot = copy tokens in
+        try
+          let exprs = exprs tokens in
+          expect OPEN tokens;
+          ef "    (\n";
+          let props = props tokens in
+          expect CLOSE tokens;
+          ef "    )\n";
           maybe SEMI tokens;
-          Ant (Location.get (), aq)
-        | _ -> raise e)
+          Decl(exprs, props)
+        with e ->
+            restore ~snapshot tokens;
+            match look 1 tokens with
+            | [DOLLAR aq] ->
+                ef "      DOLLAR: %s\n" aq;
+                seek 1 tokens;
+                maybe SEMI tokens;
+                Ant (Location.get (), aq)
+            | _ -> raise e)
 
 and props tokens =
   with_rule "props" (fun () ->
@@ -306,8 +306,8 @@ and props tokens =
       let props = props tokens in
       RSeq(prop, props)
     with Parse_error _ ->
-      restore ~snapshot tokens;
-      prop)
+        restore ~snapshot tokens;
+        prop)
 
 and all tokens =
   with_rule "all" (fun () ->
@@ -318,11 +318,11 @@ and all tokens =
       ef "  PROP: success!\n";
       res
     with Parse_error _ ->
-      ef "  PROP: failed!\n  Trying EXPR instead:\n";
-      restore ~snapshot tokens;
-      let res = exprs tokens in
-      ef "  EXPR: success!\n";
-      res
+        ef "  PROP: failed!\n  Trying EXPR instead:\n";
+        restore ~snapshot tokens;
+        let res = exprs tokens in
+        ef "  EXPR: success!\n";
+        res
   )
 
 and main tokens =
@@ -339,5 +339,5 @@ let main lexer lexbuf =
   try
     main tokens
   with Parse_error pt ->
-    pp_error pt;
-    Camlp4.PreCast.Loc.raise (Location.get ()) Parsing.Parse_error
+      pp_error pt;
+      Camlp4.PreCast.Loc.raise (Location.get ()) Parsing.Parse_error

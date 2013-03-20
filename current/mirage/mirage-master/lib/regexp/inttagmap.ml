@@ -73,16 +73,16 @@ struct
     match t with
     | Empty -> Leaf (e,x)
     | Leaf(j,_) ->
-      let j_tag = O.tag j in
-      if j_tag = e_tag then Leaf (e,x) else join e_tag (Leaf(e,x)) j_tag t
+        let j_tag = O.tag j in
+        if j_tag = e_tag then Leaf (e,x) else join e_tag (Leaf(e,x)) j_tag t
     | Branch(p,m,t0,t1) ->
-      if match_prefix e_tag p m
-      then
-        if zero_bit e_tag m
-        then Branch(p, m, ins e e_tag x t0, t1)
-        else Branch(p, m, t0, ins e e_tag x t1)
-      else
-        join e_tag (Leaf(e,x)) p t
+        if match_prefix e_tag p m
+        then
+          if zero_bit e_tag m
+          then Branch(p, m, ins e e_tag x t0, t1)
+          else Branch(p, m, t0, ins e e_tag x t1)
+        else
+          join e_tag (Leaf(e,x)) p t
 
   let add e x t = ins e (O.tag e) x t
 
@@ -99,12 +99,12 @@ struct
     | Empty -> Empty
     | Leaf(j,_) -> if e_tag = O.tag j then Empty else t
     | Branch(p,m,t0,t1) ->
-      if match_prefix e_tag p m
-      then
-        if zero_bit e_tag m
-        then branch p m (rmv e_tag t0) t1
-        else branch p m t0 (rmv e_tag t1)
-      else t
+        if match_prefix e_tag p m
+        then
+          if zero_bit e_tag m
+          then branch p m (rmv e_tag t0) t1
+          else branch p m t0 (rmv e_tag t1)
+        else t
 
   let remove k t = rmv (O.tag k) t
 

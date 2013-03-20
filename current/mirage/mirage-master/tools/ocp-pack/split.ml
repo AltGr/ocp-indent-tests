@@ -44,14 +44,14 @@ let filename = ref None
 
 let ano str = match !filename with
   | Some _ ->
-    Printf.eprintf "ERROR: specify only one input file\n";
-    exit 2
-  | None   ->
-    if not (Sys.file_exists str) then begin
-      Printf.eprintf "ERROR: cannot find %s" str;
+      Printf.eprintf "ERROR: specify only one input file\n";
       exit 2
-    end else
-      filename := Some str
+  | None   ->
+      if not (Sys.file_exists str) then begin
+        Printf.eprintf "ERROR: cannot find %s" str;
+        exit 2
+      end else
+        filename := Some str
 
 let _ =
   Arg.parse args ano usage
@@ -59,8 +59,8 @@ let _ =
 let ic = match !filename with
   | Some f -> open_in f
   | None   ->
-    Printf.eprintf "ERROR: you must specify an input file\n";
-    exit 2
+      Printf.eprintf "ERROR: you must specify an input file\n";
+      exit 2
 
 let files = ref []
 
@@ -93,15 +93,15 @@ let read_stuff () =
       match header line with
       | None   -> lines := line :: !lines;
       | Some f ->
-        if !file <> "" then
-          add_file !file !lines;
-        file := f;
-        lines := [line]
+          if !file <> "" then
+            add_file !file !lines;
+          file := f;
+          lines := [line]
     done
   with _ ->
-    if !file <> "" then
-      add_file !file !lines;
-    List.iter write_stuff !files
+      if !file <> "" then
+        add_file !file !lines;
+      List.iter write_stuff !files
 
 let _ =
   read_stuff ()

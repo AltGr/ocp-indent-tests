@@ -53,20 +53,20 @@ let num_free_grants () = Queue.length free_list
 let rec get () =
   match Queue.is_empty free_list with
   |true ->
-    let th, u = Lwt.task () in
-    let node = Lwt_sequence.add_r u free_list_waiters  in
-    Lwt.on_cancel th (fun () -> Lwt_sequence.remove node);
-    th >> get ()
+      let th, u = Lwt.task () in
+      let node = Lwt_sequence.add_r u free_list_waiters  in
+      Lwt.on_cancel th (fun () -> Lwt_sequence.remove node);
+      th >> get ()
   | false ->
-    return (Queue.pop free_list)
+      return (Queue.pop free_list)
 
 let get_n num =
   let rec gen_gnts num acc =
     match num with
     |0 -> return acc
     |n -> 
-      lwt gnt = get () in
-      gen_gnts (n-1) (gnt :: acc)
+        lwt gnt = get () in
+        gen_gnts (n-1) (gnt :: acc)
   in gen_gnts num []
 
 let with_ref f =

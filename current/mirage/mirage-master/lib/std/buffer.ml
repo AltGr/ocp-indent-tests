@@ -137,7 +137,7 @@ let advance_to_non_alpha s start =
         'î'|'ô'|'û'|'ë'|'ï'|'ü'|'ç'|
         'É'|'À'|'Á'|'È'|'Ù'|'Â'|'Ê'|
         'Î'|'Ô'|'Û'|'Ë'|'Ï'|'Ü'|'Ç' ->
-        advance (i + 1) lim
+          advance (i + 1) lim
       | _ -> i in
   advance start (String.length s);;
 
@@ -147,13 +147,13 @@ let find_ident s start lim =
     match s.[start] with
     (* Parenthesized ident ? *)
     | '(' | '{' as c ->
-      let new_start = start + 1 in
-      let stop = advance_to_closing c (closing c) 0 s new_start in
-      String.sub s new_start (stop - start - 1), stop + 1
+        let new_start = start + 1 in
+        let stop = advance_to_closing c (closing c) 0 s new_start in
+        String.sub s new_start (stop - start - 1), stop + 1
     (* Regular ident *)
     | _ ->
-      let stop = advance_to_non_alpha s (start + 1) in
-      String.sub s start (stop - start), stop;;
+        let stop = advance_to_non_alpha s (start + 1) in
+        String.sub s start (stop - start), stop;;
 
 (* Substitute $ident, $(ident), or ${ident} in s,
     according to the function mapping f. *)
@@ -163,22 +163,22 @@ let add_substitute b f s =
     if i < lim then begin
       match s.[i] with
       | '$' as current when previous = '\\' ->
-        add_char b current;
-        subst ' ' (i + 1)
+          add_char b current;
+          subst ' ' (i + 1)
       | '$' ->
-        let j = i + 1 in
-        let ident, next_i = find_ident s j lim in
-        add_string b (f ident);
-        subst ' ' next_i
+          let j = i + 1 in
+          let ident, next_i = find_ident s j lim in
+          add_string b (f ident);
+          subst ' ' next_i
       | current when previous == '\\' ->
-        add_char b '\\';
-        add_char b current;
-        subst ' ' (i + 1)
+          add_char b '\\';
+          add_char b current;
+          subst ' ' (i + 1)
       | '\\' as current ->
-        subst current (i + 1)
+          subst current (i + 1)
       | current ->
-        add_char b current;
-        subst current (i + 1)
+          add_char b current;
+          subst current (i + 1)
     end else
     if previous = '\\' then add_char b previous in
   subst ' ' 0;;

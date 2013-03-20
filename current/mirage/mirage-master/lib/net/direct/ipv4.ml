@@ -57,15 +57,15 @@ module Routing = struct
   let destination_mac t = 
     function
     |ip when ip = ipv4_broadcast || ip = ipv4_blank -> (* Broadcast *)
-      return ethernet_mac_broadcast
+        return ethernet_mac_broadcast
     |ip when is_local t ip -> (* Local *)
-      Ethif.query_arp t.ethif ip
+        Ethif.query_arp t.ethif ip
     |ip -> begin (* Gateway *)
         match t.gateways with 
         |hd::_ -> Ethif.query_arp t.ethif hd
         |[] -> 
-          printf "IP.output: no route to %s\n%!" (ipv4_addr_to_string ip);
-          fail (No_route_to_destination_address ip)
+            printf "IP.output: no route to %s\n%!" (ipv4_addr_to_string ip);
+            fail (No_route_to_destination_address ip)
       end
 end
 
@@ -135,11 +135,11 @@ let input t buf =
   let data = Cstruct.sub buf ihl payload_len in
   match get_ipv4_proto buf with
   |1 -> (* ICMP *)
-    t.icmp src hdr data
+      t.icmp src hdr data
   |6 -> (* TCP *)
-    t.tcp ~src ~dst data
+      t.tcp ~src ~dst data
   |17 -> (* UDP *)
-    t.udp ~src ~dst data
+      t.udp ~src ~dst data
   |proto -> return (printf "IPv4: dropping proto %d\n%!" proto)
 
 let default_icmp = fun _ _ _ -> return ()

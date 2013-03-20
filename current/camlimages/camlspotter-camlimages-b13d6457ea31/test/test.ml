@@ -111,49 +111,49 @@ let treat_image name =
          name (extension format) header.header_width header.header_height);
     match format with
     | Gif ->
-      prerr_endline ("Loading " ^ name ^ "...");
-      let sequence = Gif.load name [] in
-      prerr_endline "Loaded";
-      let w = sequence.screen_width
-      and h = sequence.screen_height in
-      let w' = Graphics.size_x () - w
-      and h' = Graphics.size_y () - h in
-      let x = if w' > 0 then Random.int w' else 0
-      and y = if h' > 0 then Random.int h' else 0 in
-      draw_string name x y;
-      List.iter (fun frame ->
-        let put_x = x + frame.frame_left
-        and put_y = y + frame.frame_top in
-        show_image (Index8 frame.frame_bitmap) put_x put_y;
-        (* if not (go_on ()) then raise Exit *) )
-        sequence.frames;
-      begin
-        try
-          Gif.save "out.image" [] sequence;
-          prerr_endline "Saved";
-        with
-        | _ -> prerr_endline "Save failed"
-      end;
-      if not (go_on ()) then raise Exit
+        prerr_endline ("Loading " ^ name ^ "...");
+        let sequence = Gif.load name [] in
+        prerr_endline "Loaded";
+        let w = sequence.screen_width
+        and h = sequence.screen_height in
+        let w' = Graphics.size_x () - w
+        and h' = Graphics.size_y () - h in
+        let x = if w' > 0 then Random.int w' else 0
+        and y = if h' > 0 then Random.int h' else 0 in
+        draw_string name x y;
+        List.iter (fun frame ->
+          let put_x = x + frame.frame_left
+          and put_y = y + frame.frame_top in
+          show_image (Index8 frame.frame_bitmap) put_x put_y;
+          (* if not (go_on ()) then raise Exit *) )
+          sequence.frames;
+        begin
+          try
+            Gif.save "out.image" [] sequence;
+            prerr_endline "Saved";
+          with
+          | _ -> prerr_endline "Save failed"
+        end;
+        if not (go_on ()) then raise Exit
     | _ ->
-      prerr_endline ("Loading " ^ name ^ "...");
-      let img = Images.load name [] in
-      prerr_endline "Loaded";
-      let w, h = Images.size img in
-      let w' = Graphics.size_x () - w
-      and h' = Graphics.size_y () - h in
-      let x = if w' > 0 then Random.int w' else 0
-      and y = if h' > 0 then Random.int h' else 0 in
-      show_image img x y;
-      draw_string name x y;
-      begin
-        try
-          Images.save "out.image" (Some format) [] img;
-          prerr_endline "Saved";
-        with
-        | _ -> prerr_endline "Save failed"
-      end;
-      if not (go_on ()) then raise Exit
+        prerr_endline ("Loading " ^ name ^ "...");
+        let img = Images.load name [] in
+        prerr_endline "Loaded";
+        let w, h = Images.size img in
+        let w' = Graphics.size_x () - w
+        and h' = Graphics.size_y () - h in
+        let x = if w' > 0 then Random.int w' else 0
+        and y = if h' > 0 then Random.int h' else 0 in
+        show_image img x y;
+        draw_string name x y;
+        begin
+          try
+            Images.save "out.image" (Some format) [] img;
+            prerr_endline "Saved";
+          with
+          | _ -> prerr_endline "Save failed"
+        end;
+        if not (go_on ()) then raise Exit
   with
   | Wrong_file_type -> prerr_endline "file format detection failed"
   | Failure s -> prerr_endline s;;

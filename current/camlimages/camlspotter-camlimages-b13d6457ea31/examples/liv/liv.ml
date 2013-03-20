@@ -89,20 +89,20 @@ let _ =
       "-size", Arg.String (fun s ->
         match Mstring.split_str (function 'x' -> true | _ -> false) s with
           [w;h] -> 
-          size := true; 
-          base_filters := `SIZE (int_of_string w, int_of_string h,`NOASPECT) :: !base_filters
+            size := true; 
+            base_filters := `SIZE (int_of_string w, int_of_string h,`NOASPECT) :: !base_filters
         | _ -> raise (Failure "size")), ": size [w]x[h]";
       "-atleast", Arg.String (fun s ->
         match Mstring.split_str (function 'x' -> true | _ -> false) s with
           [w;h] -> 
-          size := true; 
-          base_filters := `SIZE (int_of_string w, int_of_string h,`ATLEAST) :: !base_filters
+            size := true; 
+            base_filters := `SIZE (int_of_string w, int_of_string h,`ATLEAST) :: !base_filters
         | _ -> raise (Failure "zoom")), ": zoom [w]x[h]";
       "-atmost", Arg.String (fun s ->
         match Mstring.split_str (function 'x' -> true | _ -> false) s with
           [w;h] -> 
-          size := true; 
-          base_filters := `SIZE (int_of_string w, int_of_string h,`ATMOST) :: !base_filters
+            size := true; 
+            base_filters := `SIZE (int_of_string w, int_of_string h,`ATMOST) :: !base_filters
         | _ -> raise (Failure "zoom")), ": zoom [w]x[h]";
 
     ]  
@@ -116,11 +116,11 @@ let _ =
         let st = stat f in
         match st.st_kind with
         | S_DIR ->
-          Scandir.scan_dir (fun f -> 
-            try 
-              ignore (guess_extension (snd (Livmisc.get_extension f)));
-              fs := f :: !fs;
-            with _e -> (* prerr_endline ((f^": "^ Printexc.to_string e)) *) ()) f
+            Scandir.scan_dir (fun f -> 
+              try 
+                ignore (guess_extension (snd (Livmisc.get_extension f)));
+                fs := f :: !fs;
+              with _e -> (* prerr_endline ((f^": "^ Printexc.to_string e)) *) ()) f
         | _ -> fs := f :: !fs
       with
       | _ -> prerr_endline ("ERROR: " ^ f)) !files;
@@ -283,9 +283,9 @@ let _ =
         end else raise Not_found
       with
         Not_found ->
-        let im = load_image () in
-        incr image_id;
-        !image_id, im
+          let im = load_image () in
+          incr image_id;
+          !image_id, im
     in
     Cache.add cache file (id, image) (fun _ -> ());
 
@@ -302,28 +302,28 @@ let _ =
     try 
       display_image reload file 
     with Wrong_file_type | Wrong_image_type ->
-      try
-        prerr_endline "guess type";
-        let typ =
-          let typ = Livshtype.guess file in
+        try
+          prerr_endline "guess type";
+          let typ =
+            let typ = Livshtype.guess file in
+            match typ with
+            | Livshtype.ContentType x ->
+                begin match
+                  Mstring.split_str (function '/' -> true | _ -> false) x
+                with
+                | [mj;mn] -> mj,mn
+                | _ -> assert false
+                end
+            | Livshtype.ContentEncoding x ->
+                "encoding", x
+            | Livshtype.Special m ->
+                "special",m
+          in
+          prerr_endline (fst typ ^ "/" ^ snd typ);  
           match typ with
-          | Livshtype.ContentType x ->
-            begin match
-              Mstring.split_str (function '/' -> true | _ -> false) x
-            with
-            | [mj;mn] -> mj,mn
-            | _ -> assert false
-            end
-          | Livshtype.ContentEncoding x ->
-            "encoding", x
-          | Livshtype.Special m ->
-            "special",m
-        in
-        prerr_endline (fst typ ^ "/" ^ snd typ);  
-        match typ with
-        | _ -> raise Wrong_file_type
-      with
-      | _ -> ()
+          | _ -> raise Wrong_file_type
+        with
+        | _ -> ()
   in
 
   let _filter_toggle opt = 
@@ -366,8 +366,8 @@ let _ =
           display_current false;
         with
         | Sys_error s ->
-          prerr_endline s;
-          next mode
+            prerr_endline s;
+            next mode
         | Wrong_file_type | Wrong_image_type -> next mode
       end
     end
@@ -385,8 +385,8 @@ let _ =
           display_current false
         with
         | Sys_error s ->
-          prerr_endline s;
-          prev mode
+            prerr_endline s;
+            prev mode
         | Skipped -> prev mode
         | Wrong_file_type | Wrong_image_type -> prev mode
       end

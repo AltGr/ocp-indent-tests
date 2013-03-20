@@ -83,21 +83,21 @@ module Delayed : M = struct
     match r.pushpending with
     | true -> return ()
     | false -> r.pushpending <- true;
-      transmitacknow r ack_number
+        transmitacknow r ack_number
 
 
   let ontimer r s  =
     match r.delayed with
     | false ->
-      Tcptimer.Stoptimer
+        Tcptimer.Stoptimer
     | true -> begin
         match r.delayedack = s with
         | false ->
-          Tcptimer.Continue r.delayedack
+            Tcptimer.Continue r.delayedack
         | true -> 
-          r.delayed <- false;
-          let _ = transmitack r s in
-          Tcptimer.Stoptimer
+            r.delayed <- false;
+            let _ = transmitack r s in
+            Tcptimer.Stoptimer
       end
 
 
@@ -116,12 +116,12 @@ module Delayed : M = struct
   let receive t ack_number = 
     match t.r.delayed with
     | true ->
-      t.r.delayed <- false;
-      transmitack t.r ack_number
+        t.r.delayed <- false;
+        transmitack t.r ack_number
     | false ->
-      t.r.delayed <- true;
-      t.r.delayedack <- ack_number;
-      Tcptimer.start t.timer ack_number
+        t.r.delayed <- true;
+        t.r.delayedack <- ack_number;
+        Tcptimer.start t.timer ack_number
 
 
   (* Force out an ACK *)

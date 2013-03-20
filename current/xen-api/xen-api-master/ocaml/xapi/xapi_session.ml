@@ -702,7 +702,7 @@ let rec get_ancestry ~__context ~self =
       with e->
         debug "error %s getting ancestry for session %s"
           (ExnHelper.string_of_exn e) (trackid self)
-      ;
+        ;
         Ref.null
     in
     self::(get_ancestry ~__context ~self:parent)

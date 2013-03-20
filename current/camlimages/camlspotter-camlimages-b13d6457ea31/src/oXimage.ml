@@ -60,14 +60,14 @@ let mask_of_image win img = (* It is really inefficient *)
   (* BUG ? of gtk or lablgtk? Using None for mask does not work *)
   begin match OImages.tag img with
     | Index8 i ->
-      if i#transparent >= 0 then draw_mask i
-      else Some (plain_mask win img#width img#height)
+        if i#transparent >= 0 then draw_mask i
+        else Some (plain_mask win img#width img#height)
     | Index16 _i ->
-      let i = OImages.index16 img in
-      if i#transparent >= 0 then draw_mask i 
-      else Some (plain_mask win img#width img#height)
+        let i = OImages.index16 img in
+        if i#transparent >= 0 then draw_mask i 
+        else Some (plain_mask win img#width img#height)
     | _ -> 
-      Some (plain_mask win img#width img#height)
+        Some (plain_mask win img#width img#height)
   end;;
 
 let pixmap_of win ximage =

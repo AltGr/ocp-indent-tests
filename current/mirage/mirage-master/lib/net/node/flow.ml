@@ -38,8 +38,8 @@ let close_on_exit t fn =
     close t >>
     return x
   with exn -> 
-    close t >>
-    fail exn
+      close t >>
+      fail exn
 
 let write t (buf,off,len) = fail Not_implemented
 let read t = fail Not_implemented
@@ -79,11 +79,11 @@ let close = function
 
 let connect mgr = function
   |`TCPv4 (src, dst, fn) ->
-    TCPv4.connect mgr ?src dst (fun t -> fn (TCPv4 t))
+      TCPv4.connect mgr ?src dst (fun t -> fn (TCPv4 t))
   |_ -> fail (Failure "unknown protocol")
 
 let listen mgr = function
   |`TCPv4 (src, fn) ->
-    TCPv4.listen mgr src (fun dst t -> fn dst (TCPv4 t))
+      TCPv4.listen mgr src (fun dst t -> fn dst (TCPv4 t))
   |_ -> fail (Failure "unknown protocol")
 

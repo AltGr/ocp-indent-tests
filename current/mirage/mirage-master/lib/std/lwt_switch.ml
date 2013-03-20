@@ -48,26 +48,26 @@ let check = function
 let add_hook switch hook =
   match switch with
   | Some{ state = St_on os } ->
-    os.hooks <- hook :: os.hooks
+      os.hooks <- hook :: os.hooks
   | Some{ state = St_off } ->
-    raise Off
+      raise Off
   | None ->
-    ()
+      ()
 
 let add_hook_or_exec switch hook =
   match switch with
   | Some{ state = St_on os } ->
-    os.hooks <- hook :: os.hooks;
-    return ()
+      os.hooks <- hook :: os.hooks;
+      return ()
   | Some{ state = St_off } ->
-    hook ()
+      hook ()
   | None ->
-    return ()
+      return ()
 
 let turn_off switch =
   match switch.state with
   | St_on { hooks = hooks } ->
-    switch.state <- St_off;
-    Lwt_list.iter_p (fun hook -> apply hook ()) hooks
+      switch.state <- St_off;
+      Lwt_list.iter_p (fun hook -> apply hook ()) hooks
   | St_off ->
-    return ()
+      return ()

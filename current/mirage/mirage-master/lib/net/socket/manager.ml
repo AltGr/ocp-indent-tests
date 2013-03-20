@@ -67,7 +67,7 @@ let connect_to_peer t uid =
       Hashtbl.add t.peers uid fd;
       return (Some fd)
     with exn ->
-      return None
+        return None
   end
 
 (* Loop and listen for incoming domain socket connections from peers *)
@@ -92,8 +92,8 @@ let rec connect t uid fn =
   (* First get the domain socket connection to the peer *)
   connect_to_peer t uid >>= function
   |None ->
-    printf "Manager: no control socket to %d\n%!" uid;
-    fail (Error "connect")
+      printf "Manager: no control socket to %d\n%!" uid;
+      fail (Error "connect")
   |Some fd -> begin
       (* Generate a pipe pair for bi-direction comms *)
       lwt rd_pipe, wr_pipe = iobind pipe () in

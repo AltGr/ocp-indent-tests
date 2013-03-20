@@ -93,15 +93,15 @@ let rec finwait2timer t count timeout =
   OS.Time.sleep timeout >>
   match t.state with
   | Fin_wait_2 i ->
-    if i = count then begin
-      t.state <- Closed;
-      t.on_close ();
-      return ()
-    end else begin
-      finwait2timer t i timeout
-    end
+      if i = count then begin
+        t.state <- Closed;
+        t.on_close ();
+        return ()
+      end else begin
+        finwait2timer t i timeout
+      end
   | _ ->
-    return ()
+      return ()
 
 
 let timewait t twomsl =
@@ -129,12 +129,12 @@ let tick t (i:action) =
     | Established, Recv_fin -> Close_wait
     | Established, Timeout -> t.on_close (); Closed
     | Fin_wait_1 a, Recv_ack b ->
-      if diffone b a then
-        let count = 0 in
-        let _ = finwait2timer t count fin_wait_2_time in
-        Fin_wait_2 count
-      else
-        Fin_wait_1 a
+        if diffone b a then
+          let count = 0 in
+          let _ = finwait2timer t count fin_wait_2_time in
+          Fin_wait_2 count
+        else
+          Fin_wait_1 a
     | Fin_wait_1 a, Recv_fin -> Closing a
     | Fin_wait_1 a, Recv_finack b -> if diffone b a then Time_wait else Fin_wait_1 a
     | Fin_wait_1 a, Timeout -> t.on_close (); Closed

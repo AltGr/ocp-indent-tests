@@ -35,14 +35,14 @@ let create ~id ~root =
       | Err x -> return None
       | Retry -> assert false 
       | OK fd ->
-        (* Construct a stream that reads pages of istrings *)
-        return (Some (Lwt_stream.from (fun () ->
-              let str = String.create 4096 in
-              lwt len = iobind (fun fd -> OS.Socket.read fd str 0 4096) fd in
-              match len with
-              | 0 -> close fd; return None
-              | len -> return (Some (str, 0, len*8))
-            )))
+          (* Construct a stream that reads pages of istrings *)
+          return (Some (Lwt_stream.from (fun () ->
+                let str = String.create 4096 in
+                lwt len = iobind (fun fd -> OS.Socket.read fd str 0 4096) fd in
+                match len with
+                | 0 -> close fd; return None
+                | len -> return (Some (str, 0, len*8))
+              )))
 
     method iter_s fn =
       match opendir root with
@@ -85,7 +85,7 @@ let _ =
         try
           return (List.assoc "root" cfg)
         with Not_found ->
-          raise_lwt (Failure "RO.socket: 'root' configuration key not found")
+            raise_lwt (Failure "RO.socket: 'root' configuration key not found")
       in
       lwt t = create ~id ~root in
       return OS.Devices.({
@@ -103,8 +103,8 @@ let _ =
       |"-simple_kv_ro" -> begin
           match Regexp.Re.(split_delim (from_string ":") env.(i+1)) with
           |[p_id;root] -> 
-            let p_cfg = ["root",root] in
-            fs := ({OS.Devices.p_dep_ids=[]; p_cfg; p_id}) :: !fs
+              let p_cfg = ["root",root] in
+              fs := ({OS.Devices.p_dep_ids=[]; p_cfg; p_id}) :: !fs
           |_ -> failwith "Socket.RO: bad -simple_kv_ro flag, must be id:root_dir"
         end
       |_ -> ()) env;

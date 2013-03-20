@@ -60,8 +60,8 @@ let alt e1 e2 =
   | Alt(l1),_ -> hash_cons(Alt(Ptset.add e2 l1))
   | _,Alt(l2) -> hash_cons(Alt(Ptset.add e1 l2))
   | _ ->
-    if e1==e2 then e1
-    else hash_cons(Alt(Ptset.add e1 (Ptset.singleton e2)))
+      if e1==e2 then e1
+      else hash_cons(Alt(Ptset.add e1 (Ptset.singleton e2)))
 ;;
 
 let seq e1 e2 =
@@ -122,19 +122,19 @@ let rec residual r c =
   | Epsilon ->  empty
   | Char_interv(a,b) -> if a<=c && c<=b then epsilon else empty
   | String s -> (*r [s] cannot be [""] *)
-    if c=Char.code(String.get s 0)
-    then string (String.sub s 1 (pred (String.length s)))
-    else empty
+      if c=Char.code(String.get s 0)
+      then string (String.sub s 1 (pred (String.length s)))
+      else empty
   | Star e -> seq (residual e c) r
   | Alt(l) ->
-    Ptset.fold
-      (fun e accu -> alt (residual e c) accu)
-      l
-      empty
+      Ptset.fold
+        (fun e accu -> alt (residual e c) accu)
+        l
+        empty
   | Seq(e1,e2) ->
-    if nullable(e1)
-    then alt (seq (residual e1 c) e2) (residual e2 c)
-    else seq (residual e1 c) e2
+      if nullable(e1)
+      then alt (seq (residual e1 c) e2) (residual e2 c)
+      else seq (residual e1 c) e2
 ;;
 
 let match_string r s =
@@ -158,33 +158,33 @@ let rec insert a b r l =
   match l with
   | [] -> [(a,b,r)]
   | (a1,b1,r1)::rest ->
-    if b < a1
-    then
-      (* a <= b < a1 <= b1 *)
-      (a,b,r)::l
-    else
-    if b <= b1
-    then
+      if b < a1
+      then
+        (* a <= b < a1 <= b1 *)
+        (a,b,r)::l
+      else
+      if b <= b1
+      then
+        if a <= a1
+        then
+          (* a <= a1 <= b <= b1 *)
+          add a (a1-1) r ((a1,b,alt r r1)::(add (b+1) b1 r1 rest))
+        else
+          (* a1 < a <= b <= b1 *)
+          (a1,a-1,r1)::(a,b,alt r r1)::(add (b+1) b1 r1 rest)
+      else
       if a <= a1
       then
-        (* a <= a1 <= b <= b1 *)
-        add a (a1-1) r ((a1,b,alt r r1)::(add (b+1) b1 r1 rest))
+        (* a <= a1 <= b1 < b *)
+        add a (a1-1) r ((a1,b1,alt r r1)::(insert (b1+1) b r rest))
       else
-        (* a1 < a <= b <= b1 *)
-        (a1,a-1,r1)::(a,b,alt r r1)::(add (b+1) b1 r1 rest)
-    else
-    if a <= a1
-    then
-      (* a <= a1 <= b1 < b *)
-      add a (a1-1) r ((a1,b1,alt r r1)::(insert (b1+1) b r rest))
-    else
-    if a <= b1
-    then
-      (* a1 < a <= b1 < b *)
-      (a1,a-1,r1)::(a,b1,alt r r1)::(insert (b1+1) b r rest)
-    else
-      (* a1 <= b1 < a <= b *)
-      (a1,b1,r1)::(insert a b r rest)
+      if a <= b1
+      then
+        (* a1 < a <= b1 < b *)
+        (a1,a-1,r1)::(a,b1,alt r r1)::(insert (b1+1) b r rest)
+      else
+        (* a1 <= b1 < a <= b *)
+        (a1,b1,r1)::(insert a b r rest)
 
 let insert_list l1 l2 =
   List.fold_right
@@ -200,26 +200,26 @@ let rec firstchars r =
   | Epsilon ->  []
   | Char_interv(a,b) -> [(a,b,epsilon)]
   | String s ->
-    let c=Char.code(String.get s 0) in
-    [(c,c,string (String.sub s 1 (pred (String.length s))))]
+      let c=Char.code(String.get s 0) in
+      [(c,c,string (String.sub s 1 (pred (String.length s))))]
   | Star e ->
-    let l = firstchars e in
-    List.map (fun (a,b,res) -> (a,b,seq res r)) l
+      let l = firstchars e in
+      List.map (fun (a,b,res) -> (a,b,seq res r)) l
   | Alt(s) ->
-    Ptset.fold
-      (fun e accu -> insert_list (firstchars e) accu)
-      s
-      []
+      Ptset.fold
+        (fun e accu -> insert_list (firstchars e) accu)
+        s
+        []
   | Seq(e1,e2) ->
-    if nullable e1
-    then
-      let l1 = firstchars e1 and l2 = firstchars e2 in
-      insert_list
-        (List.map (fun (a,b,res) -> (a,b,seq res e2)) l1)
-        l2
-    else
-      let l1 = firstchars e1 in
-      List.map (fun (a,b,res) -> (a,b,seq res e2)) l1
+      if nullable e1
+      then
+        let l1 = firstchars e1 and l2 = firstchars e2 in
+        insert_list
+          (List.map (fun (a,b,res) -> (a,b,seq res e2)) l1)
+          l2
+      else
+        let l1 = firstchars e1 in
+        List.map (fun (a,b,res) -> (a,b,seq res e2)) l1
 ;;
 
 let _ =
@@ -239,9 +239,9 @@ let rec fprint fmt r =
   | String s -> fprintf fmt "\"%s\"" s
   | Star e -> fprintf fmt "(%a)*" fprint e
   | Alt(l) ->
-    fprintf fmt "(";
-    Ptset.iter (fun e -> fprintf fmt "|%a" fprint e) l;
-    fprintf fmt ")"
+      fprintf fmt "(";
+      Ptset.iter (fun e -> fprintf fmt "|%a" fprint e) l;
+      fprintf fmt ")"
   | Seq(e1,e2) -> fprintf fmt "(%a %a)" fprint e1 fprint e2
 ;;
 

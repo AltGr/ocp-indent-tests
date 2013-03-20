@@ -56,11 +56,11 @@ struct
   let rec ins t =
     function
       []     ->
-      [t]
+        [t]
     | (t'::_) as ts when rank t < rank t' ->
-      t::ts
+        t::ts
     | t'::ts ->
-      ins (link t t') ts
+        ins (link t t') ts
 
   let empty = []
   let is_empty ts = ts = []
@@ -70,18 +70,18 @@ struct
       ([], _) -> ts'
     | (_, []) -> ts
     | (t1::ts1, t2::ts2)  ->
-      if rank t1 < rank t2 then t1 :: union ts1 (t2::ts2)
-      else if rank t2 < rank t1 then t2 :: union (t1::ts1) ts2
-      else ins (link t1 t2) (union ts1 ts2)
+        if rank t1 < rank t2 then t1 :: union ts1 (t2::ts2)
+        else if rank t2 < rank t1 then t2 :: union (t1::ts1) ts2
+        else ins (link t1 t2) (union ts1 ts2)
 
   let rec find_min =
     function
       []    -> raise Not_found
     | [t]   -> root t
     | t::ts ->
-      let x = find_min ts in
-      let c = Ord.compare (root t) x in
-      if c < 0 then root t else x
+        let x = find_min ts in
+        let c = Ord.compare (root t) x in
+        if c < 0 then root t else x
 
   let lookup_min t =
     try Some(find_min t) with Not_found -> None
@@ -91,16 +91,16 @@ struct
       []    -> assert false
     | [t]   -> (t, [])
     | t::ts ->
-      let (t', ts') = get_min ts in
-      let c = Ord.compare (root t) (root t') in
-      if c < 0 then (t, ts) else (t', t::ts')
+        let (t', ts') = get_min ts in
+        let c = Ord.compare (root t) (root t') in
+        if c < 0 then (t, ts) else (t', t::ts')
 
   let remove_min =
     function
       [] -> raise Not_found
     | ts ->
-      let (Node (x, r, c), ts) = get_min ts in
-      union (List.rev c) ts
+        let (Node (x, r, c), ts) = get_min ts in
+        union (List.rev c) ts
 
   let rec size l =
     let rec sizetree (Node (_,_,tl)) = 1 + size tl in

@@ -256,9 +256,9 @@ struct
     | SA.TypeForall (tvars, rvars, cvars, t) ->
         QA.TypeForall
           ( List.map (fun (SA.Flatvar v) -> Arg.typevar v) tvars
-            , List.map (fun (SA.Rowvar v) -> Arg.rowvar v) rvars
-            , List.map (fun (SA.Colvar v) -> Arg.colvar v) cvars
-            , ty t)
+          , List.map (fun (SA.Rowvar v) -> Arg.rowvar v) rvars
+          , List.map (fun (SA.Colvar v) -> Arg.colvar v) cvars
+          , ty t)
     | SA.TypeModule fields ->
         let aux_module_field (s, t) =
           let t = ty t in

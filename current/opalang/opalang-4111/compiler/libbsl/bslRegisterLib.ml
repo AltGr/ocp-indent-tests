@@ -883,7 +883,7 @@ let finalizing_opa ~final_bymap s =
 
     if true_means_error && not s.s_options.BI.unsafe_opa then
       OManager.error "Process stopped because of errors in the Opa code@\n"
-  ;
+    ;
     s_opa_interface
   in
 
@@ -1497,7 +1497,7 @@ let parse_file_factory pprocess process_directive set_last_directive options par
   let parsed_lines, multiline = lines_foldi aux ([], None) content in
   if Option.is_some multiline
   then BRState.error "@[<2>Syntax error@\nunfinished multiline directive@]@\n"
-;
+  ;
   let parsed_lines = List.rev parsed_lines in
 
   let parsed_file = {

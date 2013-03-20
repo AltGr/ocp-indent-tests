@@ -51,24 +51,24 @@ type config = [ `DHCP | `IPv4 of ipv4_addr * ipv4_addr * ipv4_addr list ]
 let configure i =
   function
   |`DHCP ->
-    printf "Manager: VIF %s to DHCP\n%!" i.id;
-    lwt t, th = Dhcp.Client.create i.ipv4 i.udp in
-    printf "Manager: DHCP done\n%!";
-    return ()
+      printf "Manager: VIF %s to DHCP\n%!" i.id;
+      lwt t, th = Dhcp.Client.create i.ipv4 i.udp in
+      printf "Manager: DHCP done\n%!";
+      return ()
   |`IPv4 (addr, netmask, gateways) ->
-    printf "Manager: VIF %s to %s nm %s gw [%s]\n%!"
-      i.id (ipv4_addr_to_string addr) (ipv4_addr_to_string netmask)
-      (String.concat ", " (List.map ipv4_addr_to_string gateways));
-    Ipv4.set_ip i.ipv4 addr >>
-    Ipv4.set_netmask i.ipv4 netmask >>
-    Ipv4.set_gateways i.ipv4 gateways >>
-    return ()
+      printf "Manager: VIF %s to %s nm %s gw [%s]\n%!"
+        i.id (ipv4_addr_to_string addr) (ipv4_addr_to_string netmask)
+        (String.concat ", " (List.map ipv4_addr_to_string gateways));
+      Ipv4.set_ip i.ipv4 addr >>
+      Ipv4.set_netmask i.ipv4 netmask >>
+      Ipv4.set_gateways i.ipv4 gateways >>
+      return ()
 
 (* Plug in a new network interface with given id *)
 let plug t id vif =
   printf "Manager: plug %s\n%!" id; 
   let wrap (s,t) = try_lwt t >>= return with exn ->
-    (printf "Manager: exn=%s %s\n%!" s (Printexc.to_string exn); fail exn) in
+      (printf "Manager: exn=%s %s\n%!" s (Printexc.to_string exn); fail exn) in
   let (netif, netif_t) = Ethif.create vif in
   let (ipv4, ipv4_t) = Ipv4.create netif in
   let (icmp, icmp_t) = Icmp.create ipv4 in
@@ -168,8 +168,8 @@ let intercept t fn =
 let i_of_ip t addr =
   match addr with
   |None ->
-    Hashtbl.fold (fun _ (i,_) a ->
-      i :: a) t.listeners []
+      Hashtbl.fold (fun _ (i,_) a ->
+        i :: a) t.listeners []
   |Some addr -> begin
       Hashtbl.fold (fun _ (i,_) a ->
         if Ipv4.get_ip i.ipv4 = addr then i :: a else a

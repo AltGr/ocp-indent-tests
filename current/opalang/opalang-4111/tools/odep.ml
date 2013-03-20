@@ -326,7 +326,7 @@ struct
                 "  module %s with empty path ignored\n%!"
               )
                 filename i module_name
-            ;
+              ;
               env
           | [path] ->
               let lib = { Lib.lib = libname ; sublib = false ; repo = repo } in
@@ -443,7 +443,7 @@ struct
                                 "  the dependencies defined in this line will be ignored\n%!"
                               )
                                 filename i module_name
-                            ;
+                              ;
                               set
                           | [ module_ ] ->
                               let _ =
@@ -461,7 +461,7 @@ struct
                                 "  this module name can refer to:\n"
                               )
                                 filename i module_name
-                            ;
+                              ;
                               List.iter (
                                 fun module_ ->
                                   Printf.eprintf (
@@ -470,11 +470,11 @@ struct
                                     module_.Module.path module_.Module.name
                                     module_.Module.lib.Lib.lib
                               ) ambigous
-                            ;
+                              ;
                               Printf.eprintf (
                                 "  the dependencies defined in this line will be ignored\n%!"
                               )
-                            ;
+                              ;
                               set
                         )
                       | None ->
@@ -498,7 +498,7 @@ struct
                     "  the dependencies defined in this line will be ignored\n%!"
                   )
                     filename i module_name path
-                ;
+                  ;
                   env
             )
         )
@@ -525,26 +525,26 @@ let spec = [
   "--clustered",
   Arg.Set clustered,
   " Group libraries by repository in the graph"
-;
+  ;
 
   (* d *)
 
   "--debug",
   Arg.Int (fun i -> debug := Some i),
   " Activate some debug logs (take a level as arg)"
-;
+  ;
 
   "--dir",
   Arg.Set_string output_dir,
   " Specify an output directory, default is ."
-;
+  ;
 
   (* f *)
 
   "--flat-libs",
   Arg.Set flat_libs,
   " Show sub-directories as clusters within the graph of the parent lib"
-;
+  ;
 
 ]
 

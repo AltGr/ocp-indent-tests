@@ -139,9 +139,9 @@ let rec process_named_pattern env named_pattern l tl acc =
             C.E.match_ !l
               [ C.P.nil (), C.E.none ()
               ; C.P.hd_tl (C.P.any ()) (C.P.any ()),
-              (match name with
-               | None -> acc
-               | Some name -> C.E.letin name !l acc)]
+                (match name with
+                 | None -> acc
+                 | Some name -> C.E.letin name !l acc)]
         | Some (Xml_question,_) ->
             let i = fresh_name ~name:"question" () in
             let v =

@@ -163,8 +163,8 @@ let map_return_value gen_err value return =
       None (* guard *),
       ok gen_err (var "pos")  (return "res") (var "err")  (var "lai")
     ; pat_fail gen_err (pvar "err") (pvar "lai"),
-    None (* guard *),
-    fail gen_err (var "err")  (var "lai")
+      None (* guard *),
+      fail gen_err (var "err")  (var "lai")
     ]
 
 let map_lai_value gen_err value return =
@@ -173,8 +173,8 @@ let map_lai_value gen_err value return =
       None (* guard *),
       ok gen_err (var "pos")  (var "res")  (var "err")  (return "lai")
     ; pat_fail gen_err (pvar "err") (pvar "lai"),
-    None (* guard *),
-    fail gen_err (var "err")  (var "lai")
+      None (* guard *),
+      fail gen_err (var "err")  (var "lai")
     ]
 
 let map_lai_value_to_max ctx value lai =
@@ -752,7 +752,7 @@ let rec generate_exp ctx = function
             pat_fail ge (pvar "err") (pvar "lai"),
             None,
             map_lai_value_to_max ge res (var "lai")
-          ;
+            ;
             pvar "ok",
             None,
             call_gatherErrors ge (return (var "ok"))
@@ -848,7 +848,7 @@ and generate_seq ctx (items, map, code) =
             OcamlG.pat_none,
             None,
             fail ge err (var input)
-          ;
+            ;
             OcamlG.pat_some (pvar "res"),
             None,
             ok ge (var input) (var "res") err (var input)
@@ -883,7 +883,7 @@ and generate_seq ctx (items, map, code) =
           pat_fail ge (pvar "err") (pvar "lai"),
           None,
           call_gatherErrors ge (fail ge (var "err") (var "lai"))
-        ;
+          ;
           pat_ok ge (pvar inputVar) (pvar argResult) (pvar "err") (pvar "lai"),
           None,
           map_lai_value_to_max ge res (var "lai")
@@ -912,7 +912,7 @@ and generate_item ctx (prefix, primary, suffix) =
         pat_fail ge (pvar "err") (pvar "lai"),
         None,
         fail ge (var "err") (var "lai")
-      ;
+        ;
         pat_ok ge pany pany (pvar "err") (pvar "lai"),
         None,
         ok ge (var ctx.input) (predicate_res "And") (var "err") (var "lai")
@@ -923,7 +923,7 @@ and generate_item ctx (prefix, primary, suffix) =
         pat_fail ge (pvar "err") (pvar "lai"),
         None,
         ok ge (var ctx.input) (predicate_res "Not") (var "err") (var "lai")
-      ;
+        ;
         pat_ok ge pany pany (pvar "err") (pvar "lai"),
         None,
         fail ge (var "err") (var "lai")
@@ -952,7 +952,7 @@ and generate_suffix ctx (primary, suffix) =
         pat_fail ge (pvar "err") (pvar "lai"),
         None,
         ok ge (var ctx.input) (return OcamlG.none) (var "err") (var "lai")
-      ;
+        ;
         pat_ok ge (pvar inputVar) (pvar "r") (pvar "err") (pvar "lai"),
         None,
         ok ge (var inputVar) (return (OcamlG.some (var "r"))) (var "err") (var "lai")
@@ -1011,13 +1011,13 @@ let funPreliminaries () =
 
   (* let _get_char = String.unsafe_get _text *)
   ; Ocaml.pf "_get_char",
-  if !functorize then
-    call_fun [vars ["R_"; "get"]; var "_text"]
-  else
-    call_fun [vars ["String"; "unsafe_get"]; var "_text"]
+    if !functorize then
+      call_fun [vars ["R_"; "get"]; var "_text"]
+    else
+      call_fun [vars ["String"; "unsafe_get"]; var "_text"]
 
   ; Ocaml.pf "_get_sub",
-  call_fun [vars [if !functorize then "R_" else "String"; "sub"]; var "_text"]
+    call_fun [vars [if !functorize then "R_" else "String"; "sub"]; var "_text"]
 (*
   ; Ocaml.pf "_input",
     call_fun [var "_get_sub"; OcamlG.int 0; var "_len"]
@@ -1087,7 +1087,7 @@ let generate_prod peg gen_err (name, (def, annots)) =
           pat_fail ge pany pany (*FIXME*),
           None,
           do_memo res
-        ;
+          ;
           pany,
           None,
           OcamlG.unit
@@ -1098,7 +1098,7 @@ let generate_prod peg gen_err (name, (def, annots)) =
           pat_ok ge pany pany pany pany (*FIXME*),
           None,
           do_memo res
-        ;
+          ;
           pany,
           None,
           OcamlG.unit
@@ -1197,14 +1197,14 @@ let generate_parse_with () =
           pat_ok false (pvar "pos") (pvar "res") pany pany,
           None,
           result
-        ;
+          ;
           pat_fail false pany pany,
           None,
           OcamlG.make_match (call_parse "f_err") [
             pat_ok true pany pany pany pany,
             None,
             Ocaml.Assert OcamlG.false_
-          ;
+            ;
             pat_fail true (pvar "err") pany,
             None,
             call_gen_syntax_error (var "err")
@@ -1215,7 +1215,7 @@ let generate_parse_with () =
           pat_ok true (pvar "pos") (pvar "res") pany pany,
           None,
           result
-        ;
+          ;
           pat_fail true (pvar "err") pany,
           None,
           call_gen_syntax_error (var "err")

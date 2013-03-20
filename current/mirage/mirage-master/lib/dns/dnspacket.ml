@@ -84,9 +84,9 @@ let parse_label base bits =
     name: (length*8): string; data: -1: bitstring } 
   -> (L (name, offset), data)
 | { 0b0_11: 2; ptr: 14; bits: -1: bitstring } 
--> (P (ptr, offset), bits)
+  -> (P (ptr, offset), bits)
 | { 0: 8; bits: -1: bitstring } 
--> (Z offset, bits)
+  -> (Z offset, bits)
 | { _ } -> raise(Unparsable ("parse_label", bits))
 )
 
@@ -96,27 +96,27 @@ let parse_name names base bits =
     match parse_label base bits with
     | (L (n, o) as label, data) 
       -> Hashtbl.add names o label;
-      offsets |> List.iter (fun off -> (
-          Hashtbl.add names off label
-        ));
-      aux (o :: offsets) (n :: name) data 
+        offsets |> List.iter (fun off -> (
+            Hashtbl.add names off label
+          ));
+        aux (o :: offsets) (n :: name) data 
     | (P (p, _), data) 
       -> let ns = (Hashtbl.find_all names p 
                    |> List.filter (fun n ->
                      match n with L _ -> true | _ -> false)
                    |> List.rev)
-      in
-      offsets |> List.iter (fun off ->
-        ns |> List.iter (fun n -> Hashtbl.add names off n)
-      );
-      ((ns |> List.rev
-        ||> (function
-          | L (nm,_) -> nm
-          | _ -> raise(Unparsable ("parse_name", bits)))) 
-       @ name), data
+        in
+        offsets |> List.iter (fun off ->
+          ns |> List.iter (fun n -> Hashtbl.add names off n)
+        );
+        ((ns |> List.rev
+          ||> (function
+            | L (nm,_) -> nm
+            | _ -> raise(Unparsable ("parse_name", bits)))) 
+         @ name), data
     | (Z o as zero, data)
       -> Hashtbl.add names o zero;
-      (name, data)
+        (name, data)
   in 
   let name, bits = aux [] [] bits in
   (List.rev name, bits)
@@ -343,8 +343,8 @@ let parse_rdata names base t bits =
     | `CNAME -> `CNAME (bits |> parse_name names base |> stop)
 
     | `SOA -> let mn, bits = parse_name names base bits in
-      let rn, bits = parse_name names base bits in 
-      (bitmatch bits with
+        let rn, bits = parse_name names base bits in 
+        (bitmatch bits with
 | { serial: 32; refresh: 32; retry: 32; expire: 32;
     minimum: 32 }
   -> `SOA (mn, rn, serial, refresh, retry, expire, minimum)
@@ -357,13 +357,13 @@ let parse_rdata names base t bits =
 )
 | `PTR -> `PTR (bits |> parse_name names base |> stop)
 | `HINFO -> let cpu, bits = parse_charstr bits in
-let os = bits |> parse_charstr |> stop in
-`HINFO (cpu, os)
+  let os = bits |> parse_charstr |> stop in
+  `HINFO (cpu, os)
 | `MINFO -> let rm, bits = parse_name names base bits in
-let em = bits |> parse_name names base |> stop in
-`MINFO (rm, em)
+  let em = bits |> parse_name names base |> stop in
+  `MINFO (rm, em)
 | `MX -> (
-  bitmatch bits with
+    bitmatch bits with
 | { preference: 16; bits: -1: bitstring } 
   -> `MX ((preference, bits |> parse_name names base |> stop))
 )
@@ -614,7 +614,7 @@ let parse_dns names bits =
       match n with
       | 0 -> rs, bits
       | _ -> let r, bits = pf ns b bits in 
-        aux (r :: rs) (n-1) bits
+          aux (r :: rs) (n-1) bits
     in
     aux [] n bits
   in

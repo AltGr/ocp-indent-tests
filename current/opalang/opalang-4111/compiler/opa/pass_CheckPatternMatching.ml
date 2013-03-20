@@ -229,7 +229,7 @@ let check_expr e =
         List.iter iter li
       in
       List.iter iter (collect_killed_patterns li)
-    ;
+      ;
       (* Second check: obfuscation *)
       let iter (p, _) =
         let iter p =

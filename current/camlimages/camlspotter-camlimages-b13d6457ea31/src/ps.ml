@@ -33,8 +33,8 @@ let check_header filename =
       header_infos = []; }
   with
   | _ ->
-    close_in ic;
-    raise Wrong_file_type;;
+      close_in ic;
+      raise Wrong_file_type;;
 
 let get_bounding_box file =
   let ic = open_in_bin file in
@@ -64,8 +64,8 @@ let get_bounding_box file =
     None
   with
   | _ ->
-    close_in ic;
-    !bbox;;
+      close_in ic;
+      !bbox;;
 
 let load_ps file bbox_opt options =
   if not Camlimages.lib_ps then failwith "ps is not supported" else
@@ -81,19 +81,19 @@ let load_ps file bbox_opt options =
     let command =
       match bbox with
       | None ->
-        Printf.sprintf
-          "%s -sDEVICE=ppmraw -r%fx%f -q -dSAFER -dNOPAUSE \
-           -sOutputFile=%s %s -c showpage -c quit"
-          Camlimages.path_gs resx resy tmpfile file
+          Printf.sprintf
+            "%s -sDEVICE=ppmraw -r%fx%f -q -dSAFER -dNOPAUSE \
+             -sOutputFile=%s %s -c showpage -c quit"
+            Camlimages.path_gs resx resy tmpfile file
       | Some (x1, y1, x2, y2) ->
-        let ratiox = resx /. 72.0 in
-        let ratioy = resy /. 72.0 in
-        let width = truncate (float (x2 - x1 + 1) *. ratiox) in
-        let height = truncate (float (y2 - y1 + 1) *. ratioy) in
-        Printf.sprintf
-          "%s -sDEVICE=ppmraw -r%fx%f -g%dx%d -q -dSAFER -dNOPAUSE \
-           -sOutputFile=%s -c %d %d translate -f %s -c showpage -c quit"
-          Camlimages.path_gs resx resy width height tmpfile (-x1) (-y1) file in
+          let ratiox = resx /. 72.0 in
+          let ratioy = resy /. 72.0 in
+          let width = truncate (float (x2 - x1 + 1) *. ratiox) in
+          let height = truncate (float (y2 - y1 + 1) *. ratioy) in
+          Printf.sprintf
+            "%s -sDEVICE=ppmraw -r%fx%f -g%dx%d -q -dSAFER -dNOPAUSE \
+             -sOutputFile=%s -c %d %d translate -f %s -c showpage -c quit"
+            Camlimages.path_gs resx resy width height tmpfile (-x1) (-y1) file in
     debug_endline command;
     if Sys.command command <> 0 then begin
       Tmpfile.remove_tmp_file tmpfile;
@@ -172,8 +172,8 @@ let super_save file conf comments showpage images =
       | MaxBox (w, h) -> w, h
       | MinBox (w, h) -> w, h
       | _ ->
-        paper_width -. border *. 2.0,
-        paper_height -. border *. 2.0 in
+          paper_width -. border *. 2.0,
+          paper_height -. border *. 2.0 in
 
     (* open file just for getting image size info. *)
     let imgw, imgh = image.width, image.height in
@@ -182,10 +182,10 @@ let super_save file conf comments showpage images =
     let w, h, x1, y1 =
       match conf.crop with
       | Some crop ->
-        (* check cropping area *)
-        if crop.cx + crop.cw > imgw then crop.cw <- imgw - crop.cx;
-        if crop.cy + crop.ch > imgh then crop.ch <- imgh - crop.cy;
-        crop.cw, crop.ch, crop.cx, crop.cy
+          (* check cropping area *)
+          if crop.cx + crop.cw > imgw then crop.cw <- imgw - crop.cx;
+          if crop.cy + crop.ch > imgh then crop.ch <- imgh - crop.cy;
+          crop.cw, crop.ch, crop.cx, crop.cy
       | None -> imgw, imgh, 0, 0 in
 
     (* auto rotation *)
@@ -202,9 +202,9 @@ let super_save file conf comments showpage images =
         | _ -> if rw > rh then rh else rw in
       match conf.size with
       | MinBox _ -> (* smaller is better *)
-        conf.rot <- if ratio0 < ratio90 then Rot0 else Rot90
+          conf.rot <- if ratio0 < ratio90 then Rot0 else Rot90
       | _ -> (* larger is better *)
-        conf.rot <- if ratio0 > ratio90 then Rot0 else Rot90
+          conf.rot <- if ratio0 > ratio90 then Rot0 else Rot90
     end;
 
     (* from the point of view of the image *)
@@ -218,18 +218,18 @@ let super_save file conf comments showpage images =
     let ratio =
       match conf.size with
       | DPI dpi ->
-        debug_endline (sprintf "%f dpi" dpi);
-        paper_width /. 8.26 /. dpi
+          debug_endline (sprintf "%f dpi" dpi);
+          paper_width /. 8.26 /. dpi
       | _ ->
-        let ratio =
-          if limitw /. float w  *. float h < limith
-          then limitw /. float w
-          else limith /. float h in
+          let ratio =
+            if limitw /. float w  *. float h < limith
+            then limitw /. float w
+            else limith /. float h in
 (*
           let dpi = paper_width /. 8.26 /. ratio in
           debug_endline (sprintf "%f dpi" dpi);
 *)
-        ratio in
+          ratio in
 
     let rw = float w  *. ratio
     and rh = float h *. ratio in
@@ -250,8 +250,8 @@ let super_save file conf comments showpage images =
         | TopRight (x, y) -> x +. prw, y -. prh
         | Center (x, y) -> x -. prw /. 2.0, y -. prh /. 2.0
         | A4Center ->
-          (paper_width -. prw) /. 2.0,
-          (paper_height -. prh) /. 2.0 in
+            (paper_width -. prw) /. 2.0,
+            (paper_height -. prh) /. 2.0 in
       match conf.rot with
       | Rot0 -> x, y
       | Rot180 -> prw +. x, prh +. y
@@ -297,23 +297,23 @@ let super_save file conf comments showpage images =
           let print_pixel =
             if not conf.mono then
               function x ->
-                let adrs = x * 3 in
-                for i = 0 to 2 do
-                  p_ (sprintf "%02x" (Char.code buf.[adrs+i]))
-                done
+                  let adrs = x * 3 in
+                  for i = 0 to 2 do
+                    p_ (sprintf "%02x" (Char.code buf.[adrs+i]))
+                  done
             else
               let mono r g b =
                 (r * 256 / 3 + g * 256 / 2 + b * 256 / 6) / 256 in
               function x ->
-                let adrs = x * 3 in
-                let m =
-                  mono
-                    (Char.code buf.[adrs])
-                    (Char.code buf.[adrs + 1])
-                    (Char.code buf.[adrs + 2]) in
-                for i = 0 to 2 do
-                  p_ (sprintf "%02x" m)
-                done in
+                  let adrs = x * 3 in
+                  let m =
+                    mono
+                      (Char.code buf.[adrs])
+                      (Char.code buf.[adrs + 1])
+                      (Char.code buf.[adrs + 2]) in
+                  for i = 0 to 2 do
+                    p_ (sprintf "%02x" m)
+                  done in
           if not conf.mirror then
             for x = x1 to x1 + w - 1 do print_pixel x done
           else

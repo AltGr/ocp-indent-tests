@@ -31,8 +31,8 @@ let bracket set_up f tear_down () =
     f fixture;
     tear_down fixture
   with e -> 
-    tear_down fixture;
-    raise e
+      tear_down fixture;
+      raise e
 
 exception Skip of string
 let skip_if b msg =
@@ -65,36 +65,36 @@ let assert_equal ?(cmp = ( = )) ?printer ?pp_diff ?msg expected actual =
           begin
             match msg with 
             | Some s ->
-              pp_open_box fmt 0;
-              pp_print_string fmt s;
-              pp_close_box fmt ();
-              pp_print_cut fmt ()
+                pp_open_box fmt 0;
+                pp_print_string fmt s;
+                pp_close_box fmt ();
+                pp_print_cut fmt ()
             | None -> 
-              ()
+                ()
           end;
 
           begin
             match printer with
             | Some p ->
-              let p_ellipsis = print_ellipsis p in
-              fprintf fmt
-                "@[expected: @[%a@]@ but got: @[%a@]@]@,"
-                p_ellipsis expected
-                p_ellipsis actual
+                let p_ellipsis = print_ellipsis p in
+                fprintf fmt
+                  "@[expected: @[%a@]@ but got: @[%a@]@]@,"
+                  p_ellipsis expected
+                  p_ellipsis actual
 
             | None ->
-              fprintf fmt "@[not equal@]@,"
+                fprintf fmt "@[not equal@]@,"
           end;
 
           begin
             match pp_diff with 
             | Some d ->
-              fprintf fmt 
-                "@[differences: %a@]@,"
-                d (expected, actual)
+                fprintf fmt 
+                  "@[differences: %a@]@,"
+                  d (expected, actual)
 
             | None ->
-              ()
+                ()
           end;
 
           pp_close_box fmt ())
@@ -119,7 +119,7 @@ let raises f =
     f () >>
     return None
   with e -> 
-    return (Some e)
+      return (Some e)
 
 let assert_raises ?msg exn (f: unit -> 'a) = 
   let pexn = 
@@ -133,17 +133,17 @@ let assert_raises ?msg exn (f: unit -> 'a) =
     in
     match msg with
     | None -> 
-      assert_failure str
+        assert_failure str
 
     | Some s -> 
-      assert_failure (Format.sprintf "%s\n%s" s str)
+        assert_failure (Format.sprintf "%s\n%s" s str)
   in    
   match_lwt raises f with
   | None -> 
-    get_error_string () >>= assert_failure
+      get_error_string () >>= assert_failure
 
   | Some e -> 
-    assert_equal ?msg ~printer:pexn exn e
+      assert_equal ?msg ~printer:pexn exn e
 
 (* Compare floats up to a given relative error *)
 let cmp_float ?(epsilon = 0.00001) a b =
@@ -171,25 +171,25 @@ let (>:::) s l = TestLabel(s, TestList(l)) (* infix *)
 let rec test_decorate g =
   function
   | TestCase f -> 
-    TestCase (g f)
+      TestCase (g f)
   | TestList tst_lst ->
-    TestList (List.map (test_decorate g) tst_lst)
+      TestList (List.map (test_decorate g) tst_lst)
   | TestLabel (str, tst) ->
-    TestLabel (str, test_decorate g tst)
+      TestLabel (str, test_decorate g tst)
 
 (* Return the number of available tests *)
 let rec test_case_count = 
   function
   | TestCase _ -> 
-    1
+      1
 
   | TestLabel (_, t) -> 
-    test_case_count t
+      test_case_count t
 
   | TestList l -> 
-    List.fold_left 
-      (fun c t -> c + test_case_count t) 
-      0 l
+      List.fold_left 
+        (fun c t -> c + test_case_count t) 
+        0 l
 
 type node = 
   | ListItem of int 
@@ -200,9 +200,9 @@ type path = node list
 let string_of_node = 
   function
   | ListItem n -> 
-    string_of_int n
+      string_of_int n
   | Label s -> 
-    s
+      s
 
 let string_of_path path =
   String.concat ":" (List.rev_map string_of_node path)
@@ -214,10 +214,10 @@ let mapi f l =
   let rec rmapi cnt l = 
     match l with 
     | [] -> 
-      [] 
+        [] 
 
     | h :: t -> 
-      (f h cnt) :: (rmapi (cnt + 1) t) 
+        (f h cnt) :: (rmapi (cnt + 1) t) 
   in
   rmapi 0 l
 
@@ -225,10 +225,10 @@ let fold_lefti f accu l =
   let rec rfold_lefti cnt accup l = 
     match l with
     | [] -> 
-      accup
+        accup
 
     | h::t -> 
-      rfold_lefti (cnt + 1) (f accup h cnt) t
+        rfold_lefti (cnt + 1) (f accup h cnt) t
   in
   rfold_lefti 0 accu l
 
@@ -236,11 +236,11 @@ let fold_lefti_s f accu l =
   let rec rfold_lefti cnt accup l = 
     match l with
     | [] -> 
-      return accup
+        return accup
 
     | h::t -> 
-      lwt x = f accup h cnt in
-      rfold_lefti (cnt + 1) x t
+        lwt x = f accup h cnt in
+        rfold_lefti (cnt + 1) x t
   in
   rfold_lefti 0 accu l
 
@@ -252,14 +252,14 @@ let test_case_paths test =
   let rec tcps path test = 
     match test with 
     | TestCase _ -> 
-      [path] 
+        [path] 
 
     | TestList tests -> 
-      List.concat 
-        (mapi (fun t i -> tcps ((ListItem i)::path) t) tests)
+        List.concat 
+          (mapi (fun t i -> tcps ((ListItem i)::path) t) tests)
 
     | TestLabel (l, t) -> 
-      tcps ((Label l)::path) t
+        tcps ((Label l)::path) t
   in
   tcps [] test
 
@@ -283,55 +283,55 @@ let test_filter ?(skip=false) only test =
       begin
         match tst with
         | TestCase f ->
-          begin
-            if skip then
-              Some 
-                (TestCase 
-                   (fun () ->
-                     skip_if true "Test disabled";
-                     f ()))
-            else
-              None
-          end
-
-        | TestList tst_lst ->
-          begin
-            let ntst_lst =
-              fold_lefti 
-                (fun ntst_lst tst i ->
-                  let nntst_lst =
-                    match filter_test ((ListItem i) :: path) tst with
-                    | Some tst ->
-                      tst :: ntst_lst
-                    | None ->
-                      ntst_lst
-                  in
-                  nntst_lst)
-                []
-                tst_lst
-            in
-            if not skip && ntst_lst = [] then
-              None
-            else
-              Some (TestList (List.rev ntst_lst))
-          end
-
-        | TestLabel (lbl, tst) ->
-          begin
-            let ntst_opt =
-              filter_test 
-                ((Label lbl) :: path)
-                tst
-            in
-            match ntst_opt with 
-            | Some ntst ->
-              Some (TestLabel (lbl, ntst))
-            | None ->
+            begin
               if skip then
-                Some (TestLabel (lbl, tst))
+                Some 
+                  (TestCase 
+                     (fun () ->
+                       skip_if true "Test disabled";
+                       f ()))
               else
                 None
-          end
+            end
+
+        | TestList tst_lst ->
+            begin
+              let ntst_lst =
+                fold_lefti 
+                  (fun ntst_lst tst i ->
+                    let nntst_lst =
+                      match filter_test ((ListItem i) :: path) tst with
+                      | Some tst ->
+                          tst :: ntst_lst
+                      | None ->
+                          ntst_lst
+                    in
+                    nntst_lst)
+                  []
+                  tst_lst
+              in
+              if not skip && ntst_lst = [] then
+                None
+              else
+                Some (TestList (List.rev ntst_lst))
+            end
+
+        | TestLabel (lbl, tst) ->
+            begin
+              let ntst_opt =
+                filter_test 
+                  ((Label lbl) :: path)
+                  tst
+              in
+              match ntst_opt with 
+              | Some ntst ->
+                  Some (TestLabel (lbl, ntst))
+              | None ->
+                  if skip then
+                    Some (TestLabel (lbl, tst))
+                  else
+                    None
+            end
       end
   in
   filter_test [] test
@@ -400,12 +400,12 @@ let rec was_successful =
   | [] -> true
   | RSuccess _::t 
   | RSkip _::t -> 
-    was_successful t
+      was_successful t
 
   | RFailure _::_
   | RError _::_ 
   | RTodo _::_ -> 
-    false
+      false
 
 (* Events which can happen during testing *)
 type test_event =
@@ -427,44 +427,44 @@ let perform_test report test =
       return (RSuccess path)
     with
     | Failure s -> 
-      return (RFailure (path, s ^ (maybe_backtrace ())))
+        return (RFailure (path, s ^ (maybe_backtrace ())))
 
     | Skip s -> 
-      return (RSkip (path, s))
+        return (RSkip (path, s))
 
     | Todo s -> 
-      return (RTodo (path, s))
+        return (RTodo (path, s))
 
     | s -> 
-      return (RError (path, (Printexc.to_string s) ^ (maybe_backtrace ())))
+        return (RError (path, (Printexc.to_string s) ^ (maybe_backtrace ())))
   in
   let rec run_test path results = 
     function
     | TestCase(f) -> 
-      begin
-        lwt result = 
-          report (EStart path);
-          run_test_case f path 
-        in
-        report (EResult result);
-        report (EEnd path);
-        return (result::results)
-      end
+        begin
+          lwt result = 
+            report (EStart path);
+            run_test_case f path 
+          in
+          report (EResult result);
+          report (EEnd path);
+          return (result::results)
+        end
 
     | TestList (tests) ->
-      begin
-        fold_lefti_s
-          (fun results t cnt -> 
-            run_test 
-              ((ListItem cnt)::path) 
-              results t)
-          results tests
-      end
+        begin
+          fold_lefti_s
+            (fun results t cnt -> 
+              run_test 
+                ((ListItem cnt)::path) 
+                results t)
+            results tests
+        end
 
     | TestLabel (label, t) -> 
-      begin
-        run_test ((Label label)::path) results t
-      end
+        begin
+          run_test ((Label label)::path) results t
+        end
   in
   run_test [] [] test
 
@@ -493,24 +493,24 @@ let run_test_tt ?verbose test =
   let string_of_result = 
     function
     | RSuccess _ ->
-      if verbose then "ok\n" else "."
+        if verbose then "ok\n" else "."
     | RFailure (_, _) ->
-      if verbose then "FAIL\n" else "F"
+        if verbose then "FAIL\n" else "F"
     | RError (_, _) ->
-      if verbose then "ERROR\n" else "E"
+        if verbose then "ERROR\n" else "E"
     | RSkip (_, _) ->
-      if verbose then "SKIP\n" else "S"
+        if verbose then "SKIP\n" else "S"
     | RTodo (_, _) ->
-      if verbose then "TODO\n" else "T"
+        if verbose then "TODO\n" else "T"
   in
   let report_event = 
     function
     | EStart p -> 
-      if verbose then printf "%s ...\n" (string_of_path p)
+        if verbose then printf "%s ...\n" (string_of_path p)
     | EEnd _ -> 
-      ()
+        ()
     | EResult result -> 
-      printf "%s@?" (string_of_result result)
+        printf "%s@?" (string_of_result result)
   in
   let print_result_list results = 
     List.iter 

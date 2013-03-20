@@ -21,7 +21,7 @@ let expr_list_of_list _loc exprs =
   match List.rev exprs with
   | []   -> <:expr< [] >>
   | h::t ->
-    List.fold_left (fun accu x -> <:expr< [ $x$ :: $accu$ ] >>) <:expr< [ $h$ ] >> t 
+      List.fold_left (fun accu x -> <:expr< [ $x$ :: $accu$ ] >>) <:expr< [ $h$ ] >> t 
 
 let xml_of t = "xml_of_" ^ t
 
@@ -53,60 +53,60 @@ let gen_xml (_loc, n, t_exp) =
     | Char     -> <:expr< [`Data (String.make 1 $id$)] >>
     | String   -> <:expr< [`Data $id$] >>
     | Int (Some i) when i <= 64 ->
-      if i + 1 = Sys.word_size then
-        <:expr< [`Data (string_of_int $id$)] >>
-      else if i <= 32 then
-        <:expr< [`Data (Int32.to_string $id$)] >>
-      else
-        <:expr< [`Data (Int64.to_string $id$)] >>
+        if i + 1 = Sys.word_size then
+          <:expr< [`Data (string_of_int $id$)] >>
+        else if i <= 32 then
+          <:expr< [`Data (Int32.to_string $id$)] >>
+        else
+          <:expr< [`Data (Int64.to_string $id$)] >>
     | Int _ ->
-      <:expr< [`Data (Bigint.to_string $id$)] >>
+        <:expr< [`Data (Bigint.to_string $id$)] >>
     | List t   ->
-      let pid, eid = new_id _loc () in
-      <:expr< List.fold_left (fun accu $pid$ -> $aux eid t$ @ accu) [] $id$ >>
+        let pid, eid = new_id _loc () in
+        <:expr< List.fold_left (fun accu $pid$ -> $aux eid t$ @ accu) [] $id$ >>
     | Array t  ->
-      let pid, eid = new_id _loc () in
-      let array = <:expr< Array.map (fun $pid$ -> $aux eid t$) $id$ >> in
-      <:expr< List.flatten (Array.to_list $array$) >>
+        let pid, eid = new_id _loc () in
+        let array = <:expr< Array.map (fun $pid$ -> $aux eid t$) $id$ >> in
+        <:expr< List.flatten (Array.to_list $array$) >>
     | Tuple t  ->
-      let ids = List.map (new_id _loc) t in
-      let patts,exprs = List.split ids in
-      let exprs = List.map2 aux exprs t in
-      <:expr<
-        let $tup:Ast.paCom_of_list patts$ = $id$ in
-        List.flatten $expr_list_of_list _loc exprs$
-      >>
+        let ids = List.map (new_id _loc) t in
+        let patts,exprs = List.split ids in
+        let exprs = List.map2 aux exprs t in
+        <:expr<
+          let $tup:Ast.paCom_of_list patts$ = $id$ in
+          List.flatten $expr_list_of_list _loc exprs$
+        >>
     | Dict(k,d) ->
-      let new_id n = match k with
-        | `R -> <:expr< $id$.$lid:n$ >>
-        | `O -> <:expr< $id$#$lid:n$ >> in
-      let exprs =
-        List.map (fun (n,_,t) -> create_tag _loc n (aux (new_id n) t)) d in
-      let expr = expr_list_of_list _loc exprs in
-      <:expr< List.flatten $expr$ >>
+        let new_id n = match k with
+          | `R -> <:expr< $id$.$lid:n$ >>
+          | `O -> <:expr< $id$#$lid:n$ >> in
+        let exprs =
+          List.map (fun (n,_,t) -> create_tag _loc n (aux (new_id n) t)) d in
+        let expr = expr_list_of_list _loc exprs in
+        <:expr< List.flatten $expr$ >>
     | Sum (k, s) ->
-      let mc (n, args) =
-        let ids = List.map (new_id _loc) args in
-        let patts, exprs = List.split ids in
-        let exprs = match args with
-          | []  -> <:expr< [] >>
-          | [h] -> <:expr< $aux (List.hd exprs) h$ >>
-          | _   -> <:expr< List.flatten $expr_list_of_list _loc (List.map2 aux exprs args)$ >> in
-        let patt = Ast.paCom_of_list patts in
-        let patt = match k, args with
-          | `N, [] -> <:patt< $uid:n$ >>
-          | `P, [] -> <:patt< `$uid:n$ >>
-          | `N, _ -> <:patt< $uid:n$ $tup:patt$ >>
-          | `P, _ -> <:patt< `$uid:n$ $tup:patt$ >> in
-        <:match_case< $patt$ -> $exprs$ >> in
-      <:expr< match $id$ with [ $list:List.map mc s$ ] >>
+        let mc (n, args) =
+          let ids = List.map (new_id _loc) args in
+          let patts, exprs = List.split ids in
+          let exprs = match args with
+            | []  -> <:expr< [] >>
+            | [h] -> <:expr< $aux (List.hd exprs) h$ >>
+            | _   -> <:expr< List.flatten $expr_list_of_list _loc (List.map2 aux exprs args)$ >> in
+          let patt = Ast.paCom_of_list patts in
+          let patt = match k, args with
+            | `N, [] -> <:patt< $uid:n$ >>
+            | `P, [] -> <:patt< `$uid:n$ >>
+            | `N, _ -> <:patt< $uid:n$ $tup:patt$ >>
+            | `P, _ -> <:patt< `$uid:n$ $tup:patt$ >> in
+          <:match_case< $patt$ -> $exprs$ >> in
+        <:expr< match $id$ with [ $list:List.map mc s$ ] >>
     | Option o ->
-      let pid, eid = new_id _loc () in
-      <:expr<
-        match $id$ with [
-            None       -> []
-          | Some $pid$ -> $aux eid o$
-        ] >>
+        let pid, eid = new_id _loc () in
+        <:expr<
+          match $id$ with [
+              None       -> []
+            | Some $pid$ -> $aux eid o$
+          ] >>
 
     | Arrow _  -> failwith "arrow type is not yet supported"
 
@@ -118,8 +118,8 @@ let gen_xml (_loc, n, t_exp) =
     | Ext (n,_)
     | Rec (n,_)
     | Var n    ->
-      (* XXX: This will not work for recursive values *)
-      <:expr< $Pa_dyntype.Pp_dyntype.gen_ident _loc xml_of n$ $id$ >>
+        (* XXX: This will not work for recursive values *)
+        <:expr< $Pa_dyntype.Pp_dyntype.gen_ident _loc xml_of n$ $id$ >>
   in
   let id = <:expr< $lid:n$ >> in
   let typ = xml_type _loc "t" in
@@ -134,6 +134,6 @@ let () =
           value rec $Ast.biAnd_of_list (List.map gen_xml (Pa_dyntype.Pp_dyntype.create tds))$;
         >>
       with Not_found ->
-        Printf.eprintf "[Internal Error]\n";
-        Printexc.print_backtrace stderr;
-        exit (-1))
+          Printf.eprintf "[Internal Error]\n";
+          Printexc.print_backtrace stderr;
+          exit (-1))

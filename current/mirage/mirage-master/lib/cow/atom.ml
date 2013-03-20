@@ -104,8 +104,8 @@ let xml_of_feed ? self f =
 let compare (yr1,mn1,da1,_,_) (yr2,mn2,da2,_,_) =
   match yr1 - yr2 with
   | 0 ->
-    (match mn1 - mn2 with
-     | 0 -> da1 - da2
-     | n -> n
-    )
+      (match mn1 - mn2 with
+       | 0 -> da1 - da2
+       | n -> n
+      )
   | n -> n

@@ -52,10 +52,10 @@ module Make(Flow:FLOW) :
   let ibuf_refill t = 
     match_lwt Flow.read t.flow with
     |Some buf ->
-      t.ibuf <- Some buf;
-      return ()
+        t.ibuf <- Some buf;
+        return ()
     |None ->
-      fail Closed
+        fail Closed
 
   let rec get_ibuf t =
     match t.ibuf with
@@ -93,7 +93,7 @@ module Make(Flow:FLOW) :
         lwt v = read_some ?len t in
         return (Some v)
       with Closed ->
-        return None
+          return None
     )
 
   (* Read until a character is found *)
@@ -108,12 +108,12 @@ module Make(Flow:FLOW) :
     in
     match scan 0 with
     |None -> (* not found, return what we have until EOF *)
-      t.ibuf <- None;
-      return (false, buf)
+        t.ibuf <- None;
+        return (false, buf)
     |Some off -> (* found, so split the buffer *)
-      let hd = Cstruct.sub_buffer buf 0 off in
-      t.ibuf <- Some (Cstruct.shift buf (off+1));
-      return (true, hd)
+        let hd = Cstruct.sub_buffer buf 0 off in
+        t.ibuf <- Some (Cstruct.shift buf (off+1));
+        return (true, hd)
 
   (* This reads a line of input, which is terminated either by a CRLF
      sequence, or the end of the channel (which counts as a line).
@@ -123,7 +123,7 @@ module Make(Flow:FLOW) :
     let rec get acc =
       match_lwt read_until t '\n' with
       |(false, v) ->
-        get (v :: acc)
+          get (v :: acc)
       |(true, v) -> begin
           (* chop the CR if present *)
           let vlen = Cstruct.len v in
@@ -150,14 +150,14 @@ module Make(Flow:FLOW) :
     match t.obuf with
     |None -> ()
     |Some buf when Cstruct.len buf = t.opos -> (* obuf is full *)
-      t.obufq <- buf :: t.obufq;
-      t.obuf <- None
+        t.obufq <- buf :: t.obufq;
+        t.obuf <- None
     |Some buf when t.opos = 0 -> (* obuf wasnt ever used, so discard *)
-      t.obuf <- None
+        t.obuf <- None
     |Some buf -> (* partially filled obuf, so resize *)
-      let buf = Cstruct.sub buf 0 t.opos in
-      t.obufq <- buf :: t.obufq;
-      t.obuf <- None
+        let buf = Cstruct.sub buf 0 t.opos in
+        t.obufq <- buf :: t.obufq;
+        t.obuf <- None
 
   (* Get an active output buffer, which will allocate it if needed.
    * The position to write into is stored in t.opos *)
@@ -267,14 +267,14 @@ let close = function
 
 let connect mgr = function
   |`TCPv4 (src, dst, fn) ->
-    TCPv4.connect mgr ?src dst (fun t -> fn (TCPv4 t))
+      TCPv4.connect mgr ?src dst (fun t -> fn (TCPv4 t))
   |`Pipe (src, dst, fn) ->
-    Pipe.connect mgr ?src dst (fun t -> fn (Pipe t))
+      Pipe.connect mgr ?src dst (fun t -> fn (Pipe t))
   |_ -> fail (Failure "unknown protocol")
 
 let listen mgr = function
   |`TCPv4 (src, fn) ->
-    TCPv4.listen mgr src (fun dst t -> fn dst (TCPv4 t))
+      TCPv4.listen mgr src (fun dst t -> fn dst (TCPv4 t))
   |`Pipe (src, fn) ->
-    Pipe.listen mgr src (fun dst t -> fn dst (Pipe t))
+      Pipe.listen mgr src (fun dst t -> fn dst (Pipe t))
   |_ -> fail (Failure "unknown protocol")

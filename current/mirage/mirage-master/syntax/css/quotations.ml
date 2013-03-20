@@ -29,7 +29,7 @@ let destruct_aq s =
     and code = String.sub s (pos + 1) (len - pos - 1) in
     name, code
   with Not_found ->
-    "", s
+      "", s
 
 let aq_expander =
   object
@@ -37,16 +37,16 @@ let aq_expander =
     method expr =
       function
       | Ast.ExAnt (_loc, s) ->
-        let n, c = destruct_aq s in
-        let e = AQ.parse_expr _loc c in
-        begin match n with
-          | "expr" -> <:expr< Css.Exprs [List.flatten (List.map Css.expr $e$)] >> 
-          | "prop" -> <:expr< Css.Props $e$ >>
-          | "" -> e
-          | t ->
-            Printf.eprintf "[ERROR] \"%s\" is not a valid tag. Valid tags are [expr|prop]\n" t;
-            Loc.raise _loc Parsing.Parse_error
-        end
+          let n, c = destruct_aq s in
+          let e = AQ.parse_expr _loc c in
+          begin match n with
+            | "expr" -> <:expr< Css.Exprs [List.flatten (List.map Css.expr $e$)] >> 
+            | "prop" -> <:expr< Css.Props $e$ >>
+            | "" -> e
+            | t ->
+                Printf.eprintf "[ERROR] \"%s\" is not a valid tag. Valid tags are [expr|prop]\n" t;
+                Loc.raise _loc Parsing.Parse_error
+          end
       | e -> super#expr e
   end
 

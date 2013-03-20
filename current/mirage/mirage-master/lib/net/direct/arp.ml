@@ -47,10 +47,10 @@ type t = {
     uint32_t tpa
   } as big_endian
 
-      cenum op {
-      Op_request = 1;
-      Op_reply
-    } as uint16_t
+    cenum op {
+    Op_request = 1;
+    Op_reply
+  } as uint16_t
 
 (* Prettyprint cache contents *)
 let prettyprint t =
@@ -68,34 +68,34 @@ let prettyprint t =
 let rec input t frame =
   match get_arp_op frame with
   |1 -> (* Request *)
-    (* Received ARP request, check if we can satisfy it from
-       our own IPv4 list *)
-    let req_ipv4 = ipv4_addr_of_uint32 (get_arp_tpa frame) in
-    printf "ARP: who-has %s?\n%!" (ipv4_addr_to_string req_ipv4);
-    if List.mem req_ipv4 t.bound_ips then begin
-      (* We own this IP, so reply with our MAC *)
-      let sha = t.get_mac () in
-      let tha = ethernet_mac_of_bytes (copy_arp_sha frame) in
-      let spa = ipv4_addr_of_uint32 (get_arp_tpa frame) in (* the requested address *)
-      let tpa = ipv4_addr_of_uint32 (get_arp_spa frame) in (* the requesting host IPv4 *)
-      output t { op=`Reply; sha; tha; spa; tpa }
-    end else return ()
+      (* Received ARP request, check if we can satisfy it from
+         our own IPv4 list *)
+      let req_ipv4 = ipv4_addr_of_uint32 (get_arp_tpa frame) in
+      printf "ARP: who-has %s?\n%!" (ipv4_addr_to_string req_ipv4);
+      if List.mem req_ipv4 t.bound_ips then begin
+        (* We own this IP, so reply with our MAC *)
+        let sha = t.get_mac () in
+        let tha = ethernet_mac_of_bytes (copy_arp_sha frame) in
+        let spa = ipv4_addr_of_uint32 (get_arp_tpa frame) in (* the requested address *)
+        let tpa = ipv4_addr_of_uint32 (get_arp_spa frame) in (* the requesting host IPv4 *)
+        output t { op=`Reply; sha; tha; spa; tpa }
+      end else return ()
   |2 -> (* Reply *)
-    let spa = ipv4_addr_of_uint32 (get_arp_spa frame) in
-    let sha = ethernet_mac_of_bytes (copy_arp_sha frame) in
-    printf "ARP: updating %s -> %s\n%!"
-      (ipv4_addr_to_string spa) (ethernet_mac_to_string sha);
-    (* If we have pending entry, notify the waiters that answer is ready *)
-    if Hashtbl.mem t.cache spa then begin
-      match Hashtbl.find t.cache spa with
-      |Incomplete cond -> Lwt_condition.broadcast cond sha
-      |_ -> ()
-    end;
-    Hashtbl.replace t.cache spa (Verified sha);
-    return ()
+      let spa = ipv4_addr_of_uint32 (get_arp_spa frame) in
+      let sha = ethernet_mac_of_bytes (copy_arp_sha frame) in
+      printf "ARP: updating %s -> %s\n%!"
+        (ipv4_addr_to_string spa) (ethernet_mac_to_string sha);
+      (* If we have pending entry, notify the waiters that answer is ready *)
+      if Hashtbl.mem t.cache spa then begin
+        match Hashtbl.find t.cache spa with
+        |Incomplete cond -> Lwt_condition.broadcast cond sha
+        |_ -> ()
+      end;
+      Hashtbl.replace t.cache spa (Verified sha);
+      return ()
   |n ->
-    printf "ARP: Unknown message %d ignored\n%!" n;
-    return ()
+      printf "ARP: Unknown message %d ignored\n%!" n;
+      return ()
 
 and output t arp =
   (* Obtain a buffer to write into *)
@@ -170,12 +170,12 @@ let query t ip =
   if Hashtbl.mem t.cache ip then (
     match Hashtbl.find t.cache ip with
     | Incomplete cond ->
-      (* printf "ARP query: %s -> [incomplete]\n%!" (ipv4_addr_to_string ip); *)
-      Lwt_condition.wait cond
+        (* printf "ARP query: %s -> [incomplete]\n%!" (ipv4_addr_to_string ip); *)
+        Lwt_condition.wait cond
     | Verified mac ->
-      (* printf "ARP query: %s -> %s\n%!"
-         (ipv4_addr_to_string ip) (ethernet_mac_to_string mac); *)
-      return mac
+        (* printf "ARP query: %s -> %s\n%!"
+           (ipv4_addr_to_string ip) (ethernet_mac_to_string mac); *)
+        return mac
   ) else (
     let cond = Lwt_condition.create () in
     (* printf "ARP query: %s -> [probe]\n%!" (ipv4_addr_to_string ip); *)

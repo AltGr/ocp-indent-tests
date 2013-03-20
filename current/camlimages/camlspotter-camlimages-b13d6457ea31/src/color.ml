@@ -47,10 +47,10 @@ let add_color cmap c1 =
     find_exact cmap c1
   with
   | Not_found ->
-    let len = size cmap in
-    if cmap.max >= 0 && len = cmap.max then raise Too_many_colors;
-    cmap.map <- Array.append cmap.map [|c1|];
-    len;;
+      let len = size cmap in
+      if cmap.max >= 0 && len = cmap.max then raise Too_many_colors;
+      cmap.map <- Array.append cmap.map [|c1|];
+      len;;
 
 let add_colors cmap cs =
   let ret, not_exist =
@@ -232,16 +232,16 @@ let color_table_load () =
           Mstring.split_str (function ' ' | '\t' -> true | _ -> false) s in
         match tokens with
         | r :: g :: b :: rest ->
-          Hashtbl.add table (Mstring.catenate_sep " " rest)
-            {r = int_of_string r; g = int_of_string g; b = int_of_string b;}
+            Hashtbl.add table (Mstring.catenate_sep " " rest)
+              {r = int_of_string r; g = int_of_string g; b = int_of_string b;}
         | _ -> assert false
     done;
     raise Exit
   with
   | End_of_file ->
-    close_in ic;
-    color_name_table := Some table;
-    table;;
+      close_in ic;
+      color_name_table := Some table;
+      table;;
 
 let color_name_query c =
   let table =
@@ -256,15 +256,15 @@ let color_parse c =
     if c.[0] = '#' then
       match String.length c with
       | 7 ->
-        let r = int_of_string ("0x" ^ String.sub c 1 2)
-        and g = int_of_string ("0x" ^ String.sub c 3 2)
-        and b = int_of_string ("0x" ^ String.sub c 5 2) in
-        {r = r; g = g; b = b}
+          let r = int_of_string ("0x" ^ String.sub c 1 2)
+          and g = int_of_string ("0x" ^ String.sub c 3 2)
+          and b = int_of_string ("0x" ^ String.sub c 5 2) in
+          {r = r; g = g; b = b}
       | 13 ->
-        let r = int_of_string ("0x" ^ String.sub c 1 4) / 256
-        and g = int_of_string ("0x" ^ String.sub c 5 4) / 256
-        and b = int_of_string ("0x" ^ String.sub c 9 4) / 256 in
-        {r = r; g = g; b = b}
+          let r = int_of_string ("0x" ^ String.sub c 1 4) / 256
+          and g = int_of_string ("0x" ^ String.sub c 5 4) / 256
+          and b = int_of_string ("0x" ^ String.sub c 9 4) / 256 in
+          {r = r; g = g; b = b}
       | _ -> raise Exit
     else color_name_query c
   with

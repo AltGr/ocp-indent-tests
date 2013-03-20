@@ -56,32 +56,32 @@ let create v =
 let put mvar v =
   match mvar.contents with
   | None ->
-    begin match Lwt_sequence.take_opt_l mvar.readers with
-      | None ->
-        mvar.contents <- Some v
-      | Some w ->
-        Lwt.wakeup_later w v
-    end;
-    return_unit
+      begin match Lwt_sequence.take_opt_l mvar.readers with
+        | None ->
+            mvar.contents <- Some v
+        | Some w ->
+            Lwt.wakeup_later w v
+      end;
+      return_unit
   | Some _ ->
-    let (res, w) = Lwt.task () in
-    let node = Lwt_sequence.add_r (v, w) mvar.writers in
-    Lwt.on_cancel res (fun _ -> Lwt_sequence.remove node);
-    res
+      let (res, w) = Lwt.task () in
+      let node = Lwt_sequence.add_r (v, w) mvar.writers in
+      Lwt.on_cancel res (fun _ -> Lwt_sequence.remove node);
+      res
 
 let take mvar =
   match mvar.contents with
   | Some v ->
-    begin match Lwt_sequence.take_opt_l mvar.writers with
-      | Some(v', w) ->
-        mvar.contents <- Some v';
-        Lwt.wakeup_later w ()
-      | None ->
-        mvar.contents <- None
-    end;
-    Lwt.return v
+      begin match Lwt_sequence.take_opt_l mvar.writers with
+        | Some(v', w) ->
+            mvar.contents <- Some v';
+            Lwt.wakeup_later w ()
+        | None ->
+            mvar.contents <- None
+      end;
+      Lwt.return v
   | None ->
-    let (res, w) = Lwt.task () in
-    let node = Lwt_sequence.add_r w mvar.readers in
-    Lwt.on_cancel res (fun _ -> Lwt_sequence.remove node);
-    res
+      let (res, w) = Lwt.task () in
+      let node = Lwt_sequence.add_r w mvar.readers in
+      Lwt.on_cancel res (fun _ -> Lwt_sequence.remove node);
+      res

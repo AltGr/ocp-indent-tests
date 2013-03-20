@@ -26,13 +26,13 @@ cstruct tcpv4 {
   uint16_t urg_ptr
 } as big_endian
 
-    cstruct pseudo_header {
-    uint32_t src;
-    uint32_t dst;
-    uint8_t res;
-    uint8_t proto;
-    uint16_t len
-  } as big_endian 
+  cstruct pseudo_header {
+  uint32_t src;
+  uint32_t dst;
+  uint8_t res;
+  uint8_t proto;
+  uint16_t len
+} as big_endian 
 
 open Cstruct
 

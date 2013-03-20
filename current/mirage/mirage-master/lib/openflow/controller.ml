@@ -209,55 +209,55 @@ let process_of_packet state (remote_addr, remote_port) ofp t =
               (OP.Stats.string_of_stats resp));
           match resp with 
           | OP.Stats.Flow_resp(resp_h, flows) ->
-            (let dpid = Hashtbl.find state.channel_dp ep in
-             let evt = Event.Flow_stats_reply(
-                 h.Header.xid, resp_h.Stats.more_to_follow, flows, dpid) 
-             in
-             List.iter (fun cb -> cb state dpid evt) 
-               state.flow_stats_reply_cb;
-             return ();
-            )
+              (let dpid = Hashtbl.find state.channel_dp ep in
+               let evt = Event.Flow_stats_reply(
+                   h.Header.xid, resp_h.Stats.more_to_follow, flows, dpid) 
+               in
+               List.iter (fun cb -> cb state dpid evt) 
+                 state.flow_stats_reply_cb;
+               return ();
+              )
 
           | OP.Stats.Aggregate_resp(resp_h, aggr) -> 
-            (let dpid = Hashtbl.find state.channel_dp ep in
-             let evt = Event.Aggr_flow_stats_reply(
-                 h.Header.xid, aggr.Stats.packet_count, 
-                 aggr.Stats.byte_count, aggr.Stats.flow_count, dpid) 
-             in
-             List.iter (fun cb -> cb state dpid evt) 
-               state.aggr_flow_stats_reply_cb;
-             return ();
-            )
+              (let dpid = Hashtbl.find state.channel_dp ep in
+               let evt = Event.Aggr_flow_stats_reply(
+                   h.Header.xid, aggr.Stats.packet_count, 
+                   aggr.Stats.byte_count, aggr.Stats.flow_count, dpid) 
+               in
+               List.iter (fun cb -> cb state dpid evt) 
+                 state.aggr_flow_stats_reply_cb;
+               return ();
+              )
 
           | OP.Stats.Desc_resp (resp_h, aggr) ->
-            (let dpid = Hashtbl.find state.channel_dp ep in
-             let evt = Event.Desc_stats_reply(
-                 aggr.Stats.imfr_desc, aggr.Stats.hw_desc, 
-                 aggr.Stats.sw_desc, aggr.Stats.serial_num, 
-                 aggr.Stats.dp_desc, dpid) 
-             in
-             List.iter (fun cb -> cb state dpid evt) 
-               state.desc_stats_reply_cb;
-             return ();
-            )
+              (let dpid = Hashtbl.find state.channel_dp ep in
+               let evt = Event.Desc_stats_reply(
+                   aggr.Stats.imfr_desc, aggr.Stats.hw_desc, 
+                   aggr.Stats.sw_desc, aggr.Stats.serial_num, 
+                   aggr.Stats.dp_desc, dpid) 
+               in
+               List.iter (fun cb -> cb state dpid evt) 
+                 state.desc_stats_reply_cb;
+               return ();
+              )
 
           | OP.Stats.Port_resp (resp_h, ports) ->
-            (let dpid = Hashtbl.find state.channel_dp ep in
-             let evt = Event.Port_stats_reply(h.Header.xid, ports, dpid) 
-             in
-             List.iter (fun cb -> cb state dpid evt) 
-               state.port_stats_reply_cb;
-             return ();
-            )
+              (let dpid = Hashtbl.find state.channel_dp ep in
+               let evt = Event.Port_stats_reply(h.Header.xid, ports, dpid) 
+               in
+               List.iter (fun cb -> cb state dpid evt) 
+                 state.port_stats_reply_cb;
+               return ();
+              )
 
           | OP.Stats.Table_resp (resp_h, tables) ->
-            (let dpid = Hashtbl.find state.channel_dp ep in
-             let evt = Event.Table_stats_reply(h.Header.xid, tables, dpid)
-             in
-             List.iter (fun cb -> cb state dpid evt) 
-               state.table_stats_reply_cb;
-             return ();
-            )
+              (let dpid = Hashtbl.find state.channel_dp ep in
+               let evt = Event.Table_stats_reply(h.Header.xid, tables, dpid)
+               in
+               List.iter (fun cb -> cb state dpid evt) 
+                 state.table_stats_reply_cb;
+               return ();
+              )
 
           | _ -> OS.Console.log "New stats response received"; return ();
         ) 
@@ -317,9 +317,9 @@ let rec rd_data len t =
   match len with
   | 0 -> return Bitstring.empty_bitstring
   | _ -> lwt data = (Channel.read_some ~len:len t) in 
-    let nbytes = ((Bitstring.bitstring_length data)/8) in
-    lwt more_data = (rd_data (len - nbytes) t) in
-    return (Bitstring.concat [ data; more_data ])
+      let nbytes = ((Bitstring.bitstring_length data)/8) in
+      lwt more_data = (rd_data (len - nbytes) t) in
+      return (Bitstring.concat [ data; more_data ])
 
 let listen mgr loc init =
   let controller (remote_addr, remote_port) t =

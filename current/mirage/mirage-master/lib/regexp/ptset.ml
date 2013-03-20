@@ -91,15 +91,15 @@ let add k t =
   let rec ins = function
     | Empty -> Leaf k
     | Leaf j as t ->
-      if j == k then t else join (k.tag, Leaf k, j.tag, t)
+        if j == k then t else join (k.tag, Leaf k, j.tag, t)
     | Branch (p,m,t0,t1) as t ->
-      if match_prefix k.tag p m then
-        if zero_bit k.tag m then
-          Branch (p, m, ins t0, t1)
+        if match_prefix k.tag p m then
+          if zero_bit k.tag m then
+            Branch (p, m, ins t0, t1)
+          else
+            Branch (p, m, t0, ins t1)
         else
-          Branch (p, m, t0, ins t1)
-      else
-        join (k.tag, Leaf k, p, t)
+          join (k.tag, Leaf k, p, t)
   in
   ins t
 
@@ -118,13 +118,13 @@ let remove k t =
     | Empty -> Empty
     | Leaf j as t -> if k == j then Empty else t
     | Branch (p,m,t0,t1) as t ->
-      if match_prefix k.tag p m then
-        if zero_bit k.tag m then
-          branch (p, m, rmv t0, t1)
+        if match_prefix k.tag p m then
+          if zero_bit k.tag m then
+            branch (p, m, rmv t0, t1)
+          else
+            branch (p, m, t0, rmv t1)
         else
-          branch (p, m, t0, rmv t1)
-      else
-        t
+          t
   in
   rmv t
 
@@ -143,24 +143,24 @@ let rec merge = function
   | Leaf k, t -> add k t
   | t, Leaf k -> add k t
   | (Branch (p,m,s0,s1) as s), (Branch (q,n,t0,t1) as t) ->
-    if m == n && match_prefix q p m then
-      (* The trees have the same prefix. Merge the subtrees. *)
-      Branch (p, m, merge (s0,t0), merge (s1,t1))
-    else if m < n && match_prefix q p m then
-      (* [q] contains [p]. Merge [t] with a subtree of [s]. *)
-      if zero_bit q m then
-        Branch (p, m, merge (s0,t), s1)
+      if m == n && match_prefix q p m then
+        (* The trees have the same prefix. Merge the subtrees. *)
+        Branch (p, m, merge (s0,t0), merge (s1,t1))
+      else if m < n && match_prefix q p m then
+        (* [q] contains [p]. Merge [t] with a subtree of [s]. *)
+        if zero_bit q m then
+          Branch (p, m, merge (s0,t), s1)
+        else
+          Branch (p, m, s0, merge (s1,t))
+      else if m > n && match_prefix p q n then
+        (* [p] contains [q]. Merge [s] with a subtree of [t]. *)
+        if zero_bit p n then
+          Branch (q, n, merge (s,t0), t1)
+        else
+          Branch (q, n, t0, merge (s,t1))
       else
-        Branch (p, m, s0, merge (s1,t))
-    else if m > n && match_prefix p q n then
-      (* [p] contains [q]. Merge [s] with a subtree of [t]. *)
-      if zero_bit p n then
-        Branch (q, n, merge (s,t0), t1)
-      else
-        Branch (q, n, t0, merge (s,t1))
-    else
-      (* The prefixes disagree. *)
-      join (p, s, q, t)
+        (* The prefixes disagree. *)
+        join (p, s, q, t)
 
 let union s t = merge (s,t)
 
@@ -175,15 +175,15 @@ let rec subset s1 s2 = match (s1,s2) with
   | Leaf k1, _ -> mem k1 s2
   | Branch _, Leaf _ -> false
   | Branch (p1,m1,l1,r1), Branch (p2,m2,l2,r2) ->
-    if m1 == m2 && p1 == p2 then
-      subset l1 l2 && subset r1 r2
-    else if m1 > m2 && match_prefix p1 p2 m2 then
-      if zero_bit p1 m2 then
-        subset l1 l2 && subset r1 l2
+      if m1 == m2 && p1 == p2 then
+        subset l1 l2 && subset r1 r2
+      else if m1 > m2 && match_prefix p1 p2 m2 then
+        if zero_bit p1 m2 then
+          subset l1 l2 && subset r1 l2
+        else
+          subset l1 r2 && subset r1 r2
       else
-        subset l1 r2 && subset r1 r2
-    else
-      false
+        false
 
 (*s To compute the intersection and the difference of two sets, we
     still examine the same four cases as in [merge]. The recursion is
@@ -195,14 +195,14 @@ let rec inter s1 s2 = match (s1,s2) with
   | Leaf k1, _ -> if mem k1 s2 then s1 else Empty
   | _, Leaf k2 -> if mem k2 s1 then s2 else Empty
   | Branch (p1,m1,l1,r1), Branch (p2,m2,l2,r2) ->
-    if m1 == m2 && p1 == p2 then
-      merge (inter l1 l2, inter r1 r2)
-    else if m1 < m2 && match_prefix p2 p1 m1 then
-      inter (if zero_bit p2 m1 then l1 else r1) s2
-    else if m1 > m2 && match_prefix p1 p2 m2 then
-      inter s1 (if zero_bit p1 m2 then l2 else r2)
-    else
-      Empty
+      if m1 == m2 && p1 == p2 then
+        merge (inter l1 l2, inter r1 r2)
+      else if m1 < m2 && match_prefix p2 p1 m1 then
+        inter (if zero_bit p2 m1 then l1 else r1) s2
+      else if m1 > m2 && match_prefix p1 p2 m2 then
+        inter s1 (if zero_bit p1 m2 then l2 else r2)
+      else
+        Empty
 
 let rec diff s1 s2 = match (s1,s2) with
   | Empty, _ -> Empty
@@ -210,17 +210,17 @@ let rec diff s1 s2 = match (s1,s2) with
   | Leaf k1, _ -> if mem k1 s2 then Empty else s1
   | _, Leaf k2 -> remove k2 s1
   | Branch (p1,m1,l1,r1), Branch (p2,m2,l2,r2) ->
-    if m1 == m2 && p1 == p2 then
-      merge (diff l1 l2, diff r1 r2)
-    else if m1 < m2 && match_prefix p2 p1 m1 then
-      if zero_bit p2 m1 then
-        merge (diff l1 s2, r1)
+      if m1 == m2 && p1 == p2 then
+        merge (diff l1 l2, diff r1 r2)
+      else if m1 < m2 && match_prefix p2 p1 m1 then
+        if zero_bit p2 m1 then
+          merge (diff l1 s2, r1)
+        else
+          merge (l1, diff r1 s2)
+      else if m1 > m2 && match_prefix p1 p2 m2 then
+        if zero_bit p1 m2 then diff s1 l2 else diff s1 r2
       else
-        merge (l1, diff r1 s2)
-    else if m1 > m2 && match_prefix p1 p2 m2 then
-      if zero_bit p1 m2 then diff s1 l2 else diff s1 r2
-    else
-      s1
+        s1
 
 (*s All the following operations ([cardinal], [iter], [fold], [for_all],
     [exists], [filter], [partition], [choose], [elements]) are
@@ -309,7 +309,7 @@ let rec equalq t1 t2 =
   | Empty,Empty -> true
   | Leaf k, Leaf j -> k==j
   | Branch(p1,m1,l1,r1),Branch(p2,m2,l2,r2) ->
-    p1==p2 && m1==m2 && equalq l1 l2 && equalq r1 r2
+      p1==p2 && m1==m2 && equalq l1 l2 && equalq r1 r2
   | _ -> false
 
 
@@ -328,11 +328,11 @@ let rec intersect s1 s2 = match (s1,s2) with
   | Leaf k1, _ -> mem k1 s2
   | _, Leaf k2 -> mem k2 s1
   | Branch (p1,m1,l1,r1), Branch (p2,m2,l2,r2) ->
-    if m1 == m2 && p1 == p2 then
-      intersect l1 l2 || intersect r1 r2
-    else if m1 < m2 && match_prefix p2 p1 m1 then
-      intersect (if zero_bit p2 m1 then l1 else r1) s2
-    else if m1 > m2 && match_prefix p1 p2 m2 then
-      intersect s1 (if zero_bit p1 m2 then l2 else r2)
-    else
-      false
+      if m1 == m2 && p1 == p2 then
+        intersect l1 l2 || intersect r1 r2
+      else if m1 < m2 && match_prefix p2 p1 m1 then
+        intersect (if zero_bit p2 m1 then l1 else r1) s2
+      else if m1 > m2 && match_prefix p1 p2 m2 then
+        intersect s1 (if zero_bit p1 m2 then l2 else r2)
+      else
+        false

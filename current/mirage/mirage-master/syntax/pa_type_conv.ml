@@ -85,12 +85,12 @@ let push_conv_path mod_name =
   | Not_initialized -> conv_path_ref := Too_late (* Entered a submodule *)
   | Too_late -> ()
   | Path (str, rev_lst) ->
-    conv_path_ref := Path (str ^ "." ^ mod_name, mod_name :: rev_lst)
+      conv_path_ref := Path (str ^ "." ^ mod_name, mod_name :: rev_lst)
 
 let pop_conv_path () =
   match !conv_path_ref with
   | Path (_, _ :: rev_lst) ->
-    conv_path_ref := Path (String.concat "." (List.rev rev_lst), rev_lst)
+      conv_path_ref := Path (String.concat "." (List.rev rev_lst), rev_lst)
   | _ -> ()
 
 
@@ -120,7 +120,7 @@ let no_arg id e typ arg =
 (* Parse a list of tokens with the given grammar entry *)
 let parse_with entry = function
   | Some tokens ->
-    Some (Gram.parse_tokens_after_filter entry (Stream.of_list tokens))
+      Some (Gram.parse_tokens_after_filter entry (Stream.of_list tokens))
   | None -> None
 
 (* Entry which ignores its input *)
@@ -174,8 +174,8 @@ module Gen = struct
       | [] -> Ast.ExNil Loc.ghost
       | [x] -> x
       | x :: xs ->
-        let loc = Ast.loc_of_expr x in
-        <:expr@loc< $aux xs$ $x$ >>
+          let loc = Ast.loc_of_expr x in
+          <:expr@loc< $aux xs$ $x$ >>
     in
     aux (List.rev l)
 
@@ -183,15 +183,15 @@ module Gen = struct
     | [] -> Ast.TyNil Loc.ghost
     | [x] -> x
     | x :: xs ->
-      let loc = loc_of_ctyp x in
-      <:ctyp@loc< $x$ -> $tyArr_of_list xs$ >>
+        let loc = loc_of_ctyp x in
+        <:ctyp@loc< $x$ -> $tyArr_of_list xs$ >>
 
-      let rec paOr_of_list = function
-        | [] -> Ast.PaNil Loc.ghost
-        | [x] -> x
-        | x :: xs ->
-          let loc = loc_of_patt x in
-          <:patt@loc< $x$ | $paOr_of_list xs$ >>
+        let rec paOr_of_list = function
+          | [] -> Ast.PaNil Loc.ghost
+          | [x] -> x
+          | x :: xs ->
+              let loc = loc_of_patt x in
+              <:patt@loc< $x$ | $paOr_of_list xs$ >>
 
   module PP = Camlp4.Printers.OCaml.Make (Syntax)
   let conv_ctyp = (new PP.printer ())#ctyp
@@ -210,7 +210,7 @@ module Gen = struct
   let rec ty_var_list_of_ctyp tp acc =
     match tp with
     | <:ctyp< $tp1$ $tp2$ >> ->
-      ty_var_list_of_ctyp tp1 (ty_var_list_of_ctyp tp2 acc)
+        ty_var_list_of_ctyp tp1 (ty_var_list_of_ctyp tp2 acc)
     | <:ctyp< '$param$ >> -> param :: acc
     | _ -> invalid_arg "ty_var_list_of_ctyp"
 
@@ -228,7 +228,7 @@ module Gen = struct
   let rec ident_of_rev_path _loc = function
     | [str] -> mk_ident _loc str
     | str :: strs ->
-      <:ident< $ident_of_rev_path _loc strs$ . $mk_ident _loc str$ >>
+        <:ident< $ident_of_rev_path _loc strs$ . $mk_ident _loc str$ >>
     | _ -> invalid_arg "ident_of_rev_path"
 
   let rec get_appl_path _loc = function
@@ -309,17 +309,17 @@ module Gen = struct
       | Ast.TyAnt _ as tp -> bad_type tp
     and loop_module_type = function
       | <:module_type< $module_type$ with $with_constr$ >> ->
-        let rec loop_with_constr = function
-          | <:with_constr< type $_$ = $tp$ >>
-          | <:with_constr< type $_$ := $tp$ >> -> loop tp
-          | <:with_constr< $wc1$ and $wc2$ >> ->
-            loop_with_constr wc1 || loop_with_constr wc2
-          | <:with_constr< module $_$ = $_$ >>
-          | <:with_constr< module $_$ := $_$ >>
-          | <:with_constr< >> -> false
-          | Ast.WcAnt _ -> bad_type tp
-        in
-        loop_with_constr with_constr || loop_module_type module_type
+          let rec loop_with_constr = function
+            | <:with_constr< type $_$ = $tp$ >>
+            | <:with_constr< type $_$ := $tp$ >> -> loop tp
+            | <:with_constr< $wc1$ and $wc2$ >> ->
+                loop_with_constr wc1 || loop_with_constr wc2
+            | <:with_constr< module $_$ = $_$ >>
+            | <:with_constr< module $_$ := $_$ >>
+            | <:with_constr< >> -> false
+            | Ast.WcAnt _ -> bad_type tp
+          in
+          loop_with_constr with_constr || loop_module_type module_type
       | <:module_type< $id:_$ >>
       | <:module_type< '$_$ >>
       | <:module_type< >> -> false
@@ -341,8 +341,8 @@ end
 let generate tp (drv_id, drv_arg) =
   try Hashtbl.find generators drv_id tp drv_arg
   with Not_found ->
-    failwith (
-      "Pa_type_conv: '" ^ drv_id ^ "' is not a supported type generator.")
+      failwith (
+        "Pa_type_conv: '" ^ drv_id ^ "' is not a supported type generator.")
 
 let gen_derived_defs _loc tp drvs =
   let coll drv der_sis = <:str_item< $der_sis$; $generate tp drv$ >> in
@@ -351,8 +351,8 @@ let gen_derived_defs _loc tp drvs =
 let generate_exn tp (drv_id, drv_arg) =
   try Hashtbl.find exn_generators drv_id tp drv_arg
   with Not_found ->
-    failwith (
-      "Pa_type_conv: '" ^ drv_id ^ "' is not a supported exception generator.")
+      failwith (
+        "Pa_type_conv: '" ^ drv_id ^ "' is not a supported exception generator.")
 
 let gen_derived_exn_defs _loc tp drvs =
   let coll drv der_sis = <:str_item< $der_sis$; $generate_exn tp drv$ >> in
@@ -361,8 +361,8 @@ let gen_derived_exn_defs _loc tp drvs =
 let sig_generate tp (drv_id, drv_arg) =
   try Hashtbl.find sig_generators drv_id tp drv_arg
   with Not_found ->
-    failwith (
-      "Pa_type_conv: '" ^ drv_id ^ "' is not a supported signature generator.")
+      failwith (
+        "Pa_type_conv: '" ^ drv_id ^ "' is not a supported signature generator.")
 
 let gen_derived_sigs _loc tp drvs =
   let coll drv der_sis = <:sig_item< $der_sis$; $sig_generate tp drv$ >> in
@@ -371,8 +371,8 @@ let gen_derived_sigs _loc tp drvs =
 let sig_exn_generate tp (drv_id, drv_arg) =
   try Hashtbl.find sig_exn_generators drv_id tp drv_arg
   with Not_found ->
-    failwith (
-      "Pa_type_conv: '" ^ drv_id ^ "' is not a supported signature generator.")
+      failwith (
+        "Pa_type_conv: '" ^ drv_id ^ "' is not a supported signature generator.")
 
 let gen_derived_exn_sigs _loc tp drvs =
   let coll drv der_sis = <:sig_item< $der_sis$; $sig_exn_generate tp drv$ >> in
@@ -410,28 +410,28 @@ let found_module_name =
   Gram.Entry.of_parser "found_module_name" (fun strm ->
     match Stream.npeek 1 strm with
     | [(UIDENT name, token_info)] ->
-      set_conv_path_if_not_set (Gram.token_location token_info);
-      push_conv_path name;
-      Stream.junk strm;
-      name
+        set_conv_path_if_not_set (Gram.token_location token_info);
+        push_conv_path name;
+        Stream.junk strm;
+        name
     | _ -> raise Stream.Failure)
 
 let rec fetch_generator_arg paren_count strm =
   match Stream.next strm with
   | KEYWORD "(", _ -> fetch_generator_arg (paren_count + 1) strm
   | KEYWORD ")", token_info ->
-    if paren_count = 1 then [(EOI, token_info)]
-    else fetch_generator_arg (paren_count - 1) strm
+      if paren_count = 1 then [(EOI, token_info)]
+      else fetch_generator_arg (paren_count - 1) strm
   | EOI, token_info ->
-    Loc.raise (Gram.token_location token_info) (Stream.Error "')' missing")
+      Loc.raise (Gram.token_location token_info) (Stream.Error "')' missing")
   | x -> x :: fetch_generator_arg paren_count strm
 
 let generator_arg =
   Gram.Entry.of_parser "generator_arg" (fun strm ->
     match Stream.peek strm with
     | Some (KEYWORD "(", _) ->
-      Stream.junk strm;
-      Some (fetch_generator_arg 1 strm)
+        Stream.junk strm;
+        Some (fetch_generator_arg 1 strm)
     | _ -> None)
 
     DELETE_RULE Gram str_item: "module"; a_UIDENT; module_binding0 END;

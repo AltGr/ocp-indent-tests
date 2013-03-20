@@ -45,8 +45,8 @@ let edge edgename img24 =
   let edgeimg =
     match edgename with
     | Some _ ->
-      Some (new rgb24_with img24#width img24#height
-        [] (String.copy img24#dump))
+        Some (new rgb24_with img24#width img24#height
+          [] (String.copy img24#dump))
     | None -> None in
   let edge = Array.init img24#width (fun _ -> Array.create img24#height 0) in
 
@@ -124,17 +124,17 @@ let edge edgename img24 =
 
   begin match edgename, edgeimg with
     | Some _name, Some img ->
-      for x = 0 to img24#width - 1 do
-        for y = 0 to img24#height - 1 do
-          if edge2.(x).(y) > 0 then begin
-            let rgb = img#get x y in
-            rgb.r <- (rgb.r + 255 * 9) / 10;
-            rgb.g <- rgb.g / 10;
-            rgb.b <- rgb.b / 10;
-            img#set x y rgb
-          end
-        done
-      done;
+        for x = 0 to img24#width - 1 do
+          for y = 0 to img24#height - 1 do
+            if edge2.(x).(y) > 0 then begin
+              let rgb = img#get x y in
+              rgb.r <- (rgb.r + 255 * 9) / 10;
+              rgb.g <- rgb.g / 10;
+              rgb.b <- rgb.b / 10;
+              img#set x y rgb
+            end
+          done
+        done;
     | _ -> () end;
   edge2, edgeimg;;
 
@@ -181,11 +181,11 @@ Arg.parse [ "-force", Arg.Unit (fun () -> force_write := true),
                                      | _ -> false) s)
               with
               | [w;h] when !prop ->
-                conf := Some (PROP (w,h))
+                  conf := Some (PROP (w,h))
               | [w;h;x;y] when !whxy ->
-                conf := Some (WHXY (w,h,x,y))
+                  conf := Some (WHXY (w,h,x,y))
               | [x1;x2;y1;y2] when !xxyy ->
-                conf := Some (XXYY (x1,x2,y1,y2))
+                  conf := Some (XXYY (x1,x2,y1,y2))
               | _ -> assert false), "?x?+?+? : explicit cropping";
           ] (fun s -> files := s :: !files) "crop files";
 
@@ -204,91 +204,91 @@ List.iter (fun file ->
     let x1, x2, y1, y2 =
       match !conf with
       | None ->
-        let img =
-          match OImages.tag orgimg with
-          | Rgb24 i -> i
-          | Index8 i -> i#to_rgb24
-          | _ -> raise Wrong_image_class
-        in
-        let edge, eimg =
-          edge (if !test then Some edgefile else None) img in
+          let img =
+            match OImages.tag orgimg with
+            | Rgb24 i -> i
+            | Index8 i -> i#to_rgb24
+            | _ -> raise Wrong_image_class
+          in
+          let edge, eimg =
+            edge (if !test then Some edgefile else None) img in
 
-        edgeimg := eimg;
+          edgeimg := eimg;
 
-        let borderdetect w h q =
-          let max = w / !delim in
-          let found = ref 0 in
+          let borderdetect w h q =
+            let max = w / !delim in
+            let found = ref 0 in
 
-          for x = 0 to max do
+            for x = 0 to max do
 
-            let rec chunk y =
-              if q x y = 1 then
+              let rec chunk y =
+                if q x y = 1 then
+                  try
+                    chunk (y+1) + 1
+                  with _ -> 1
+                else 0 in
+
+              let rec chunks y =
                 try
-                  chunk (y+1) + 1
-                with _ -> 1
-              else 0 in
+                  let c = chunk y in
+                  c :: chunks (y + c + 1)
+                with
+                | _ -> [] in
 
-            let rec chunks y =
-              try
-                let c = chunk y in
-                c :: chunks (y + c + 1)
-              with
-              | _ -> [] in
+              let chunks = chunks 0 in
 
-            let chunks = chunks 0 in
-
-            let power =
-              List.fold_left (fun s x -> s + x) 0
-                (List.map (fun x -> x * x) chunks) in
-            if power > h * h / 128 then found := x;
-          done;
-          !found in
-        let x1 =
-          borderdetect img#width img#height
-            (fun x y -> edge.(x).(y)) in
-        let x2 =
-          borderdetect img#width img#height
-            (fun x y -> edge.(img#width-x-1).(y)) in
-        let y1 =
-          borderdetect img#height img#width
-            (fun x y -> edge.(y).(x)) in
-        let y2 =
-          borderdetect img#height img#width
-            (fun x y -> edge.(y).(img#height-x-1)) in
-        begin match !edgeimg with
-          | Some img ->
-            for x = x1 to img#width - 1 - x2 do
-              let f y =
-                if edge.(x).(y) > 0 then img#set x y {r=0;g=255;b=0} in
-              f y1;
-              f (img#height - 1 - y2)
+              let power =
+                List.fold_left (fun s x -> s + x) 0
+                  (List.map (fun x -> x * x) chunks) in
+              if power > h * h / 128 then found := x;
             done;
-            for y = y1 to img#height - 1 - y2 do
-              let f x =
-                if edge.(x).(y) > 0 then img#set x y {r=0;g=255;b=0} in
-              f x1;
-              f (img#width - 1 - x2)
-            done;
+            !found in
+          let x1 =
+            borderdetect img#width img#height
+              (fun x y -> edge.(x).(y)) in
+          let x2 =
+            borderdetect img#width img#height
+              (fun x y -> edge.(img#width-x-1).(y)) in
+          let y1 =
+            borderdetect img#height img#width
+              (fun x y -> edge.(y).(x)) in
+          let y2 =
+            borderdetect img#height img#width
+              (fun x y -> edge.(y).(img#height-x-1)) in
+          begin match !edgeimg with
+            | Some img ->
+                for x = x1 to img#width - 1 - x2 do
+                  let f y =
+                    if edge.(x).(y) > 0 then img#set x y {r=0;g=255;b=0} in
+                  f y1;
+                  f (img#height - 1 - y2)
+                done;
+                for y = y1 to img#height - 1 - y2 do
+                  let f x =
+                    if edge.(x).(y) > 0 then img#set x y {r=0;g=255;b=0} in
+                  f x1;
+                  f (img#width - 1 - x2)
+                done;
 
-            img#save edgefile (Some Jpeg) [Save_Quality 75];
-            img#destroy
-          | None -> ()
-        end;
+                img#save edgefile (Some Jpeg) [Save_Quality 75];
+                img#destroy
+            | None -> ()
+          end;
 
-        x1, x2, y1, y2
+          x1, x2, y1, y2
       | Some (WHXY (w, h, x, y)) ->
-        prerr_endline "WHXY";
-        x, orgimg#width - x - w, y, orgimg#height - y - h
+          prerr_endline "WHXY";
+          x, orgimg#width - x - w, y, orgimg#height - y - h
       | Some (XXYY (x1, x2, y1, y2)) -> x1, x2, y1, y2
       | Some (PROP (w, h)) ->
-        let r = float w /. float h in
-        let dx = truncate (((float orgimg#width) -.
-              (float orgimg#height) *. r) /. 2.0)  in
-        let dy = truncate (((float orgimg#height) -.
-              (float orgimg#width) /. r) /. 2.0)  in
-        if dx > 0 then dx, dx, 0, 0 else
-        if dy > 0 then 0, 0, dy, dy else
-          0, 0, 0, 0 in
+          let r = float w /. float h in
+          let dx = truncate (((float orgimg#width) -.
+                (float orgimg#height) *. r) /. 2.0)  in
+          let dy = truncate (((float orgimg#height) -.
+                (float orgimg#width) /. r) /. 2.0)  in
+          if dx > 0 then dx, dx, 0, 0 else
+          if dy > 0 then 0, 0, dy, dy else
+            0, 0, 0, 0 in
 
     let w = orgimg#width - x1 - x2
     and h = orgimg#height - y1 - y2 in
@@ -313,5 +313,5 @@ List.iter (fun file ->
     end
   with
   | Wrong_image_class ->
-    prerr_endline (Printf.sprintf "%s not supported" file)) files;;
+      prerr_endline (Printf.sprintf "%s not supported" file)) files;;
 

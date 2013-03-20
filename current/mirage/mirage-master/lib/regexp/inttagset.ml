@@ -96,16 +96,16 @@ struct
     match t with
     | Empty -> Leaf e
     | Leaf j ->
-      let j_tag = O.tag j in
-      if j_tag = e_tag then t else join e_tag (Leaf e) j_tag t
+        let j_tag = O.tag j in
+        if j_tag = e_tag then t else join e_tag (Leaf e) j_tag t
     | Branch(p,m,t0,t1) ->
-      if match_prefix e_tag p m
-      then
-        if zero_bit e_tag m
-        then Branch(p, m, ins e e_tag t0, t1)
-        else Branch(p, m, t0, ins e e_tag t1)
-      else
-        join e_tag (Leaf e) p t
+        if match_prefix e_tag p m
+        then
+          if zero_bit e_tag m
+          then Branch(p, m, ins e e_tag t0, t1)
+          else Branch(p, m, t0, ins e e_tag t1)
+        else
+          join e_tag (Leaf e) p t
 
   let add e t = ins e (O.tag e) t
 
@@ -122,13 +122,13 @@ struct
     | Empty -> Empty
     | Leaf j -> if e_tag = O.tag j then Empty else t
     | Branch (p,m,t0,t1) ->
-      if match_prefix e_tag p m
-      then
-        if zero_bit e_tag m
-        then branch p m (rmv e_tag t0) t1
-        else branch p m t0 (rmv e_tag t1)
-      else
-        t
+        if match_prefix e_tag p m
+        then
+          if zero_bit e_tag m
+          then branch p m (rmv e_tag t0) t1
+          else branch p m t0 (rmv e_tag t1)
+        else
+          t
 
   let remove e t = rmv (O.tag e) t
 
@@ -139,27 +139,27 @@ struct
     | Leaf k, t -> add k t
     | t, Leaf k -> add k t
     | Branch(p,m,s0,s1), Branch(q,n,t0,t1) ->
-      if m = n && match_prefix q p m
-      then
-        (* The trees have the same prefix. Merge the subtrees. *)
-        Branch(p, m, merge s0 t0, merge s1 t1)
-      else
-      if m < n && match_prefix q p m
-      then
-        (* [q] contains [p]. Merge [t] with a subtree of [s]. *)
-        if zero_bit q m
-        then Branch(p, m, merge s0 t, s1)
-        else Branch(p, m, s0, merge s1 t)
-      else
-      if m > n && match_prefix p q n
-      then
-        (* [p] contains [q]. Merge [s] with a subtree of [t]. *)
-        if zero_bit p n
-        then Branch(q, n, merge s t0, t1)
-        else Branch(q, n, t0, merge s t1)
-      else
-        (* The prefixes disagree. *)
-        join p s q t
+        if m = n && match_prefix q p m
+        then
+          (* The trees have the same prefix. Merge the subtrees. *)
+          Branch(p, m, merge s0 t0, merge s1 t1)
+        else
+        if m < n && match_prefix q p m
+        then
+          (* [q] contains [p]. Merge [t] with a subtree of [s]. *)
+          if zero_bit q m
+          then Branch(p, m, merge s0 t, s1)
+          else Branch(p, m, s0, merge s1 t)
+        else
+        if m > n && match_prefix p q n
+        then
+          (* [p] contains [q]. Merge [s] with a subtree of [t]. *)
+          if zero_bit p n
+          then Branch(q, n, merge s t0, t1)
+          else Branch(q, n, t0, merge s t1)
+        else
+          (* The prefixes disagree. *)
+          join p s q t
 
   let union s t = merge s t
 
@@ -170,17 +170,17 @@ struct
     | Leaf k1, _ -> mem k1 s2
     | Branch _, Leaf _ -> false
     | Branch (p1,m1,l1,r1), Branch (p2,m2,l2,r2) ->
-      if m1 = m2
-      then
-        p1 = p2 && subset l1 l2 && subset r1 r2
-      else
-      if m1 > m2
-      then
-        (match_prefix p1 p2 m2) &&
-        (if zero_bit p1 m2 then subset l1 l2 && subset r1 l2
-         else subset l1 r2 && subset r1 r2)
-      else
-        false
+        if m1 = m2
+        then
+          p1 = p2 && subset l1 l2 && subset r1 r2
+        else
+        if m1 > m2
+        then
+          (match_prefix p1 p2 m2) &&
+          (if zero_bit p1 m2 then subset l1 l2 && subset r1 l2
+           else subset l1 r2 && subset r1 r2)
+        else
+          false
 
   let rec inter s1 s2 =
     match (s1,s2) with
@@ -189,21 +189,21 @@ struct
     | Leaf k1, _ -> if mem k1 s2 then s1 else Empty
     | _, Leaf k2 -> if mem k2 s1 then s2 else Empty
     | Branch (p1,m1,l1,r1), Branch (p2,m2,l2,r2) ->
-      if m1 = m2
-      then
-        if p1 = p2
-        then merge (inter l1 l2) (inter r1 r2)
+        if m1 = m2
+        then
+          if p1 = p2
+          then merge (inter l1 l2) (inter r1 r2)
+          else Empty
+        else
+        if m1 < m2
+        then
+          if match_prefix p2 p1 m1
+          then inter (if zero_bit p2 m1 then l1 else r1) s2
+          else Empty
+        else
+        if match_prefix p1 p2 m2
+        then inter s1 (if zero_bit p1 m2 then l2 else r2)
         else Empty
-      else
-      if m1 < m2
-      then
-        if match_prefix p2 p1 m1
-        then inter (if zero_bit p2 m1 then l1 else r1) s2
-        else Empty
-      else
-      if match_prefix p1 p2 m2
-      then inter s1 (if zero_bit p1 m2 then l2 else r2)
-      else Empty
 
   let rec diff s1 s2 =
     match (s1,s2) with
@@ -212,27 +212,27 @@ struct
     | Leaf k1, _ -> if mem k1 s2 then Empty else s1
     | _, Leaf k2 -> remove k2 s1
     | Branch (p1,m1,l1,r1), Branch (p2,m2,l2,r2) ->
-      if m1 = m2
-      then
-        if p1 = p2
-        then merge (diff l1 l2) (diff r1 r2)
-        else s1
-      else
-      if m1 < m2
-      then
-        if match_prefix p2 p1 m1
+        if m1 = m2
         then
-          if zero_bit p2 m1
-          then merge (diff l1 s2) r1
-          else merge l1 (diff r1 s2)
+          if p1 = p2
+          then merge (diff l1 l2) (diff r1 r2)
+          else s1
+        else
+        if m1 < m2
+        then
+          if match_prefix p2 p1 m1
+          then
+            if zero_bit p2 m1
+            then merge (diff l1 s2) r1
+            else merge l1 (diff r1 s2)
+          else
+            s1
+        else
+        if match_prefix p1 p2 m2
+        then
+          if zero_bit p1 m2 then diff s1 l2 else diff s1 r2
         else
           s1
-      else
-      if match_prefix p1 p2 m2
-      then
-        if zero_bit p1 m2 then diff s1 l2 else diff s1 r2
-      else
-        s1
 
   let rec cardinal = function
     | Empty -> 0

@@ -26,7 +26,7 @@ let expr_list_of_list _loc exprs =
   match List.rev exprs with
   | []   -> <:expr< [] >>
   | h::t ->
-    List.fold_left (fun accu x -> <:expr< [ $x$ :: $accu$ ] >>) <:expr< [ $h$ ] >> t 
+      List.fold_left (fun accu x -> <:expr< [ $x$ :: $accu$ ] >>) <:expr< [ $h$ ] >> t 
 
 let type_of t = "type_of_" ^ t
 
@@ -37,7 +37,7 @@ let split str sep =
         let newpos = String.index_from str pos sep in
         String.sub str pos (newpos - pos) :: split_rec (newpos + 1)
       with Not_found ->
-        [String.sub str pos (String.length str - pos)]
+          [String.sub str pos (String.length str - pos)]
     end in
   split_rec 0
 
@@ -46,9 +46,9 @@ let gen_ident _loc gen t =
   | []               -> assert false
   | [m]              -> <:expr< $lid:gen m$ >>
   | last :: rev_rest ->
-    let id_last = gen last in
-    let id_rev_rest = List.map (fun x -> <:ident< $uid:x$ >>) rev_rest in
-    <:expr< $id:Ast.idAcc_of_list (List.rev id_rev_rest)$.$lid:id_last$ >>
+      let id_last = gen last in
+      let id_rev_rest = List.map (fun x -> <:ident< $uid:x$ >>) rev_rest in
+      <:expr< $id:Ast.idAcc_of_list (List.rev id_rev_rest)$.$lid:id_last$ >>
 
 let list_of_ctyp_decl tds =
   let rec aux accu = function
@@ -125,8 +125,8 @@ let create tds : (loc * string * t) list =
     | <:ctyp< [> $variants$] >>
     | <:ctyp< [= $variants$] >> 
     | <:ctyp< [$variants$] >> ->
-      let kind = if is_polymorphic variants then `P else `N in
-      Sum (kind, list_of_sum same_aux variants)
+        let kind = if is_polymorphic variants then `P else `N in
+        Sum (kind, list_of_sum same_aux variants)
     | <:ctyp< { $fields$ } >> -> Dict (`R, list_of_fields same_aux fields)
     | <:ctyp< < $fields$ > >> -> Dict (`O, list_of_fields same_aux fields)
     | <:ctyp< $t$ -> $u$ >>   -> Arrow (same_aux t, same_aux u)

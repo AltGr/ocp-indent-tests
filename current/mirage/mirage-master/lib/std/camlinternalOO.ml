@@ -175,10 +175,10 @@ let get_method_label table name =
   try
     Meths.find name table.methods_by_name
   with Not_found ->
-    let label = new_method table in
-    table.methods_by_name <- Meths.add name label table.methods_by_name;
-    table.methods_by_label <- Labs.add label true table.methods_by_label;
-    label
+      let label = new_method table in
+      table.methods_by_name <- Meths.add name label table.methods_by_name;
+      table.methods_by_label <- Labs.add label true table.methods_by_label;
+      label
 
 let get_method_labels table names =
   Array.map (get_method_label table) names
@@ -262,9 +262,9 @@ let new_slot table =
 let new_variable table name =
   try Vars.find name table.vars
   with Not_found ->
-    let index = new_slot table in
-    if name <> "" then table.vars <- Vars.add name index table.vars;
-    index
+      let index = new_slot table in
+      if name <> "" then table.vars <- Vars.add name index table.vars;
+      index
 
 let to_array arr =
   if arr = Obj.magic 0 then [||] else arr
@@ -534,41 +534,41 @@ let method_impl table i arr =
   | AppConst -> let f = next() and x = next() in app_const f x
   | AppVar   -> let f = next() and n = next () in app_var f n
   | AppEnv   ->
-    let f = next() and e = next() and n = next() in app_env f e n
+      let f = next() and e = next() and n = next() in app_env f e n
   | AppMeth  -> let f = next() and n = next () in app_meth f n
   | AppConstConst ->
-    let f = next() and x = next() and y = next() in app_const_const f x y
+      let f = next() and x = next() and y = next() in app_const_const f x y
   | AppConstVar ->
-    let f = next() and x = next() and n = next() in app_const_var f x n
+      let f = next() and x = next() and n = next() in app_const_var f x n
   | AppConstEnv ->
-    let f = next() and x = next() and e = next () and n = next() in
-    app_const_env f x e n
+      let f = next() and x = next() and e = next () and n = next() in
+      app_const_env f x e n
   | AppConstMeth ->
-    let f = next() and x = next() and n = next() in app_const_meth f x n
+      let f = next() and x = next() and n = next() in app_const_meth f x n
   | AppVarConst ->
-    let f = next() and n = next() and x = next() in app_var_const f n x
+      let f = next() and n = next() and x = next() in app_var_const f n x
   | AppEnvConst ->
-    let f = next() and e = next () and n = next() and x = next() in
-    app_env_const f e n x
+      let f = next() and e = next () and n = next() and x = next() in
+      app_env_const f e n x
   | AppMethConst ->
-    let f = next() and n = next() and x = next() in app_meth_const f n x
+      let f = next() and n = next() and x = next() in app_meth_const f n x
   | MethAppConst ->
-    let n = next() and x = next() in meth_app_const n x
+      let n = next() and x = next() in meth_app_const n x
   | MethAppVar ->
-    let n = next() and m = next() in meth_app_var n m
+      let n = next() and m = next() in meth_app_var n m
   | MethAppEnv ->
-    let n = next() and e = next() and m = next() in meth_app_env n e m
+      let n = next() and e = next() and m = next() in meth_app_env n e m
   | MethAppMeth ->
-    let n = next() and m = next() in meth_app_meth n m
+      let n = next() and m = next() in meth_app_meth n m
   | SendConst ->
-    let m = next() and x = next() in send_const m x (new_cache table)
+      let m = next() and x = next() in send_const m x (new_cache table)
   | SendVar ->
-    let m = next() and n = next () in send_var m n (new_cache table)
+      let m = next() and n = next () in send_var m n (new_cache table)
   | SendEnv ->
-    let m = next() and e = next() and n = next() in
-    send_env m e n (new_cache table)
+      let m = next() and e = next() and n = next() in
+      send_env m e n (new_cache table)
   | SendMeth ->
-    let m = next() and n = next () in send_meth m n (new_cache table)
+      let m = next() and n = next () in send_meth m n (new_cache table)
   | Closure _ as clo -> magic clo
 
 let set_methods table methods =

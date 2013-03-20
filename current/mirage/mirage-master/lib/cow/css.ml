@@ -108,15 +108,15 @@ module Css = struct
   let unroll t =
     let rec aux accu = function
       | Decl (a,b) ->
-        if List.for_all is_prop b then
-          (* no nested declarations *)
-          Decl (a, b) :: accu
-        else begin
-          (* split/shit/unroll the nested declarations *)
-          let splits = split b in
-          let shifts = List.map (shift a) splits in
-          List.fold_left aux accu shifts
-        end
+          if List.for_all is_prop b then
+            (* no nested declarations *)
+            Decl (a, b) :: accu
+          else begin
+            (* split/shit/unroll the nested declarations *)
+            let splits = split b in
+            let shifts = List.map (shift a) splits in
+            List.fold_left aux accu shifts
+          end
       | x -> x :: accu in
     match t with
     | Props pl -> Props (List.rev (List.fold_left aux [] pl))

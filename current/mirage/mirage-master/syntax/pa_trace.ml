@@ -56,25 +56,25 @@ let add_debug_expr name e =
 
 let rec map_match_case name = function
   | <:match_case@_loc< $m1$ | $m2$ >> ->
-    <:match_case< $map_match_case name m1$ | $map_match_case name m2$ >>
+      <:match_case< $map_match_case name m1$ | $map_match_case name m2$ >>
   | <:match_case@_loc< $p$ when $w$ -> $e$ >> ->
-    <:match_case< $p$ when $w$ -> $add_debug_expr name e$ >>
+      <:match_case< $p$ when $w$ -> $add_debug_expr name e$ >>
   | m ->
-    m
+      m
 
 let rec map_expr name = function
   | <:expr@_loc< fun $p$ -> $e$ >> ->
       <:expr< fun $p$ -> $map_expr name e$ >>
     | <:expr@_loc< function $m$ >> ->
-        <:expr< function $map_match_case name m$ >>
+          <:expr< function $map_match_case name m$ >>
         | e ->
-          add_debug_expr name e
+            add_debug_expr name e
 
 let rec map_binding = function
   | <:binding@_loc< $lid:func$ = fun $p$ -> $e$ >> ->
         <:binding< $lid:func$ = fun $p$ -> $map_expr func e$ >>
       | <:binding@_loc< $lid:func$ = function $m$ >> ->
-            <:binding< $lid:func$ = function $map_match_case func m$ >>
+              <:binding< $lid:func$ = function $map_match_case func m$ >>
             | <:binding@_loc< $a$ and $b$ >> ->
   <:binding< $map_binding a$ and $map_binding b$ >>
                                     | x ->
@@ -82,8 +82,8 @@ let rec map_binding = function
 
 let map_str_item = function
   | Ast.StVal (_loc, rec_mode, binding) ->
-    <:str_item< let $rec:rec_mode$ $map_binding binding$ >>
+      <:str_item< let $rec:rec_mode$ $map_binding binding$ >>
   | x ->
-    x
+      x
 
 let () = AstFilters.register_str_item_filter (Ast.map_str_item map_str_item)#str_item

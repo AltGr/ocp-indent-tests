@@ -156,11 +156,11 @@ module Mir = struct
        modules to be linked in *)
     match string_list_of_file mirfile with
     |main::mods ->
-      let mlprod = env mlprod in
-      let acc = ref 0 in
-      let mods = List.map (fun m -> incr acc; sprintf "module ForceLink%d = %s" !acc m) mods in
-      let main = sprintf "let _ = OS.Main.run (%s ())" main in
-      Util.safe_echo (mods @ [main]) mlprod
+        let mlprod = env mlprod in
+        let acc = ref 0 in
+        let mods = List.map (fun m -> incr acc; sprintf "module ForceLink%d = %s" !acc m) mods in
+        let main = sprintf "let _ = OS.Main.run (%s ())" main in
+        Util.safe_echo (mods @ [main]) mlprod
     |[] -> failwith "empty .mir file"
 
   (** Copied from ocaml/ocamlbuild/ocaml_specific.ml and modified to add
@@ -376,43 +376,43 @@ module Spec = struct
         let test_sh = env "%(test).sh" in
         let exec_cmd = match is_supported backend with
           |`Yes ->
-            (* Build the target for this backend *)
-            let prod = env "%(test).%(backend).exec" in
-            let binary = backend_target backend root_target in
-            let _ = List.map Outcome.ignore_good (build [[ binary ]]) in
-            (* If a test is expected to fail, then we need to pass this to mir-run *)
-            let return = match spec.expect with
-              |0 -> [N] |e -> [A"-e"; A(string_of_int e)] in
-            (* Add -vbd command line. "*" will generate a new temporary vbd *)
-            let vbdnum = ref 0 in
-            let vbds = List.flatten (List.map (fun vbd ->
-                  let name =
-                    if vbd = "*" then
-                      (incr vbdnum; env "%(test).%(backend).disk" ^ (string_of_int !vbdnum))
-                    else 
-                      vbd
-                  in
-                  [A"-vbd";P name]) spec.vbds) 
-            in
-            let kv_ros = List.flatten (List.map (fun kv_ro ->
-                  [A"-kv_ro";P kv_ro]) spec.kv_ros) in
-            (* Execute the binary using the mir-run wrapper and log its output to prod *)
-            Cmd (S ([A "mir-run"; A"-m"; A"8192"; A"-b"; A (env "%(backend)"); A"-o"; P prod] @ vbds @ kv_ros @ return @[A binary]))
+              (* Build the target for this backend *)
+              let prod = env "%(test).%(backend).exec" in
+              let binary = backend_target backend root_target in
+              let _ = List.map Outcome.ignore_good (build [[ binary ]]) in
+              (* If a test is expected to fail, then we need to pass this to mir-run *)
+              let return = match spec.expect with
+                |0 -> [N] |e -> [A"-e"; A(string_of_int e)] in
+              (* Add -vbd command line. "*" will generate a new temporary vbd *)
+              let vbdnum = ref 0 in
+              let vbds = List.flatten (List.map (fun vbd ->
+                    let name =
+                      if vbd = "*" then
+                        (incr vbdnum; env "%(test).%(backend).disk" ^ (string_of_int !vbdnum))
+                      else 
+                        vbd
+                    in
+                    [A"-vbd";P name]) spec.vbds) 
+              in
+              let kv_ros = List.flatten (List.map (fun kv_ro ->
+                    [A"-kv_ro";P kv_ro]) spec.kv_ros) in
+              (* Execute the binary using the mir-run wrapper and log its output to prod *)
+              Cmd (S ([A "mir-run"; A"-m"; A"8192"; A"-b"; A (env "%(backend)"); A"-o"; P prod] @ vbds @ kv_ros @ return @[A binary]))
           |`No ->
-            (* Unsupported backend for this test, so mark as skipped in the log *)
-            Util.safe_echo ["skipped"] (env "%(test).%(backend).exec") 
+              (* Unsupported backend for this test, so mark as skipped in the log *)
+              Util.safe_echo ["skipped"] (env "%(test).%(backend).exec") 
           |`External ->
-            (* Run a shell script to support external test *)
-            Cmd (S ([A "bash"; P test_sh; A"run"]))
+              (* Run a shell script to support external test *)
+              Cmd (S ([A "bash"; P test_sh; A"run"]))
         in
         (* If a support shell script exists, then run that to prepare the test and clean up after 
            Args: $1=[prerun|postrun] $2=backend
         *)
         match build [[test_sh]] with
         |[Outcome.Good o] -> 
-          Seq [ Cmd (S [A "bash"; P test_sh; A"prerun"; A (env "%(backend)")]);
-                exec_cmd;
-                Cmd (S [A "bash"; P test_sh; A"postrun"; A (env "%(backend)")])]
+            Seq [ Cmd (S [A "bash"; P test_sh; A"prerun"; A (env "%(backend)")]);
+                  exec_cmd;
+                  Cmd (S [A "bash"; P test_sh; A"postrun"; A (env "%(backend)")])]
         |[Outcome.Bad o] -> exec_cmd
         |_ -> assert false
       );
@@ -468,18 +468,18 @@ let tag_glob glob tags =
 
 let _ = dispatch begin function
     | Before_hygiene ->
-      (* Flag all the backend subdirs with a "backend:" tag *)
-      List.iter (fun be ->
-        let be = Spec.backend_to_string be in
-        let betag = sprintf "backend:%s" be in
-        tag_glob (sprintf "%s/**" be) [betag];
-      ) Spec.all_backends
+        (* Flag all the backend subdirs with a "backend:" tag *)
+        List.iter (fun be ->
+          let be = Spec.backend_to_string be in
+          let betag = sprintf "backend:%s" be in
+          tag_glob (sprintf "%s/**" be) [betag];
+        ) Spec.all_backends
 
     | After_options ->
-      let syntaxdir = lib / "syntax" in
-      let pp_pa = sprintf "camlp4o.opt -I %s str.cmxs pa_mirage.cmxs"syntaxdir
-      in
-      Options.ocaml_ppflags := [pp_pa]
+        let syntaxdir = lib / "syntax" in
+        let pp_pa = sprintf "camlp4o.opt -I %s str.cmxs pa_mirage.cmxs"syntaxdir
+        in
+        Options.ocaml_ppflags := [pp_pa]
 
     | After_rules -> begin
         (* do not compile with the standard lib *)

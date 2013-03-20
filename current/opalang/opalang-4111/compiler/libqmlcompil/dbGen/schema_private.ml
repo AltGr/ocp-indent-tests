@@ -248,7 +248,7 @@ let manage_pervasive_type ~context ty t gamma n =
         QmlError.warning ~wclass:WarningClass.dbgen_schema context
           "@[<2>this kind of @{<bright>map@} is not handled by the database,@ elements won't be reachable directly@ (at %s)@]"
           (SchemaGraphLib.string_path_of_node t n)
-      ;
+        ;
         None
   in
   match QmlTypesUtils.Inspect.get_deeper_typename gamma ty with
@@ -676,7 +676,7 @@ let register_default ~name_default_values ~context t path dflt =
   then
     QmlError.error context
       "Database expressions are not allowed at this point"
-;
+  ;
   let prefix, db_def, n = find_path_manydb ~context t path in
   let n =
     match (V.label n).C.nlabel with
@@ -692,7 +692,7 @@ let register_default ~name_default_values ~context t path dflt =
     QmlError.error context
       "@[<2>Redefinition of default database value for path@\n%s@\n@]"
       (Db.path_decl_to_string path)
-;
+  ;
   let dflt = QmlAstCons.UntypedExpr.coerce dflt (SchemaGraphLib.type_of_node n) in
   let dflt, _ident_opt, o = maybe_name_expr ~name_default_values dflt in
   let s, _n = SchemaGraphLib.set_node_dflt db_def.schema n dflt in
@@ -718,13 +718,13 @@ let register_constraint ~context t p cstr =
       then
         QmlError.error context
           "Database expressions are not allowed within this constraint specification"
-    ;
+      ;
       if (V.label n).C.nlabel <> C.Multi
       then
         QmlError.error context
           "@[<2>Ordering constraint on a path that is not of type map in:@\n%s@]"
           (Db.path_decl_to_string p)
-    ;
+      ;
       let (s, _n) = SchemaGraphLib.add_node_cstr db_def.schema n cstr in
       StringListMap.add prefix { db_def with schema = s } t
   | Db.C_Private b -> (* must be propagated to the whole subtree *)
@@ -1099,7 +1099,7 @@ let rec find_exprpath_aux ?context t ?(node=SchemaGraphLib.get_root t) ?(kind=Db
       "Direct access to private contents is forbidden at @{<bright>%s@} (in path access @{<bright>%a@})"
       (SchemaGraphLib.string_path_of_node t node)
       QmlPrint.pp#path_elts epath0
-;
+  ;
   let aux_multi epath partial =
     let setty = node.C.ty in
     let dataty, dnode, _ =
@@ -1311,7 +1311,7 @@ module Preprocess = struct
         Format.eprintf "Preprocess select %a : %a -> %a\n%!"
           (QmlAst.Db.pp_select QmlPrint.pp#expr) select
           QmlPrint.pp#ty dataty QmlPrint.pp#ty tyres
-  ;
+    ;
     #<End>;
     (rebuildt tyres), s
 

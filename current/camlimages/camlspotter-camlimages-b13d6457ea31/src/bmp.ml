@@ -224,74 +224,74 @@ let load_image8data bih ic =
   let bitmap = String.create (bih.biWidth * bih.biHeight) in
   match bih.biCompression with
   | BI_RGB ->
-    (* No compression : lines are stored in reverse order *)
-    (* 'bih.biWidth' is padded to be a multiple of 4 pixels (32 bits) *)
-    let pad = ((bih.biWidth + 3) / 4) * 4 in
-    (* Reading *)
-    for i = bih.biHeight - 1 downto 0 do
-      let bitmapindex = ref (i * bih.biWidth) in
-      for j = 0 to pad - 1 do
-        let c = Char.chr (read_byte ic) in
-        if j < bih.biWidth then bitmap.[!bitmapindex] <- c;
-        incr bitmapindex
-      done
-    done;
-    bitmap
+      (* No compression : lines are stored in reverse order *)
+      (* 'bih.biWidth' is padded to be a multiple of 4 pixels (32 bits) *)
+      let pad = ((bih.biWidth + 3) / 4) * 4 in
+      (* Reading *)
+      for i = bih.biHeight - 1 downto 0 do
+        let bitmapindex = ref (i * bih.biWidth) in
+        for j = 0 to pad - 1 do
+          let c = Char.chr (read_byte ic) in
+          if j < bih.biWidth then bitmap.[!bitmapindex] <- c;
+          incr bitmapindex
+        done
+      done;
+      bitmap
   | BI_RLE8 ->
-    (* Run-length encoded format for bitmaps with 8 bits per pixel *)
-    (* Coordinates of the current point in the image *)
-    let x = ref 0 in
-    let y = ref 0 in
-    let bitmapindex = ref (!x + (bih.biHeight - !y - 1) * bih.biWidth) in
-    while !y < bih.biHeight do
-      match read_byte ic with
-      (* Absolute mode, if second byte is between 03H and FFH.
-         Encoded mode, with escape code otherwise. *)
-      | 0 ->
-        (* Escape codes mode *)
-        begin
-          match read_byte ic with
-          | 0 ->
-            (* End of line code *)
-            x := 0;
-            incr y;
-            bitmapindex := !x + (bih.biHeight - !y - 1) * bih.biWidth
-          | 1 ->
-            (* End of bitmap : force exit *)
-            y := bih.biHeight
-          | 2 ->
-            (* Delta *)
+      (* Run-length encoded format for bitmaps with 8 bits per pixel *)
+      (* Coordinates of the current point in the image *)
+      let x = ref 0 in
+      let y = ref 0 in
+      let bitmapindex = ref (!x + (bih.biHeight - !y - 1) * bih.biWidth) in
+      while !y < bih.biHeight do
+        match read_byte ic with
+        (* Absolute mode, if second byte is between 03H and FFH.
+           Encoded mode, with escape code otherwise. *)
+        | 0 ->
+            (* Escape codes mode *)
+            begin
+              match read_byte ic with
+              | 0 ->
+                  (* End of line code *)
+                  x := 0;
+                  incr y;
+                  bitmapindex := !x + (bih.biHeight - !y - 1) * bih.biWidth
+              | 1 ->
+                  (* End of bitmap : force exit *)
+                  y := bih.biHeight
+              | 2 ->
+                  (* Delta *)
+                  let c1 = read_byte ic in
+                  x := !x + c1;
+                  let c2 = read_byte ic in
+                  y := !y + c2;
+                  bitmapindex := !x + (bih.biHeight - !y - 1) * bih.biWidth
+              | c ->
+                  (* c should be between 03H and FFH *)
+                  (* Absolute mode:
+                     c represents the number of bytes which follow,
+                     each of which contains the color index of a single pixel. *)
+                  for i = 0 to c - 1 do
+                    let c1 = read_byte ic in
+                    bitmap.[!bitmapindex] <- Char.chr c1;
+                    incr x;
+                    incr bitmapindex
+                  done;
+                  (* Odd length run: read an extra pad byte *)
+                  if c land 1 <> 0 then skip_byte ic
+            end
+        | c ->
+            (* Encoded mode *)
             let c1 = read_byte ic in
-            x := !x + c1;
-            let c2 = read_byte ic in
-            y := !y + c2;
-            bitmapindex := !x + (bih.biHeight - !y - 1) * bih.biWidth
-          | c ->
-            (* c should be between 03H and FFH *)
-            (* Absolute mode:
-               c represents the number of bytes which follow,
-               each of which contains the color index of a single pixel. *)
             for i = 0 to c - 1 do
-              let c1 = read_byte ic in
               bitmap.[!bitmapindex] <- Char.chr c1;
               incr x;
               incr bitmapindex
-            done;
-            (* Odd length run: read an extra pad byte *)
-            if c land 1 <> 0 then skip_byte ic
-        end
-      | c ->
-        (* Encoded mode *)
-        let c1 = read_byte ic in
-        for i = 0 to c - 1 do
-          bitmap.[!bitmapindex] <- Char.chr c1;
-          incr x;
-          incr bitmapindex
-        done
-    done;
-    bitmap
+            done
+      done;
+      bitmap
   | BI_RLE4 ->
-    failwith ("Invalid compression mode : BI_RLE4")
+      failwith ("Invalid compression mode : BI_RLE4")
 ;;
 
 let load_image1data bih ic =
@@ -325,84 +325,84 @@ let load_image4data bih ic =
   let bitmap = String.create (bih.biWidth * bih.biHeight) in
   match bih.biCompression with
   | BI_RGB ->
-    (* 'w' is padded to be a multiple of 8 pixels (32 bits) *)
-    let pad = ((bih.biWidth + 7) / 8) * 8 in
-    let c = ref 0 in
+      (* 'w' is padded to be a multiple of 8 pixels (32 bits) *)
+      let pad = ((bih.biWidth + 7) / 8) * 8 in
+      let c = ref 0 in
 
-    for i = bih.biHeight - 1 downto 0 do
-      let bitmapindex = ref (i * bih.biWidth) in
-      let nyblenum = ref 0 in
-      for j = 0 to pad -1 do
-        if !nyblenum land 1 = 0 then
-          begin
-            (* Read the next byte *)
-            c := read_byte ic;
-            nyblenum := 0
-          end;
-        if j < bih.biWidth then
-          begin
-            bitmap.[!bitmapindex] <- Char.chr ((!c land 0xf0) lsr 4);
-            incr bitmapindex;
-            c := !c lsl 4
-          end;
-        incr nyblenum
-      done
-    done;
-    bitmap
+      for i = bih.biHeight - 1 downto 0 do
+        let bitmapindex = ref (i * bih.biWidth) in
+        let nyblenum = ref 0 in
+        for j = 0 to pad -1 do
+          if !nyblenum land 1 = 0 then
+            begin
+              (* Read the next byte *)
+              c := read_byte ic;
+              nyblenum := 0
+            end;
+          if j < bih.biWidth then
+            begin
+              bitmap.[!bitmapindex] <- Char.chr ((!c land 0xf0) lsr 4);
+              incr bitmapindex;
+              c := !c lsl 4
+            end;
+          incr nyblenum
+        done
+      done;
+      bitmap
   | BI_RLE4 ->
-    let x = ref 0 in
-    let y = ref 0 in
-    let bitmapindex = ref (!x + (bih.biHeight - !y - 1) * bih.biWidth) in
-    let c1 = ref 0 in
-    while !y < bih.biHeight do
-      match read_byte ic with
-      | 0 ->
-        (* Escape codes *)
-        begin
-          match read_byte ic with
-          | 0 ->
-            (* End of line *)
-            x := 0;
-            incr y;
-            bitmapindex := !x + (bih.biHeight - !y - 1) * bih.biWidth
-          | 1 ->
-            (* End of bitmap : force exit *)
-            y := bih.biHeight
-          | 2 ->
-            (* Delta *)
-            let c' = read_byte ic in
-            x := !x + c';
-            let c'' = read_byte ic in
-            y := !y + c'';
-            bitmapindex := !x + (bih.biHeight - !y - 1) * bih.biWidth
-          | c ->
-            (* Absolute mode *)
+      let x = ref 0 in
+      let y = ref 0 in
+      let bitmapindex = ref (!x + (bih.biHeight - !y - 1) * bih.biWidth) in
+      let c1 = ref 0 in
+      while !y < bih.biHeight do
+        match read_byte ic with
+        | 0 ->
+            (* Escape codes *)
+            begin
+              match read_byte ic with
+              | 0 ->
+                  (* End of line *)
+                  x := 0;
+                  incr y;
+                  bitmapindex := !x + (bih.biHeight - !y - 1) * bih.biWidth
+              | 1 ->
+                  (* End of bitmap : force exit *)
+                  y := bih.biHeight
+              | 2 ->
+                  (* Delta *)
+                  let c' = read_byte ic in
+                  x := !x + c';
+                  let c'' = read_byte ic in
+                  y := !y + c'';
+                  bitmapindex := !x + (bih.biHeight - !y - 1) * bih.biWidth
+              | c ->
+                  (* Absolute mode *)
+                  for i = 0 to c - 1 do
+                    if i land 1 = 0 then c1 := read_byte ic;
+                    let c = if i land 1 <> 0 then !c1 else !c1 lsr 4 in
+                    bitmap.[!bitmapindex] <- Char.chr (c land 0x0F);
+                    incr x;
+                    incr bitmapindex
+                  done;
+                  (* Read pad byte *)
+                  if c land 3 = 1 || c land 3 = 2 then skip_byte ic
+            end
+
+        |  c ->
+            (* Encoded mode *)
+            let c1 = read_byte ic in
+            let col1 = c1 land 0x0F
+            and col2 = (c1 lsr 4) land 0x0F in
             for i = 0 to c - 1 do
-              if i land 1 = 0 then c1 := read_byte ic;
-              let c = if i land 1 <> 0 then !c1 else !c1 lsr 4 in
-              bitmap.[!bitmapindex] <- Char.chr (c land 0x0F);
+              let c = if i land 1 <> 0 then col1 else col2 in
+              bitmap.[!bitmapindex] <- Char.chr c;
               incr x;
               incr bitmapindex
-            done;
-            (* Read pad byte *)
-            if c land 3 = 1 || c land 3 = 2 then skip_byte ic
-        end
-
-      |  c ->
-        (* Encoded mode *)
-        let c1 = read_byte ic in
-        let col1 = c1 land 0x0F
-        and col2 = (c1 lsr 4) land 0x0F in
-        for i = 0 to c - 1 do
-          let c = if i land 1 <> 0 then col1 else col2 in
-          bitmap.[!bitmapindex] <- Char.chr c;
-          incr x;
-          incr bitmapindex
-        done
-    done;
-    bitmap
+            done
+      done;
+      bitmap
   | BI_RLE8 ->
-    failwith ("Invalid compression mode : BI_RLE8")
+      failwith ("Invalid compression mode : BI_RLE8")
 ;;
 
 let load_image24data bih ic =
@@ -449,8 +449,8 @@ let check_header fname =
       header_infos = []; }
   with
   | _ ->
-    close_in ic;
-    raise Wrong_file_type
+      close_in ic;
+      raise Wrong_file_type
 ;;
 
 let read_bmp ic =
@@ -478,13 +478,13 @@ let image_of_bmp = function
       bmpInfoHeader = bih;
       bmpRgbQuad = colormap;
       bmpBytes = bitmap; } ->
-    match bih.biBitCount with
-    | ColorM ->
-      Rgb24 (Rgb24.create_with bih.biWidth bih.biHeight [] bitmap)
-    | _ ->
-      Index8
-        (Index8.create_with bih.biWidth bih.biHeight []
-           { map = colormap; max = 256; } (-1) bitmap)
+      match bih.biBitCount with
+      | ColorM ->
+          Rgb24 (Rgb24.create_with bih.biWidth bih.biHeight [] bitmap)
+      | _ ->
+          Index8
+            (Index8.create_with bih.biWidth bih.biHeight []
+               { map = colormap; max = 256; } (-1) bitmap)
 ;;
 
 let load fname _opts = image_of_bmp (read_bmp_file fname);;
@@ -558,16 +558,16 @@ let write_bmpFileHeader oc = function {
   (* WORD *) bfReserved2 = bfr2;
   (* DWORD *) bfOffBits = bfob
 } ->
-  let start_index = !bytes_written in
-  write_word oc bft;
-  let bfSize_index = !bytes_written in
-  write_dword oc bfs;
-  write_word oc bfr1;
-  write_word oc bfr2;
-  let bfOffBits_index = !bytes_written in
-  write_dword oc bfob;
-  let end_bmpFileHeader = !bytes_written in
-  start_index, bfSize_index, bfOffBits_index, end_bmpFileHeader
+    let start_index = !bytes_written in
+    write_word oc bft;
+    let bfSize_index = !bytes_written in
+    write_dword oc bfs;
+    write_word oc bfr1;
+    write_word oc bfr2;
+    let bfOffBits_index = !bytes_written in
+    write_dword oc bfob;
+    let end_bmpFileHeader = !bytes_written in
+    start_index, bfSize_index, bfOffBits_index, end_bmpFileHeader
 ;;
 
 let write_bmpInfoHeader oc = function {
@@ -583,21 +583,21 @@ let write_bmpInfoHeader oc = function {
   (* DWORD *) biClrUsed = bicu;
   (* DWORD *) biClrImportant = bici
 } ->
-  let biSize_index = !bytes_written in
-  write_dword oc bis;
-  write_dword oc biw;
-  write_dword oc bih;
-  write_word oc bip;
-  write_bit_count oc bibc;
-  write_compression oc bic;
-  let biSizeImage_index = !bytes_written in
-  write_dword oc bisi;
-  write_dword oc bixpm;
-  write_dword oc biypm;
-  write_dword oc bicu;
-  write_dword oc bici;
-  let end_bmpInfoHeader = !bytes_written in
-  biSize_index, biSizeImage_index, end_bmpInfoHeader
+    let biSize_index = !bytes_written in
+    write_dword oc bis;
+    write_dword oc biw;
+    write_dword oc bih;
+    write_word oc bip;
+    write_bit_count oc bibc;
+    write_compression oc bic;
+    let biSizeImage_index = !bytes_written in
+    write_dword oc bisi;
+    write_dword oc bixpm;
+    write_dword oc biypm;
+    write_dword oc bicu;
+    write_dword oc bici;
+    let end_bmpInfoHeader = !bytes_written in
+    biSize_index, biSizeImage_index, end_bmpInfoHeader
 ;;
 
 let write_colors oc color_map =
@@ -719,61 +719,61 @@ let write_image4data bmp oc =
   match bih.biCompression with
 
   | BI_RGB ->
-    (* 'w' is padded to be a multiple of 8 pixels (32 bits) *)
-    let extra_padding_bytes = pad_bytes ((width + 1) / 2) in
+      (* 'w' is padded to be a multiple of 8 pixels (32 bits) *)
+      let extra_padding_bytes = pad_bytes ((width + 1) / 2) in
 
-    for i = height - 1 downto 0 do
-      (* For each pixel in the line *)
-      let start = i * width in
-      let lim = (i + 1) * width - 1 in
-      let rec write_line x count accu =
-        if count = 2 then begin
-          write_byte oc accu;
-          if x <= lim then write_line x 0 0 end else
-          let cur = bitmap.[x] in
-          let chunk = Char.code cur lsl (4 - count) in
-          let new_accu = chunk + accu in
-          if x = lim then write_byte oc new_accu
-          else write_line (x + 1) (count + 1) new_accu in
+      for i = height - 1 downto 0 do
+        (* For each pixel in the line *)
+        let start = i * width in
+        let lim = (i + 1) * width - 1 in
+        let rec write_line x count accu =
+          if count = 2 then begin
+            write_byte oc accu;
+            if x <= lim then write_line x 0 0 end else
+            let cur = bitmap.[x] in
+            let chunk = Char.code cur lsl (4 - count) in
+            let new_accu = chunk + accu in
+            if x = lim then write_byte oc new_accu
+            else write_line (x + 1) (count + 1) new_accu in
 
-      write_line start 0 0;
-      (* Padding *)
-      write_pad oc extra_padding_bytes;
-    done;
-    let end_bitmap_index = !bytes_written in
-    start_bitmap_index, end_bitmap_index
+        write_line start 0 0;
+        (* Padding *)
+        write_pad oc extra_padding_bytes;
+      done;
+      let end_bitmap_index = !bytes_written in
+      start_bitmap_index, end_bitmap_index
 
   | BI_RLE4 ->
 
-    (* We compress in encoded mode, not in absolute mode. *)
-    (* So we do not have to align each run. *)
-    (* However, each scan line is padded to be a multiple of 8 *)
-    (* pixels (32 bits) *)
-    (* For each line *)
-    for i = height - 1 downto 0 do
-      (* For each pixel in the line *)
-      let start = i * width in
-      let lim = (i + 1) * width - 1 in
-      let rec write_line x count pred =
-        let cur = bitmap.[x] in
-        if cur = pred then
-          if x = lim then write_rle4 oc (count + 1) pred
-          else write_line (x + 1) (count + 1) pred
-        else begin
-          write_rle4 oc count pred;
-          if x = lim then write_rle4 oc 1 cur
-          else write_line (x + 1) 1 cur
-        end in
-      write_line start 0 bitmap.[start];
-      write_end_of_scan_line oc;
-      (* No padding in this mode *)
-    done;
-    write_end_of_bitmap oc;
-    let end_bitmap_index = !bytes_written in
-    start_bitmap_index, end_bitmap_index
+      (* We compress in encoded mode, not in absolute mode. *)
+      (* So we do not have to align each run. *)
+      (* However, each scan line is padded to be a multiple of 8 *)
+      (* pixels (32 bits) *)
+      (* For each line *)
+      for i = height - 1 downto 0 do
+        (* For each pixel in the line *)
+        let start = i * width in
+        let lim = (i + 1) * width - 1 in
+        let rec write_line x count pred =
+          let cur = bitmap.[x] in
+          if cur = pred then
+            if x = lim then write_rle4 oc (count + 1) pred
+            else write_line (x + 1) (count + 1) pred
+          else begin
+            write_rle4 oc count pred;
+            if x = lim then write_rle4 oc 1 cur
+            else write_line (x + 1) 1 cur
+          end in
+        write_line start 0 bitmap.[start];
+        write_end_of_scan_line oc;
+        (* No padding in this mode *)
+      done;
+      write_end_of_bitmap oc;
+      let end_bitmap_index = !bytes_written in
+      start_bitmap_index, end_bitmap_index
 
   | BI_RLE8 ->
-    failwith ("Invalid compression mode : BI_RLE8");;
+      failwith ("Invalid compression mode : BI_RLE8");;
 
 let write_image8data bmp oc =
   let bih = bmp.bmpInfoHeader in
@@ -786,56 +786,56 @@ let write_image8data bmp oc =
   match bih.biCompression with
 
   | BI_RGB ->
-    (* 'w' is padded to be a multiple of 8 pixels (32 bits) *)
-    let extra_padding_bytes = pad_bytes width in
+      (* 'w' is padded to be a multiple of 8 pixels (32 bits) *)
+      let extra_padding_bytes = pad_bytes width in
 
-    for i = height - 1 downto 0 do
-      (* For each pixel in the line *)
-      let start = i * width in
-      let lim = (i + 1) * width - 1 in
-      let rec write_line x =
-        let cur = bitmap.[x] in
-        write_byte oc (Char.code cur);
-        if x < lim then write_line (x + 1) in
+      for i = height - 1 downto 0 do
+        (* For each pixel in the line *)
+        let start = i * width in
+        let lim = (i + 1) * width - 1 in
+        let rec write_line x =
+          let cur = bitmap.[x] in
+          write_byte oc (Char.code cur);
+          if x < lim then write_line (x + 1) in
 
-      write_line start;
-      (* Padding *)
-      write_pad oc extra_padding_bytes;
-    done;
-    let end_bitmap_index = !bytes_written in
-    start_bitmap_index, end_bitmap_index
+        write_line start;
+        (* Padding *)
+        write_pad oc extra_padding_bytes;
+      done;
+      let end_bitmap_index = !bytes_written in
+      start_bitmap_index, end_bitmap_index
 
   | BI_RLE8 ->
 
-    (* We compress in encoded mode, not in absolute mode. *)
-    (* So we do not have to align each run. *)
-    (* However, each scan line is padded to be a multiple of 8 *)
-    (* pixels (32 bits) *)
-    (* For each line *)
-    for i = height - 1 downto 0 do
-      (* For each pixel in the line *)
-      let start = i * width in
-      let lim = (i + 1) * width - 1 in
-      let rec write_line x count pred =
-        let cur = bitmap.[x] in
-        if cur = pred then
-          if x = lim then write_rle oc (count + 1) pred
-          else write_line (x + 1) (count + 1) pred
-        else begin
-          write_rle oc count pred;
-          if x = lim then write_rle oc 1 cur
-          else write_line (x + 1) 1 cur
-        end in
-      write_line start 0 bitmap.[start];
-      write_end_of_scan_line oc;
-      (* No padding in this mode *)
-    done;
-    write_end_of_bitmap oc;
-    let end_bitmap_index = !bytes_written in
-    start_bitmap_index, end_bitmap_index
+      (* We compress in encoded mode, not in absolute mode. *)
+      (* So we do not have to align each run. *)
+      (* However, each scan line is padded to be a multiple of 8 *)
+      (* pixels (32 bits) *)
+      (* For each line *)
+      for i = height - 1 downto 0 do
+        (* For each pixel in the line *)
+        let start = i * width in
+        let lim = (i + 1) * width - 1 in
+        let rec write_line x count pred =
+          let cur = bitmap.[x] in
+          if cur = pred then
+            if x = lim then write_rle oc (count + 1) pred
+            else write_line (x + 1) (count + 1) pred
+          else begin
+            write_rle oc count pred;
+            if x = lim then write_rle oc 1 cur
+            else write_line (x + 1) 1 cur
+          end in
+        write_line start 0 bitmap.[start];
+        write_end_of_scan_line oc;
+        (* No padding in this mode *)
+      done;
+      write_end_of_bitmap oc;
+      let end_bitmap_index = !bytes_written in
+      start_bitmap_index, end_bitmap_index
 
   | BI_RLE4 ->
-    failwith ("Invalid compression mode : BI_RLE8");;
+      failwith ("Invalid compression mode : BI_RLE8");;
 
 let write_image_data oc bmp =
   let bih = bmp.bmpInfoHeader in
@@ -849,77 +849,77 @@ let write_image_data oc bmp =
 let bmp_of_image img =
   match img with
   | Rgb24 bitmap ->
-    let biW = bitmap.Rgb24.width
-    and biH = bitmap.Rgb24.height
-    and data = Rgb24.dump bitmap in
-    let bfh = {
-      (* WORD *) bfType = 19778 (* BM *);
-      (* DWORD *) bfSize = -1 (* Unknown to be updated *);
-      (* WORD *) bfReserved1 = 0;
-      (* WORD *) bfReserved2 = 0;
-      (* DWORD *) bfOffBits = -1 (* Unknown to be updated *)
-    } in
+      let biW = bitmap.Rgb24.width
+      and biH = bitmap.Rgb24.height
+      and data = Rgb24.dump bitmap in
+      let bfh = {
+        (* WORD *) bfType = 19778 (* BM *);
+        (* DWORD *) bfSize = -1 (* Unknown to be updated *);
+        (* WORD *) bfReserved1 = 0;
+        (* WORD *) bfReserved2 = 0;
+        (* DWORD *) bfOffBits = -1 (* Unknown to be updated *)
+      } in
 
-    let bih =
-      { (* The size in bytes of this header. *)
-        biSize = -1;  (* Unknown to be updated *)
-        (* Width and height of the image *)
-        biWidth = biW; biHeight = biH;
-        (* According to the format, Must be set to 1. *)
-        biPlanes = 1;
-        (* 24 bits pixels. *)
-        biBitCount = ColorM;
-        (* Compression is no compression: we output pixels as
-           rgb rgb ... with padding. *)
-        biCompression = BI_RGB;
-        (* The size of the actual image pixels representation in the
-           file. Due to padding, cannot be computed here. *)
-        biSizeImage = -1 (* Unknown to be updated *);
-        (* This should be OK *)
-        biXPelsPerMeter = 600; biYPelsPerMeter = 600;
-        (* Unknown: the number of colors actually
-           used by the image. Must be computed while writing the
-           image. *)
-        biClrUsed = 0;
-        (* Number of important colors. If 0, all colors are important *)
-        biClrImportant = 0 } in
+      let bih =
+        { (* The size in bytes of this header. *)
+          biSize = -1;  (* Unknown to be updated *)
+          (* Width and height of the image *)
+          biWidth = biW; biHeight = biH;
+          (* According to the format, Must be set to 1. *)
+          biPlanes = 1;
+          (* 24 bits pixels. *)
+          biBitCount = ColorM;
+          (* Compression is no compression: we output pixels as
+             rgb rgb ... with padding. *)
+          biCompression = BI_RGB;
+          (* The size of the actual image pixels representation in the
+             file. Due to padding, cannot be computed here. *)
+          biSizeImage = -1 (* Unknown to be updated *);
+          (* This should be OK *)
+          biXPelsPerMeter = 600; biYPelsPerMeter = 600;
+          (* Unknown: the number of colors actually
+             used by the image. Must be computed while writing the
+             image. *)
+          biClrUsed = 0;
+          (* Number of important colors. If 0, all colors are important *)
+          biClrImportant = 0 } in
 
-    { bmpFileHeader = bfh;
-      bmpInfoHeader = bih;
-      bmpRgbQuad = [||];
-      bmpBytes = data }
+      { bmpFileHeader = bfh;
+        bmpInfoHeader = bih;
+        bmpRgbQuad = [||];
+        bmpBytes = data }
   | Index8 bitmap ->
-    let colormap = bitmap.Index8.colormap.map
-    and biW = bitmap.Index8.width
-    and biH = bitmap.Index8.height
-    and data = Index8.dump bitmap in
-    let bfh = {
-      (* WORD *) bfType = 19778 (* BM *);
-      (* DWORD *) bfSize = -1 (* Unknown to be updated *);
-      (* WORD *) bfReserved1 = 0;
-      (* WORD *) bfReserved2 = 0;
-      (* DWORD *) bfOffBits = -1 (* Unknown to be updated *)
-    } in
-    let biBitCount,biClrUsed,biCompression,biClrImportant =
-      let col_map_len = Array.length colormap in
-      match col_map_len with
-      | n when n <= 2 -> Monochrome, 2, BI_RGB, 2
-      | 16 -> Color16, col_map_len, BI_RGB, 0
-      | n when n <= 16 -> Color16, col_map_len, BI_RLE4, 0
-      | 256 -> Color256, col_map_len, BI_RGB, 0
-      | n when n <= 256 -> Color256, col_map_len, BI_RLE8, 0
-      | _n -> failwith "Too many colors for a bitmap with 8 bits per pixel" in
-    let bih =
-      { biSize = -1; biWidth = biW; biHeight = biH;
-        biPlanes = 1; biBitCount = biBitCount;
-        biCompression = biCompression; biSizeImage = -1;
-        biXPelsPerMeter = 600; biYPelsPerMeter = 600;
-        biClrUsed = biClrUsed; biClrImportant = biClrImportant; } in
+      let colormap = bitmap.Index8.colormap.map
+      and biW = bitmap.Index8.width
+      and biH = bitmap.Index8.height
+      and data = Index8.dump bitmap in
+      let bfh = {
+        (* WORD *) bfType = 19778 (* BM *);
+        (* DWORD *) bfSize = -1 (* Unknown to be updated *);
+        (* WORD *) bfReserved1 = 0;
+        (* WORD *) bfReserved2 = 0;
+        (* DWORD *) bfOffBits = -1 (* Unknown to be updated *)
+      } in
+      let biBitCount,biClrUsed,biCompression,biClrImportant =
+        let col_map_len = Array.length colormap in
+        match col_map_len with
+        | n when n <= 2 -> Monochrome, 2, BI_RGB, 2
+        | 16 -> Color16, col_map_len, BI_RGB, 0
+        | n when n <= 16 -> Color16, col_map_len, BI_RLE4, 0
+        | 256 -> Color256, col_map_len, BI_RGB, 0
+        | n when n <= 256 -> Color256, col_map_len, BI_RLE8, 0
+        | _n -> failwith "Too many colors for a bitmap with 8 bits per pixel" in
+      let bih =
+        { biSize = -1; biWidth = biW; biHeight = biH;
+          biPlanes = 1; biBitCount = biBitCount;
+          biCompression = biCompression; biSizeImage = -1;
+          biXPelsPerMeter = 600; biYPelsPerMeter = 600;
+          biClrUsed = biClrUsed; biClrImportant = biClrImportant; } in
 
-    { bmpFileHeader = bfh;
-      bmpInfoHeader = bih;
-      bmpRgbQuad = colormap;
-      bmpBytes = data; }
+      { bmpFileHeader = bfh;
+        bmpInfoHeader = bih;
+        bmpRgbQuad = colormap;
+        bmpBytes = data; }
   | _ -> raise Wrong_image_type;;
 
 let write_bmp oc = function
@@ -927,38 +927,38 @@ let write_bmp oc = function
       bmpInfoHeader = bmpInfoHeader;
       bmpRgbQuad = colormap;
       bmpBytes = _bitmap } as bmp ->
-    bytes_written := 0;
-    let start_index, bfSize_index, bfOffBits_index, end_bmpFileHeader =
-      write_bmpFileHeader oc bmpFileHeader in
-    let start_bmpInfoHeader = end_bmpFileHeader in
-    let biSize_index, biSizeImage_index, end_bmpInfoHeader =
-      write_bmpInfoHeader oc bmpInfoHeader in
+      bytes_written := 0;
+      let start_index, bfSize_index, bfOffBits_index, end_bmpFileHeader =
+        write_bmpFileHeader oc bmpFileHeader in
+      let start_bmpInfoHeader = end_bmpFileHeader in
+      let biSize_index, biSizeImage_index, end_bmpInfoHeader =
+        write_bmpInfoHeader oc bmpInfoHeader in
 
-    write_colors oc colormap;
+      write_colors oc colormap;
 
-    let start_bitmap_index, end_bitmap_index =
-      write_image_data oc bmp in
+      let start_bitmap_index, end_bitmap_index =
+        write_image_data oc bmp in
 
-    (* Correcting sizes: bfSize, bfOffBits, biSize, bisizeImage *)
-    let bfSize = (* Given in bytes! not in DWORDs *)
-      !bytes_written - start_index in
-    seek_out oc bfSize_index;
-    output_dword oc bfSize;
+      (* Correcting sizes: bfSize, bfOffBits, biSize, bisizeImage *)
+      let bfSize = (* Given in bytes! not in DWORDs *)
+        !bytes_written - start_index in
+      seek_out oc bfSize_index;
+      output_dword oc bfSize;
 
-    let bfOffBits = (* Given in bytes *)
-      start_bitmap_index - start_index in
-    seek_out oc bfOffBits_index;
-    output_dword oc bfOffBits;
+      let bfOffBits = (* Given in bytes *)
+        start_bitmap_index - start_index in
+      seek_out oc bfOffBits_index;
+      output_dword oc bfOffBits;
 
-    let biSize = (* Given in bytes *)
-      end_bmpInfoHeader - start_bmpInfoHeader in
-    seek_out oc biSize_index;
-    output_dword oc biSize;
+      let biSize = (* Given in bytes *)
+        end_bmpInfoHeader - start_bmpInfoHeader in
+      seek_out oc biSize_index;
+      output_dword oc biSize;
 
-    let biSizeImage = (* Given in bytes *)
-      end_bitmap_index - start_bitmap_index in
-    seek_out oc biSizeImage_index;
-    output_dword oc biSizeImage;
+      let biSizeImage = (* Given in bytes *)
+        end_bitmap_index - start_bitmap_index in
+      seek_out oc biSizeImage_index;
+      output_dword oc biSizeImage;
 ;;
 
 let write_bmp_file fname bmp =

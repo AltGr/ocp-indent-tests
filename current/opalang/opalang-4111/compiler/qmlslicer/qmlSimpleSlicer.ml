@@ -239,7 +239,7 @@ module Options = struct
       Format.sprintf " Level of security of the slicing checks (%a) [%s]"
         (Format.pp_list "@ " Format.pp_print_string) WClass.security_levels
         default_options.check_level
-    ;
+      ;
     ]
 
 end
@@ -854,19 +854,19 @@ let check_privacy ~emit_error:_ ~emit node =
       if c1 then may_warn ~wclass:WClass.Exposed.meaningless
           ~tagged:"exposed" ~use:"only non protected" No
           "The directive will be ignored"
-    ;
+      ;
       (* an implict exposed value is giving access to a protected value *)
       let c2 = node.calls_private <> None && implicit in
       if c2 then may_warn ~wclass:WClass.Protected.implicit_access
           ~tagged:"implicit exposed" ~use:"protected" Private_path
           "The access to these values is guaranteed to be safe, but they can be accessed."
-    ;
+      ;
       (* an explicit exposed value is accessing the client *)
       let c3 = node.needs_the_client<>[] && not(implicit) in
       if c3 then may_warn ~wclass:WClass.Exposed.misleading
           ~tagged:"exposed" ~use:"client" Client_deps
           "This is can be inefficient and may be a security threat."
-    ;
+      ;
       c1 && c2 && c3
   | Visible -> true
   | Private ->
@@ -874,7 +874,7 @@ let check_privacy ~emit_error:_ ~emit node =
       if c1 then may_warn ~wclass:WClass.Protected.misleading
           ~tagged:"protected" ~use:"client" Client_deps
           "This is probably a security threat."
-    ;
+      ;
       c1
 
 let check_side ~emit_error ~emit node =
@@ -933,7 +933,7 @@ let check_side ~emit_error ~emit node =
                [Q.Lambda (_, args, _)], _)) ->
              fst (List.split_at env args)
          | _ -> assert false)
-    ;
+      ;
       false
     ) else true
   in c1 && c2 && c3 && c4

@@ -215,9 +215,9 @@ let rx_poll nf fn =
     Gnttab.put gnt;
     match status with
     |sz when status > 0 ->
-      let packet = Io_page.sub page 0 sz in
-      ignore_result (try_lwt fn packet
-      with exn -> return (printf "RX exn %s\n%!" (Printexc.to_string exn)))
+        let packet = Io_page.sub page 0 sz in
+        ignore_result (try_lwt fn packet
+        with exn -> return (printf "RX exn %s\n%!" (Printexc.to_string exn)))
     |err -> printf "RX error %d\n%!" err
   )
 
@@ -251,26 +251,26 @@ let writev nf pages =
   match pages with
   |[] -> return ()
   |[page] ->
-    (* If there is only one page, then just write it normally *)
-    write nf page
+      (* If there is only one page, then just write it normally *)
+      write nf page
   |first_page::other_pages ->
-    (* For Xen Netfront, the first fragment contains the entire packet
-     * length, which is the backend will use to consume the remaining
-     * fragments until the full length is satisfied *)
-    lwt () = write_request ~flags:TX.Proto_64.flag_more_data ~size:(Cstruct.lenv pages) nf first_page in
-    let rec xmit = 
-      function
-      |[] -> return ()
-      |[page] -> (* The last fragment has no More_data flag to indicate eof *)
-        write_request ~flags:0 nf page
-      |page::tl -> (* A middle fragment has a More_data flag set *)
-        lwt () = write_request ~flags:TX.Proto_64.flag_more_data nf page in
-        xmit tl
-    in
-    lwt () = xmit other_pages in
-    if Ring.Front.push_requests_and_check_notify nf.tx_fring then
-      Evtchn.notify nf.evtchn;
-    return ()
+      (* For Xen Netfront, the first fragment contains the entire packet
+       * length, which is the backend will use to consume the remaining
+       * fragments until the full length is satisfied *)
+      lwt () = write_request ~flags:TX.Proto_64.flag_more_data ~size:(Cstruct.lenv pages) nf first_page in
+      let rec xmit = 
+        function
+        |[] -> return ()
+        |[page] -> (* The last fragment has no More_data flag to indicate eof *)
+            write_request ~flags:0 nf page
+        |page::tl -> (* A middle fragment has a More_data flag set *)
+            lwt () = write_request ~flags:TX.Proto_64.flag_more_data nf page in
+            xmit tl
+      in
+      lwt () = xmit other_pages in
+      if Ring.Front.push_requests_and_check_notify nf.tx_fring then
+        Evtchn.notify nf.evtchn;
+      return ()
 
 let listen nf fn =
   (* Listen for the activation to poll the interface *)

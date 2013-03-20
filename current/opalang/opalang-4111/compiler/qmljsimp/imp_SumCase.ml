@@ -753,7 +753,7 @@ let assert_sum_prefix sum_rev_prefix_path rev_prefix_path =
             OManager.printf "assert_rev_prefix_path: %a@\nrev_prefix_path: %a@."
               Common.pp_path sum_rev_prefix_path
               Common.pp_path rev_prefix_path
-          ;
+            ;
             assert false
       in
       aux (List.rev sum_rev_prefix_path) (List.rev rev_prefix_path)
@@ -770,7 +770,7 @@ let rev_skip_sum_prefix sum_rev_prefix_path rev_prefix_path =
             OManager.printf "sum_rev_prefix_path: %a@\nrev_prefix_path: %a@."
               Common.pp_path sum_rev_prefix_path
               Common.pp_path rev_prefix_path
-          ;
+            ;
             assert false
       in
       aux (List.rev sum_rev_prefix_path) (List.rev rev_prefix_path)
@@ -992,7 +992,7 @@ struct
                         )
                           pp_sum_content sum
                           Common.pp_fieldset present
-                      ;
+                        ;
                         assert false
 
                     | [ hd, index ] ->
@@ -1030,7 +1030,7 @@ struct
                           pp_sum_content sum
                           Common.pp_fieldset present
                           (Format.pp_list ", " Format.pp_print_int) indexes
-                      ;
+                        ;
                         assert false
                 in
                 let absent = FieldSet.diff sum.fields overlap in
@@ -1104,7 +1104,7 @@ struct
                 OManager.printf "Imp_SumCase.SumAnalysis.follow_dot: internal error on type %a with path %a@\n"
                   QmlPrint.pp#ty ty
                   (Format.pp_list "." Format.pp_print_string) path
-              ;
+                ;
                 assert false
           in
           let ty = Return.set_checkpoint (

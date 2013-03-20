@@ -240,9 +240,9 @@ let try_explain_ty_incompatibility ppf (accur_ty1, accur_ty2) =
 
 let pp_location_hints ppf
     ( err_ty1, _, err_ty2, _
-      , ty1 , _, ty2, _) =
+    , ty1 , _, ty2, _) =
   match ( W_SubTerms.locate_subterms err_ty1.W_Algebra.sty_desc ty1.W_Algebra.sty_desc
-    , W_SubTerms.locate_subterms err_ty2.W_Algebra.sty_desc ty1.W_Algebra.sty_desc) with
+        , W_SubTerms.locate_subterms err_ty2.W_Algebra.sty_desc ty1.W_Algebra.sty_desc) with
   |(Some (_, s1), Some (_, s2)) -> (
       Format.fprintf ppf
         ("@\n@[<2>@{<bright>Hint@}:@\nIn type @{<red>%a@} " ^^
@@ -251,7 +251,7 @@ let pp_location_hints ppf
     )
   | _ ->(
       match ( W_SubTerms.locate_subterms err_ty1.W_Algebra.sty_desc ty2.W_Algebra.sty_desc
-        , W_SubTerms.locate_subterms err_ty2.W_Algebra.sty_desc ty2.W_Algebra.sty_desc) with
+            , W_SubTerms.locate_subterms err_ty2.W_Algebra.sty_desc ty2.W_Algebra.sty_desc) with
       |(Some (_, s1), Some (_, s2)) -> (
           Format.fprintf ppf
             ("@\n@[<2>@{<bright>Hint@}:@\nIn@ type@ @{<red>%a@} " ^^
@@ -547,9 +547,9 @@ let report_unification_conflict_with_context
           try_explain_ty_incompatibility (err_ty1, err_ty2)
           pp_unification_conflict_detail detail
           pp_location_hints ( err_ty1, err_loc1
-          , err_ty2, err_loc2
-          , pat_ty , ty_loc1
-          , coercing_ty, ty_loc2)
+                            , err_ty2, err_loc2
+                            , pat_ty , ty_loc1
+                            , coercing_ty, ty_loc2)
     | W_InferErrors.UCC_apply (expr, fun_pat_ty, tmp_fun_ty) ->(
         let fun_name =
           match expr with
@@ -583,9 +583,9 @@ let report_unification_conflict_with_context
             W_PrintTypes.pp_simple_type_continue_sequence tmp_fun_ty
             pp_unification_conflict_detail detail
             pp_location_hints ( err_ty1, err_loc1
-            , err_ty2, err_loc2
-            , fun_pat_ty , ty_loc1
-            , tmp_fun_ty, ty_loc2) in
+                              , err_ty2, err_loc2
+                              , fun_pat_ty , ty_loc1
+                              , tmp_fun_ty, ty_loc2) in
         match fun_pat_ty.W_Algebra.sty_desc with
         | W_Algebra.SType_arrow (args1, _) -> (
             match tmp_fun_ty.W_Algebra.sty_desc with
@@ -668,9 +668,9 @@ let report_unification_conflict_with_context
           try_explain_ty_incompatibility (err_ty1, err_ty2)
           pp_unification_conflict_detail detail
           pp_location_hints ( err_ty1, err_loc1
-          , err_ty2, err_loc2
-          , previous_left_ty , ty_loc1
-          , current_left_ty, ty_loc2)
+                            , err_ty2, err_loc2
+                            , previous_left_ty , ty_loc1
+                            , current_left_ty, ty_loc2)
 
     | W_InferErrors.UCC_match_ty_right_parts_vs_ty_branch
         (expr, ty_right_parts, ty_branch) ->
@@ -690,9 +690,9 @@ let report_unification_conflict_with_context
           W_PrintTypes.pp_simple_type_continue_sequence ty_branch
           pp_unification_conflict_detail detail
           pp_location_hints ( err_ty1, err_loc1
-          , err_ty2, err_loc2
-          , ty_right_parts , ty_loc1
-          , ty_branch, ty_loc2)
+                            , err_ty2, err_loc2
+                            , ty_right_parts , ty_loc1
+                            , ty_branch, ty_loc2)
     | W_InferErrors.UCC_dot
         (expr, rec_expr_ty, accessed_field_rec_ty, accessed_label) -> (
         let (record_name, record_or_module) = match expr with
@@ -746,9 +746,9 @@ let report_unification_conflict_with_context
                   accessed_field_rec_ty
                   pp_unification_conflict_detail detail
                   pp_location_hints ( err_ty1, err_loc1
-                  , err_ty2, err_loc2
-                  , rec_expr_ty , ty_loc1
-                  , accessed_field_rec_ty, ty_loc2)
+                                    , err_ty2, err_loc2
+                                    , rec_expr_ty , ty_loc1
+                                    , accessed_field_rec_ty, ty_loc2)
             | [unique_case] -> (
                 let (fields, _) =
                   (W_CoreTypes.row_type_repr unique_case).
@@ -805,9 +805,9 @@ let report_unification_conflict_with_context
                     (HintUtils.pp_suggestion labels) accessed_label
                     pp_unification_conflict_detail detail
                     pp_location_hints ( err_ty1, err_loc1
-                    , err_ty2, err_loc2
-                    , rec_expr_ty , ty_loc1
-                    , accessed_field_rec_ty, ty_loc2)
+                                      , err_ty2, err_loc2
+                                      , rec_expr_ty , ty_loc1
+                                      , accessed_field_rec_ty, ty_loc2)
                 )
               )
             | _ ->
@@ -824,9 +824,9 @@ let report_unification_conflict_with_context
                   accessed_field_rec_ty
                   pp_unification_conflict_detail detail
                   pp_location_hints ( err_ty1, err_loc1
-                  , err_ty2, err_loc2
-                  , rec_expr_ty , ty_loc1
-                  , accessed_field_rec_ty, ty_loc2)
+                                    , err_ty2, err_loc2
+                                    , rec_expr_ty , ty_loc1
+                                    , accessed_field_rec_ty, ty_loc2)
           )
         | _ ->(*NOT RECORD*)
             (* Other cases than a type sum. *)
@@ -843,9 +843,9 @@ let report_unification_conflict_with_context
               pp_info ty_loc2
               pp_unification_conflict_detail detail
               pp_location_hints ( err_ty1, err_loc1
-              , err_ty2, err_loc2
-              , rec_expr_ty , ty_loc1
-              , accessed_field_rec_ty, ty_loc2)
+                                , err_ty2, err_loc2
+                                , rec_expr_ty , ty_loc1
+                                , accessed_field_rec_ty, ty_loc2)
       )
     | W_InferErrors.UCC_record_extend (expr, extended_expr_ty, extension_ty) -> (
         W_Misc.set_error_position (Annot.pos (Annot.Magic.label expr));
@@ -864,9 +864,9 @@ let report_unification_conflict_with_context
               try_explain_ty_incompatibility (err_ty1, err_ty2)
               pp_unification_conflict_detail detail
               pp_location_hints ( err_ty1, err_loc1
-              , err_ty2, err_loc2
-              , extended_expr_ty , ty_loc1
-              , extension_ty, ty_loc2)
+                                , err_ty2, err_loc2
+                                , extended_expr_ty , ty_loc1
+                                , extension_ty, ty_loc2)
           )
         | _ -> (
             QmlError.error ~msg:reason err_ctxt
@@ -924,9 +924,9 @@ let report_unification_conflict_with_context
               W_PrintTypes.pp_simple_type_continue_sequence coercing_ty
               pp_unification_conflict_detail detail
               pp_location_hints ( err_ty1, err_loc1
-              , err_ty2, err_loc2
-              , expr_ty , ty_loc1
-              , coercing_ty, ty_loc2)
+                                , err_ty2, err_loc2
+                                , expr_ty , ty_loc1
+                                , coercing_ty, ty_loc2)
       )
     | W_InferErrors.UCC_let_rec_body (binding_name, expr, body_ty,
         expected_ty) ->
@@ -954,7 +954,7 @@ let report_unification_conflict_with_context
         let ty_loc2 = W_TypeInfo.retrieve inferred_ty.W_Algebra.sty_desc in
         W_Misc.set_error_position (Annot.pos (Annot.Magic.label expr));
         match ( expected_ty.W_Algebra.sty_desc
-          , inferred_ty.W_Algebra.sty_desc) with
+              , inferred_ty.W_Algebra.sty_desc) with
         | (W_Algebra.SType_arrow (args1, _), W_Algebra.SType_arrow (args2, _))->(
             let args_num1 = List.length args1 in
             let args_num2 = List.length args2 in
@@ -977,9 +977,9 @@ let report_unification_conflict_with_context
                 try_explain_ty_incompatibility (err_ty1, err_ty2)
                 pp_unification_conflict_detail detail
                 pp_location_hints ( err_ty1, err_loc1
-                , err_ty2, err_loc2
-                , expected_ty , ty_loc1
-                , inferred_ty, ty_loc2)
+                                  , err_ty2, err_loc2
+                                  , expected_ty , ty_loc1
+                                  , inferred_ty, ty_loc2)
             )
           )
         | (W_Algebra.SType_arrow (args1, _), _)-> (
@@ -1002,9 +1002,9 @@ let report_unification_conflict_with_context
               try_explain_ty_incompatibility (err_ty1, err_ty2)
               pp_unification_conflict_detail detail
               pp_location_hints ( err_ty1, err_loc1
-              , err_ty2, err_loc2
-              , expected_ty , ty_loc1
-              , inferred_ty, ty_loc2)
+                                , err_ty2, err_loc2
+                                , expected_ty , ty_loc1
+                                , inferred_ty, ty_loc2)
           )
       )
     | W_InferErrors.UCC_catch (expr, expected_handler_ty, handler_ty) ->
@@ -1023,9 +1023,9 @@ let report_unification_conflict_with_context
           try_explain_ty_incompatibility (err_ty1, err_ty2)
           pp_unification_conflict_detail detail
           pp_location_hints ( err_ty1, err_loc1
-          , err_ty2, err_loc2
-          , expected_handler_ty , ty_loc1
-          , handler_ty, ty_loc2)
+                            , err_ty2, err_loc2
+                            , expected_handler_ty , ty_loc1
+                            , handler_ty, ty_loc2)
     | W_InferErrors.UCC_throw (expr, curr_exn_ty, thrown_ty) ->
         W_Misc.set_error_position (Annot.pos (Annot.Magic.label expr));
         let err_ctxt =
@@ -1041,9 +1041,9 @@ let report_unification_conflict_with_context
           try_explain_ty_incompatibility (err_ty1, err_ty2)
           pp_unification_conflict_detail detail
           pp_location_hints ( err_ty1, err_loc1
-          , err_ty2, err_loc2
-          , curr_exn_ty, ty_loc1
-          , thrown_ty, ty_loc2)
+                            , err_ty2, err_loc2
+                            , curr_exn_ty, ty_loc1
+                            , thrown_ty, ty_loc2)
   )
 
 (* ************************************************************************** *)

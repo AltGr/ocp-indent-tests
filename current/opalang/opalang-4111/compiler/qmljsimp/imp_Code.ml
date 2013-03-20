@@ -789,7 +789,7 @@ let compile_function_body_aux env private_env recursion_info name body =
                 (Format.pp_list "," (JsPrint.pp#expr ~leading:false)) args
                 (Format.pp_list "," (fun f s -> Format.pp_print_string f (JsPrint.string_of_ident s))) params
                 QmlPrint.pp#expr body
-            ;
+              ;
               assert false
         in
         let (_previous_params,need_alias) =

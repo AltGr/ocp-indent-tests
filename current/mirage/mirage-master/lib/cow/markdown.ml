@@ -134,16 +134,16 @@ let push_current st =
 let rec read_paragraph ?(skip_blank=true) indent e = match Enum.peek e with
     None -> None
   | Some (indentation, line, isblank) -> match isblank with
-      true ->
-      Enum.junk e;
-      if skip_blank then read_paragraph indent e else None
-    | false ->
-      if indentation < indent then
-        None
-      else begin
-        Enum.junk e;
-        read_nonempty indentation e line
-      end
+        true ->
+          Enum.junk e;
+          if skip_blank then read_paragraph indent e else None
+      | false ->
+          if indentation < indent then
+            None
+          else begin
+            Enum.junk e;
+            read_nonempty indentation e line
+          end
 
 and skip_blank_line e = match Enum.peek e with
     None | Some (_, _, false) -> ()
@@ -156,8 +156,8 @@ and read_nonempty indent e s = match s.[0] with
   | '#' when snd_is_space s -> push_remainder indent s e; read_ol indent e
   | '{' when snd_is s '{' -> read_pre (slice s ~first:2) e
   | '>' when snd_is_space s || s = ">" ->
-    (* last check needed because "> " becomes ">" *)
-    Enum.push e (indent, s, false); read_quote indent e
+      (* last check needed because "> " becomes ">" *)
+      Enum.push e (indent, s, false); read_quote indent e
   | _ -> Enum.push e (indent, s, false); read_normal e
 
 and read_heading s =
@@ -199,9 +199,9 @@ and read_list f is_item indent e =
     skip_blank_line e;
     match Enum.peek e with
     | Some (indentation, s, _) when indentation >= indent && is_item s ->
-      Enum.junk e;
-      push_remainder indentation s e;
-      read_all fst (read_item indentation [] :: others)
+        Enum.junk e;
+        push_remainder indentation s e;
+        read_all fst (read_item indentation [] :: others)
     | None | Some _ -> f fst (List.rev others)
   in Some (read_all (read_item indent []) [])
 
@@ -216,8 +216,8 @@ and read_pre kind e =
   let rec read_until_end fstindent ls = match Enum.get e with
       None | Some (_, "}}", _) -> ret ls
     | Some (indentation, s, _) ->
-      let spaces = String.make (max 0 (indentation - fstindent)) ' ' in
-      read_until_end fstindent ((spaces ^ unescape s) :: ls)
+        let spaces = String.make (max 0 (indentation - fstindent)) ' ' in
+        read_until_end fstindent ((spaces ^ unescape s) :: ls)
   in match Enum.get e with
     None | Some (_, "}}", _) -> ret []
   | Some (indentation, s, _) -> read_until_end indentation [s]
@@ -227,12 +227,12 @@ and read_quote indent e =
   let next_without_lt e = function
     | (_, _, true) as line -> push_and_finish e line
     | (n, s, false) as line ->
-      if n < indent || s.[0] <> '>' then
-        push_and_finish e line
-      else
-        let s = slice ~first:1 s in
-        let s' = strip s in
-        (String.length s - String.length s', s', s' = "")
+        if n < indent || s.[0] <> '>' then
+          push_and_finish e line
+        else
+          let s = slice ~first:1 s in
+          let s' = strip s in
+          (String.length s - String.length s', s', s' = "")
 
   in match collect (read_paragraph 0) (Enum.map (next_without_lt e) e) with
     [] -> None
@@ -244,9 +244,9 @@ and read_normal e =
     match Enum.peek e with
       None | Some (_, _, true) -> return ()
     | Some (_, l, _) -> match l.[0] with
-        '!' | '*' | '#' | '>' when snd_is_space l -> return ()
-      | '{' when snd_is l '{' -> return ()
-      | _ -> Enum.junk e; gettxt (l :: ls) in
+          '!' | '*' | '#' | '>' when snd_is_space l -> return ()
+        | '{' when snd_is l '{' -> return ()
+        | _ -> Enum.junk e; gettxt (l :: ls) in
   let txt = gettxt [] in
   Some (Normal (parse_text txt))
 
@@ -265,33 +265,33 @@ and scan s st n =
 
   else match s.[n] with
     | '`' ->
-      delimited (fun ~first ~last -> Code (unescape_slice s ~first ~last)) "`"
-        s st n
+        delimited (fun ~first ~last -> Code (unescape_slice s ~first ~last)) "`"
+          s st n
     | '*' ->
-      delimited (fun ~first ~last -> Bold (unescape_slice s ~first ~last)) "*"
-        s st n
+        delimited (fun ~first ~last -> Bold (unescape_slice s ~first ~last)) "*"
+          s st n
     | '_' ->
-      delimited (fun ~first ~last -> Emph (unescape_slice s ~first ~last)) "__"
-        s st n
+        delimited (fun ~first ~last -> Emph (unescape_slice s ~first ~last)) "__"
+          s st n
     | '=' ->
-      delimited
-        (fun ~first ~last ->
-          Struck (scan s
-              { max = last; fragments = []; current = new_fragment (); }
-              first))
-        "==" s st n
+        delimited
+          (fun ~first ~last ->
+            Struck (scan s
+                { max = last; fragments = []; current = new_fragment (); }
+                first))
+          "==" s st n
     | '!' when matches_at s ~max n "![" ->
-      maybe_link
-        "![" (fun ref -> Image { img_src = ref.src; img_alt = ref.desc })
-        s st (n + 2)
+        maybe_link
+          "![" (fun ref -> Image { img_src = ref.src; img_alt = ref.desc })
+          s st (n + 2)
     | '[' ->
-      maybe_link "["
-        (fun ref -> match ref.src, ref.desc with
-            "", "" -> Text ""
-          | "", desc -> Link { href_target = desc; href_desc = desc }
-          | src, "" when src.[0] = '#' -> Anchor (slice ~first:1 src)
-          | src, desc -> Link { href_target = ref.src; href_desc = ref.desc})
-        s st (n + 1)
+        maybe_link "["
+          (fun ref -> match ref.src, ref.desc with
+              "", "" -> Text ""
+            | "", desc -> Link { href_target = desc; href_desc = desc }
+            | src, "" when src.[0] = '#' -> Anchor (slice ~first:1 src)
+            | src, desc -> Link { href_target = ref.src; href_desc = ref.desc})
+          s st (n + 1)
     | '\\' when (n + 1) < max -> addc st.current s.[n+1]; scan s st (n + 2)
     | c -> addc st.current c; scan s st (n + 1)
 
@@ -307,21 +307,21 @@ and delimited f delim s st first =
   if not (matches_at s ~max first delim) then scan_from_next_char ()
   else match scan_past ~delim s ~max (first + String.length delim) with
       Some n ->
-      let chunk = f ~first:(first + delim_len)
-          ~last:(n - String.length delim)
-      in scan s
-        { st with fragments = chunk :: push_current st;
-                  current = new_fragment () }
-        n
+        let chunk = f ~first:(first + delim_len)
+            ~last:(n - String.length delim)
+        in scan s
+          { st with fragments = chunk :: push_current st;
+                    current = new_fragment () }
+          n
     | None -> scan_from_next_char ()
 
 and maybe_link delim f s st n = match scan_link s ~max:st.max n with
     None -> adds st.current delim; scan s st n
   | Some (ref, n) ->
-    scan s
-      { st with fragments = f ref :: push_current st;
-                current = (new_fragment ()) }
-      n
+      scan s
+        { st with fragments = f ref :: push_current st;
+                  current = (new_fragment ()) }
+        n
 
 (* return None if delim not found, else Some (offset of char *after* delim) *)
 and scan_past ~delim s ~max n =
@@ -342,22 +342,22 @@ and scan_past ~delim s ~max n =
 and scan_link s ~max n = match scan_past ~delim:"]" s ~max n with
     None -> None
   | Some end_of_desc ->
-    if end_of_desc >= max then None
-    else match s.[end_of_desc] with
-        '(' ->
-        begin match scan_past ~delim:")" s ~max (end_of_desc + 1) with
-            None -> None
-          | Some end_of_uri ->
-            let ref =
-              {
-                desc = unescape_slice s ~first:n ~last:(end_of_desc - 1);
-                src = unescape_slice s
-                    ~first:(end_of_desc + 1)
-                    ~last:(end_of_uri - 1)
-              }
-            in Some (ref, end_of_uri)
-        end
-      | _ -> None
+      if end_of_desc >= max then None
+      else match s.[end_of_desc] with
+          '(' ->
+            begin match scan_past ~delim:")" s ~max (end_of_desc + 1) with
+                None -> None
+              | Some end_of_uri ->
+                  let ref =
+                    {
+                      desc = unescape_slice s ~first:n ~last:(end_of_desc - 1);
+                      src = unescape_slice s
+                          ~first:(end_of_desc + 1)
+                          ~last:(end_of_uri - 1)
+                    }
+                  in Some (ref, end_of_uri)
+            end
+        | _ -> None
 
 and matches_at s ~max n delim =
   let len = String.length delim in

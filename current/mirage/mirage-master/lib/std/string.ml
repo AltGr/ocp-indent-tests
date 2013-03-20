@@ -65,19 +65,19 @@ let concat sep l =
   match l with
     [] -> ""
   | hd :: tl ->
-    let num = ref 0 and len = ref 0 in
-    List.iter (fun s -> incr num; len := !len + length s) l;
-    let r = create (!len + length sep * (!num - 1)) in
-    unsafe_blit hd 0 r 0 (length hd);
-    let pos = ref(length hd) in
-    List.iter
-      (fun s ->
-        unsafe_blit sep 0 r !pos (length sep);
-        pos := !pos + length sep;
-        unsafe_blit s 0 r !pos (length s);
-        pos := !pos + length s)
-      tl;
-    r
+      let num = ref 0 and len = ref 0 in
+      List.iter (fun s -> incr num; len := !len + length s) l;
+      let r = create (!len + length sep * (!num - 1)) in
+      unsafe_blit hd 0 r 0 (length hd);
+      let pos = ref(length hd) in
+      List.iter
+        (fun s ->
+          unsafe_blit sep 0 r !pos (length sep);
+          pos := !pos + length sep;
+          unsafe_blit s 0 r !pos (length s);
+          pos := !pos + length s)
+        tl;
+      r
 
 external is_printable: char -> bool = "caml_is_printable"
 external char_code: char -> int = "%identity"
@@ -98,28 +98,28 @@ let escaped s =
       begin
         match unsafe_get s i with
         | ('"' | '\\') as c ->
-          unsafe_set s' !n '\\'; incr n; unsafe_set s' !n c
+            unsafe_set s' !n '\\'; incr n; unsafe_set s' !n c
         | '\n' ->
-          unsafe_set s' !n '\\'; incr n; unsafe_set s' !n 'n'
+            unsafe_set s' !n '\\'; incr n; unsafe_set s' !n 'n'
         | '\t' ->
-          unsafe_set s' !n '\\'; incr n; unsafe_set s' !n 't'
+            unsafe_set s' !n '\\'; incr n; unsafe_set s' !n 't'
         | '\r' ->
-          unsafe_set s' !n '\\'; incr n; unsafe_set s' !n 'r'
+            unsafe_set s' !n '\\'; incr n; unsafe_set s' !n 'r'
         | '\b' ->
-          unsafe_set s' !n '\\'; incr n; unsafe_set s' !n 'b'
+            unsafe_set s' !n '\\'; incr n; unsafe_set s' !n 'b'
         | c ->
-          if is_printable c then
-            unsafe_set s' !n c
-          else begin
-            let a = char_code c in
-            unsafe_set s' !n '\\';
-            incr n;
-            unsafe_set s' !n (char_chr (48 + a / 100));
-            incr n;
-            unsafe_set s' !n (char_chr (48 + (a / 10) mod 10));
-            incr n;
-            unsafe_set s' !n (char_chr (48 + a mod 10))
-          end
+            if is_printable c then
+              unsafe_set s' !n c
+            else begin
+              let a = char_code c in
+              unsafe_set s' !n '\\';
+              incr n;
+              unsafe_set s' !n (char_chr (48 + a / 100));
+              incr n;
+              unsafe_set s' !n (char_chr (48 + (a / 10) mod 10));
+              incr n;
+              unsafe_set s' !n (char_chr (48 + a mod 10))
+            end
       end;
       incr n
     done;

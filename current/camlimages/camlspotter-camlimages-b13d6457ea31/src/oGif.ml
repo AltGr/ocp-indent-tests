@@ -22,5 +22,5 @@ let save_image name opts image =
   let img = image#image in
   match img with
   | Images.Index8 _bmp ->
-    Gif.save_image name opts img
+      Gif.save_image name opts img
   | _ -> raise Wrong_image_class;;

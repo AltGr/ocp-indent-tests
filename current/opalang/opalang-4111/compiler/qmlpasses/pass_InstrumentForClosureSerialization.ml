@@ -154,7 +154,7 @@ let detect_candidate_call always_serialize code =
            (* partial apply cases *)
            | Q.Directive (_, `partial_apply (_,false),
                [Q.Apply (_, Q.Ident (_, i), _args)]
-               , _)
+                         , _)
              when IdentSet.mem i always_serialize
              -> local,IdentSet.add i need_instrumentation
 

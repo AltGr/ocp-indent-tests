@@ -40,13 +40,13 @@ let walk_directory_tree ?ext walkfn root_dir =
       match readdir dh with
       | "." | ".." -> ()
       | f ->
-        let n = Filename.concat dir f in
-        if Sys.is_directory n then walk n
-        else
-          (match (get_extension f), ext with
-           | (_, None) -> walkfn root_dir (String.sub n 2 (String.length n - 2))
-           | (Some e, Some e') when e = e'  -> walkfn root_dir (String.sub n 2 (String.length n - 2))
-           | _ -> ())
+          let n = Filename.concat dir f in
+          if Sys.is_directory n then walk n
+          else
+            (match (get_extension f), ext with
+             | (_, None) -> walkfn root_dir (String.sub n 2 (String.length n - 2))
+             | (Some e, Some e') when e = e'  -> walkfn root_dir (String.sub n 2 (String.length n - 2))
+             | _ -> ())
     );
     closedir dh in
   chdir root_dir;

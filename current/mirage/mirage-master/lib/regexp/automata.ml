@@ -127,33 +127,33 @@ let compile r =
       HashRegexp.find hashtable r
     with
       Not_found ->
-      (* generate a new state *)
-      let init = !next_state
-      and next_chars = Regular_expr.firstchars r
-      in
-      incr next_state;
-      HashRegexp.add hashtable r init;
-      if nullable r then acceptable := IntSet.add init !acceptable;
-      let t = build_sparse_array next_chars in
-      transtable := IntMap.add init t !transtable;
-      init
+        (* generate a new state *)
+        let init = !next_state
+        and next_chars = Regular_expr.firstchars r
+        in
+        incr next_state;
+        HashRegexp.add hashtable r init;
+        if nullable r then acceptable := IntSet.add init !acceptable;
+        let t = build_sparse_array next_chars in
+        transtable := IntMap.add init t !transtable;
+        init
 
   and build_sparse_array next_chars =
     match next_chars with
     | [] -> (0,[||])
     | (a,b,_)::r ->
-      let mini = a
-      and maxi = List.fold_left (fun _ (_,x,_) -> x) b r
-      in
-      let t = Array.create (maxi-mini+1) (-1) in
-      List.iter
-        (fun (a,b,r) ->
-          let s = loop r in
-          for i=a to b do
-            t.(i-mini) <- s
-          done)
-        next_chars;
-      (mini,t)
+        let mini = a
+        and maxi = List.fold_left (fun _ (_,x,_) -> x) b r
+        in
+        let t = Array.create (maxi-mini+1) (-1) in
+        List.iter
+          (fun (a,b,r) ->
+            let s = loop r in
+            for i=a to b do
+              t.(i-mini) <- s
+            done)
+          next_chars;
+        (mini,t)
 
   in
   let _ = loop r in

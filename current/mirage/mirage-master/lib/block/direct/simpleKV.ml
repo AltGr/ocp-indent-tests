@@ -46,8 +46,8 @@ let create ~(id:string) ~(vbd:OS.Devices.blkif) : OS.Devices.kv_ro Lwt.t =
       parse_page (num+1)
   end
 | { _ } ->
-(*          printf "SimpleKV: %s init done (%d files)\n%!" id (Hashtbl.length files); *)
-return ()
+  (*          printf "SimpleKV: %s init done (%d files)\n%!" id (Hashtbl.length files); *)
+  return ()
 in
 parse_page 0 in
 read_page 0L >>
@@ -80,14 +80,14 @@ return (object
               lwt p = vbd#read_page (Int64.add file.offset !pos) in
               match (Int64.add !pos 4096L) < file.len with
               |true -> (* Read full page *)
-                (* printf "full page\n%!"; *)
-                pos := Int64.add !pos 4096L;
-                return (Some p)
+                  (* printf "full page\n%!"; *)
+                  pos := Int64.add !pos 4096L;
+                  return (Some p)
               |false -> (* EOF, short read *)
-                (* printf "short page\n%!"; *)
-                let p' = Bitstring.subbitstring p 0 ((Int64.to_int (Int64.sub file.len !pos)) * 8) in
-                pos := file.len; 
-                return (Some p')
+                  (* printf "short page\n%!"; *)
+                  let p' = Bitstring.subbitstring p 0 ((Int64.to_int (Int64.sub file.len !pos)) * 8) in
+                  pos := file.len; 
+                  return (Some p')
             end else begin
               (* printf "SimpleKV.read CLOSE: %s\n%!" filename; *)
               return None
@@ -95,8 +95,8 @@ return (object
           )))
     with
     | Not_found ->
-      (*          printf "SimpleKV: file %s not found\n%!" filename; *)
-      return None
+        (*          printf "SimpleKV: file %s not found\n%!" filename; *)
+        return None
 end )
 
 let _ =
@@ -112,14 +112,14 @@ let _ =
       (* One dependency: a Blkif entry to mount *)
       match deps with 
       |[{node=Blkif vbd} as ent] ->
-        (*         printf "SimpleKV.provider: %s depends on vbd %s\n%!" id ent.id; *)
-        lwt t = create ~id ~vbd in
-        return OS.Devices.({
-            provider=self;
-            id=self#id;
-            depends=deps;
-            node=KV_RO t 
-          })
+          (*         printf "SimpleKV.provider: %s depends on vbd %s\n%!" id ent.id; *)
+          lwt t = create ~id ~vbd in
+          return OS.Devices.({
+              provider=self;
+              id=self#id;
+              depends=deps;
+              node=KV_RO t 
+            })
       |_ -> raise_lwt (Failure "bad deps")
   end
   in
@@ -131,8 +131,8 @@ let _ =
       |"-simple_kv_ro" -> begin
           match Regexp.Re.(split_delim (from_string ":") env.(i+1)) with
           |[p_id;p_dep_id] ->
-            let p_dep_ids=[p_dep_id] in
-            fs := ({OS.Devices.p_dep_ids; p_cfg=[]; p_id}) :: !fs
+              let p_dep_ids=[p_dep_id] in
+              fs := ({OS.Devices.p_dep_ids; p_cfg=[]; p_id}) :: !fs
           |_ -> failwith "Direct.SimpleKV: bad -simple_kv_ro flag, must be id:dep_id"
         end
       |_ -> ()) env;

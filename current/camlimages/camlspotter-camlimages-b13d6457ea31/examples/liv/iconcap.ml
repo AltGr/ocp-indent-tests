@@ -34,8 +34,8 @@ let load f =
             Mstring.split_str (function '/' -> true | _ -> false) typ in
           match tokens with
           | [maj; min] ->
-            (* prerr_endline (Printf.sprintf "%s/%s => (%s)" maj min icon); *)
-            Hashtbl.add table (maj, min) icon
+              (* prerr_endline (Printf.sprintf "%s/%s => (%s)" maj min icon); *)
+              Hashtbl.add table (maj, min) icon
           | _ -> assert false
         with
         | _ -> failwith (str ^ ": parse error")

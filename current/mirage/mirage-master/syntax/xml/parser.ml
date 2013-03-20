@@ -126,6 +126,6 @@ let parse loc ?entity ?enc str =
     | Tag (String "xxx", Nil, body) -> body
     | _ -> Location.raise loc (0,1) Parsing.Parse_error
   with Xml.Error (pos, e) ->
-    Printf.eprintf "[XMLM:%d-%d] %s: %s\n"(fst pos) (snd pos) str (Xml.error_message e);
-    Location.raise loc pos Parsing.Parse_error
+      Printf.eprintf "[XMLM:%d-%d] %s: %s\n"(fst pos) (snd pos) str (Xml.error_message e);
+      Location.raise loc pos Parsing.Parse_error
 

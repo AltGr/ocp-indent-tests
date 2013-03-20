@@ -140,10 +140,10 @@ let norm_crlf lastwascr buf offs len =
     match buf.[!rpos] with
     | '\n' -> dest.[!wpos] <- '\n'; incr rpos; incr wpos
     | '\r' ->
-      if buf.[!rpos + 1] = '\n' then begin
-        dest.[!wpos] <- '\n'; rpos := !rpos + 2; incr wpos
-      end else begin
-        dest.[!wpos] <- '\n'; incr rpos; incr wpos end
+        if buf.[!rpos + 1] = '\n' then begin
+          dest.[!wpos] <- '\n'; rpos := !rpos + 2; incr wpos
+        end else begin
+          dest.[!wpos] <- '\n'; incr rpos; incr wpos end
     | c -> dest.[!wpos] <- c; incr rpos; incr wpos
   done;
   begin match buf.[offs+len-1] with

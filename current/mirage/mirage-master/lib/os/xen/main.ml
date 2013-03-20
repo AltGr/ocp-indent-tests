@@ -31,17 +31,17 @@ let enter_hooks = Lwt_sequence.create ()
 let rec call_hooks hooks  =
   match Lwt_sequence.take_opt_l hooks with
   | None ->
-    return ()
+      return ()
   | Some f ->
-    (* Run the hooks in parallel *)
-    let _ =
-      try_lwt
-        f ()
-      with exn ->
-        Printf.printf "call_hooks: exn %s\n%!" (Printexc.to_string exn);
-        return ()
-    in
-    call_hooks hooks
+      (* Run the hooks in parallel *)
+      let _ =
+        try_lwt
+          f ()
+        with exn ->
+            Printf.printf "call_hooks: exn %s\n%!" (Printexc.to_string exn);
+            return ()
+      in
+      call_hooks hooks
 
 (* Execute one iteration and register a callback function *)
 let run t =
@@ -52,21 +52,21 @@ let run t =
     try
       match Lwt.poll t with
       | Some x ->
-        true
+          true
       | None ->
-        (* If we have nothing to do, check for next timeout and
-         * and block the domain *)
-        Activations.run ();
-        let timeout =
-          match Time.select_next Clock.time with
-          |None -> 86400000.0
-          |Some tm -> tm
-        in
-        block_domain timeout;
-        false
+          (* If we have nothing to do, check for next timeout and
+           * and block the domain *)
+          Activations.run ();
+          let timeout =
+            match Time.select_next Clock.time with
+            |None -> 86400000.0
+            |Some tm -> tm
+          in
+          block_domain timeout;
+          false
     with exn ->
-      (Printf.printf "Top level exception: %s\n%!" 
-         (Printexc.to_string exn); true) in
+        (Printf.printf "Top level exception: %s\n%!" 
+           (Printexc.to_string exn); true) in
   ignore(Callback.register "OS.Main.run" aux)
 
 let () = at_exit (fun () -> run (call_hooks exit_hooks))

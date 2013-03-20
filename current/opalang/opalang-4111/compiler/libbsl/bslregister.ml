@@ -78,7 +78,7 @@ let customize_lib_name name =
       "Plugin name should be alphanumeric and start with a letter"
     )
       name
-;
+  ;
   let name = BslConvention.plugin_name name in
 
   is_default_lib       := false ;
@@ -354,7 +354,7 @@ let anon_fun file =
           "or maybe you could rename one of the clashing javascript files@]@\n"
         )
           file
-    ;
+      ;
       js_validator_files_set := StringSet.add key (!js_validator_files_set);
       (if ext = "js" then MutableList.add js_files file
        else MutableList.add nodejs_files file);
